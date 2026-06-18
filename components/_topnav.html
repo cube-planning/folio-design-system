@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Folio — Top Nav Component</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../tokens.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      color: #222B3A;
+      background: #F2F5F9;
+    }
+
+    /* ── TOP NAV ─────────────────────────────────── */
+
+    .topnav {
+      height: 80px;
+      background: #F2F5F9;
+      border-bottom: 1px solid #E3E8EF;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    /* Company Switcher — pill */
+    .tn-company {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      height: 32px;
+      padding: 0 12px;
+      background: #FFFFFF;
+      border-radius: 16px;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .tn-company-ic {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #173D82;
+      flex-shrink: 0;
+    }
+    .tn-company-name {
+      font-size: 12px;
+      color: #677489;
+    }
+    .tn-chevron {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Right-side cluster */
+    .tn-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Ghost icon buttons — 32×32 */
+    .tn-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      flex-shrink: 0;
+    }
+    .tn-btn:hover { background: #F8FAFC; }
+
+    /* AI sparkle button — 28×28 */
+    .tn-ai-btn {
+      width: 28px;
+      height: 28px;
+      border: none;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .tn-ai-btn:hover { opacity: 0.8; }
+
+    /* User dropdown — pill */
+    .tn-user {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 32px;
+      padding: 0 8px;
+      background: #FFFFFF;
+      border-radius: 20px;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    /* User avatar */
+    .tn-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 12px;
+      background: #E3E8EF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: #4A5567;
+      font-family: 'DM Sans', sans-serif;
+      flex-shrink: 0;
+    }
+
+    .tn-user-name {
+      font-size: 12px;
+      color: #677489;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════ TOP NAV ════════════════ -->
+<nav class="topnav">
+
+  <!-- Left: Company Switcher -->
+  <div class="tn-company">
+    <div class="tn-company-ic">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+        <path d="M1 14.5V3.5C1 2.948 1.448 2.5 2 2.5H7C7.552 2.5 8 2.948 8 3.5V5.5H14C14.552 5.5 15 5.948 15 6.5V14.5H10V11.5H6V14.5H1ZM3 11.5H5V9.5H3V11.5ZM3 7.5H5V5.5H3V7.5ZM10 11.5H12V9.5H10V11.5ZM10 7.5H12V5.5H10V7.5ZM6 7.5H8V5.5H6V7.5Z" fill="currentColor"/>
+      </svg>
+    </div>
+    <span class="tn-company-name">Accuplanner Inc</span>
+    <div class="tn-chevron">
+      <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
+        <path d="M1 1L5 5L9 1" stroke="#353F4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Right: Icons + User -->
+  <div class="tn-right">
+
+    <!-- Background tasks -->
+    <button class="tn-btn" title="Background tasks">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <clipPath id="bgt-c"><rect width="20" height="20" fill="white"/></clipPath>
+        </defs>
+        <g clip-path="url(#bgt-c)">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M7.36452 -0.00439453C11.4336 -0.00439453 14.7329 1.17324 14.7329 2.62718V8.41666C14.1878 8.41666 13.6586 8.48519 13.154 8.61505V7.47916C12.7165 7.65679 12.2358 7.80441 11.7292 7.92941C10.4727 8.23857 8.96965 8.41666 7.36452 8.41666C5.75938 8.41666 4.25631 8.23857 2.99979 7.92941C2.49322 7.80441 2.01254 7.6535 1.57504 7.47916V9.95243C2.01254 10.1926 2.61493 10.4197 3.37808 10.6072C4.49316 10.8835 5.86796 11.0482 7.36452 11.0482C8.19151 11.0482 8.98095 10.9948 9.71032 10.9033C9.32567 11.4071 9.01467 11.9701 8.79441 12.5768C8.32982 12.6083 7.85196 12.6272 7.36452 12.6272C5.75946 12.6272 4.25628 12.4499 2.99979 12.144C2.49322 12.019 2.01254 11.8671 1.57504 11.6928V14.0088L1.59457 14.0252C1.7722 14.1732 2.11822 14.3774 2.68729 14.5813C3.809 14.9793 5.46344 15.2588 7.36452 15.2588C7.73223 15.2588 8.09051 15.2446 8.43771 15.2248C8.47962 15.7683 8.58971 16.2922 8.76049 16.7884C8.30843 16.8193 7.84184 16.8377 7.36452 16.8377C3.29544 16.8377 -0.00390625 15.6601 -0.00390625 14.2061V2.62718C-0.00390625 1.17324 3.29544 -0.00439453 7.36452 -0.00439453ZM7.36452 1.57455C5.46344 1.57455 3.809 1.85403 2.68729 2.25198C2.11822 2.45593 1.76891 2.66008 1.59457 2.80811L1.57504 2.82455V5.74191C2.01254 5.98204 2.61493 6.20922 3.37808 6.39672C4.49316 6.67298 5.86796 6.83771 7.36452 6.83771C8.86107 6.83771 10.2359 6.67298 11.3509 6.39672C12.1141 6.20922 12.7165 5.97875 13.154 5.74191V2.82455L13.1345 2.80811C12.9568 2.66008 12.6108 2.45593 12.0417 2.25198C10.92 1.85403 9.26559 1.57455 7.36452 1.57455Z" fill="#4A5567"/>
+          <path d="M12.2527 12.0755C11.8689 12.4866 11.5926 12.9682 11.4237 13.4803C11.2943 13.8726 10.893 14.077 10.529 13.9384C10.165 13.7998 9.97197 13.3699 10.1014 12.9799C10.3382 12.2587 10.7242 11.5845 11.2593 11.0113C13.1715 8.96276 16.2658 8.95571 18.1847 10.9878L19.097 10.0105C19.2483 9.84842 19.4742 9.80143 19.6715 9.88835C19.8689 9.97527 19.9961 10.182 19.9961 10.4099V13.4169C19.9961 13.7293 19.7614 13.9807 19.4698 13.9807H16.6628C16.45 13.9807 16.2571 13.8444 16.1759 13.633C16.0948 13.4216 16.1386 13.1796 16.29 13.0175L17.1913 12.052C15.8185 10.6072 13.6145 10.6143 12.2505 12.0755H12.2527ZM9.46978 16.048C9.46978 15.7356 9.70443 15.4842 9.99609 15.4842H12.8031C13.0158 15.4842 13.2088 15.6205 13.29 15.8319C13.3711 16.0433 13.3272 16.2853 13.1759 16.4474L12.2746 17.4129C13.6474 18.8577 15.8514 18.8506 17.2154 17.3894C17.5992 16.9783 17.8755 16.4967 18.0443 15.9846C18.1737 15.5923 18.575 15.3879 18.9391 15.5265C19.3031 15.6651 19.4961 16.095 19.3667 16.485C19.1299 17.2038 18.7439 17.8781 18.2066 18.4536C16.2943 20.5021 13.2 20.5092 11.2812 18.4771L10.3689 19.4544C10.2176 19.6165 9.99171 19.6635 9.79434 19.5765C9.59697 19.4896 9.46978 19.2829 9.46978 19.055V16.048Z" fill="#4A5567"/>
+        </g>
+      </svg>
+    </button>
+
+    <!-- Help -->
+    <button class="tn-btn" title="Help">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18.125 10C18.125 7.84512 17.269 5.77849 15.7452 4.25476C14.2215 2.73102 12.1549 1.875 10 1.875C7.84512 1.875 5.77849 2.73102 4.25476 4.25476C2.73102 5.77849 1.875 7.84512 1.875 10C1.875 12.1549 2.73102 14.2215 4.25476 15.7452C5.77849 17.269 7.84512 18.125 10 18.125C12.1549 18.125 14.2215 17.269 15.7452 15.7452C17.269 14.2215 18.125 12.1549 18.125 10ZM0 10C0 7.34784 1.05357 4.8043 2.92893 2.92893C4.8043 1.05357 7.34784 0 10 0C12.6522 0 15.1957 1.05357 17.0711 2.92893C18.9464 4.8043 20 7.34784 20 10C20 12.6522 18.9464 15.1957 17.0711 17.0711C15.1957 18.9464 12.6522 20 10 20C7.34784 20 4.8043 18.9464 2.92893 17.0711C1.05357 15.1957 0 12.6522 0 10ZM6.63281 6.45703C6.94141 5.58594 7.76953 5 8.69531 5H10.9727C12.3359 5 13.4375 6.10547 13.4375 7.46484C13.4375 8.34766 12.9648 9.16406 12.1992 9.60547L10.9375 10.3281C10.9297 10.8359 10.5117 11.25 10 11.25C9.48047 11.25 9.0625 10.832 9.0625 10.3125V9.78516C9.0625 9.44922 9.24219 9.14062 9.53516 8.97266L11.2656 7.98047C11.4492 7.875 11.5625 7.67969 11.5625 7.46875C11.5625 7.14062 11.2969 6.87891 10.9727 6.87891H8.69531C8.5625 6.87891 8.44531 6.96094 8.40234 7.08594L8.38672 7.13281C8.21484 7.62109 7.67578 7.875 7.19141 7.70312C6.70703 7.53125 6.44922 6.99219 6.62109 6.50781L6.63672 6.46094L6.63281 6.45703ZM8.75 13.75C8.75 13.4185 8.8817 13.1005 9.11612 12.8661C9.35054 12.6317 9.66848 12.5 10 12.5C10.3315 12.5 10.6495 12.6317 10.8839 12.8661C11.1183 13.1005 11.25 13.4185 11.25 13.75C11.25 14.0815 11.1183 14.3995 10.8839 14.6339C10.6495 14.8683 10.3315 15 10 15C9.66848 15 9.35054 14.8683 9.11612 14.6339C8.8817 14.3995 8.75 14.0815 8.75 13.75Z" fill="#4A5567"/>
+      </svg>
+    </button>
+
+    <!-- AI sparkle button — gradient border + gradient icon -->
+    <button class="tn-ai-btn" title="AI Analyst">
+      <img src="../assets/icons/AI Button.svg" width="28" height="28" alt="AI Analyst">
+    </button>
+
+    <!-- User dropdown -->
+    <div class="tn-user">
+      <div class="tn-avatar">NG</div>
+      <span class="tn-user-name">Nina Graham</span>
+      <div class="tn-chevron">
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
+          <path d="M1 1L5 5L9 1" stroke="#353F4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+</body>
+</html>

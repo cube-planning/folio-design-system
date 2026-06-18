@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__26c84a9a-0dee-4a0a-8564-53caac46880c__use_figma",
+      "Bash(cp \"/Users/nanosborne/Cube Claude Test/prototype/_sidebar-icons.js\" \"/Users/nanosborne/folio/components/_sidebar-icons.js\" && echo \"copied\")",
+      "mcp__26c84a9a-0dee-4a0a-8564-53caac46880c__get_design_context",
+      "Bash(open \"http://localhost:8000/templates/usage.html\")",
+      "WebSearch",
+      "Bash(find /Users/nanosborne -name \"*mcp-server-guide*\" -type f 2>/dev/null | head -20)",
+      "mcp__e3b9232a-cce4-4558-9af5-73f9834ad683__use_figma",
+      "mcp__e3b9232a-cce4-4558-9af5-73f9834ad683__get_design_context",
+      "mcp__e3b9232a-cce4-4558-9af5-73f9834ad683__get_code_connect_suggestions",
+      "mcp__e3b9232a-cce4-4558-9af5-73f9834ad683__get_screenshot",
+      "mcp__e3b9232a-cce4-4558-9af5-73f9834ad683__get_variable_defs",
+      "Bash(curl -s -o /tmp/psb_overview.png \"https://www.figma.com/api/mcp/asset/ad6edc94-0dc2-4d9e-9d91-24fa58ad7841\")",
+      "Bash(curl -s -o /tmp/psb_expanded_home.png \"https://www.figma.com/api/mcp/asset/bfc86050-41ef-411a-b7ad-6d6cf4686810\")",
+      "Bash(curl -s -o /tmp/psb_collapsed_home.png \"https://www.figma.com/api/mcp/asset/8248cd92-1df6-4d62-a7c5-09dc413e2054\")",
+      "Bash(curl -s -o /tmp/psb_cubebi.png \"https://www.figma.com/api/mcp/asset/febb76c8-efe5-4c46-b50f-ffc83921311c\")",
+      "Bash(curl -s -o /tmp/psb_boards.png \"https://www.figma.com/api/mcp/asset/3adfa46b-a384-4591-a1d9-45326472ea99\")",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(python3 -c ' *)"
+    ]
+  }
+}

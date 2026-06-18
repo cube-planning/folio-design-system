@@ -1,0 +1,206 @@
+# Folio Design System — Cursor Rules
+
+You are working on the Folio Design System for the Cube platform.
+Folio is an HTML/CSS design system that Claude and Cursor use to generate
+on-brand UI screens. Read these rules before writing any code.
+
+---
+
+## Project Overview
+
+Folio is a generative middle layer between design and code:
+
+```
+tokens.css + components/
+        ↓
+Generate ideation screens (HTML/CSS)
+        ↓
+Push to Figma via MCP
+        ↓
+Designers adjust in Figma
+```
+
+**Stack:** Vanilla HTML + CSS. No frameworks, no Tailwind, no React.
+**Fonts:** DM Sans (body), Montserrat (display headings)
+**Icons:** SVG registry in components/_sidebar-icons.js (data-icon pattern)
+
+---
+
+## Folder Structure
+
+```
+folio/
+├── .cursorrules               ← you are here
+├── CLAUDE.md                  ← Claude Code rules (same intent)
+├── tokens.css                 ← single source of truth for all design tokens
+├── components/
+│   └── _sidebar-icons.js     ← SVG icon registry, auto-injects via data-icon
+└── templates/
+    └── shell.html             ← base shell for every screen
+```
+
+---
+
+## Rule 1: Always start from the shell
+
+Never rebuild the sidebar or top nav from scratch.
+Copy `templates/shell.html` for every new screen.
+
+To create a new screen:
+1. Copy `templates/shell.html` → `templates/[screen-name].html`
+2. Set the correct `.ni` to `class="ni active"`
+3. Add page content inside `<main class="page-content">`
+4. Add page-specific styles only — never redefine shell classes
+
+---
+
+## Rule 2: 4px spacing grid
+
+Every spacing value — padding, margin, gap, height, width — must be
+a multiple of 4px.
+
+**Allowed:** 4, 8, 12, 16, 20, 24, 28, 32, 40, 48, 64
+**Never use:** 1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15 (or any non-multiple of 4)
+
+Use spacing tokens from tokens.css:
+```css
+--spacing-1: 4px    --spacing-2: 8px    --spacing-3: 12px
+--spacing-4: 16px   --spacing-5: 20px   --spacing-6: 24px
+--spacing-8: 32px   --spacing-12: 48px
+```
+
+---
+
+## Rule 3: Design tokens — always use exact values
+
+Never approximate colors or invent values. Always reference tokens.css.
+
+Key color values:
+```
+Primary blue:      #2667D8   (--color-blue-500)
+Sidebar bg outer:  #F2F5F9
+Card bg:           #FFFFFF
+Border:            #E3E8EF
+Text primary:      #222B3A
+Text secondary:    #4A5567
+Text muted:        #677489
+Active nav bg:     #EFF6FF
+Active nav border: #2667D8  (3px left stroke)
+AI gradient:       linear-gradient(-19deg, #7A5AF8 33%, #9B8AFB 62%, #5925DC 98%)
+```
+
+---
+
+## Rule 4: Icon system
+
+All icons come from `components/_sidebar-icons.js`.
+Use the `data-icon` attribute — never inline SVGs for sidebar icons.
+
+```html
+<!-- Correct -->
+<div class="ni-ic" data-icon="home"></div>
+
+<!-- Wrong — never do this -->
+<svg>...</svg>
+```
+
+Available icons: home, cubeBI, reports, boards, smartVariance, aiAnalyst,
+scenarios, workflows, library, dimensions, formulas, tags, integrations,
+dataExport, users, currencies, auditTrail, aiPlugin, chatgpt, claude,
+excel, sheets, slack, teams, powerpoint, slides, wordmark, logoMark,
+collapseLeft, collapseRight
+
+---
+
+## Rule 5: Locked classes — never redefine
+
+These classes are defined in shell.html and must not be overridden:
+
+**Sidebar:**
+`.sb`, `.sb-card`, `.sb-hdr`, `.sb-nav`, `.col-btn`,
+`.dv`, `.nav-section`, `.sec`, `.ni`, `.ni.home`, `.ni.active`,
+`.ni-ic`, `.ni-lbl`, `.apps-wrap`, `.apps-grid`, `.app-tile`,
+`.app-circ`, `.app-lbl`
+
+**Top nav:**
+`.topnav`, `.tn-company`, `.tn-company-ic`, `.tn-company-name`,
+`.tn-chevron`, `.tn-right`, `.tn-btn`, `.tn-ai-btn`, `.tn-ai-inner`,
+`.tn-user`, `.tn-avatar`, `.tn-user-name`
+
+**Shell:**
+`.app-shell`, `.main`, `.page-content`
+
+Only add NEW classes for page-specific content.
+
+---
+
+## Rule 6: Active nav state
+
+Active nav items have:
+- `background: #EFF6FF`
+- `border-left: 3px solid #2667D8`
+- `padding-left: 21px` (24px − 3px border)
+- `width: calc(100% + 16px)` with `margin-left: -8px` to break out of section padding
+- Label: `color: #2667D8`, `font-weight: 600`
+
+Mark active by adding `class="ni active"` to the correct `.ni` element.
+
+---
+
+## Rule 7: Top nav structure
+
+The top nav (`header.topnav`) has two fixed regions:
+
+**Left — company selector:**
+```html
+<div class="tn-company">
+  <div class="tn-company-ic"><!-- buildings SVG --></div>
+  <span class="tn-company-name">Company Name</span>
+  <div class="tn-chevron"><!-- chevron SVG --></div>
+</div>
+```
+
+**Right — actions + user:**
+```html
+<div class="tn-right">
+  <button class="tn-btn"><!-- icon --></button>    <!-- bg tasks -->
+  <button class="tn-btn"><!-- icon --></button>    <!-- help -->
+  <button class="tn-ai-btn">
+    <div class="tn-ai-inner"><!-- sparkle --></div>
+  </button>
+  <div class="tn-user">
+    <div class="tn-avatar">XX</div>               <!-- initials -->
+    <span class="tn-user-name">Name</span>
+    <div class="tn-chevron"><!-- chevron SVG --></div>
+  </div>
+</div>
+```
+
+---
+
+## Rule 8: Page content area
+
+All page-specific content goes inside:
+```html
+<main class="page-content">
+  <!-- your content here -->
+</main>
+```
+
+The `.page-content` class provides:
+- `background: #FCFCFD`
+- `padding: 32px`
+- `overflow-y: auto`
+
+---
+
+## What NOT to do
+
+- Do not use Tailwind classes
+- Do not use React, Vue, or any framework
+- Do not use Font Awesome CDN (icons come from _sidebar-icons.js)
+- Do not rebuild the sidebar or top nav
+- Do not use non-4px spacing values
+- Do not hardcode colors — reference tokens.css values
+- Do not add `!important` overrides
+- Do not create new files unless the user asks
