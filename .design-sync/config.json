@@ -1,0 +1,28 @@
+{
+  "pkg": "folio-design-system",
+  "globalName": "FolioDS",
+  "projectId": "778e58da-f7d5-4747-9cca-1d86fbe38777",
+  "shape": "package",
+  "buildCmd": "node build.mjs",
+  "cssEntry": "tokens.css",
+  "tokensGlob": "typography.css",
+  "runtimeFontPrefixes": ["DM Sans", "JetBrains Mono"],
+  "componentSrcMap": {
+    "CubeText": "components/CubeText.jsx",
+    "CubeButton": "components/CubeButton.jsx",
+    "CubeInput": "components/CubeInput.jsx",
+    "CubeSelect": "components/CubeSelect.jsx",
+    "CubeBadge": "components/CubeBadge.jsx",
+    "CubeBanner": "components/CubeBanner.jsx",
+    "CubeDrawer": "components/CubeDrawer.jsx",
+    "CubeSegmented": "components/CubeSegmented.jsx",
+    "CubeToggle": "components/CubeToggle.jsx",
+    "CubeTable": "components/CubeTable.jsx",
+    "CubeSourceCard": "components/CubeSourceCard.jsx"
+  },
+  "overrides": {
+    "CubeButton": {"cardMode": "column"},
+    "CubeDrawer": {"cardMode": "single", "primaryStory": "DrawerShell"}
+  },
+  "readmeHeader": ".design-sync/conventions.md"
+}
