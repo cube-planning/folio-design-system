@@ -1,23 +1,23 @@
-import { CubeDrawer, CubeButton, CubeInput } from 'folio-design-system';
+import { Drawer, Button, Input } from 'folio-design-system';
 
 export function DrawerShell() {
   return (
     <div style={{ position: "relative", width: 480, height: 420, overflow: "hidden", transform: "translateZ(0)", background: "#f9fafb", borderRadius: 12 }}>
-      <CubeDrawer
+      <Drawer
         open={true}
         title="Add Scenario"
         subtitle="Configure your forecast scenario"
         style={{ position: "absolute" }}
         footer={
           <>
-            <CubeButton type="secondary">Cancel</CubeButton>
-            <CubeButton type="primary">Save Scenario</CubeButton>
+            <Button type="secondary">Cancel</Button>
+            <Button type="primary">Save Scenario</Button>
           </>
         }
       >
-        <CubeInput label="Scenario Name" placeholder="e.g. Q3 Upside" state="default" />
-        <CubeInput label="Description" placeholder="Optional description" state="default" />
-      </CubeDrawer>
+        <Input label="Scenario Name" placeholder="e.g. Q3 Upside" state="default" />
+        <Input label="Description" placeholder="Optional description" state="default" />
+      </Drawer>
     </div>
   );
 }
@@ -55,8 +55,8 @@ export function DrawerHeader() {
         Drawer body content…
       </div>
       <div style={{ padding: 16, borderTop: "1px solid #E4E7EC", display: "flex", gap: 8, justifyContent: "flex-end" }}>
-        <CubeButton type="secondary" size="large">Cancel</CubeButton>
-        <CubeButton type="primary" size="large">Apply</CubeButton>
+        <Button type="secondary" size="large">Cancel</Button>
+        <Button type="primary" size="large">Apply</Button>
       </div>
     </div>
   );

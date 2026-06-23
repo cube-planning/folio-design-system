@@ -8,21 +8,21 @@
   "tokensGlob": "typography.css",
   "runtimeFontPrefixes": ["DM Sans", "JetBrains Mono"],
   "componentSrcMap": {
-    "CubeText": "components/CubeText.jsx",
-    "CubeButton": "components/CubeButton.jsx",
-    "CubeInput": "components/CubeInput.jsx",
-    "CubeSelect": "components/CubeSelect.jsx",
-    "CubeBadge": "components/CubeBadge.jsx",
-    "CubeBanner": "components/CubeBanner.jsx",
-    "CubeDrawer": "components/CubeDrawer.jsx",
-    "CubeSegmented": "components/CubeSegmented.jsx",
-    "CubeToggle": "components/CubeToggle.jsx",
-    "CubeTable": "components/CubeTable.jsx",
-    "CubeSourceCard": "components/CubeSourceCard.jsx"
+    "Text":       "components/Text.jsx",
+    "Button":     "components/Button.jsx",
+    "Input":      "components/Input.jsx",
+    "Select":     "components/Select.jsx",
+    "Badge":      "components/Badge.jsx",
+    "Banner":     "components/Banner.jsx",
+    "Drawer":     "components/Drawer.jsx",
+    "Segmented":  "components/Segmented.jsx",
+    "Toggle":     "components/Toggle.jsx",
+    "Table":      "components/Table.jsx",
+    "SourceCard": "components/SourceCard.jsx"
   },
   "overrides": {
-    "CubeButton": {"cardMode": "column"},
-    "CubeDrawer": {"cardMode": "single", "primaryStory": "DrawerShell"}
+    "Button":  {"cardMode": "column"},
+    "Drawer":  {"cardMode": "single", "primaryStory": "DrawerShell"}
   },
   "readmeHeader": ".design-sync/conventions.md"
 }

@@ -1,4 +1,4 @@
-import { CubeSegmented } from 'folio-design-system';
+import { Segmented } from 'folio-design-system';
 
 const PERIOD_OPTIONS = [
   { value: "monthly", label: "Monthly" },
@@ -14,7 +14,7 @@ const VIEW_OPTIONS = [
 export function PeriodSelector() {
   return (
     <div style={{ padding: 8 }}>
-      <CubeSegmented options={PERIOD_OPTIONS} value="monthly" />
+      <Segmented options={PERIOD_OPTIONS} value="monthly" />
     </div>
   );
 }
@@ -22,7 +22,7 @@ export function PeriodSelector() {
 export function ViewToggle() {
   return (
     <div style={{ padding: 8 }}>
-      <CubeSegmented options={VIEW_OPTIONS} value="chart" />
+      <Segmented options={VIEW_OPTIONS} value="chart" />
     </div>
   );
 }
@@ -30,8 +30,8 @@ export function ViewToggle() {
 export function Sizes() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: 8 }}>
-      <CubeSegmented options={PERIOD_OPTIONS} value="quarterly" size="large" />
-      <CubeSegmented options={PERIOD_OPTIONS} value="quarterly" size="small" />
+      <Segmented options={PERIOD_OPTIONS} value="quarterly" size="large" />
+      <Segmented options={PERIOD_OPTIONS} value="quarterly" size="small" />
     </div>
   );
 }

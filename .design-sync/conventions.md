@@ -5,8 +5,8 @@
 Components require no wrapper context. Mount directly:
 
 ```jsx
-const { CubeButton } = window.FolioDS;
-ReactDOM.createRoot(root).render(<CubeButton type="primary">Save</CubeButton>);
+const { Button } = window.FolioDS;
+ReactDOM.createRoot(root).render(<Button type="primary">Save</Button>);
 ```
 
 ## Styling idiom: inline styles, no CSS classes
@@ -25,11 +25,11 @@ Token names (from `styles.css` / `_ds_bundle.css`):
 
 ## Fonts
 
-DM Sans is shipped with this project (provisioned by the design-system's self-check into `fonts/`). Designs built with this DS will render DM Sans without any additional setup. JetBrains Mono is used only for `CubeText mono={true}` and `CubeInput` char-count; it falls back to a system monospace if not available.
+DM Sans is shipped with this project (provisioned by the design-system's self-check into `fonts/`). Designs built with this DS will render DM Sans without any additional setup. JetBrains Mono is used only for `Text mono={true}` and `Input` char-count; it falls back to a system monospace if not available.
 
 ## Font Awesome icons
 
-Several components render Font Awesome icons (`CubeSelect` chevron, `CubeBanner` alert icon, `CubeDrawer` close, `CubeTable` sort, `CubeSourceCard` chevron, `CubeInput` error icon). Without FA loaded, icons show as empty boxes — the component is still fully functional, but icon slots will be blank.
+Several components render Font Awesome icons (`Select` chevron, `Banner` alert icon, `Drawer` close, `Table` sort, `SourceCard` chevron, `Input` error icon). Without FA loaded, icons show as empty boxes — the component is still fully functional, but icon slots will be blank.
 
 Load in `<head>` if icon rendering matters:
 ```html
@@ -40,26 +40,26 @@ Load in `<head>` if icon rendering matters:
 
 - Per-component API and usage: `components/general/<Name>/<Name>.prompt.md`
 - Token definitions: `styles.css` + `_ds_bundle.css`
-- CubeButton variant names: `"primary" | "secondary" | "destructive" | "destructive-secondary" | "destructive-subtle" | "subtle-blue" | "ghost-blue" | "ghost-gray" | "ghost-destructive"`
-- CubeText variant names: `"display-1" | "display-2" | "display-3" | "display-4" | "title-1" | "title-2" | "title-3" | "body" | "caption-1" | "caption-2"`
+- Button variant names: `"primary" | "secondary" | "destructive" | "destructive-secondary" | "destructive-subtle" | "subtle-blue" | "ghost-blue" | "ghost-gray" | "ghost-destructive"`
+- Text variant names: `"display-1" | "display-2" | "display-3" | "display-4" | "title-1" | "title-2" | "title-3" | "body" | "caption-1" | "caption-2"`
 
 ## Idiomatic build example
 
 ```jsx
-const { CubeButton, CubeInput, CubeBanner, CubeBadge } = window.FolioDS;
+const { Button, Input, Banner, Badge } = window.FolioDS;
 
 function ScenarioForm() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16, maxWidth: 400, padding: 24 }}>
-      <CubeBanner variant="info">Fill in the details below to create a new forecast scenario.</CubeBanner>
-      <CubeInput label="Scenario name" placeholder="e.g. Q3 Upside" state="default" />
+      <Banner variant="info">Fill in the details below to create a new forecast scenario.</Banner>
+      <Input label="Scenario name" placeholder="e.g. Q3 Upside" state="default" />
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
         <span style={{ fontFamily: "var(--font-base)", fontSize: 14, color: "#101828" }}>Status</span>
-        <CubeBadge variant="lifecycle">Draft</CubeBadge>
+        <Badge variant="lifecycle">Draft</Badge>
       </div>
       <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
-        <CubeButton type="secondary">Cancel</CubeButton>
-        <CubeButton type="primary">Create Scenario</CubeButton>
+        <Button type="secondary">Cancel</Button>
+        <Button type="primary">Create Scenario</Button>
       </div>
     </div>
   );

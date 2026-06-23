@@ -1,12 +1,12 @@
-import { CubeInput } from 'folio-design-system';
+import { Input } from 'folio-design-system';
 
 export function States() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16, padding: 8, maxWidth: 320 }}>
-      <CubeInput label="Default" placeholder="Enter text" state="default" />
-      <CubeInput label="Focused" placeholder="Enter text" state="focused" />
-      <CubeInput label="Populated" value="Accrual basis" state="populated-inactive" />
-      <CubeInput label="Disabled" placeholder="Disabled" disabled />
+      <Input label="Default" placeholder="Enter text" state="default" />
+      <Input label="Focused" placeholder="Enter text" state="focused" />
+      <Input label="Populated" value="Accrual basis" state="populated-inactive" />
+      <Input label="Disabled" placeholder="Disabled" disabled />
     </div>
   );
 }
@@ -14,7 +14,7 @@ export function States() {
 export function ErrorState() {
   return (
     <div style={{ padding: 8, maxWidth: 320 }}>
-      <CubeInput
+      <Input
         label="Date"
         value="13/45/2024"
         state="error"
@@ -27,7 +27,7 @@ export function ErrorState() {
 export function WithCharCount() {
   return (
     <div style={{ padding: 8, maxWidth: 320 }}>
-      <CubeInput
+      <Input
         label="Description"
         placeholder="Describe the scenario..."
         value="Q3 pipeline review"
@@ -42,8 +42,8 @@ export function WithCharCount() {
 export function Sizes() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: 8, maxWidth: 320 }}>
-      <CubeInput size="large" label="Large (32px)" placeholder="Text" />
-      <CubeInput size="small" label="Small (28px)" placeholder="Text" />
+      <Input size="large" label="Large (32px)" placeholder="Text" />
+      <Input size="small" label="Small (28px)" placeholder="Text" />
     </div>
   );
 }

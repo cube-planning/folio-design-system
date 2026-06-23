@@ -1,4 +1,4 @@
-import { CubeTable, CubeBadge } from 'folio-design-system';
+import { Table, Badge } from 'folio-design-system';
 
 const COLUMNS = [
   { key: "name", label: "Scenario" },
@@ -22,14 +22,14 @@ const COLUMNS_WITH_BADGE = [
     key: "status",
     label: "Status",
     sortable: false,
-    render: (val: string) => <CubeBadge variant="lifecycle">{val}</CubeBadge>,
+    render: (val: string) => <Badge variant="lifecycle">{val}</Badge>,
   },
 ];
 
 export function DefaultTable() {
   return (
     <div style={{ padding: 8 }}>
-      <CubeTable columns={COLUMNS} rows={ROWS} />
+      <Table columns={COLUMNS} rows={ROWS} />
     </div>
   );
 }
@@ -37,7 +37,7 @@ export function DefaultTable() {
 export function WithBadges() {
   return (
     <div style={{ padding: 8 }}>
-      <CubeTable columns={COLUMNS_WITH_BADGE} rows={ROWS} />
+      <Table columns={COLUMNS_WITH_BADGE} rows={ROWS} />
     </div>
   );
 }
@@ -45,7 +45,7 @@ export function WithBadges() {
 export function Compact() {
   return (
     <div style={{ padding: 8, maxWidth: 400 }}>
-      <CubeTable
+      <Table
         columns={[{ key: "name", label: "Name" }, { key: "value", label: "Value", align: "right" as const }]}
         rows={[
           { id: 1, name: "Total Revenue", value: "$8.4M" },
