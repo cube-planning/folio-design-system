@@ -1,56 +1,54 @@
 import { Table, Badge } from 'folio-design-system';
 
-const COLUMNS = [
-  { key: "name", label: "Scenario" },
-  { key: "period", label: "Period" },
-  { key: "revenue", label: "Revenue", align: "right" as const },
-  { key: "status", label: "Status", sortable: false },
+const WORKFLOW_COLUMNS = [
+  { key: "name",   label: "Name",   sortable: true },
+  { key: "owner",  label: "Owner",  sortable: true },
+  { key: "tasks",  label: "Tasks",  sortable: true },
+  { key: "status", label: "Status", sortable: true },
 ];
 
-const ROWS = [
-  { id: 1, name: "Base Case", period: "Q3 2024", revenue: "$2.4M", status: "Draft" },
-  { id: 2, name: "Upside", period: "Q3 2024", revenue: "$3.1M", status: "In Review" },
-  { id: 3, name: "Conservative", period: "Q3 2024", revenue: "$1.8M", status: "Approved" },
-  { id: 4, name: "Board Scenario", period: "Q4 2024", revenue: "$4.2M", status: "Draft" },
-];
-
-const COLUMNS_WITH_BADGE = [
-  { key: "name", label: "Scenario" },
-  { key: "period", label: "Period" },
-  { key: "revenue", label: "Revenue", align: "right" as const },
+const WORKFLOW_COLUMNS_WITH_BADGE = [
+  { key: "name",  label: "Name",  sortable: true },
+  { key: "owner", label: "Owner", sortable: true },
+  { key: "tasks", label: "Tasks", sortable: true },
   {
     key: "status",
     label: "Status",
-    sortable: false,
-    render: (val: string) => <Badge variant="lifecycle">{val}</Badge>,
+    sortable: true,
+    render: (val: string) => (
+      <Badge variant={val === "In Progress" ? "lifecycle" : "active"}>{val}</Badge>
+    ),
   },
 ];
 
+const WORKFLOW_ROWS = [
+  { id: 1, name: "FY 2026 Planning",                owner: "Bob Smith",     tasks: "0/3", status: "Not Started" },
+  { id: 2, name: "Quarter Forecasting Q2 2025",     owner: "Alex Chen",     tasks: "6/6", status: "In Progress" },
+  { id: 3, name: "Scenario Planning",               owner: "Alice Johnson", tasks: "2/7", status: "In Progress" },
+  { id: 4, name: "Resource Allocation Strategies",  owner: "Michael Brown", tasks: "4/5", status: "Not Started" },
+  { id: 5, name: "Risk Assessment and Mitigation",  owner: "Emily Davis",   tasks: "0/3", status: "Not Started" },
+];
+
 export function DefaultTable() {
-  return (
-    <div style={{ padding: 8 }}>
-      <Table columns={COLUMNS} rows={ROWS} />
-    </div>
-  );
+  return <Table columns={WORKFLOW_COLUMNS} rows={WORKFLOW_ROWS} />;
 }
 
 export function WithBadges() {
-  return (
-    <div style={{ padding: 8 }}>
-      <Table columns={COLUMNS_WITH_BADGE} rows={ROWS} />
-    </div>
-  );
+  return <Table columns={WORKFLOW_COLUMNS_WITH_BADGE} rows={WORKFLOW_ROWS} />;
 }
 
 export function Compact() {
   return (
-    <div style={{ padding: 8, maxWidth: 400 }}>
+    <div style={{ maxWidth: 400 }}>
       <Table
-        columns={[{ key: "name", label: "Name" }, { key: "value", label: "Value", align: "right" as const }]}
+        columns={[
+          { key: "name",  label: "Name" },
+          { key: "value", label: "Value", align: "right" as const },
+        ]}
         rows={[
-          { id: 1, name: "Total Revenue", value: "$8.4M" },
-          { id: 2, name: "COGS", value: "$3.2M" },
-          { id: 3, name: "Gross Margin", value: "61.9%" },
+          { id: 1, name: "Total Revenue",      value: "$8.4M" },
+          { id: 2, name: "COGS",               value: "$3.2M" },
+          { id: 3, name: "Gross Margin",       value: "61.9%" },
           { id: 4, name: "Operating Expenses", value: "$2.1M" },
         ]}
       />
