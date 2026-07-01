@@ -19,7 +19,7 @@
 
     /* Sidebar */
     .sb { width: 240px; min-width: 240px; padding: 8px; display: flex; flex-direction: column; height: 100vh; transition: width 0.2s ease, min-width 0.2s ease; overflow: hidden; }
-    .sb.col { width: 52px; min-width: 52px; }
+    .sb.col { width: 64px; min-width: 64px; }
     .sb-card { background: #fff; border-radius: 8px; box-shadow: 0px 4px 8px rgba(0,0,0,0.08), 0px 1px 2px rgba(0,0,0,0.06); flex: 1; display: flex; flex-direction: column; overflow: hidden; }
     .sb-hdr { height: 48px; padding: 16px 12px 0 16px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; white-space: nowrap; }
     .sb.col .sb-hdr { flex-direction: column; height: auto; justify-content: center; align-items: center; gap: 8px; padding: 12px 0 8px; }
@@ -196,11 +196,11 @@
     .pg-card-title { font-size: 16px; font-weight: 600; color: #222B3A; }
 
     /* Data health table */
-    .dh-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    .dh-table thead th { padding: 8px 12px; text-align: left; font-size: 11px; font-weight: 500; color: #677489; background: #F2F5F9; border-bottom: 1px solid #E3E8EF; }
-    .dh-table tbody td { padding: 12px; border-bottom: 1px solid #E3E8EF; color: #4A5567; vertical-align: middle; }
+    .dh-table { width: 100%; border-collapse: separate; border-spacing: 0; font-family: 'DM Sans', sans-serif; }
+    .dh-table thead tr { background: var(--color-gray-100); }
+    .dh-table thead th { padding: 0 8px; height: 40px; text-align: left; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; color: var(--color-gray-800); text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 1px solid var(--border-table-header); white-space: nowrap; }
+    .dh-table tbody td { padding: 0 8px; height: 48px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--color-gray-800); background: var(--color-white); border-bottom: 1px solid var(--border-table-stroke); vertical-align: middle; }
     .dh-table tbody tr:last-child td { border-bottom: none; }
-    .dh-table tbody tr:hover td { background: #F2F5F9; }
     .source-logo { width: 24px; height: 24px; border-radius: 50%; background: #E3E8EF; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: #4A5567; }
     .dh-link { color: #2667D8; font-size: 12px; text-decoration: none; }
     .dh-link:hover { text-decoration: underline; }
@@ -227,8 +227,10 @@
     }
     .ai-card-tag { font-size: 11px; font-weight: 500; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.5px; }
     .ai-card-text { font-size: 14px; line-height: 1.6; opacity: 0.9; }
-    .ai-card-btn { align-self: flex-end; padding: 8px 16px; background: rgba(255,255,255,0.2); border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); font-size: 13px; font-weight: 500; color: #fff; cursor: pointer; transition: background 150ms; }
+    .ai-card-btn { align-self: flex-end; padding: 0 16px; height: 32px; background: rgba(255,255,255,0.2); border-radius: 9999px; border: 1px solid rgba(255,255,255,0.3); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: #fff; cursor: pointer; display: inline-flex; align-items: center; transition: background 100ms; }
     .ai-card-btn:hover { background: rgba(255,255,255,0.3); }
+    .btn-icon-ghost { width: 32px; height: 32px; border: none; border-radius: 9999px; background: transparent; color: #344054; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 16px; transition: background 100ms; }
+    .btn-icon-ghost:hover { background: #E4E7EC; }
 
     /* Suggested prompts */
     .pg-prompts { padding: 0 24px 24px; }
@@ -276,17 +278,21 @@
         <div class="nav-section">
           <div class="sec"><svg class="sec-crt" width="8" height="5" viewBox="0 0 10 6" fill="none"><path d="M4.29 5.71C4.68 6.1 5.32 6.1 5.71 5.71L9.71 1.71C10 1.42 10.08.99 9.92.62 9.77.24 9.4 0 9 0H1C.6 0 .23.25.08.62c-.16.38-.07.81.21 1.1L4.29 5.71z" fill="#677489"/></svg><span class="sec-lbl">Reporting &amp; Analytics</span></div>
           <div class="ni" data-label="Cube BI"><div class="ni-ic" data-icon="cubeBI"></div><span class="ni-lbl">Cube BI</span></div>
-          <div class="ni" data-label="Reports"><div class="ni-ic" data-icon="reports"></div><span class="ni-lbl">Reports</span></div>
           <div class="ni" data-label="Boards"><div class="ni-ic" data-icon="boards"></div><span class="ni-lbl">Boards</span></div>
           <div class="ni" data-label="Smart Variance"><div class="ni-ic" data-icon="smartVariance"></div><span class="ni-lbl">Smart Variance</span></div>
-          <div class="ni" data-label="AI Analyst"><div class="ni-ic" data-icon="aiAnalyst"></div><span class="ni-lbl">AI Analyst</span></div>
+          <div class="ni" data-label="Cube AI"><div class="ni-ic" data-icon="aiAnalyst"></div><span class="ni-lbl">Cube AI</span></div>
+          <div class="ni" data-label="Library"><div class="ni-ic" data-icon="library"></div><span class="ni-lbl">Library</span></div>
+          <div class="ni-sub-wrap">
+            <a class="ni-sub" data-label="Reports"><span>Reports</span></a>
+            <a class="ni-sub" data-label="Files"><span>Files</span></a>
+          </div>
         </div>
         <div class="dv"></div>
         <div class="nav-section">
           <div class="sec"><svg class="sec-crt" width="8" height="5" viewBox="0 0 10 6" fill="none"><path d="M4.29 5.71C4.68 6.1 5.32 6.1 5.71 5.71L9.71 1.71C10 1.42 10.08.99 9.92.62 9.77.24 9.4 0 9 0H1C.6 0 .23.25.08.62c-.16.38-.07.81.21 1.1L4.29 5.71z" fill="#677489"/></svg><span class="sec-lbl">Planning</span></div>
+          <div class="ni" data-label="Planners"><div class="ni-ic" data-icon="planners"></div><span class="ni-lbl">Planners</span></div>
           <div class="ni" data-label="Scenarios"><div class="ni-ic" data-icon="scenarios"></div><span class="ni-lbl">Scenarios</span></div>
           <div class="ni" data-label="Workflows"><div class="ni-ic" data-icon="workflows"></div><span class="ni-lbl">Workflows</span></div>
-          <div class="ni" data-label="Library"><div class="ni-ic" data-icon="library"></div><span class="ni-lbl">Library</span></div>
         </div>
         <div class="dv"></div>
         <div class="nav-section">
@@ -404,35 +410,35 @@
                 <td>Sage Intacct</td>
                 <td><a href="#" class="dh-link">2 hours ago</a></td>
                 <td><span class="badge badge-success">Healthy</span></td>
-                <td><button style="border:none;background:none;cursor:pointer;color:#677489">···</button></td>
+                <td><button class="btn-icon-ghost">···</button></td>
               </tr>
               <tr>
                 <td><div class="source-logo">QB</div></td>
                 <td>QuickBooks Online</td>
                 <td><a href="#" class="dh-link">5 hours ago</a></td>
                 <td><span class="badge badge-success">Healthy</span></td>
-                <td><button style="border:none;background:none;cursor:pointer;color:#677489">···</button></td>
+                <td><button class="btn-icon-ghost">···</button></td>
               </tr>
               <tr>
                 <td><div class="source-logo">XR</div></td>
                 <td>Xero</td>
                 <td><a href="#" class="dh-link">Yesterday</a></td>
                 <td><span class="badge badge-warning">Needs review</span></td>
-                <td><button style="border:none;background:none;cursor:pointer;color:#677489">···</button></td>
+                <td><button class="btn-icon-ghost">···</button></td>
               </tr>
               <tr>
                 <td><div class="source-logo">SF</div></td>
                 <td>Salesforce</td>
                 <td><a href="#" class="dh-link">2 days ago</a></td>
                 <td><span class="badge badge-error">Failed</span></td>
-                <td><button style="border:none;background:none;cursor:pointer;color:#677489">···</button></td>
+                <td><button class="btn-icon-ghost">···</button></td>
               </tr>
               <tr>
                 <td><div class="source-logo">BM</div></td>
                 <td>Bamboo HR</td>
                 <td><a href="#" class="dh-link">3 days ago</a></td>
                 <td><span class="badge badge-success">Healthy</span></td>
-                <td><button style="border:none;background:none;cursor:pointer;color:#677489">···</button></td>
+                <td><button class="btn-icon-ghost">···</button></td>
               </tr>
             </tbody>
           </table>

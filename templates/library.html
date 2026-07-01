@@ -43,8 +43,8 @@
     }
 
     .sb.col {
-      width: 52px;
-      min-width: 52px;
+      width: 64px;
+      min-width: 64px;
     }
 
     .sb-card {
@@ -464,31 +464,33 @@
     .page-header-actions { display: flex; align-items: center; gap: 8px; }
 
     .btn {
-      height: 36px;
+      height: 32px;
       padding: 0 16px;
-      border-radius: 6px;
+      border-radius: 9999px;
       border: none;
       font-family: 'DM Sans', sans-serif;
       font-size: 14px;
       font-weight: 500;
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
+      white-space: nowrap;
+      transition: background 100ms;
     }
 
     .btn-outline {
-      background: #FFFFFF;
-      border: 1px solid #E3E8EF;
-      color: #222B3A;
+      background: transparent;
+      border: 1.5px solid #173D82;
+      color: #173D82;
     }
-    .btn-outline:hover { background: #F8FAFC; }
+    .btn-outline:hover { background: #E6EBF4; }
 
     .btn-primary {
-      background: #2667D8;
+      background: #173D82;
       color: #FFFFFF;
     }
-    .btn-primary:hover { background: #1E52B8; }
+    .btn-primary:hover { background: #122E64; }
 
     /* Toolbar */
     .lib-toolbar {
@@ -579,31 +581,39 @@
       margin-bottom: 12px;
     }
 
+    .lib-table-wrap {
+      border: 1px solid var(--color-border-strong);
+      border-radius: 8px;
+      padding: 8px;
+      overflow: hidden;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--color-white);
+    }
+
     .lib-table {
       width: 100%;
-      border-collapse: collapse;
-      background: #FFFFFF;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0px 1px 3px rgba(0,0,0,0.06);
+      border-collapse: separate;
+      border-spacing: 0;
     }
 
-    .lib-table thead tr {
-      border-bottom: 1px solid #E3E8EF;
-    }
+    .lib-table thead tr { background: var(--color-gray-100); }
 
     .lib-table th {
-      padding: 0 16px;
+      padding: 0 8px;
       height: 40px;
       text-align: left;
+      font-family: 'DM Sans', sans-serif;
       font-size: 12px;
       font-weight: 600;
-      color: #4A5567;
-      background: #F8FAFC;
+      color: var(--color-gray-800);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
       white-space: nowrap;
+      user-select: none;
+      border-bottom: 1px solid var(--border-table-header);
     }
 
-    .th-check { width: 40px; padding: 0 8px 0 16px; }
+    .th-check { width: 40px; padding: 0 8px; }
 
     .th-sort {
       display: inline-flex;
@@ -611,19 +621,21 @@
       gap: 4px;
       cursor: pointer;
     }
-    .th-sort:hover { color: #222B3A; }
+    .th-sort:hover { color: var(--color-gray-900); }
 
     .lib-table td {
-      padding: 0 16px;
+      padding: 0 8px;
       height: 48px;
+      font-family: 'DM Sans', sans-serif;
       font-size: 14px;
-      color: #222B3A;
-      border-bottom: 1px solid #F2F5F9;
+      font-weight: 400;
+      color: var(--color-gray-800);
+      background: var(--color-white);
+      border-bottom: 1px solid var(--border-table-stroke);
       vertical-align: middle;
     }
 
     .lib-table tbody tr:last-child td { border-bottom: none; }
-    .lib-table tbody tr:hover td { background: #F8FAFC; }
 
     /* Checkbox cell */
     .td-check { width: 40px; padding: 0 8px 0 16px; }
@@ -760,6 +772,11 @@
           <div class="ni" data-label="Boards"><div class="ni-ic" data-icon="boards"></div><span class="ni-lbl">Boards</span></div>
           <div class="ni" data-label="Smart Variance"><div class="ni-ic" data-icon="smartVariance"></div><span class="ni-lbl">Smart Variance</span></div>
           <div class="ni" data-label="Cube AI"><div class="ni-ic" data-icon="aiAnalyst"></div><span class="ni-lbl">Cube AI</span></div>
+          <div class="ni active" data-label="Library"><div class="ni-ic" data-icon="library"></div><span class="ni-lbl">Library</span></div>
+          <div class="ni-sub-wrap">
+            <a class="ni-sub active" data-label="Reports"><span>Reports</span></a>
+            <a class="ni-sub" data-label="Files"><span>Files</span></a>
+          </div>
         </div>
 
         <div class="dv"></div>
@@ -770,13 +787,9 @@
             <svg class="sec-crt" width="8" height="5" viewBox="0 0 10 6" fill="none"><path d="M4.29 5.71C4.68 6.1 5.32 6.1 5.71 5.71L9.71 1.71C10 1.42 10.08.99 9.92.62 9.77.24 9.4 0 9 0H1C.6 0 .23.25.08.62c-.16.38-.07.81.21 1.1L4.29 5.71z" fill="#677489"/></svg>
             <span class="sec-lbl">Planning</span>
           </div>
+          <div class="ni" data-label="Planners"><div class="ni-ic" data-icon="planners"></div><span class="ni-lbl">Planners</span></div>
           <div class="ni" data-label="Scenarios"><div class="ni-ic" data-icon="scenarios"></div><span class="ni-lbl">Scenarios</span></div>
           <div class="ni" data-label="Workflows"><div class="ni-ic" data-icon="workflows"></div><span class="ni-lbl">Workflows</span></div>
-          <div class="ni active" data-label="Library"><div class="ni-ic" data-icon="library"></div><span class="ni-lbl">Library</span></div>
-          <div class="ni-sub-wrap">
-            <a class="ni-sub active" data-label="Reports"><span>Reports</span></a>
-            <a class="ni-sub" data-label="Files"><span>Files</span></a>
-          </div>
         </div>
 
         <div class="dv"></div>
@@ -945,6 +958,7 @@
       <div class="lib-count">Assets (14)</div>
 
       <!-- Table -->
+      <div class="lib-table-wrap">
       <table class="lib-table">
         <thead>
           <tr>
@@ -1130,6 +1144,7 @@
 
         </tbody>
       </table>
+      </div>
 
       <!-- Pagination -->
       <div class="pagination">

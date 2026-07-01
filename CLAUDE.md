@@ -51,16 +51,15 @@ Confirm you have loaded the Folio design system context.
 ```
 src/
 ├── components/
-│   ├── ui/                    # shadcn primitives (button, input, dialog, etc.)
-│   ├── cube/                  # Cube-specific compound components
-│   │   ├── CubeDrawer.tsx     # Side drawer shell
-│   │   ├── CubeTable.tsx      # Data table with sort headers
-│   │   ├── CubeSourceCard.tsx # Collapsible lifecycle source card
-│   │   ├── CubeBadge.tsx      # Lifecycle, Active, Status badges
-│   │   ├── CubeBanner.tsx     # Warning, Error, Info banners
-│   │   ├── CubeSegmented.tsx  # Segmented control (toggle group)
-│   │   ├── CubeTimePicker.tsx # Hierarchical time tree picker
-│   │   └── CubeToggle.tsx     # Small toggle switch
+│   ├── ui/                # shadcn primitives (button, input, dialog, etc.)
+│   ├── cube/              # Folio Design System components (no Cube prefix)
+│   │   ├── Drawer.tsx     # Side drawer shell
+│   │   ├── Table.tsx      # Data table with sort headers
+│   │   ├── SourceCard.tsx # Collapsible lifecycle source card
+│   │   ├── Badge.tsx      # Lifecycle, Active, Status badges
+│   │   ├── Banner.tsx     # Warning, Error, Info banners
+│   │   ├── Segmented.tsx  # Segmented control (toggle group)
+│   │   └── Toggle.tsx     # Small toggle switch
 │   └── layout/
 │       ├── Sidebar.tsx
 │       └── TopHeader.tsx
@@ -74,7 +73,7 @@ src/
 
 ### Component Naming
 - **shadcn primitives:** Lowercase kebab-case files (`button.tsx`, `dialog.tsx`) — default shadcn convention
-- **Cube components:** PascalCase with `Cube` prefix (`CubeDrawer.tsx`, `CubeSourceCard.tsx`)
+- **Folio components:** PascalCase, no prefix (`Drawer.tsx`, `SourceCard.tsx`, `Button.tsx`)
 - **Layout:** PascalCase, no prefix (`Sidebar.tsx`, `TopHeader.tsx`)
 - **Pages:** PascalCase, singular noun (`Scenarios.tsx`, `Dimensions.tsx`)
 
@@ -118,12 +117,30 @@ The full color palette lives in `cube-colors.md`. Below is a quick-reference for
 
 ### Font Loading
 
-Load DM Sans via Google Fonts in `index.html`:
+Load both typefaces via Google Fonts in `index.html`:
 ```html
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
 ```
 
-> **Note:** DM Sans is the sole typeface across all token roles — display, titles, body, captions, labels, inputs, and table content. Do not use Lato or Montserrat.
+> **Note:** Folio uses two typefaces. DM Sans is the primary typeface for all UI text. JetBrains Mono is the data/decoration typeface — used only for numeric and code-adjacent content. Do not use Lato or Montserrat.
+
+---
+
+### JetBrains Mono — Data & Decoration Font
+
+Reserved exclusively for data-adjacent and numeric contexts. One weight only.
+
+| Size | Token | Use for |
+|---|---|---|
+| 14px | `body` | Inline numeric values, chart data labels |
+| 12px | `caption-1` | Timestamps, percentages, metadata values |
+| 10px | `caption-2` | Micro labels, axis ticks, dense data tables |
+
+**Weight:** Regular (400) only — no medium, semibold, or bold variants.
+
+**Use JetBrains Mono for:** timestamps, percentages, numeric values, chart labels, axis ticks, data table numbers.
+
+**Do not use JetBrains Mono for:** @mentions, #tags, links, names, body copy, headings, labels, or any non-numeric inline references. Use DM Sans + color/chip differentiation for those instead.
 
 ---
 
@@ -234,17 +251,16 @@ Error:  border-cube-red-500
 
 | Variant | Classes |
 |---|---|
-| Primary | `h-8 px-4 py-2 rounded-full bg-cube-cobalt-500 text-white font-semibold text-sm` |
-| Secondary | `h-8 px-4 py-2 rounded-full border border-cube-cobalt-500 text-cube-cobalt-500 font-semibold text-sm` |
-| Ghost | `h-8 px-4 py-2 rounded-full font-semibold text-sm text-cube-gray-900` |
-| Add Source | `h-8 w-full rounded-full border border-cube-cobalt-500 text-cube-cobalt-500 font-semibold text-xs text-center` |
+| Primary | `h-8 px-4 py-2 rounded-full bg-cube-cobalt-500 text-white font-medium text-sm` |
+| Secondary | `h-8 px-4 py-2 rounded-full border border-cube-cobalt-500 text-cube-cobalt-500 font-medium text-sm` |
+| Ghost | `h-8 px-4 py-2 rounded-full font-medium text-sm text-cube-gray-900` |
+| Add Source | `h-8 w-full rounded-full border border-cube-cobalt-500 text-cube-cobalt-500 font-medium text-xs text-center` |
 
 #### Button Size Scale
-| Size | Height | Padding | Font Size |
-|---|---|---|---|
-| sm | 32px | `px-3 py-1.5` | 12px |
-| md (default) | 40px | `px-4 py-2` | 14px |
-| lg | 48px | `px-5 py-3` | 16px |
+| Size | Height | Padding | Font Size | Font Weight |
+|---|---|---|---|---|
+| large (default) | 32px | `px-4 py-2` | 14px (body) | medium (500) |
+| small | 28px | `px-3 py-1.5` | 12px (caption-1) | medium (500) |
 
 ### Side Drawer
 ```
@@ -366,7 +382,7 @@ Effect styles pushed to Figma — use these token names in code:
 - Use `rounded-lg` (8px) for inputs and selects
 - Use shadcn primitives as the base, then customize with Cube token classes
 - Use `cn()` for conditional/merged classes
-- Keep components in `components/cube/` with `Cube` prefix
+- Keep components in `components/cube/` — no prefix, PascalCase only
 - Match Figma measurements exactly: 32px input height, 48px row height, 400px drawer width
 - Use DM Sans for all UI text — it is the only typeface in Folio
 - Collapsible sections default to collapsed when data exists, expanded when empty
@@ -386,7 +402,7 @@ Effect styles pushed to Figma — use these token names in code:
 
 ### WHEN BUILDING NEW COMPONENTS
 1. Check if a shadcn primitive exists (Sheet, Dialog, Switch, Collapsible, etc.)
-2. Wrap it in a `Cube*` component with Cube token styling
+2. Wrap it in a PascalCase component (no prefix) with Folio token styling
 3. Export with clear prop types
 4. Follow the collapsible pattern for complex sections (expanded/collapsed with chevron)
 5. Keep drawer content scrollable with fixed header/footer

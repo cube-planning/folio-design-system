@@ -18,7 +18,22 @@
       "Bash(curl -s -o /tmp/psb_cubebi.png \"https://www.figma.com/api/mcp/asset/febb76c8-efe5-4c46-b50f-ffc83921311c\")",
       "Bash(curl -s -o /tmp/psb_boards.png \"https://www.figma.com/api/mcp/asset/3adfa46b-a384-4591-a1d9-45326472ea99\")",
       "mcp__Claude_Preview__preview_start",
-      "Bash(python3 -c ' *)"
+      "Bash(python3 -c ' *)",
+      "Bash(gh repo *)",
+      "Bash(git config *)",
+      "Read(//Users/nanosborne/**)",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' -X POST https://api.github.com/user/repos -H 'Authorization: token __CMDSUB_OUTPUT__' -H 'Content-Type: application/json' -d '{\"name\":\"folio\",\"private\":true,\"description\":\"Folio Design System\"}')",
+      "mcp__visualize__read_me",
+      "mcp__visualize__show_widget",
+      "Bash(sed -i '' \"s/font-family:'Fraunces',serif/font-family:'Helvetica Neue',Helvetica,Arial,sans-serif/g\" futurequest-mockup.html)",
+      "Bash(sed -i '' \"s/serif = Fraunces, body = DM Sans, labels = DM Mono/display = Helvetica Neue, body = DM Sans, labels = DM Mono/\" futurequest-mockup.html)",
+      "Bash(python3)",
+      "WebFetch(domain:claude.ai)",
+      "Bash(npm run *)",
+      "mcp__e3b9232a-cce4-4558-9af5-73f9834ad683__get_metadata",
+      "Bash(node build.mjs)",
+      "Bash(node build-ds-bundle.mjs)",
+      "Bash(curl -s -o /tmp/figma-nav.png \"https://www.figma.com/api/mcp/asset/2f682fae-6af4-47f8-8ad8-9a34b54046f7\")"
     ]
   }
 }

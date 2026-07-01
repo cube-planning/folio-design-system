@@ -597,7 +597,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /* ── SIDEBAR ── */
     .sb { width: 240px; min-width: 240px; padding: 8px; display: flex; flex-direction: column; height: 100vh; transition: width 0.2s ease, min-width 0.2s ease; overflow: hidden; }
-    .sb.col { width: 52px; min-width: 52px; }
+    .sb.col { width: 64px; min-width: 64px; }
     .sb-card { background: #fff; border-radius: 8px; box-shadow: 0px 4px 8px rgba(0,0,0,0.08), 0px 1px 2px rgba(0,0,0,0.06); flex: 1; display: flex; flex-direction: column; overflow: hidden; }
     .sb-hdr { height: 48px; padding: 16px 12px 0 16px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; white-space: nowrap; }
     .sb.col .sb-hdr { flex-direction: column; height: auto; justify-content: center; align-items: center; gap: 8px; padding: 12px 0 8px; }
@@ -675,12 +675,12 @@ document.addEventListener('DOMContentLoaded', function () {
     .pg-sub { font-size: 13px; color: #677489; }
     .pg-actions { display: flex; align-items: center; gap: 8px; }
 
-    .btn-outline { height: 32px; padding: 0 14px; background: #FFFFFF; border: 1px solid #CDD5E0; border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: #353F4F; cursor: pointer; display: flex; align-items: center; gap: 6px; }
-    .btn-outline:hover { background: #F8FAFC; }
-    .btn-primary { height: 32px; padding: 0 16px; background: #2667D8; border: none; border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; color: #FFFFFF; cursor: pointer; }
-    .btn-primary:hover { background: #1D50B0; }
-    .btn-ghost { height: 32px; padding: 0 12px; background: transparent; border: 1px solid #CDD5E0; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: #4A5567; cursor: pointer; display: flex; align-items: center; gap: 6px; }
-    .btn-ghost:hover { background: #F8FAFC; }
+    .btn-outline { height: 32px; padding: 0 16px; background: transparent; border: 1.5px solid #173D82; border-radius: 9999px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: #173D82; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; transition: background 100ms; }
+    .btn-outline:hover { background: #E6EBF4; }
+    .btn-primary { height: 32px; padding: 0 16px; background: #173D82; border: none; border-radius: 9999px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; transition: background 100ms; }
+    .btn-primary:hover { background: #122E64; }
+    .btn-ghost { height: 32px; padding: 0 16px; background: transparent; border: none; border-radius: 9999px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: #344054; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; transition: background 100ms; }
+    .btn-ghost:hover { background: #E4E7EC; }
 
     /* Tabs */
     .view-tabs { display: flex; border-bottom: 1px solid #E3E8EF; margin-bottom: 24px; gap: 0; }
@@ -757,21 +757,21 @@ document.addEventListener('DOMContentLoaded', function () {
     .filter-search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #9AA5B4; pointer-events: none; }
 
     /* Table */
-    .tbl-card { background: #FFFFFF; border: 1px solid #E3E8EF; border-radius: 8px; overflow: hidden; }
-    .usage-tbl { width: 100%; border-collapse: collapse; }
-    .usage-tbl th { padding: 10px 16px; text-align: left; font-size: 11px; font-weight: 700; color: #677489; text-transform: uppercase; letter-spacing: 0.06em; background: #F8FAFC; border-bottom: 1px solid #E3E8EF; white-space: nowrap; }
-    .usage-tbl td { padding: 13px 16px; font-size: 13px; border-bottom: 1px solid #E3E8EF; vertical-align: middle; background: #F2F5F9; }
-    .usage-tbl tr:last-child td { border-bottom: none; }
-    .usage-tbl tbody tr:hover td { background: #E3E8EF; }
-    .u-name { font-size: 13px; font-weight: 500; color: #222B3A; }
-    .u-role { color: #677489; font-size: 13px; }
-    .u-active { color: #677489; font-size: 13px; }
-    .ask-val   { color: #2357B8; font-size: 13px; font-variant-numeric: tabular-nums; }
-    .build-val { color: #4E80EE; font-size: 13px; font-variant-numeric: tabular-nums; }
-    .mcp-val   { color: #7A5AF8; font-size: 13px; font-variant-numeric: tabular-nums; }
-    .total-val { font-size: 13px; font-weight: 700; color: #222B3A; font-variant-numeric: tabular-nums; }
+    .tbl-card { border: 1px solid var(--color-border-strong); border-radius: 8px; padding: 8px; overflow: hidden; font-family: 'DM Sans', sans-serif; background: var(--color-white); }
+    .usage-tbl { width: 100%; border-collapse: separate; border-spacing: 0; }
+    .usage-tbl thead tr { background: var(--color-gray-100); }
+    .usage-tbl th { padding: 0 8px; height: 40px; text-align: left; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; color: var(--color-gray-800); text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 1px solid var(--border-table-header); white-space: nowrap; user-select: none; }
+    .usage-tbl td { padding: 0 8px; height: 48px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 400; color: var(--color-gray-800); background: var(--color-white); border-bottom: 1px solid var(--border-table-stroke); vertical-align: middle; }
+    .usage-tbl tbody tr:last-child td { border-bottom: none; }
+    .u-name { font-size: 14px; font-weight: 500; color: var(--color-gray-800); }
+    .u-role { color: var(--color-gray-600); font-size: 14px; }
+    .u-active { color: var(--color-gray-600); font-size: 14px; }
+    .ask-val   { color: #2357B8; font-size: 14px; font-variant-numeric: tabular-nums; }
+    .build-val { color: #4E80EE; font-size: 14px; font-variant-numeric: tabular-nums; }
+    .mcp-val   { color: #7A5AF8; font-size: 14px; font-variant-numeric: tabular-nums; }
+    .total-val { font-size: 14px; font-weight: 700; color: var(--color-gray-800); font-variant-numeric: tabular-nums; }
     .th-sort { display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
-    .th-sort:hover { color: #353F4F; }
+    .th-sort:hover { color: var(--color-gray-900); }
 
     /* Usage Limits tab */
     .limits-section { background: #FFFFFF; border: 1px solid #E3E8EF; border-radius: 8px; padding: 20px 24px; margin-bottom: 16px; }
@@ -807,15 +807,18 @@ document.addEventListener('DOMContentLoaded', function () {
           <div class="ni" data-label="Boards"><div class="ni-ic" data-icon="boards"></div><span class="ni-lbl">Boards</span></div>
           <div class="ni" data-label="Smart Variance"><div class="ni-ic" data-icon="smartVariance"></div><span class="ni-lbl">Smart Variance</span></div>
           <div class="ni" data-label="Cube AI"><div class="ni-ic" data-icon="aiAnalyst"></div><span class="ni-lbl">Cube AI</span></div>
+          <div class="ni" data-label="Library"><div class="ni-ic" data-icon="library"></div><span class="ni-lbl">Library</span></div>
+          <div class="ni-sub-wrap">
+            <a class="ni-sub" data-label="Reports"><span>Reports</span></a>
+            <a class="ni-sub" data-label="Files"><span>Files</span></a>
+          </div>
         </div>
         <div class="dv"></div>
         <div class="nav-section">
           <div class="sec"><svg class="sec-crt" width="8" height="5" viewBox="0 0 10 6" fill="none"><path d="M4.29 5.71C4.68 6.1 5.32 6.1 5.71 5.71L9.71 1.71C10 1.42 10.08.99 9.92.62 9.77.24 9.4 0 9 0H1C.6 0 .23.25.08.62c-.16.38-.07.81.21 1.1L4.29 5.71z" fill="#677489"/></svg><span class="sec-lbl">Planning</span></div>
+          <div class="ni" data-label="Planners"><div class="ni-ic" data-icon="planners"></div><span class="ni-lbl">Planners</span></div>
           <div class="ni" data-label="Scenarios"><div class="ni-ic" data-icon="scenarios"></div><span class="ni-lbl">Scenarios</span></div>
           <div class="ni" data-label="Workflows"><div class="ni-ic" data-icon="workflows"></div><span class="ni-lbl">Workflows</span></div>
-          <div class="ni" data-label="Library"><div class="ni-ic" data-icon="library"></div><span class="ni-lbl">Library</span></div>
-          <div class="ni" style="padding-left:32px" data-label="Reports"><div class="ni-ic" data-icon="reports"></div><span class="ni-lbl">Reports</span></div>
-          <div class="ni" style="padding-left:32px" data-label="Files"><div class="ni-ic" data-icon="reports"></div><span class="ni-lbl">Files</span></div>
         </div>
         <div class="dv"></div>
         <div class="nav-section">

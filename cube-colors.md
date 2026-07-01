@@ -33,15 +33,15 @@ Use `600` for primary buttons, `700–800` for text and icons, `50–200` for ti
 
 ```css
 --cube-cobalt-25:  #F5F7FA;
---cube-cobalt-50:  #EEF2FF;
---cube-cobalt-100: #E0E7FF;
---cube-cobalt-200: #C7D2FE;
---cube-cobalt-300: #A5B4FC;
---cube-cobalt-400: #818CF8;
---cube-cobalt-500: #4A73CD;
---cube-cobalt-600: #3462C8;
---cube-cobalt-700: #1746AE;
---cube-cobalt-800: #163D83;
+--cube-cobalt-50:  #E6EBF4;
+--cube-cobalt-100: #C6D3EC;
+--cube-cobalt-200: #8EA8E1;
+--cube-cobalt-300: #4B7CD8;
+--cube-cobalt-400: #2357B8;
+--cube-cobalt-500: #173D82;
+--cube-cobalt-600: #122E64;
+--cube-cobalt-700: #0E2349;
+--cube-cobalt-800: #0B1932;
 --cube-cobalt-900: #081121;
 ```
 
@@ -166,8 +166,8 @@ Use `700–800` for warning text and icons, `50–100` for warning banner backgr
 Used for AI surfaces and UI Refresh contexts only. Not part of the standard semantic ramp system.
 
 ```css
---cube-gradient-ai:   linear-gradient(135deg, #6366F1 0%, #4A63B8 50%, #4163B8 100%);
---cube-gradient-blue: linear-gradient(135deg, #2667D8 0%, #5024A7 50%, #4163B8 100%);
+--cube-gradient-ai:   linear-gradient(135deg, #7A5AF8 10%, #9B8AFB 50%, #5925DC 100%);
+--cube-gradient-blue: linear-gradient(135deg, #2A4DD0 10%, #2667D8 50%, #163D83 100%);
 ```
 
 ---

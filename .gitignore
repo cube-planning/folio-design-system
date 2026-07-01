@@ -9,3 +9,9 @@ ds-bundle/
 .design-sync/.cache/
 .design-sync/learnings/
 .design-sync/node_modules
+.npmrc
+
+Cube Design System.zip
+Cube Design System/
+designing-data-intensive-applications-book_excerpt.pdf
+templates/Nan Design Prompt Process.pdf

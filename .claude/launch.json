@@ -6,6 +6,12 @@
       "runtimeExecutable": "npx",
       "runtimeArgs": ["serve", "-l", "3456", "."],
       "port": 3456
+    },
+    {
+      "name": "webflow",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "-l", "3457", "/Users/nanosborne/nanosborne.webflow"],
+      "port": 3457
     }
   ]
 }
