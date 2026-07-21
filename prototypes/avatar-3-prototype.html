@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Avatar 3.0 — Folio DS Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="vendor/fontawesome/css/all.min.css" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'Nunito Sans', BlinkMacSystemFont, sans-serif; background: #F0F2F5; display: flex; justify-content: center; padding: 2rem; min-height: 100vh; }
+.wrap { width: 960px; }
+
+.header { padding: 1.5rem 0 1rem; }
+.header h1 { font-size: 22px; font-weight: 700; color: #0E2349; margin-bottom: 4px; }
+.header p { font-size: 13px; color: #677489; }
+
+.sb { background: white; border: 1px solid #E0E5EC; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(16,24,40,.06); }
+
+/* Toolbar */
+.sb-bar { background: white; border-bottom: 1px solid #E5E5E5; display: flex; align-items: center; gap: 4px; padding: 0 14px; height: 42px; }
+.sb-icon { width: 30px; height: 30px; border: none; background: none; cursor: pointer; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: #666; font-size: 14px; }
+.sb-icon:hover { background: #F3F3F3; }
+.sb-sep { width: 1px; height: 18px; background: #E5E5E5; margin: 0 4px; }
+.sb-logo { display: flex; align-items: center; gap: 8px; }
+.sb-logo-mark { display: flex; align-items: center; justify-content: center; }
+.sb-logo-mark svg { display: block; height: 22px; width: auto; }
+.sb-logo-text { font-size: 13px; font-weight: 700; color: #163D83; }
+.sb-bar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.sb-badge { font-size: 11px; font-weight: 600; color: #677489; background: #F1F4F8; padding: 2px 8px; border-radius: 99px; }
+
+/* Canvas */
+.sb-canvas { background: white; min-height: 160px; display: flex; align-items: center; justify-content: center; padding: 2.5rem; border-bottom: 1px solid #E5E5E5; background-image: radial-gradient(#DEE3EC 1px, transparent 1px); background-size: 20px 20px; }
+.sb-canvas.no-dots { background-image: none; }
+.sb-canvas.on-color { background-color: #173D82; background-image: none; }
+
+/* Code bar */
+.sb-codebar { background: white; display: flex; align-items: center; gap: 16px; padding: 8px 16px; border-bottom: 1px solid #E5E5E5; }
+.sb-cbtn { font-size: 12px; color: #888; border: none; background: none; cursor: pointer; display: flex; align-items: center; gap: 5px; padding: 4px 0; }
+.sb-cbtn:hover { color: #333; }
+.code-snippet { display: none; background: #F6F8FA; border: 1px solid #E5E5E5; border-radius: 6px; padding: 10px 14px; font-family: 'SFMono-Regular', monospace; font-size: 12px; color: #333; margin: 0 16px 12px; line-height: 1.6; white-space: pre-wrap; }
+.code-snippet.visible { display: block; }
+#copied-msg { font-size: 12px; color: #229E66; margin-left: auto; opacity: 0; transition: opacity 200ms; }
+#copied-msg.show { opacity: 1; }
+
+/* Tabs */
+.sb-tabs { background: white; display: flex; padding: 0 16px; border-bottom: 1px solid #E5E5E5; }
+.sb-tab { padding: 10px 14px; font-size: 12px; font-weight: 600; color: #999; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px; }
+.sb-tab.on { color: #163D83; border-bottom-color: #163D83; }
+
+/* Controls table */
+.ctl-head { display: grid; grid-template-columns: 160px 1fr 90px 1fr 32px; padding: 8px 16px; background: white; border-bottom: 1px solid #E5E5E5; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #aaa; }
+.ctl-row { display: grid; grid-template-columns: 160px 1fr 90px 1fr 32px; padding: 10px 16px; background: white; border-bottom: 1px solid #F2F2F2; align-items: center; min-height: 48px; }
+.ctl-row:hover { background: #FAFAFA; }
+.ctl-name { font-family: 'SFMono-Regular', 'Menlo', monospace; font-size: 12px; font-weight: 700; color: #333; }
+.ctl-desc { font-family: 'SFMono-Regular', monospace; font-size: 10px; color: #bbb; line-height: 1.5; padding-right: 12px; }
+.ctl-def { font-size: 11px; color: #ccc; }
+select.ctrl { width: 100%; border: 1px solid #E0E0E0; border-radius: 5px; padding: 5px 8px; font-size: 12px; background: white; color: #333; cursor: pointer; }
+select.ctrl:focus { outline: none; border-color: #A6BEEB; }
+input[type=text].ctrl { width: 100%; border: 1px solid #E0E0E0; border-radius: 5px; padding: 5px 8px; font-size: 12px; background: white; color: #333; }
+input[type=text].ctrl:focus { outline: none; border-color: #A6BEEB; }
+.bool-wrap { display: flex; }
+.bool-btn { flex: 1; padding: 4px 8px; font-size: 12px; border: 1px solid #E0E0E0; background: white; cursor: pointer; color: #777; }
+.bool-btn:first-child { border-radius: 5px 0 0 5px; border-right: none; }
+.bool-btn:last-child { border-radius: 0 5px 5px 0; }
+.bool-btn.on { background: #EBEBEB; font-weight: 700; color: #333; }
+.rst { width: 28px; height: 28px; border: none; background: none; cursor: pointer; color: #ccc; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+.rst:hover { background: #F0F0F0; color: #888; }
+
+/* State strip */
+.strip-divider { height: 1px; background: #EBEEF2; }
+.strip-wrap { padding: 20px; background: #FAFAFA; }
+.strip-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.strip-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #aaa; }
+.strip-variant { font-size: 11px; font-weight: 600; color: #677489; background: #EEF2FA; padding: 2px 8px; border-radius: 99px; }
+.strip-row { display: flex; gap: 20px; align-items: flex-end; flex-wrap: wrap; }
+.strip-cell { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.strip-name { font-size: 10px; color: #aaa; font-weight: 600; letter-spacing: .04em; text-align: center; text-transform: uppercase; }
+
+/* Overview grid */
+.overview-wrap { padding: 20px; background: #FAFAFA; }
+.overview-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #aaa; margin-bottom: 16px; }
+.overview-grid { display: flex; flex-wrap: wrap; gap: 16px; }
+.overview-cell { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
+.overview-cell:hover .overview-name { color: #163D83; }
+.overview-name { font-size: 10px; color: #aaa; font-weight: 600; letter-spacing: .03em; transition: color 100ms; text-align: center; }
+
+/* ── THE AVATAR ─────────────────────────────── */
+.favatar {
+  position: relative; display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 9999px; flex-shrink: 0; overflow: hidden;
+  font-family: 'DM Sans', sans-serif; line-height: 1;
+}
+.favatar svg { display: block; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <h1>Avatar 3.0 — Folio DS Prototype</h1>
+    <p>Initials (active user) · Placeholder (unassigned / deactivated) · System (Cube). Toggle border for colored backgrounds · Use controls to audit each type × size.</p>
+  </div>
+
+  <div class="sb">
+    <div class="sb-bar">
+      <div class="sb-logo">
+        <span class="sb-logo-mark">
+          <svg width="20" height="22" viewBox="0 0 29 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11.2464 5.30427L13.5369 4L13.5282 15.7556L11.229 17.0598L11.2464 5.30427Z" fill="#163D83"></path>
+            <path d="M24.6057 21.23L14.8688 15.747V4L24.6057 9.5603V21.23Z" fill="#163D83"></path>
+            <path d="M23.935 22.3624L14.2678 27.9999L4.68762 22.3109L14.1894 16.8622L23.935 22.3624Z" fill="#163D83"></path>
+            <path d="M7.6318 9.67221L9.93103 8.35936L9.9136 17.8153L7.61438 19.1195L7.6318 9.67221Z" fill="#163D83"></path>
+            <path d="M4.01742 14.4599L6.31665 13.1471L6.29923 19.8744L4 21.1786L4.01742 14.4599Z" fill="#163D83"></path>
+          </svg>
+        </span>
+        <span class="sb-logo-text">Folio</span>
+      </div>
+      <div class="sb-sep"></div>
+      <button class="sb-icon" onclick="toggleDots()" title="Toggle dots background"><i class="fa-solid fa-table-cells"></i></button>
+      <button class="sb-icon" onclick="toggleCanvasColor()" title="Toggle colored background"><i class="fa-solid fa-fill-drip"></i></button>
+      <button class="sb-icon" title="Zoom in"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+      <button class="sb-icon" title="Zoom out"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+      <div class="sb-bar-right">
+        <span class="sb-badge">Avatar · Figma naming · 3.0</span>
+      </div>
+    </div>
+
+    <div class="sb-canvas" id="canvas">
+      <span id="preview"></span>
+    </div>
+
+    <div class="sb-codebar">
+      <button class="sb-cbtn" onclick="toggleCode()"><i class="fa-solid fa-code" style="font-size:13px"></i> Show code</button>
+      <button class="sb-cbtn" onclick="copyCode()"><i class="fa-regular fa-copy" style="font-size:13px"></i> Copy code</button>
+      <span id="copied-msg">Copied!</span>
+    </div>
+    <div class="code-snippet" id="code-block"></div>
+
+    <div class="sb-tabs">
+      <div class="sb-tab on">Controls</div>
+      <div class="sb-tab">Actions</div>
+      <div class="sb-tab">Accessibility</div>
+    </div>
+
+    <div class="ctl-head">
+      <span>Name</span><span>Description</span><span>Default</span><span>Control</span><span></span>
+    </div>
+
+    <!-- type -->
+    <div class="ctl-row">
+      <span class="ctl-name">type</span>
+      <span class="ctl-desc">initials (active user) | placeholder (unassigned / deactivated) | system (Cube)</span>
+      <span class="ctl-def">initials</span>
+      <select class="ctrl" id="ctl-type" onchange="render()">
+        <option value="initials">initials</option>
+        <option value="placeholder">placeholder</option>
+        <option value="system">system</option>
+      </select>
+      <button class="rst" onclick="resetSel('ctl-type','initials')" title="Reset">↺</button>
+    </div>
+
+    <!-- size -->
+    <div class="ctl-row">
+      <span class="ctl-name">size</span>
+      <span class="ctl-desc">xs 24 | sm 32 | md 40 | lg 48 | xl 56 | 2xl 64</span>
+      <span class="ctl-def">lg</span>
+      <select class="ctrl" id="ctl-size" onchange="render()">
+        <option value="xs">xs — 24</option>
+        <option value="sm">sm — 32</option>
+        <option value="md">md — 40</option>
+        <option value="lg" selected>lg — 48</option>
+        <option value="xl">xl — 56</option>
+        <option value="2xl">2xl — 64</option>
+      </select>
+      <button class="rst" onclick="resetSel('ctl-size','lg')" title="Reset">↺</button>
+    </div>
+
+    <!-- name -->
+    <div class="ctl-row">
+      <span class="ctl-name">name</span>
+      <span class="ctl-desc">string · derives initials + deterministic color</span>
+      <span class="ctl-def">—</span>
+      <input type="text" class="ctrl" id="ctl-name" value="Nan Graham" oninput="render()">
+      <button class="rst" onclick="document.getElementById('ctl-name').value='Nan Graham';render()" title="Reset">↺</button>
+    </div>
+
+    <!-- colorIndex -->
+    <div class="ctl-row">
+      <span class="ctl-name">colorIndex</span>
+      <span class="ctl-desc">0–7 pool override · Auto = hash(name)</span>
+      <span class="ctl-def">Auto</span>
+      <select class="ctrl" id="ctl-color" onchange="render()">
+        <option value="auto">Auto (hash)</option>
+        <option value="0">0 — Blue</option>
+        <option value="1">1 — Cobalt</option>
+        <option value="2">2 — Cyan</option>
+        <option value="3">3 — Teal</option>
+        <option value="4">4 — Emerald</option>
+        <option value="5">5 — Green</option>
+        <option value="6">6 — Indigo</option>
+        <option value="7">7 — Fuchsia</option>
+      </select>
+      <button class="rst" onclick="resetSel('ctl-color','auto')" title="Reset">↺</button>
+    </div>
+
+    <!-- border -->
+    <div class="ctl-row">
+      <span class="ctl-name">border</span>
+      <span class="ctl-desc">boolean · white ring for colored / image backgrounds</span>
+      <span class="ctl-def">false</span>
+      <div class="bool-wrap" id="border-wrap">
+        <button class="bool-btn on" onclick="setBool('border',false,this,'border-wrap')">False</button>
+        <button class="bool-btn" onclick="setBool('border',true,this,'border-wrap')">True</button>
+      </div>
+      <button class="rst" onclick="setBool('border',false,document.querySelector('#border-wrap .bool-btn'),'border-wrap')" title="Reset">↺</button>
+    </div>
+
+    <!-- Size strip -->
+    <div class="strip-divider"></div>
+    <div class="strip-wrap">
+      <div class="strip-header">
+        <span class="strip-label">All sizes</span>
+        <span class="strip-variant" id="strip-variant-lbl">initials</span>
+      </div>
+      <div class="strip-row" id="strip"></div>
+    </div>
+
+    <!-- Overview grid -->
+    <div class="strip-divider"></div>
+    <div class="overview-wrap">
+      <div class="overview-label">Initials color pool — click to select</div>
+      <div class="overview-grid" id="overview"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var S = { type: 'initials', size: 'lg', name: 'Nan Graham', color: 'auto', border: false };
+
+// UI Refresh color pool — 400 stop (cyan 500), white text.
+var POOL = ['#4E80EE','#2357B8','#22D3EE','#2DD4BF','#34D399','#70CF98','#818CF8','#E879F9'];
+var POOL_NAMES = ['Blue','Cobalt','Cyan','Teal','Emerald','Green','Indigo','Fuchsia'];
+
+var COBALT_50 = '#E6EBF4', COBALT_100 = '#C6D3EC', COBALT_500 = '#173D82', WHITE = '#FFFFFF';
+
+var SIZE = {
+  xs:    { px: 24, font: 10, icon: 12, border: 1 },
+  sm:    { px: 32, font: 14, icon: 16, border: 1 },
+  md:    { px: 40, font: 18, icon: 20, border: 1.5 },
+  lg:    { px: 48, font: 20, icon: 24, border: 1.5 },
+  xl:    { px: 56, font: 24, icon: 28, border: 1.5 },
+  '2xl': { px: 64, font: 30, icon: 32, border: 2 }
+};
+
+var CUBE_SVG = '<svg viewBox="0 0 29 32" fill="none" aria-hidden="true">'
+  + '<path d="M11.2464 5.30427L13.5369 4L13.5282 15.7556L11.229 17.0598L11.2464 5.30427Z" fill="currentColor"/>'
+  + '<path d="M24.6057 21.23L14.8688 15.747V4L24.6057 9.5603V21.23Z" fill="currentColor"/>'
+  + '<path d="M23.935 22.3624L14.2678 27.9999L4.68762 22.3109L14.1894 16.8622L23.935 22.3624Z" fill="currentColor"/>'
+  + '<path d="M7.6318 9.67221L9.93103 8.35936L9.9136 17.8153L7.61438 19.1195L7.6318 9.67221Z" fill="currentColor"/>'
+  + '<path d="M4.01742 14.4599L6.31665 13.1471L6.29923 19.8744L4 21.1786L4.01742 14.4599Z" fill="currentColor"/></svg>';
+
+var codeVisible = false;
+
+function hashIndex(str, mod) {
+  var h = 0;
+  for (var i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) >>> 0;
+  return h % mod;
+}
+
+function deriveInitials(name) {
+  if (!name) return '';
+  var parts = name.trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return '';
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function poolIndex(name, colorOpt) {
+  if (colorOpt !== 'auto' && colorOpt != null && colorOpt !== '') return parseInt(colorOpt, 10) % POOL.length;
+  return hashIndex(String(name || ''), POOL.length);
+}
+
+// Build one avatar span.
+function buildAvatar(type, size, opts) {
+  opts = opts || {};
+  var s = SIZE[size] || SIZE.lg;
+  var el = document.createElement('span');
+  el.className = 'favatar';
+  el.style.width = s.px + 'px';
+  el.style.height = s.px + 'px';
+  if (opts.border) el.style.boxShadow = 'inset 0 0 0 ' + s.border + 'px ' + WHITE;
+
+  if (type === 'placeholder') {
+    el.style.background = COBALT_50;
+    el.innerHTML = '<i class="fa-solid fa-user" aria-hidden="true" style="font-size:' + s.icon + 'px;color:' + COBALT_100 + ';line-height:1"></i>';
+  } else if (type === 'system') {
+    el.style.background = COBALT_500;
+    el.style.color = WHITE;
+    el.innerHTML = '<span style="width:' + s.icon + 'px;height:' + s.icon + 'px;display:inline-flex">' + CUBE_SVG + '</span>';
+  } else {
+    var idx = poolIndex(opts.name, opts.color);
+    el.style.background = POOL[idx];
+    el.style.color = WHITE;
+    el.innerHTML = '<span style="font-size:' + s.font + 'px;font-weight:600">' + (deriveInitials(opts.name) || '?') + '</span>';
+  }
+  return el;
+}
+
+function render() {
+  S.type  = document.getElementById('ctl-type').value;
+  S.size  = document.getElementById('ctl-size').value;
+  S.name  = document.getElementById('ctl-name').value;
+  S.color = document.getElementById('ctl-color').value;
+
+  var preview = document.getElementById('preview');
+  preview.innerHTML = '';
+  preview.appendChild(buildAvatar(S.type, S.size, S));
+
+  document.getElementById('strip-variant-lbl').textContent = S.type;
+  updateCode();
+  renderStrip();
+  renderOverview();
+}
+
+function renderStrip() {
+  var strip = document.getElementById('strip');
+  strip.innerHTML = '';
+  ['xs','sm','md','lg','xl','2xl'].forEach(function(sz) {
+    var cell = document.createElement('div');
+    cell.className = 'strip-cell';
+    cell.appendChild(buildAvatar(S.type, sz, S));
+    var nm = document.createElement('span');
+    nm.className = 'strip-name';
+    nm.textContent = sz;
+    cell.appendChild(nm);
+    strip.appendChild(cell);
+  });
+}
+
+function renderOverview() {
+  var grid = document.getElementById('overview');
+  grid.innerHTML = '';
+  POOL.forEach(function(_, i) {
+    var cell = document.createElement('div');
+    cell.className = 'overview-cell';
+    cell.title = POOL_NAMES[i];
+    cell.appendChild(buildAvatar('initials', 'md', { name: S.name, color: String(i), border: S.border }));
+    var nm = document.createElement('span');
+    nm.className = 'overview-name';
+    nm.textContent = i + ' · ' + POOL_NAMES[i];
+    cell.appendChild(nm);
+    cell.addEventListener('click', function() {
+      document.getElementById('ctl-type').value = 'initials';
+      document.getElementById('ctl-color').value = String(i);
+      render();
+    });
+    grid.appendChild(cell);
+  });
+}
+
+function setBool(key, val, btn, wrapId) {
+  S[key] = val;
+  document.querySelectorAll('#' + wrapId + ' .bool-btn').forEach(function(b){ b.classList.remove('on'); });
+  btn.classList.add('on');
+  render();
+}
+
+function resetSel(id, val) {
+  document.getElementById(id).value = val;
+  render();
+}
+
+function toggleDots() {
+  var c = document.getElementById('canvas');
+  c.classList.remove('on-color');
+  c.classList.toggle('no-dots');
+}
+
+function toggleCanvasColor() {
+  document.getElementById('canvas').classList.toggle('on-color');
+}
+
+function updateCode() {
+  var attrs = '\n  type="' + S.type + '"\n  size="' + S.size + '"';
+  if (S.type === 'initials') {
+    attrs += '\n  name="' + (S.name || '') + '"';
+    if (S.color !== 'auto') attrs += '\n  colorIndex={' + S.color + '}';
+  }
+  if (S.border) attrs += '\n  border';
+  document.getElementById('code-block').textContent = '<Avatar' + attrs + '\n/>';
+}
+
+function toggleCode() {
+  codeVisible = !codeVisible;
+  document.getElementById('code-block').classList.toggle('visible', codeVisible);
+}
+
+function copyCode() {
+  updateCode();
+  var code = document.getElementById('code-block').textContent;
+  navigator.clipboard && navigator.clipboard.writeText(code);
+  var msg = document.getElementById('copied-msg');
+  msg.classList.add('show');
+  if (!codeVisible) { document.getElementById('code-block').classList.add('visible'); codeVisible = true; }
+  setTimeout(function(){ msg.classList.remove('show'); }, 2000);
+}
+
+render();
+</script>
+</body>
+</html>

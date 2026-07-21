@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Badge 3.0 — Folio DS Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="vendor/fontawesome/css/all.min.css" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'Nunito Sans', BlinkMacSystemFont, sans-serif; background: #F0F2F5; display: flex; justify-content: center; padding: 2rem; min-height: 100vh; }
+.wrap { width: 960px; }
+
+.header { padding: 1.5rem 0 1rem; }
+.header h1 { font-size: 22px; font-weight: 700; color: #0E2349; margin-bottom: 4px; }
+.header p { font-size: 13px; color: #677489; }
+
+.sb { background: white; border: 1px solid #E0E5EC; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(16,24,40,.06); }
+
+/* Toolbar */
+.sb-bar { background: white; border-bottom: 1px solid #E5E5E5; display: flex; align-items: center; gap: 4px; padding: 0 14px; height: 42px; }
+.sb-icon { width: 30px; height: 30px; border: none; background: none; cursor: pointer; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: #666; font-size: 14px; }
+.sb-icon:hover { background: #F3F3F3; }
+.sb-sep { width: 1px; height: 18px; background: #E5E5E5; margin: 0 4px; }
+.sb-logo { display: flex; align-items: center; gap: 8px; }
+.sb-logo-mark { display: flex; align-items: center; justify-content: center; }
+.sb-logo-mark svg { display: block; height: 22px; width: auto; }
+.sb-logo-text { font-size: 13px; font-weight: 700; color: #163D83; }
+.sb-bar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.sb-badge { font-size: 11px; font-weight: 600; color: #677489; background: #F1F4F8; padding: 2px 8px; border-radius: 99px; }
+
+/* Canvas */
+.sb-canvas { background: white; min-height: 140px; display: flex; align-items: center; justify-content: center; padding: 2.5rem; border-bottom: 1px solid #E5E5E5; background-image: radial-gradient(#DEE3EC 1px, transparent 1px); background-size: 20px 20px; }
+.sb-canvas.no-dots { background-image: none; }
+
+/* Code bar */
+.sb-codebar { background: white; display: flex; align-items: center; gap: 16px; padding: 8px 16px; border-bottom: 1px solid #E5E5E5; }
+.sb-cbtn { font-size: 12px; color: #888; border: none; background: none; cursor: pointer; display: flex; align-items: center; gap: 5px; padding: 4px 0; }
+.sb-cbtn:hover { color: #333; }
+.code-snippet { display: none; background: #F6F8FA; border: 1px solid #E5E5E5; border-radius: 6px; padding: 10px 14px; font-family: 'SFMono-Regular', monospace; font-size: 12px; color: #333; margin: 0 16px 12px; line-height: 1.6; white-space: pre-wrap; }
+.code-snippet.visible { display: block; }
+#copied-msg { font-size: 12px; color: #229E66; margin-left: auto; opacity: 0; transition: opacity 200ms; }
+#copied-msg.show { opacity: 1; }
+
+/* Tabs */
+.sb-tabs { background: white; display: flex; padding: 0 16px; border-bottom: 1px solid #E5E5E5; }
+.sb-tab { padding: 10px 14px; font-size: 12px; font-weight: 600; color: #999; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px; }
+.sb-tab.on { color: #FF4785; border-bottom-color: #FF4785; }
+
+/* Controls table */
+.ctl-head { display: grid; grid-template-columns: 160px 1fr 90px 1fr 32px; padding: 8px 16px; background: white; border-bottom: 1px solid #E5E5E5; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #aaa; }
+.ctl-row { display: grid; grid-template-columns: 160px 1fr 90px 1fr 32px; padding: 10px 16px; background: white; border-bottom: 1px solid #F2F2F2; align-items: center; min-height: 48px; }
+.ctl-row:hover { background: #FAFAFA; }
+.ctl-name { font-family: 'SFMono-Regular', 'Menlo', monospace; font-size: 12px; font-weight: 700; color: #333; }
+.ctl-desc { font-family: 'SFMono-Regular', monospace; font-size: 10px; color: #bbb; line-height: 1.5; padding-right: 12px; }
+.ctl-def { font-size: 11px; color: #ccc; }
+select.ctrl { width: 100%; border: 1px solid #E0E0E0; border-radius: 5px; padding: 5px 8px; font-size: 12px; background: white; color: #333; cursor: pointer; }
+select.ctrl:focus { outline: none; border-color: #A6BEEB; }
+input[type=text].ctrl { width: 100%; border: 1px solid #E0E0E0; border-radius: 5px; padding: 5px 8px; font-size: 12px; background: white; color: #333; }
+input[type=text].ctrl:focus { outline: none; border-color: #A6BEEB; }
+.bool-wrap { display: flex; }
+.bool-btn { flex: 1; padding: 4px 8px; font-size: 12px; border: 1px solid #E0E0E0; background: white; cursor: pointer; color: #777; }
+.bool-btn:first-child { border-radius: 5px 0 0 5px; border-right: none; }
+.bool-btn:last-child { border-radius: 0 5px 5px 0; }
+.bool-btn.on { background: #EBEBEB; font-weight: 700; color: #333; }
+.rst { width: 28px; height: 28px; border: none; background: none; cursor: pointer; color: #ccc; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+.rst:hover { background: #F0F0F0; color: #888; }
+
+/* State strip */
+.strip-divider { height: 1px; background: #EBEEF2; }
+.strip-wrap { padding: 20px; background: #FAFAFA; }
+.strip-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.strip-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #aaa; }
+.strip-variant { font-size: 11px; font-weight: 600; color: #677489; background: #EEF2FA; padding: 2px 8px; border-radius: 99px; }
+.strip-row { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+.strip-cell { display: flex; flex-direction: column; align-items: center; gap: 10px; min-width: 72px; }
+.strip-name { font-size: 10px; color: #aaa; font-weight: 600; letter-spacing: .04em; text-align: center; text-transform: uppercase; }
+
+/* Overview grid */
+.overview-wrap { padding: 20px; background: #FAFAFA; }
+.overview-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #aaa; margin-bottom: 16px; }
+.overview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 20px; }
+.overview-cell { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; cursor: pointer; }
+.overview-cell:hover .overview-name { color: #173D82; }
+.overview-name { font-size: 10px; color: #aaa; font-weight: 600; letter-spacing: .03em; transition: color 100ms; }
+
+/* ── THE BADGE ──────────────────────────────── */
+.fbadge {
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 9999px; font-family: 'DM Sans', sans-serif; font-weight: 500;
+  white-space: nowrap; box-sizing: border-box; border: 1px solid transparent;
+}
+.fbadge .fb-remove {
+  display: inline-flex; align-items: center; justify-content: center;
+  border: none; background: transparent; color: inherit; cursor: pointer;
+  padding: 0; margin: 0; line-height: 1;
+}
+.fbadge .fb-dot { border-radius: 9999px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <h1>Badge 3.0 — Folio DS Prototype</h1>
+    <p>Variants match Figma naming. Toggle icon · dot · removable · select · Use controls to audit each color × type × size.</p>
+  </div>
+
+  <div class="sb">
+    <div class="sb-bar">
+      <div class="sb-logo">
+        <span class="sb-logo-mark">
+          <svg width="20" height="22" viewBox="0 0 29 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11.2464 5.30427L13.5369 4L13.5282 15.7556L11.229 17.0598L11.2464 5.30427Z" fill="#163D83"></path>
+            <path d="M24.6057 21.23L14.8688 15.747V4L24.6057 9.5603V21.23Z" fill="#163D83"></path>
+            <path d="M23.935 22.3624L14.2678 27.9999L4.68762 22.3109L14.1894 16.8622L23.935 22.3624Z" fill="#163D83"></path>
+            <path d="M7.6318 9.67221L9.93103 8.35936L9.9136 17.8153L7.61438 19.1195L7.6318 9.67221Z" fill="#163D83"></path>
+            <path d="M4.01742 14.4599L6.31665 13.1471L6.29923 19.8744L4 21.1786L4.01742 14.4599Z" fill="#163D83"></path>
+          </svg>
+        </span>
+        <span class="sb-logo-text">Folio</span>
+      </div>
+      <div class="sb-sep"></div>
+      <button class="sb-icon" onclick="toggleDots()" title="Toggle dots background"><i class="fa-solid fa-table-cells"></i></button>
+      <button class="sb-icon" title="Zoom in"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+      <button class="sb-icon" title="Zoom out"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+      <div class="sb-bar-right">
+        <span class="sb-badge">Badge · Figma naming · 3.0</span>
+      </div>
+    </div>
+
+    <div class="sb-canvas" id="canvas">
+      <span id="preview"></span>
+    </div>
+
+    <div class="sb-codebar">
+      <button class="sb-cbtn" onclick="toggleCode()"><i class="fa-solid fa-code" style="font-size:13px"></i> Show code</button>
+      <button class="sb-cbtn" onclick="copyCode()"><i class="fa-regular fa-copy" style="font-size:13px"></i> Copy code</button>
+      <span id="copied-msg">Copied!</span>
+    </div>
+    <div class="code-snippet" id="code-block"></div>
+
+    <div class="sb-tabs">
+      <div class="sb-tab on">Controls</div>
+      <div class="sb-tab">Actions</div>
+      <div class="sb-tab">Accessibility</div>
+    </div>
+
+    <div class="ctl-head">
+      <span>Name</span><span>Description</span><span>Default</span><span>Control</span><span></span>
+    </div>
+
+    <!-- type -->
+    <div class="ctl-row">
+      <span class="ctl-name">type</span>
+      <span class="ctl-desc">Solid (tinted) | Dark (strong fill) | Outlined (neutral chip)</span>
+      <span class="ctl-def">solid</span>
+      <select class="ctrl" id="ctl-type" onchange="render()">
+        <option value="solid">Solid</option>
+        <option value="dark">Dark</option>
+        <option value="outlined">Outlined</option>
+      </select>
+      <button class="rst" onclick="resetSel('ctl-type','solid')" title="Reset">↺</button>
+    </div>
+
+    <!-- color -->
+    <div class="ctl-row">
+      <span class="ctl-name">color</span>
+      <span class="ctl-desc">success | warning | error | info | neutral | ai</span>
+      <span class="ctl-def">success</span>
+      <select class="ctrl" id="ctl-color" onchange="render()">
+        <option value="success">Success (green)</option>
+        <option value="warning">Warning (yellow)</option>
+        <option value="error">Error (red)</option>
+        <option value="info">Info (blue)</option>
+        <option value="neutral">Neutral (gray)</option>
+        <option value="ai">AI (purple)</option>
+      </select>
+      <button class="rst" onclick="resetSel('ctl-color','success')" title="Reset">↺</button>
+    </div>
+
+    <!-- size -->
+    <div class="ctl-row">
+      <span class="ctl-name">size</span>
+      <span class="ctl-desc">"lg" (32) | "md" (28) | "sm" (20)</span>
+      <span class="ctl-def">md</span>
+      <div class="bool-wrap" id="size-wrap">
+        <button class="bool-btn" onclick="setSize('lg',this)">lg</button>
+        <button class="bool-btn on" onclick="setSize('md',this)">md</button>
+        <button class="bool-btn" onclick="setSize('sm',this)">sm</button>
+      </div>
+      <button class="rst" onclick="setSize('md',document.querySelectorAll('#size-wrap .bool-btn')[1])" title="Reset">↺</button>
+    </div>
+
+    <!-- label -->
+    <div class="ctl-row">
+      <span class="ctl-name">label</span>
+      <span class="ctl-desc">string</span>
+      <span class="ctl-def">—</span>
+      <input type="text" class="ctrl" id="ctl-label" value="Success" oninput="render()">
+      <button class="rst" onclick="document.getElementById('ctl-label').value='Success';render()" title="Reset">↺</button>
+    </div>
+
+    <!-- icon -->
+    <div class="ctl-row">
+      <span class="ctl-name">icon</span>
+      <span class="ctl-desc">boolean · leading status icon</span>
+      <span class="ctl-def">false</span>
+      <div class="bool-wrap" id="icon-wrap">
+        <button class="bool-btn on" onclick="setBool('icon',false,this,'icon-wrap')">False</button>
+        <button class="bool-btn" onclick="setBool('icon',true,this,'icon-wrap')">True</button>
+      </div>
+      <button class="rst" onclick="setBool('icon',false,document.querySelector('#icon-wrap .bool-btn'),'icon-wrap')" title="Reset">↺</button>
+    </div>
+
+    <!-- dot -->
+    <div class="ctl-row">
+      <span class="ctl-name">dot</span>
+      <span class="ctl-desc">boolean · colored indicator dot</span>
+      <span class="ctl-def">false</span>
+      <div class="bool-wrap" id="dot-wrap">
+        <button class="bool-btn on" onclick="setBool('dot',false,this,'dot-wrap')">False</button>
+        <button class="bool-btn" onclick="setBool('dot',true,this,'dot-wrap')">True</button>
+      </div>
+      <button class="rst" onclick="setBool('dot',false,document.querySelector('#dot-wrap .bool-btn'),'dot-wrap')" title="Reset">↺</button>
+    </div>
+
+    <!-- removable -->
+    <div class="ctl-row">
+      <span class="ctl-name">removable</span>
+      <span class="ctl-desc">boolean · trailing × button</span>
+      <span class="ctl-def">false</span>
+      <div class="bool-wrap" id="rm-wrap">
+        <button class="bool-btn on" onclick="setBool('removable',false,this,'rm-wrap')">False</button>
+        <button class="bool-btn" onclick="setBool('removable',true,this,'rm-wrap')">True</button>
+      </div>
+      <button class="rst" onclick="setBool('removable',false,document.querySelector('#rm-wrap .bool-btn'),'rm-wrap')" title="Reset">↺</button>
+    </div>
+
+    <!-- selectable -->
+    <div class="ctl-row">
+      <span class="ctl-name">selectable</span>
+      <span class="ctl-desc">boolean · trailing chevron (filter chip)</span>
+      <span class="ctl-def">false</span>
+      <div class="bool-wrap" id="sel-wrap">
+        <button class="bool-btn on" onclick="setBool('selectable',false,this,'sel-wrap')">False</button>
+        <button class="bool-btn" onclick="setBool('selectable',true,this,'sel-wrap')">True</button>
+      </div>
+      <button class="rst" onclick="setBool('selectable',false,document.querySelector('#sel-wrap .bool-btn'),'sel-wrap')" title="Reset">↺</button>
+    </div>
+
+    <!-- Size strip -->
+    <div class="strip-divider"></div>
+    <div class="strip-wrap">
+      <div class="strip-header">
+        <span class="strip-label">All sizes</span>
+        <span class="strip-variant" id="strip-variant-lbl">Solid · Success</span>
+      </div>
+      <div class="strip-row" id="strip"></div>
+    </div>
+
+    <!-- Overview grid -->
+    <div class="strip-divider"></div>
+    <div class="overview-wrap">
+      <div class="overview-label">All colors — click to select</div>
+      <div class="overview-grid" id="overview"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var S = { type:'solid', color:'success', size:'md', label:'Success', icon:false, dot:false, removable:false, selectable:false };
+
+// color aliases → palette
+var ALIASES = { success:'green', warning:'yellow', error:'red', info:'blue', neutral:'gray', ai:'purple' };
+
+// per-color chrome — mirrors components/Badge.jsx
+var PALETTE = {
+  green:  { base:'#229E66', solidBg:'#ECFDF3', solidBorder:'#DCFAE6', solidFg:'#229E66', darkBg:'#229E66', darkFg:'#FFFFFF', icon:'fa-circle-check' },
+  yellow: { base:'#F79009', solidBg:'#FFFAEB', solidBorder:'#FEF0C7', solidFg:'#DC6803', darkBg:'#FEC84B', darkFg:'#222B3A', icon:'fa-triangle-exclamation' },
+  red:    { base:'#D92D20', solidBg:'#FEF3F2', solidBorder:'#FFE6E5', solidFg:'#D92D20', darkBg:'#D92D20', darkFg:'#FFFFFF', icon:'fa-circle-xmark' },
+  blue:   { base:'#2667D8', solidBg:'#EFF6FF', solidBorder:'#DBEAFE', solidFg:'#2667D8', darkBg:'#2667D8', darkFg:'#FFFFFF', icon:'fa-circle-info' },
+  purple: { base:'#7A5AF8', solidBg:'#F4F3FF', solidBorder:'#EBE9FE', solidFg:'#7A5AF8', darkBg:'#7A5AF8', darkFg:'#FFFFFF', icon:'fa-sparkles' },
+  gray:   { base:'#97A3B6', solidBg:'#F2F5F9', solidBorder:'#E3E8EF', solidFg:'#4A5567', darkBg:'#4A5567', darkFg:'#FFFFFF', icon:'fa-tag' }
+};
+
+var OUTLINED = { bg:'#FCFCFD', border:'#F2F5F9', fg:'#4A5567' };
+
+var SIZE = {
+  lg: { height:32, fontSize:14, lineHeight:20, icon:16, dot:8, padX:8, gap:4 },
+  md: { height:28, fontSize:12, lineHeight:18, icon:14, dot:6, padX:6, gap:4 },
+  sm: { height:20, fontSize:12, lineHeight:18, icon:12, dot:6, padX:6, gap:4 }
+};
+
+var COLORS = [
+  { key:'success', label:'Success' },
+  { key:'warning', label:'Warning' },
+  { key:'error',   label:'Error' },
+  { key:'info',    label:'Info' },
+  { key:'neutral', label:'Neutral' },
+  { key:'ai',      label:'AI' }
+];
+
+var TYPE_LABELS = { solid:'Solid', dark:'Dark', outlined:'Outlined' };
+var codeVisible = false;
+
+function resolveChrome(type, colorAlias) {
+  var p = PALETTE[colorAlias] || PALETTE.gray;
+  if (type === 'dark')     return { bg:p.darkBg, border:p.darkBg, fg:p.darkFg, dot:p.darkFg };
+  if (type === 'outlined') return { bg:OUTLINED.bg, border:OUTLINED.border, fg:OUTLINED.fg, dot:p.base };
+  return { bg:p.solidBg, border:p.solidBorder, fg:p.solidFg, dot:p.solidFg };
+}
+
+function buildBadge(type, color, size, label, opts) {
+  opts = opts || {};
+  var alias = ALIASES[color] || color;
+  var p = PALETTE[alias] || PALETTE.gray;
+  var s = SIZE[size] || SIZE.md;
+  var ch = resolveChrome(type, alias);
+
+  var el = document.createElement('span');
+  el.className = 'fbadge';
+  el.style.height = s.height + 'px';
+  el.style.paddingLeft = s.padX + 'px';
+  el.style.paddingRight = s.padX + 'px';
+  el.style.gap = s.gap + 'px';
+  el.style.background = ch.bg;
+  el.style.borderColor = ch.border;
+  el.style.color = ch.fg;
+  el.style.fontSize = s.fontSize + 'px';
+  el.style.lineHeight = s.lineHeight + 'px';
+
+  var html = '';
+  if (opts.dot) {
+    html += '<span class="fb-dot" style="width:' + s.dot + 'px;height:' + s.dot + 'px;background:' + ch.dot + '"></span>';
+  }
+  if (opts.icon) {
+    html += '<i class="fa-solid ' + p.icon + '" style="font-size:' + s.icon + 'px;line-height:1" aria-hidden="true"></i>';
+  }
+  html += '<span>' + label + '</span>';
+  if (opts.selectable) {
+    html += '<i class="fa-solid fa-chevron-down" style="font-size:' + s.icon + 'px;line-height:1" aria-hidden="true"></i>';
+  }
+  if (opts.removable) {
+    html += '<button type="button" class="fb-remove" aria-label="Remove" style="width:' + s.icon + 'px;height:' + s.icon + 'px;font-size:' + s.icon + 'px"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>';
+  }
+  el.innerHTML = html;
+  return el;
+}
+
+function render() {
+  S.type  = document.getElementById('ctl-type').value;
+  S.color = document.getElementById('ctl-color').value;
+  S.label = document.getElementById('ctl-label').value || 'Badge';
+
+  var preview = document.getElementById('preview');
+  preview.innerHTML = '';
+  preview.appendChild(buildBadge(S.type, S.color, S.size, S.label, S));
+
+  document.getElementById('strip-variant-lbl').textContent =
+    TYPE_LABELS[S.type] + ' · ' + (COLORS.find(function(c){ return c.key === S.color; }) || {}).label;
+
+  updateCode();
+  renderStrip();
+  renderOverview();
+}
+
+function renderStrip() {
+  var strip = document.getElementById('strip');
+  strip.innerHTML = '';
+  ['lg','md','sm'].forEach(function(sz) {
+    var cell = document.createElement('div');
+    cell.className = 'strip-cell';
+    cell.appendChild(buildBadge(S.type, S.color, sz, S.label, S));
+    var nm = document.createElement('span');
+    nm.className = 'strip-name';
+    nm.textContent = sz;
+    cell.appendChild(nm);
+    strip.appendChild(cell);
+  });
+}
+
+function renderOverview() {
+  var grid = document.getElementById('overview');
+  grid.innerHTML = '';
+  COLORS.forEach(function(cd) {
+    var cell = document.createElement('div');
+    cell.className = 'overview-cell';
+    cell.title = 'Switch to ' + cd.label;
+    cell.appendChild(buildBadge(S.type, cd.key, 'md', cd.label, { icon:S.icon, dot:S.dot }));
+    var nm = document.createElement('span');
+    nm.className = 'overview-name';
+    nm.textContent = cd.label;
+    cell.appendChild(nm);
+    cell.addEventListener('click', function() {
+      document.getElementById('ctl-color').value = cd.key;
+      document.getElementById('ctl-label').value = cd.label;
+      render();
+    });
+    grid.appendChild(cell);
+  });
+}
+
+function setSize(sz, btn) {
+  S.size = sz;
+  document.querySelectorAll('#size-wrap .bool-btn').forEach(function(b){ b.classList.remove('on'); });
+  btn.classList.add('on');
+  render();
+}
+
+function setBool(key, val, btn, wrapId) {
+  S[key] = val;
+  document.querySelectorAll('#' + wrapId + ' .bool-btn').forEach(function(b){ b.classList.remove('on'); });
+  btn.classList.add('on');
+  render();
+}
+
+function resetSel(id, val) {
+  document.getElementById(id).value = val;
+  render();
+}
+
+function toggleDots() {
+  document.getElementById('canvas').classList.toggle('no-dots');
+}
+
+function updateCode() {
+  var attrs = '';
+  attrs += '\n  type="' + S.type + '"';
+  attrs += '\n  color="' + S.color + '"';
+  attrs += '\n  size="' + S.size + '"';
+  if (S.icon)       attrs += '\n  icon={<i className="fa-solid fa-circle-check" />}';
+  if (S.dot)        attrs += '\n  dot';
+  if (S.selectable) attrs += '\n  selectable';
+  if (S.removable)  attrs += '\n  removable onRemove={() => {}}';
+  var code = '<Badge' + attrs + '\n>\n  ' + (S.label || 'Badge') + '\n</Badge>';
+  document.getElementById('code-block').textContent = code;
+}
+
+function toggleCode() {
+  codeVisible = !codeVisible;
+  document.getElementById('code-block').classList.toggle('visible', codeVisible);
+}
+
+function copyCode() {
+  updateCode();
+  var code = document.getElementById('code-block').textContent;
+  navigator.clipboard && navigator.clipboard.writeText(code);
+  var msg = document.getElementById('copied-msg');
+  msg.classList.add('show');
+  if (!codeVisible) { document.getElementById('code-block').classList.add('visible'); codeVisible = true; }
+  setTimeout(function(){ msg.classList.remove('show'); }, 2000);
+}
+
+render();
+</script>
+</body>
+</html>

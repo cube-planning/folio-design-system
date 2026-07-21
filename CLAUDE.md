@@ -12,11 +12,11 @@ Always read these files at the start of every session before doing anything:
 ```
 Read the following before doing anything:
 - CLAUDE.md
-- tokens.css
-- cube-colors.md
-- typography.css
-- cube-personas.md
-- shell.html
+- tokens/tokens.css
+- tokens/cube-colors.md
+- tokens/typography.css
+- docs/cube-personas.md
+- templates/shell.html
 
 Confirm you have loaded the Folio design system context.
 ```
@@ -26,12 +26,12 @@ Confirm you have loaded the Folio design system context.
 | File | Purpose |
 |---|---|
 | `CLAUDE.md` | Design system rules — this file |
-| `tokens.css` | Spacing, radius, shadows, focus rings, z-index, semantic color aliases |
-| `cube-colors.md` | Full color palette with all ramps and Tailwind registration |
-| `typography.css` | Type scale tokens and utility classes |
-| `cube-personas.md` | User personas — Max, Ava, Tobias, Chris |
-| `shell.html` | Base app layout — sidebar, nav, shell structure |
-| `DESIGN-PLAYBOOK.md` | How to structure prompts and run design sessions |
+| `tokens/tokens.css` | Spacing, radius, shadows, focus rings, z-index, semantic color aliases |
+| `tokens/cube-colors.md` | Full color palette with all ramps and Tailwind registration |
+| `tokens/typography.css` | Type scale tokens and utility classes |
+| `docs/cube-personas.md` | User personas — Max, Ava, Tobias, Chris |
+| `templates/shell.html` | Base app layout — sidebar, nav, shell structure |
+| `docs/DESIGN-PLAYBOOK.md` | How to structure prompts and run design sessions |
 
 ---
 
@@ -88,10 +88,10 @@ src/
 
 ### Colors
 
-The full color palette lives in `cube-colors.md`. Below is a quick-reference for the tokens used most in components.
+The full color palette lives in `tokens/cube-colors.md`. Below is a quick-reference for the tokens used most in components.
 
 #### Primary Color
-**Cobalt 500** (`#4A73CD`) is the primary interactive color — replaces the old Blue 500. Use `cube-cobalt-*` for all primary actions, focus states, and active indicators. Use `cube-blue-*` for links and navigation only.
+**Cobalt** is the primary brand color — it replaces the old Blue 500. `cube-cobalt-500` (`#173D82`) is the base hue / core brand stop, and `cube-cobalt-600` (`#122E64`) is the interactive stop used for buttons, focus states, and active indicators. Use `cube-cobalt-*` for all primary actions; use `cube-blue-*` for links and navigation only.
 
 #### Color Rule
 
@@ -243,7 +243,7 @@ font-['DM_Sans'] text-sm text-cube-gray-900
 placeholder → text-cube-gray-500
 
 Hover:  border-cube-gray-600
-Focus:  border-cube-cobalt-500 + box-shadow focus-ring-default
+Focus:  border-cube-cobalt-600 + box-shadow focus-ring-default
 Error:  border-cube-red-500
 ```
 
@@ -251,10 +251,10 @@ Error:  border-cube-red-500
 
 | Variant | Classes |
 |---|---|
-| Primary | `h-8 px-4 py-2 rounded-full bg-cube-cobalt-500 text-white font-medium text-sm` |
-| Secondary | `h-8 px-4 py-2 rounded-full border border-cube-cobalt-500 text-cube-cobalt-500 font-medium text-sm` |
+| Primary | `h-8 px-4 py-2 rounded-full bg-cube-cobalt-600 text-white font-medium text-sm` |
+| Secondary | `h-8 px-4 py-2 rounded-full border border-cube-cobalt-600 text-cube-cobalt-600 font-medium text-sm` |
 | Ghost | `h-8 px-4 py-2 rounded-full font-medium text-sm text-cube-gray-900` |
-| Add Source | `h-8 w-full rounded-full border border-cube-cobalt-500 text-cube-cobalt-500 font-medium text-xs text-center` |
+| Add Source | `h-8 w-full rounded-full border border-cube-cobalt-600 text-cube-cobalt-600 font-medium text-xs text-center` |
 
 #### Button Size Scale
 | Size | Height | Padding | Font Size | Font Weight |
@@ -265,7 +265,7 @@ Error:  border-cube-red-500
 ### Side Drawer
 ```
 Container: w-[400px] h-full bg-white rounded-2xl p-4 shadow-lg
-Header:    pb-4 border-b-2 border-cube-cobalt-500 flex justify-between items-start
+Header:    pb-4 border-b-2 border-cube-cobalt-600 flex justify-between items-start
 Footer:    pt-4 mt-4 flex gap-2 justify-end
 ```
 **shadcn:** Use `<Sheet side="right">` with custom width and header styling.
@@ -282,14 +282,14 @@ Header:    font-semibold text-sm text-cube-cobalt-700
 ```
 Container: flex gap-1 bg-cube-gray-200 rounded-full
 Inactive:  flex-1 h-8 rounded-full font-semibold text-sm text-cube-gray-900 bg-cube-gray-200 border border-transparent
-Active:    flex-1 h-8 rounded-full font-semibold text-sm text-cube-cobalt-500 bg-cube-cobalt-100 border border-cube-cobalt-500
+Active:    flex-1 h-8 rounded-full font-semibold text-sm text-cube-cobalt-600 bg-cube-cobalt-100 border border-cube-cobalt-600
 ```
 **shadcn:** Use `<ToggleGroup type="single">` with custom item styling.
 
 ### Toggle
 ```
 w-7 h-3.5 rounded-full
-On:  bg-cube-cobalt-500
+On:  bg-cube-cobalt-600
 Off: bg-cube-gray-400
 Knob: w-2.5 h-2.5 bg-white rounded-full
 ```
@@ -376,7 +376,7 @@ Effect styles pushed to Figma — use these token names in code:
 ## 8. Rules for Claude
 
 ### DO
-- Always use Tailwind utility classes with Cube tokens (`bg-cube-cobalt-500`, not `bg-[#2667D8]`)
+- Always use Tailwind utility classes with Cube tokens (`bg-cube-cobalt-600`, not `bg-[#2667D8]`)
 - Use Cobalt as the primary color — not Blue
 - Use pill/`rounded-full` for all buttons, badges, chips, and toggles
 - Use `rounded-lg` (8px) for inputs and selects
@@ -387,14 +387,14 @@ Effect styles pushed to Figma — use these token names in code:
 - Use DM Sans for all UI text — it is the only typeface in Folio
 - Collapsible sections default to collapsed when data exists, expanded when empty
 - Reference `cube-personas.md` when a feature targets a specific user — use persona context to inform UX decisions
-- Use `shell.html` as the base layout for all new screens — only add content inside `<main>`
+- Use `templates/shell.html` as the base layout for all new screens — only add content inside `<main>`
 
 ### DO NOT
 - Never use `rounded-[4px]` for buttons — use `rounded-full`
 - Never use inline `style={{}}` attributes
 - Never use arbitrary hex values — always use token classes
 - Never use Lato or Montserrat — DM Sans only
-- Never reference Blue 500 as primary — Cobalt 500 is primary
+- Never reference Blue 500 as primary — Cobalt is primary (base hue `cobalt-500`, interactive `cobalt-600`)
 - Never use red borders for errors — use soft `bg-cube-red-100` banners
 - Never put lifecycle rules in the create-new-scenario drawer
 - Never use `<form>` tags in components (use event handlers directly)

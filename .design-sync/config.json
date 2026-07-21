@@ -4,25 +4,23 @@
   "projectId": "778e58da-f7d5-4747-9cca-1d86fbe38777",
   "shape": "package",
   "buildCmd": "node build.mjs",
-  "cssEntry": "tokens.css",
-  "tokensGlob": "typography.css",
+  "cssEntry": "tokens/tokens.css",
+  "tokensGlob": "tokens/typography.css",
   "runtimeFontPrefixes": ["DM Sans", "JetBrains Mono"],
   "componentSrcMap": {
-    "Text":       "components/Text.jsx",
-    "Button":     "components/Button.jsx",
-    "Input":      "components/Input.jsx",
-    "Select":     "components/Select.jsx",
-    "Badge":      "components/Badge.jsx",
-    "Banner":     "components/Banner.jsx",
-    "Drawer":     "components/Drawer.jsx",
-    "Segmented":  "components/Segmented.jsx",
-    "Toggle":     "components/Toggle.jsx",
-    "Table":      "components/Table.jsx",
-    "SourceCard": "components/SourceCard.jsx"
-  },
-  "overrides": {
-    "Button":  {"cardMode": "column"},
-    "Drawer":  {"cardMode": "single", "primaryStory": "DrawerShell"}
+    "Text":       null,
+    "Avatar":     null,
+    "Button":     null,
+    "Input":      null,
+    "Select":     null,
+    "Badge":      null,
+    "Banner":     null,
+    "Drawer":     null,
+    "Segmented":  null,
+    "Toggle":     null,
+    "Table":      null,
+    "SourceCard": null,
+    "Cell":       null
   },
   "readmeHeader": ".design-sync/conventions.md"
 }

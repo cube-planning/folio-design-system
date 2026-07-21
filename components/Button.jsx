@@ -122,6 +122,8 @@ export function Button({
   type = "primary",
   size = "large",
   state = "default",
+  radius = 16,      // corner radius in px — 16 (default, pill-like) or 8 (squarer)
+  stroke = false,   // add a 1px border in the variant's color (no-op on outlined variants)
   leadingIcon,
   trailingIcon,
   loading = false,
@@ -137,6 +139,13 @@ export function Button({
   const s = SIZE[size] ?? SIZE.large;
   const isIconOnly = !children;
 
+  // Optional stroke: add a 1px border in the variant's text color, unless the
+  // variant is already outlined (secondary / *-secondary define their own border).
+  const hasOwnBorder = typeStyle.border && typeStyle.border !== "none";
+  const strokeStyle = stroke && !hasOwnBorder
+    ? { border: `1px solid ${typeStyle.color ?? "currentColor"}` }
+    : {};
+
   const baseStyle = {
     display: "inline-flex",
     alignItems: "center",
@@ -145,7 +154,8 @@ export function Button({
     height: s.height,
     width: isIconOnly ? s.iconOnly : undefined,
     paddingInline: isIconOnly ? 0 : s.paddingInline,
-    borderRadius: 9999,
+    borderRadius: radius,
+    boxSizing: "border-box",
     fontSize: s.fontSize,
     fontFamily: "'DM Sans', sans-serif",
     fontWeight: 500,
@@ -156,6 +166,7 @@ export function Button({
     transition: "background 100ms, box-shadow 100ms",
     ...typeStyle,
     ...stateOverride,
+    ...strokeStyle,
     ...style,
   };
 

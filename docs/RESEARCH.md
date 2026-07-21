@@ -43,7 +43,7 @@ Build a design system that acts as a source of truth — so Claude can generate 
 ### Lovable / v0 / Figma AI
 - **Problem:** All generate generic UI with no knowledge of the Cube design system
 - **Tested:** Designer tried using Claude directly without Folio context → generic output, burned credits
-- **Conclusion:** These tools require Folio context to produce on-brand output. Without `tokens.css` and `shell.html` as reference, results are random.
+- **Conclusion:** These tools require Folio context to produce on-brand output. Without `tokens/tokens.css` and `shell.html` as reference, results are random.
 
 ---
 

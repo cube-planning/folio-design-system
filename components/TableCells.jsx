@@ -1,0 +1,119 @@
+// Table cell variants — Folio Design System
+// Reusable renderers for Table `column.render`, mirroring Figma's "Table Cell" variants.
+// Usage: { key: "owner", label: "Owner", render: (v, row) => <Cell.AvatarText name={v} /> }
+
+import { Badge } from "./Badge.jsx";
+import { Avatar } from "./Avatar.jsx";
+
+const C = {
+  blue:   "#2667D8",  // link / dataviz blue-500
+  purple: "#7A5AF8",  // MCP / AI
+  gray900:"#222B3A",
+  gray500:"#97A3B6",
+  gray200:"#F2F5F9",
+  green:  "#079455",
+};
+const FONT = "'DM Sans', sans-serif";
+
+function Text({ children }) {
+  return <span style={{ fontFamily: FONT, fontSize: 14, color: C.gray900 }}>{children}</span>;
+}
+
+function Link({ children, href, onClick }) {
+  return (
+    <a
+      href={href}
+      onClick={onClick}
+      style={{ fontFamily: FONT, fontSize: 14, color: C.blue, textDecoration: "none", cursor: "pointer" }}
+    >
+      {children}
+    </a>
+  );
+}
+
+const TONES = { blue: C.blue, purple: C.purple, default: C.gray900 };
+function Metric({ children, tone = "blue", bold = false }) {
+  return (
+    <span style={{ fontFamily: FONT, fontSize: 14, color: TONES[tone] ?? C.blue, fontWeight: bold ? 700 : 400 }}>
+      {children}
+    </span>
+  );
+}
+
+function Icon({ icon, children, tone }) {
+  return (
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: FONT, fontSize: 14, color: tone === "link" ? C.blue : C.gray900 }}>
+      {icon && (
+        <span style={{ display: "inline-flex", width: 16, height: 16, alignItems: "center", justifyContent: "center", color: C.gray500, fontSize: 16, flexShrink: 0 }}>
+          {icon}
+        </span>
+      )}
+      {children}
+    </span>
+  );
+}
+
+function User({ name, children, size = "xs", colorIndex, border, ...rest }) {
+  return (
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: FONT, fontSize: 14, color: C.gray900 }}>
+      <Avatar size={size} name={name} colorIndex={colorIndex} border={border} {...rest} />
+      <span>{children ?? name}</span>
+    </span>
+  );
+}
+
+function Progress({ value, max, color = C.green }) {
+  const pct = max ? Math.min(100, Math.max(0, Math.round((value / max) * 100))) : 0;
+  return (
+    <span style={{ display: "inline-flex", flexDirection: "column", gap: 4, minWidth: 72 }}>
+      <span style={{ fontFamily: FONT, fontSize: 14, color: C.gray900 }}>{value}/{max}</span>
+      <span style={{ display: "block", height: 6, borderRadius: 9999, background: C.gray200, overflow: "hidden", width: "100%" }}>
+        <span style={{ display: "block", height: "100%", width: `${pct}%`, background: color, borderRadius: 9999 }} />
+      </span>
+    </span>
+  );
+}
+
+function Actions({ children }) {
+  return (
+    <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "flex-end", gap: 2, width: "100%" }}>
+      {children}
+    </span>
+  );
+}
+
+function ActionButton({ icon, onClick, "aria-label": ariaLabel }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={ariaLabel}
+      style={{
+        display: "inline-flex", alignItems: "center", justifyContent: "center",
+        width: 24, height: 24, padding: 0, border: "none", background: "transparent",
+        color: C.gray500, cursor: "pointer", fontSize: 16, borderRadius: 9999,
+      }}
+    >
+      {icon}
+    </button>
+  );
+}
+
+export const Cell = {
+  // Spoken vocabulary — say "make Owner a User cell" → Cell.User
+  Text,          // plain value (default)
+  Link,          // blue clickable record/name link
+  Metric,        // right-aligned number; tone "blue" | "purple" | "default", bold for totals
+  Icon,          // leading icon + text
+  User,          // Avatar + name
+  Status: Badge, // status badge (the Badge component)
+  Progress,      // x/y + bar
+  Actions,       // trailing icon-button group
+  ActionButton,  // one icon button inside Actions
+
+  // Aliases (older/explicit names) — kept so existing usage keeps working
+  Badge,
+  NumericLink: Metric,
+  IconText: Icon,
+  AvatarText: User,
+};

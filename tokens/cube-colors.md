@@ -290,7 +290,7 @@ All use the `500` stop with white initials for AA contrast compliance.
 | 2 | Indigo | `#6366F1` |
 | 3 | Fuchsia | `#D946EF` |
 | 4 | Orange | `#F97316` |
-| 5 | Cobalt | `#4A73CD` |
+| 5 | Cobalt | `#173D82` |
 
 ---
 

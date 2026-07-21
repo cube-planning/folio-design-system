@@ -15,7 +15,7 @@ import { fileURLToPath } from 'url';
 
 const __dirname  = path.dirname(fileURLToPath(import.meta.url));
 const FILE_KEY   = 'Q7G87Bmjx2aYNVDKYLlBaG';
-const TOKENS_CSS = path.join(__dirname, 'tokens.css');
+const TOKENS_CSS = path.join(__dirname, 'tokens', 'tokens.css');
 const COLLECTION = 'Primitives';
 
 // ── Auth ─────────────────────────────────────────────────────────────────────

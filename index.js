@@ -1,4 +1,5 @@
 export { Text }       from "./components/Text.jsx";
+export { Avatar }     from "./components/Avatar.jsx";
 export { Button }     from "./components/Button.jsx";
 export { Input }      from "./components/Input.jsx";
 export { Select }     from "./components/Select.jsx";
@@ -8,4 +9,5 @@ export { Drawer }     from "./components/Drawer.jsx";
 export { Segmented }  from "./components/Segmented.jsx";
 export { Toggle }     from "./components/Toggle.jsx";
 export { Table }      from "./components/Table.jsx";
+export { Cell }       from "./components/TableCells.jsx";
 export { SourceCard } from "./components/SourceCard.jsx";

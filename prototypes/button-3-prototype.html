@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Button 3.0 — Folio DS Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="vendor/fontawesome/css/all.min.css" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'Nunito Sans', BlinkMacSystemFont, sans-serif; background: #F0F2F5; display: flex; justify-content: center; padding: 2rem; min-height: 100vh; }
+.wrap { width: 960px; }
+
+.header { padding: 1.5rem 0 1rem; }
+.header h1 { font-size: 22px; font-weight: 700; color: #0E2349; margin-bottom: 4px; }
+.header p { font-size: 13px; color: #677489; }
+
+.sb { background: white; border: 1px solid #E0E5EC; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(16,24,40,.06); }
+
+/* Toolbar */
+.sb-bar { background: white; border-bottom: 1px solid #E5E5E5; display: flex; align-items: center; gap: 4px; padding: 0 14px; height: 42px; }
+.sb-icon { width: 30px; height: 30px; border: none; background: none; cursor: pointer; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: #666; font-size: 14px; }
+.sb-icon:hover { background: #F3F3F3; }
+.sb-sep { width: 1px; height: 18px; background: #E5E5E5; margin: 0 4px; }
+.sb-logo { display: flex; align-items: center; gap: 8px; }
+.sb-logo-mark { display: flex; align-items: center; justify-content: center; }
+.sb-logo-mark svg { display: block; height: 22px; width: auto; }
+.sb-logo-text { font-size: 13px; font-weight: 700; color: #163D83; }
+.sb-bar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.sb-badge { font-size: 11px; font-weight: 600; color: #677489; background: #F1F4F8; padding: 2px 8px; border-radius: 99px; }
+
+/* Canvas */
+.sb-canvas { background: white; min-height: 140px; display: flex; align-items: center; justify-content: center; padding: 2.5rem; border-bottom: 1px solid #E5E5E5; background-image: radial-gradient(#DEE3EC 1px, transparent 1px); background-size: 20px 20px; }
+.sb-canvas.no-dots { background-image: none; }
+
+/* Code bar */
+.sb-codebar { background: white; display: flex; align-items: center; gap: 16px; padding: 8px 16px; border-bottom: 1px solid #E5E5E5; }
+.sb-cbtn { font-size: 12px; color: #888; border: none; background: none; cursor: pointer; display: flex; align-items: center; gap: 5px; padding: 4px 0; }
+.sb-cbtn:hover { color: #333; }
+.code-snippet { display: none; background: #F6F8FA; border: 1px solid #E5E5E5; border-radius: 6px; padding: 10px 14px; font-family: 'SFMono-Regular', monospace; font-size: 12px; color: #333; margin: 0 16px 12px; line-height: 1.6; white-space: pre-wrap; }
+.code-snippet.visible { display: block; }
+#copied-msg { font-size: 12px; color: #229E66; margin-left: auto; opacity: 0; transition: opacity 200ms; }
+#copied-msg.show { opacity: 1; }
+
+/* Tabs */
+.sb-tabs { background: white; display: flex; padding: 0 16px; border-bottom: 1px solid #E5E5E5; }
+.sb-tab { padding: 10px 14px; font-size: 12px; font-weight: 600; color: #999; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px; }
+.sb-tab.on { color: #FF4785; border-bottom-color: #FF4785; }
+
+/* Controls table */
+.ctl-head { display: grid; grid-template-columns: 160px 1fr 90px 1fr 32px; padding: 8px 16px; background: white; border-bottom: 1px solid #E5E5E5; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #aaa; }
+.ctl-row { display: grid; grid-template-columns: 160px 1fr 90px 1fr 32px; padding: 10px 16px; background: white; border-bottom: 1px solid #F2F2F2; align-items: center; min-height: 48px; }
+.ctl-row:hover { background: #FAFAFA; }
+.ctl-name { font-family: 'SFMono-Regular', 'Menlo', monospace; font-size: 12px; font-weight: 700; color: #333; }
+.ctl-desc { font-family: 'SFMono-Regular', monospace; font-size: 10px; color: #bbb; line-height: 1.5; padding-right: 12px; }
+.ctl-def { font-size: 11px; color: #ccc; }
+select.ctrl { width: 100%; border: 1px solid #E0E0E0; border-radius: 5px; padding: 5px 8px; font-size: 12px; background: white; color: #333; cursor: pointer; }
+select.ctrl:focus { outline: none; border-color: #A6BEEB; }
+input[type=text].ctrl { width: 100%; border: 1px solid #E0E0E0; border-radius: 5px; padding: 5px 8px; font-size: 12px; background: white; color: #333; }
+input[type=text].ctrl:focus { outline: none; border-color: #A6BEEB; }
+.bool-wrap { display: flex; }
+.bool-btn { flex: 1; padding: 4px 8px; font-size: 12px; border: 1px solid #E0E0E0; background: white; cursor: pointer; color: #777; }
+.bool-btn:first-child { border-radius: 5px 0 0 5px; border-right: none; }
+.bool-btn:last-child { border-radius: 0 5px 5px 0; }
+.bool-btn.on { background: #EBEBEB; font-weight: 700; color: #333; }
+.rst { width: 28px; height: 28px; border: none; background: none; cursor: pointer; color: #ccc; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+.rst:hover { background: #F0F0F0; color: #888; }
+
+/* State strip */
+.strip-divider { height: 1px; background: #EBEEF2; }
+.strip-wrap { padding: 20px; background: #FAFAFA; }
+.strip-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.strip-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #aaa; }
+.strip-variant { font-size: 11px; font-weight: 600; color: #677489; background: #EEF2FA; padding: 2px 8px; border-radius: 99px; }
+.strip-row { display: flex; gap: 24px; align-items: flex-end; flex-wrap: wrap; }
+.strip-cell { display: flex; flex-direction: column; align-items: center; gap: 10px; min-width: 72px; }
+.strip-name { font-size: 10px; color: #aaa; font-weight: 600; letter-spacing: .04em; text-align: center; text-transform: uppercase; }
+
+/* Overview grid */
+.overview-wrap { padding: 20px; background: #FAFAFA; }
+.overview-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #aaa; margin-bottom: 16px; }
+.overview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 20px; }
+.overview-cell { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; cursor: pointer; }
+.overview-cell:hover .overview-name { color: #173D82; }
+.overview-name { font-size: 10px; color: #aaa; font-weight: 600; letter-spacing: .03em; transition: color 100ms; }
+
+/* ── THE BUTTONS ────────────────────────────── */
+.fbtn {
+  display: inline-flex; align-items: center; gap: 6px;
+  border-radius: 9999px; cursor: pointer; border: none;
+  font-family: 'DM Sans', sans-serif; font-weight: 500;
+  position: relative; overflow: hidden; outline: none;
+  white-space: nowrap;
+  transition: box-shadow 80ms ease, background 80ms ease, transform 60ms ease;
+}
+.lg { height: 32px; padding: 0 16px; font-size: 14px; }
+.sm { height: 28px; padding: 0 12px; font-size: 12px; }
+
+/* ── Variant fills (Figma naming) ─────────── */
+
+/* shadow tokens */
+:root {
+  --shadow-sm: 0 1px 3px rgba(16,24,40,.10), 0 1px 2px rgba(16,24,40,.06);
+  --shadow-md: 0 4px 8px rgba(16,24,40,.08), 0 2px 4px rgba(16,24,40,.04);
+}
+
+/* Primary — solid cobalt */
+.v-primary            { background: #173D82; color: white; box-shadow: var(--shadow-sm); }
+/* Secondary — outlined cobalt */
+.v-secondary          { background: white; color: #173D82; border: 1.5px solid #173D82; box-shadow: var(--shadow-sm); }
+/* Subtle Blue — light cobalt tint fill */
+.v-subtle-blue        { background: #C6D3EC; color: #173D82; box-shadow: var(--shadow-sm); }
+/* Ghost Blue — transparent, cobalt text */
+.v-ghost-blue         { background: transparent; color: #173D82; box-shadow: none; }
+/* Ghost Gray — transparent, gray text */
+.v-ghost-gray         { background: transparent; color: #4A5567; box-shadow: none; }
+/* Destructive — solid red */
+.v-destructive        { background: #D92D20; color: white; box-shadow: var(--shadow-sm); }
+/* Destructive Secondary — outlined red */
+.v-destr-secondary    { background: white; color: #B42318; border: 1.5px solid #D92D20; box-shadow: var(--shadow-sm); }
+/* Destructive Subtle — tinted red fill */
+.v-destr-subtle       { background: #FEF3F2; color: #B42318; box-shadow: var(--shadow-sm); }
+/* Ghost Destructive — transparent, red text */
+.v-ghost-destructive  { background: transparent; color: #D92D20; box-shadow: none; }
+
+/* Plain — no padding, inline use, text only */
+.v-plain-blue         { background: transparent; color: #173D82; box-shadow: none; padding: 0; height: auto; border-radius: 4px; overflow: visible; }
+.v-plain-gray         { background: transparent; color: #4A5567; box-shadow: none; padding: 0; height: auto; border-radius: 4px; overflow: visible; }
+.v-plain-destructive  { background: transparent; color: #D92D20; box-shadow: none; padding: 0; height: auto; border-radius: 4px; overflow: visible; }
+
+/* ── Hover states ─────────────────────────── */
+.hov.v-primary           { background: #122E64; box-shadow: var(--shadow-md); }
+.hov.v-secondary         { background: #EEF2FA; box-shadow: var(--shadow-md); }
+.hov.v-subtle-blue       { background: #AABCE0; box-shadow: var(--shadow-md); }
+.hov.v-ghost-blue        { background: #EEF2FA; }
+.hov.v-ghost-gray        { background: #F1F4F8; }
+.hov.v-destructive       { background: #B42318; box-shadow: var(--shadow-md); }
+.hov.v-destr-secondary   { background: #FEF3F2; box-shadow: var(--shadow-md); }
+.hov.v-destr-subtle      { background: #FEE4E2; box-shadow: var(--shadow-md); }
+.hov.v-ghost-destructive { background: #FEF3F2; }
+.hov.v-plain-blue        { text-decoration: underline; text-underline-offset: 2px; }
+.hov.v-plain-gray        { text-decoration: underline; text-underline-offset: 2px; }
+.hov.v-plain-destructive { text-decoration: underline; text-underline-offset: 2px; }
+
+/* ── Focus states ─────────────────────────── */
+.foc { outline: 2px solid #A6BEEB !important; outline-offset: 2px !important; box-shadow: none !important; }
+.foc.v-destructive, .foc.v-destr-secondary, .foc.v-destr-subtle, .foc.v-ghost-destructive { outline-color: #FDA29B !important; }
+.foc.v-ghost-gray { outline-color: #CDD5E0 !important; }
+.foc.v-plain-gray { outline-color: #CDD5E0 !important; }
+.foc.v-plain-destructive { outline-color: #FDA29B !important; }
+
+/* ── Pressed states ───────────────────────── */
+.prs { transform: scale(0.97) !important; }
+.prs.v-primary           { background: #0E2349; }
+.prs.v-secondary         { background: #D9E3F5; }
+.prs.v-subtle-blue       { background: #8FA9D4; }
+.prs.v-ghost-blue        { background: #D9E3F5; }
+.prs.v-ghost-gray        { background: #E3E8EF; }
+.prs.v-destructive       { background: #7A1A12; }
+.prs.v-destr-secondary   { background: #FEE4E2; }
+.prs.v-destr-subtle      { background: #FECDC9; }
+.prs.v-ghost-destructive { background: #FEE4E2; }
+.prs.v-plain-blue        { opacity: .7; }
+.prs.v-plain-gray        { opacity: .7; }
+.prs.v-plain-destructive { opacity: .7; }
+
+/* ── Disabled ─────────────────────────────── */
+.dis { opacity: .7 !important; cursor: not-allowed !important; pointer-events: none !important; box-shadow: none !important; }
+
+/* ── Loading ──────────────────────────────── */
+.ldr { color: transparent !important; opacity: .7; pointer-events: none; }
+.ldr::after { content: ''; position: absolute; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.3); border-top-color: white; border-radius: 50%; animation: sp 600ms linear infinite; }
+.ldr.sm::after { width: 12px; height: 12px; }
+.ldr.v-secondary::after, .ldr.v-subtle-blue::after, .ldr.v-ghost-blue::after, .ldr.v-ghost-gray::after { border-color: rgba(23,61,130,.2); border-top-color: #173D82; }
+.ldr.v-destr-secondary::after, .ldr.v-destr-subtle::after, .ldr.v-ghost-destructive::after, .ldr.v-plain-destructive::after { border-color: rgba(180,35,24,.2); border-top-color: #B42318; }
+.ldr.v-plain-blue::after, .ldr.v-plain-gray::after { border-color: rgba(23,61,130,.2); border-top-color: #173D82; }
+@keyframes sp { to { transform: rotate(360deg); } }
+
+/* ── Ripple ───────────────────────────────── */
+.ripel { position: absolute; border-radius: 50%; transform: scale(0); background: rgba(14,35,73,.10); pointer-events: none; animation: rp 400ms ease-out forwards; }
+.v-destructive .ripel, .v-destr-secondary .ripel, .v-destr-subtle .ripel, .v-ghost-destructive .ripel { background: rgba(217,45,32,.10); }
+@keyframes rp { to { transform: scale(4); opacity: 0; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <h1>Button 3.0 — Folio DS Prototype</h1>
+    <p>Variants match Figma naming. Click for ripple · Tab for focus ring · Use controls to audit each variant × state.</p>
+  </div>
+
+  <div class="sb">
+    <div class="sb-bar">
+      <div class="sb-logo">
+        <span class="sb-logo-mark">
+          <svg width="20" height="22" viewBox="0 0 29 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11.2464 5.30427L13.5369 4L13.5282 15.7556L11.229 17.0598L11.2464 5.30427Z" fill="#163D83"></path>
+            <path d="M24.6057 21.23L14.8688 15.747V4L24.6057 9.5603V21.23Z" fill="#163D83"></path>
+            <path d="M23.935 22.3624L14.2678 27.9999L4.68762 22.3109L14.1894 16.8622L23.935 22.3624Z" fill="#163D83"></path>
+            <path d="M7.6318 9.67221L9.93103 8.35936L9.9136 17.8153L7.61438 19.1195L7.6318 9.67221Z" fill="#163D83"></path>
+            <path d="M4.01742 14.4599L6.31665 13.1471L6.29923 19.8744L4 21.1786L4.01742 14.4599Z" fill="#163D83"></path>
+          </svg>
+        </span>
+        <span class="sb-logo-text">Folio</span>
+      </div>
+      <div class="sb-sep"></div>
+      <button class="sb-icon" onclick="toggleDots()" title="Toggle dots background"><i class="fa-solid fa-table-cells"></i></button>
+      <button class="sb-icon" title="Zoom in"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+      <button class="sb-icon" title="Zoom out"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+      <div class="sb-bar-right">
+        <span class="sb-badge">Button · Figma naming · 3.0</span>
+      </div>
+    </div>
+
+    <div class="sb-canvas" id="canvas">
+      <button class="fbtn lg v-primary" id="preview" onclick="doRipple(event,this)">Button</button>
+    </div>
+
+    <div class="sb-codebar">
+      <button class="sb-cbtn" onclick="toggleCode()"><i class="fa-solid fa-code" style="font-size:13px"></i> Show code</button>
+      <button class="sb-cbtn" onclick="copyCode()"><i class="fa-regular fa-copy" style="font-size:13px"></i> Copy code</button>
+      <span id="copied-msg">Copied!</span>
+    </div>
+    <div class="code-snippet" id="code-block"></div>
+
+    <div class="sb-tabs">
+      <div class="sb-tab on">Controls</div>
+      <div class="sb-tab">Actions</div>
+      <div class="sb-tab">Accessibility</div>
+    </div>
+
+    <div class="ctl-head">
+      <span>Name</span><span>Description</span><span>Default</span><span>Control</span><span></span>
+    </div>
+
+    <!-- variant -->
+    <div class="ctl-row">
+      <span class="ctl-name">variant</span>
+      <span class="ctl-desc">Primary | Secondary | Subtle Blue | Ghost Blue | Ghost Gray | Destructive | Destructive Secondary | Destructive Subtle | Ghost Destructive</span>
+      <span class="ctl-def">Primary</span>
+      <select class="ctrl" id="ctl-variant" onchange="render()">
+        <option value="v-primary">Primary</option>
+        <option value="v-secondary">Secondary</option>
+        <option value="v-subtle-blue">Subtle Blue</option>
+        <option value="v-ghost-blue">Ghost Blue</option>
+        <option value="v-ghost-gray">Ghost Gray</option>
+        <option value="v-destructive">Destructive</option>
+        <option value="v-destr-secondary">Destructive Secondary</option>
+        <option value="v-destr-subtle">Destructive Subtle</option>
+        <option value="v-ghost-destructive">Ghost Destructive</option>
+        <option value="v-plain-blue">Plain Blue</option>
+        <option value="v-plain-gray">Plain Gray</option>
+        <option value="v-plain-destructive">Plain Destructive</option>
+      </select>
+      <button class="rst" onclick="resetSel('ctl-variant','v-primary')" title="Reset">↺</button>
+    </div>
+
+    <!-- size -->
+    <div class="ctl-row">
+      <span class="ctl-name">size</span>
+      <span class="ctl-desc">"large" | "small"</span>
+      <span class="ctl-def">large</span>
+      <div class="bool-wrap" id="size-wrap">
+        <button class="bool-btn on" onclick="setSize('lg',this)">large</button>
+        <button class="bool-btn" onclick="setSize('sm',this)">small</button>
+      </div>
+      <button class="rst" onclick="setSize('lg',document.querySelector('#size-wrap .bool-btn'))" title="Reset">↺</button>
+    </div>
+
+    <!-- label -->
+    <div class="ctl-row">
+      <span class="ctl-name">label</span>
+      <span class="ctl-desc">string</span>
+      <span class="ctl-def">—</span>
+      <input type="text" class="ctrl" id="ctl-label" value="Button" oninput="render()">
+      <button class="rst" onclick="document.getElementById('ctl-label').value='Button';render()" title="Reset">↺</button>
+    </div>
+
+    <!-- leadingIcon -->
+    <div class="ctl-row">
+      <span class="ctl-name">leadingIcon</span>
+      <span class="ctl-desc">boolean</span>
+      <span class="ctl-def">false</span>
+      <div class="bool-wrap" id="icon-wrap">
+        <button class="bool-btn on" onclick="setBool('iconLead',false,this,'icon-wrap')">False</button>
+        <button class="bool-btn" onclick="setBool('iconLead',true,this,'icon-wrap')">True</button>
+      </div>
+      <button class="rst" onclick="setBool('iconLead',false,document.querySelector('#icon-wrap .bool-btn'),'icon-wrap')" title="Reset">↺</button>
+    </div>
+
+    <!-- trailingChevron -->
+    <div class="ctl-row">
+      <span class="ctl-name">trailingChevron</span>
+      <span class="ctl-desc">boolean</span>
+      <span class="ctl-def">false</span>
+      <div class="bool-wrap" id="chev-wrap">
+        <button class="bool-btn on" onclick="setBool('chevron',false,this,'chev-wrap')">False</button>
+        <button class="bool-btn" onclick="setBool('chevron',true,this,'chev-wrap')">True</button>
+      </div>
+      <button class="rst" onclick="setBool('chevron',false,document.querySelector('#chev-wrap .bool-btn'),'chev-wrap')" title="Reset">↺</button>
+    </div>
+
+    <!-- state -->
+    <div class="ctl-row">
+      <span class="ctl-name">state</span>
+      <span class="ctl-desc">"default" | "hover" | "focus" | "pressed" | "disabled" | "loading"</span>
+      <span class="ctl-def">default</span>
+      <select class="ctrl" id="ctl-state" onchange="render()">
+        <option value="">default</option>
+        <option value="hov">hover</option>
+        <option value="foc">focus</option>
+        <option value="prs">pressed</option>
+        <option value="dis">disabled</option>
+        <option value="ldr">loading</option>
+      </select>
+      <button class="rst" onclick="resetSel('ctl-state','')" title="Reset">↺</button>
+    </div>
+
+    <!-- State strip -->
+    <div class="strip-divider"></div>
+    <div class="strip-wrap">
+      <div class="strip-header">
+        <span class="strip-label">All states</span>
+        <span class="strip-variant" id="strip-variant-lbl">Primary</span>
+      </div>
+      <div class="strip-row" id="strip"></div>
+    </div>
+
+    <!-- Overview grid -->
+    <div class="strip-divider"></div>
+    <div class="overview-wrap">
+      <div class="overview-label">All variants — click to select</div>
+      <div class="overview-grid" id="overview"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var S = { variant:'v-primary', size:'lg', label:'Button', iconLead:false, chevron:false };
+
+var VARIANTS = [
+  { key:'v-primary',          label:'Primary' },
+  { key:'v-secondary',        label:'Secondary' },
+  { key:'v-subtle-blue',      label:'Subtle Blue' },
+  { key:'v-ghost-blue',       label:'Ghost Blue' },
+  { key:'v-ghost-gray',       label:'Ghost Gray' },
+  { key:'v-destructive',      label:'Destructive' },
+  { key:'v-destr-secondary',  label:'Destructive Secondary' },
+  { key:'v-destr-subtle',     label:'Destructive Subtle' },
+  { key:'v-ghost-destructive',  label:'Ghost Destructive' },
+  { key:'v-plain-blue',         label:'Plain Blue' },
+  { key:'v-plain-gray',         label:'Plain Gray' },
+  { key:'v-plain-destructive',  label:'Plain Destructive' }
+];
+
+var STATES = [
+  { cls:'',    name:'Default' },
+  { cls:'hov', name:'Hover' },
+  { cls:'foc', name:'Focus' },
+  { cls:'prs', name:'Pressed' },
+  { cls:'dis', name:'Disabled' },
+  { cls:'ldr', name:'Loading' }
+];
+
+var codeVisible = false;
+
+function getLabel(key) {
+  return (VARIANTS.find(function(v){ return v.key === key; }) || {}).label || key;
+}
+
+function buildBtn(vClass, label, iconLead, chevron, size, stateClass) {
+  var isPlain = vClass.indexOf('plain') !== -1;
+  var b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'fbtn ' + (isPlain ? '' : size + ' ') + vClass + (stateClass ? ' ' + stateClass : '');
+  if (stateClass === 'dis') b.disabled = true;
+  var inner = '';
+  if (iconLead && stateClass !== 'ldr') inner += '<i class="fa-solid fa-plus" style="font-size:13px" aria-hidden="true"></i>';
+  inner += '<span>' + label + '</span>';
+  if (chevron && stateClass !== 'ldr') inner += '<i class="fa-solid fa-chevron-down" style="font-size:12px" aria-hidden="true"></i>';
+  b.innerHTML = inner;
+  b.addEventListener('click', function(e){ doRipple(e, this); });
+  return b;
+}
+
+function render() {
+  var v = document.getElementById('ctl-variant').value;
+  var st = document.getElementById('ctl-state').value;
+  var lbl = document.getElementById('ctl-label').value || 'Button';
+  S.variant = v; S.label = lbl;
+
+  var isPlain = v.indexOf('plain') !== -1;
+  var preview = document.getElementById('preview');
+  preview.className = 'fbtn ' + (isPlain ? '' : S.size + ' ') + v + (st ? ' ' + st : '');
+  var inner = '';
+  if (S.iconLead && st !== 'ldr') inner += '<i class="fa-solid fa-plus" style="font-size:13px" aria-hidden="true"></i>';
+  inner += '<span>' + lbl + '</span>';
+  if (S.chevron && st !== 'ldr') inner += '<i class="fa-solid fa-chevron-down" style="font-size:12px" aria-hidden="true"></i>';
+  preview.innerHTML = inner;
+  preview.disabled = st === 'dis';
+
+  document.getElementById('strip-variant-lbl').textContent = getLabel(v);
+  updateCode();
+  renderStrip(v, lbl);
+  renderOverview(lbl);
+}
+
+function renderStrip(v, lbl) {
+  var strip = document.getElementById('strip');
+  strip.innerHTML = '';
+  STATES.forEach(function(st) {
+    var cell = document.createElement('div');
+    cell.className = 'strip-cell';
+    cell.appendChild(buildBtn(v, lbl, S.iconLead, S.chevron, S.size, st.cls));
+    var nm = document.createElement('span');
+    nm.className = 'strip-name';
+    nm.textContent = st.name;
+    cell.appendChild(nm);
+    strip.appendChild(cell);
+  });
+}
+
+function renderOverview(lbl) {
+  var grid = document.getElementById('overview');
+  grid.innerHTML = '';
+  VARIANTS.forEach(function(vd) {
+    var cell = document.createElement('div');
+    cell.className = 'overview-cell';
+    cell.title = 'Switch to ' + vd.label;
+    var btn = buildBtn(vd.key, lbl, false, false, 'lg', '');
+    btn.addEventListener('click', function() {
+      document.getElementById('ctl-variant').value = vd.key;
+      render();
+    });
+    var nm = document.createElement('span');
+    nm.className = 'overview-name';
+    nm.textContent = vd.label;
+    cell.appendChild(btn);
+    cell.appendChild(nm);
+    grid.appendChild(cell);
+  });
+}
+
+function doRipple(e, btn) {
+  if (btn.disabled) return;
+  var r = btn.getBoundingClientRect();
+  var size = Math.max(r.width, r.height) * 2;
+  var x = e.clientX - r.left - size / 2;
+  var y = e.clientY - r.top - size / 2;
+  var el = document.createElement('span');
+  el.className = 'ripel';
+  el.style.cssText = 'width:' + size + 'px;height:' + size + 'px;left:' + x + 'px;top:' + y + 'px';
+  btn.appendChild(el);
+  setTimeout(function(){ el.remove(); }, 450);
+}
+
+function setSize(sz, btn) {
+  S.size = sz;
+  document.querySelectorAll('#size-wrap .bool-btn').forEach(function(b){ b.classList.remove('on'); });
+  btn.classList.add('on');
+  render();
+}
+
+function setBool(key, val, btn, wrapId) {
+  S[key] = val;
+  document.querySelectorAll('#' + wrapId + ' .bool-btn').forEach(function(b){ b.classList.remove('on'); });
+  btn.classList.add('on');
+  render();
+}
+
+function resetSel(id, val) {
+  document.getElementById(id).value = val;
+  render();
+}
+
+function toggleDots() {
+  document.getElementById('canvas').classList.toggle('no-dots');
+}
+
+function updateCode() {
+  var lbl = S.label || 'Button';
+  var lead = S.iconLead ? '\n  leadingIcon={<PlusIcon />}' : '';
+  var chev = S.chevron ? '\n  trailingChevron' : '';
+  var sz = S.size === 'lg' ? 'large' : 'small';
+  var code = '<Button\n  variant="' + getLabel(S.variant) + '"\n  size="' + sz + '"' + lead + chev + '\n>\n  ' + lbl + '\n</Button>';
+  document.getElementById('code-block').textContent = code;
+}
+
+function toggleCode() {
+  codeVisible = !codeVisible;
+  document.getElementById('code-block').classList.toggle('visible', codeVisible);
+}
+
+function copyCode() {
+  updateCode();
+  var code = document.getElementById('code-block').textContent;
+  navigator.clipboard && navigator.clipboard.writeText(code);
+  var msg = document.getElementById('copied-msg');
+  msg.classList.add('show');
+  if (!codeVisible) { document.getElementById('code-block').classList.add('visible'); codeVisible = true; }
+  setTimeout(function(){ msg.classList.remove('show'); }, 2000);
+}
+
+render();
+</script>
+</body>
+</html>
