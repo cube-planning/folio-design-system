@@ -19,22 +19,42 @@ function Text({ children }) {
   return <span style={{ fontFamily: FONT, fontSize: 14, color: C.gray900 }}>{children}</span>;
 }
 
-function Link({ children, href, onClick }) {
+function Link({ children, href, onClick, icon }) {
   return (
     <a
       href={href}
       onClick={onClick}
-      style={{ fontFamily: FONT, fontSize: 14, color: C.blue, textDecoration: "none", cursor: "pointer" }}
+      style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: FONT, fontSize: 14, color: C.blue, textDecoration: "none", cursor: "pointer" }}
     >
+      {icon && (
+        <span style={{ display: "inline-flex", width: 14, height: 14, alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+          {icon}
+        </span>
+      )}
       {children}
     </a>
   );
 }
 
+// Same red/yellow/green mapping as the Workflow template's Status column (Todo/Draft/Done).
+const STATUS_COLOR = {
+  "todo":       "red",
+  "to do":      "red",
+  "draft":      "yellow",
+  "in review":  "yellow",
+  "done":       "green",
+  "active":     "blue",
+};
+function statusColor(status) {
+  return STATUS_COLOR[String(status ?? "").toLowerCase()] ?? "gray";
+}
+
 const TONES = { blue: C.blue, purple: C.purple, default: C.gray900 };
-function Metric({ children, tone = "blue", bold = false }) {
+function Metric({ children, tone = "blue", bold = false, weight }) {
+  if (children == null || children === "") return null;
+  const fontWeight = weight === "medium" ? 500 : bold ? 700 : 400;
   return (
-    <span style={{ fontFamily: FONT, fontSize: 14, color: TONES[tone] ?? C.blue, fontWeight: bold ? 700 : 400 }}>
+    <span style={{ fontFamily: FONT, fontSize: 14, color: TONES[tone] ?? C.blue, fontWeight }}>
       {children}
     </span>
   );
@@ -102,14 +122,15 @@ function ActionButton({ icon, onClick, "aria-label": ariaLabel }) {
 export const Cell = {
   // Spoken vocabulary — say "make Owner a User cell" → Cell.User
   Text,          // plain value (default)
-  Link,          // blue clickable record/name link
-  Metric,        // right-aligned number; tone "blue" | "purple" | "default", bold for totals
+  Link,          // blue clickable record/name link; pass `icon` to prefix a leading icon
+  Metric,        // right-aligned number; tone "blue" | "purple" | "default"; weight "medium" for totals; blank when value is null/empty
   Icon,          // leading icon + text
   User,          // Avatar + name
   Status: Badge, // status badge (the Badge component)
   Progress,      // x/y + bar
   Actions,       // trailing icon-button group
   ActionButton,  // one icon button inside Actions
+  statusColor,   // maps a status string to the shared red/yellow/green (Todo/Draft/Done) Badge color
 
   // Aliases (older/explicit names) — kept so existing usage keeps working
   Badge,

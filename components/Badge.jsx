@@ -47,10 +47,11 @@ const COLOR_ALIASES = {
   ai:      "purple",
 };
 
+// `icon` is the glyph size; `iconWrapper` is the centered hit-box around it (Figma "IconWrapper").
 const SIZE = {
-  lg: { height: 32, fontSize: 14, lineHeight: 20, icon: 16, dot: 8, padX: 8, gap: 4 },
-  md: { height: 28, fontSize: 12, lineHeight: 18, icon: 14, dot: 6, padX: 6, gap: 4 },
-  sm: { height: 20, fontSize: 12, lineHeight: 18, icon: 12, dot: 6, padX: 6, gap: 4 },
+  lg: { height: 32, fontSize: 14, lineHeight: 20, icon: 16, iconWrapper: 24, dot: 8, padX: 8, gap: 4 },
+  md: { height: 28, fontSize: 12, lineHeight: 18, icon: 14, iconWrapper: 22, dot: 6, padX: 6, gap: 4 },
+  sm: { height: 20, fontSize: 12, lineHeight: 18, icon: 12, iconWrapper: 20, dot: 6, padX: 6, gap: 4 },
 };
 
 // Resolves bg / border / fg for the requested type + color.
@@ -66,7 +67,8 @@ function resolveChrome(type, color) {
   return { bg: p.solidBg, border: p.solidBorder, fg: p.solidFg, dot: p.solidFg };
 }
 
-function IconSlot({ size, children }) {
+// Icon glyph centered inside a larger square hit-box, matching Figma's "IconWrapper".
+function IconSlot({ size, wrapperSize, children }) {
   return (
     <span
       style={{
@@ -74,8 +76,8 @@ function IconSlot({ size, children }) {
         alignItems: "center",
         justifyContent: "center",
         fontSize: size,
-        width: size,
-        height: size,
+        width: wrapperSize ?? size,
+        height: wrapperSize ?? size,
         lineHeight: 1,
         flexShrink: 0,
       }}
@@ -154,6 +156,13 @@ export function Badge({
   const s = SIZE[size] ?? SIZE.md;
   const chrome = resolveChrome(type, resolvedColor);
 
+  // Figma pads the side with no leading/trailing accessory 2px wider — the
+  // icon/dot/chevron/remove wrapper's own inset otherwise makes that side look tight.
+  const hasLeading = Boolean(dot || icon);
+  const hasTrailing = Boolean(selectable || removable);
+  const padLeft = hasLeading ? s.padX : s.padX + 2;
+  const padRight = hasTrailing ? s.padX : s.padX + 2;
+
   return (
     <span
       style={{
@@ -162,7 +171,8 @@ export function Badge({
         justifyContent: "center",
         gap: s.gap,
         height: s.height,
-        paddingInline: s.padX,
+        paddingLeft: padLeft,
+        paddingRight: padRight,
         borderRadius: 9999,
         background: chrome.bg,
         border: `1px solid ${chrome.border}`,
@@ -183,10 +193,10 @@ export function Badge({
           aria-hidden="true"
         />
       )}
-      {icon && <IconSlot size={s.icon}>{icon}</IconSlot>}
+      {icon && <IconSlot size={s.icon} wrapperSize={s.iconWrapper}>{icon}</IconSlot>}
       {children != null && <span>{children}</span>}
       {selectable && (
-        <IconSlot size={s.icon}>
+        <IconSlot size={s.icon} wrapperSize={s.iconWrapper}>
           <i className="fa-regular fa-chevron-down" />
         </IconSlot>
       )}
@@ -199,8 +209,8 @@ export function Badge({
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
-            width: s.icon,
-            height: s.icon,
+            width: s.iconWrapper,
+            height: s.iconWrapper,
             padding: 0,
             margin: 0,
             border: "none",

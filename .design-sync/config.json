@@ -8,19 +8,30 @@
   "tokensGlob": "tokens/typography.css",
   "runtimeFontPrefixes": ["DM Sans", "JetBrains Mono"],
   "componentSrcMap": {
-    "Text":       null,
-    "Avatar":     null,
-    "Button":     null,
-    "Input":      null,
-    "Select":     null,
-    "Badge":      null,
-    "Banner":     null,
-    "Drawer":     null,
-    "Segmented":  null,
-    "Toggle":     null,
-    "Table":      null,
-    "SourceCard": null,
-    "Cell":       null
+    "Text":         "components/Text.jsx",
+    "Avatar":       "components/Avatar.jsx",
+    "Button":       "components/Button.jsx",
+    "Input":        "components/Input.jsx",
+    "Textarea":     "components/Textarea.jsx",
+    "Select":       "components/Select.jsx",
+    "Badge":        "components/Badge.jsx",
+    "Banner":       "components/Banner.jsx",
+    "Drawer":       "components/Drawer.jsx",
+    "Segmented":    "components/Segmented.jsx",
+    "Toggle":       "components/Toggle.jsx",
+    "Table":        "components/Table.jsx",
+    "SourceCard":   "components/SourceCard.jsx",
+    "Cell":         "components/TableCells.jsx",
+    "ImportDrawer": "components/ImportDrawer.jsx",
+    "Stepper":      "components/Stepper.jsx",
+    "TaskCard":     "components/TaskCard.jsx"
   },
-  "readmeHeader": ".design-sync/conventions.md"
+  "readmeHeader": ".design-sync/conventions.md",
+  "overrides": {
+    "Drawer": {"cardMode": "single", "primaryStory": "DrawerShell"},
+    "ImportDrawer": {"cardMode": "single", "primaryStory": "JustworksImport"},
+    "SourceCard": {"cardMode": "column"},
+    "Stepper": {"cardMode": "column"},
+    "Table": {"cardMode": "column"}
+  }
 }
