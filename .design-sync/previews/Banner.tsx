@@ -39,3 +39,27 @@ export function BodyOnly() {
     </Banner>
   );
 }
+
+export function AI() {
+  return (
+    <Banner variant="ai" title="AI summary ready">
+      Charlie finished analyzing your Q3 pipeline — 4 anomalies flagged for review.
+    </Banner>
+  );
+}
+
+export function Neutral() {
+  return (
+    <Banner variant="neutral">
+      This workspace is shared with 3 other teams.
+    </Banner>
+  );
+}
+
+export function WithButtonAndDismiss() {
+  return (
+    <Banner variant="warning" title="Storage almost full" button="Upgrade plan" dismissable>
+      Your team has used 92% of its allotted storage.
+    </Banner>
+  );
+}
