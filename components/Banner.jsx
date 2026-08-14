@@ -6,6 +6,8 @@
 //   header      : optional bold lead line above the body text
 //   button      : optional trailing pill CTA
 //   dismissable : optional trailing ghost × button
+//   icon        : leading icon — defaults to the type's glyph; pass a Font Awesome
+//                 class string to swap it, or `false` to omit the icon entirely
 
 const VARIANTS = {
   error: {
@@ -59,6 +61,7 @@ export function Banner({
   variant = "info",
   title,
   children,
+  icon,
   button,
   onButtonClick,
   dismissable = false,
@@ -66,6 +69,7 @@ export function Banner({
   style,
 }) {
   const v = VARIANTS[variant] ?? VARIANTS.info;
+  const resolvedIcon = icon === false ? null : (icon ?? v.icon);
 
   return (
     <div
@@ -77,15 +81,18 @@ export function Banner({
         borderRadius: 8,
         background: v.background,
         border: v.border ? `1px solid ${v.border}` : "none",
+        boxShadow: "var(--shadow-sm)",
         fontFamily: "'DM Sans', sans-serif",
         ...style,
       }}
       role="alert"
     >
       <div style={{ display: "flex", flex: 1, minWidth: 0, gap: 4, alignItems: "flex-start" }}>
-        <IconWrapper>
-          <i className={v.icon} style={{ fontSize: 16, color: v.color }} aria-hidden="true" />
-        </IconWrapper>
+        {resolvedIcon && (
+          <IconWrapper>
+            <i className={resolvedIcon} style={{ fontSize: 16, color: v.color }} aria-hidden="true" />
+          </IconWrapper>
+        )}
         <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0, gap: 4, paddingTop: 2 }}>
           {title && (
             <p style={{ margin: 0, fontSize: 14, fontWeight: 500, color: v.color, lineHeight: "20px" }}>

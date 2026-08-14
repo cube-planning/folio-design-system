@@ -63,3 +63,19 @@ export function WithButtonAndDismiss() {
     </Banner>
   );
 }
+
+export function CustomIcon() {
+  return (
+    <Banner variant="info" icon="fa-solid fa-rocket" title="New feature available">
+      Try the new scenario planner from the sidebar.
+    </Banner>
+  );
+}
+
+export function NoIcon() {
+  return (
+    <Banner variant="neutral" icon={false}>
+      This workspace is shared with 3 other teams.
+    </Banner>
+  );
+}
