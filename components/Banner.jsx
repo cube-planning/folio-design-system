@@ -10,35 +10,30 @@
 const VARIANTS = {
   error: {
     background: "var(--color-red-100)",
-    border:     "var(--color-red-300)",
     color:      "var(--color-red-700)",
     icon:       "fa-solid fa-circle-xmark",
     button:     { background: "var(--color-red-50)", border: "var(--color-red-200)", color: "var(--color-red-500)" },
   },
   warning: {
     background: "var(--color-yellow-100)",
-    border:     "var(--color-yellow-300)",
     color:      "var(--color-yellow-700)",
     icon:       "fa-solid fa-triangle-exclamation",
     button:     { background: "var(--color-yellow-50)", border: "var(--color-yellow-200)", color: "var(--color-yellow-600)" },
   },
   success: {
     background: "var(--color-green-100)",
-    border:     "var(--color-green-300)",
     color:      "var(--color-green-700)",
     icon:       "fa-solid fa-circle-check",
     button:     { background: "var(--color-green-50)", border: "var(--color-green-200)", color: "var(--color-green-500)" },
   },
   info: {
     background: "var(--color-blue-50)",
-    border:     "var(--color-blue-300)",
     color:      "var(--color-blue-700)",
     icon:       "fa-solid fa-circle-info",
     button:     { background: "var(--color-blue-50)", border: "var(--color-blue-200)", color: "var(--color-blue-500)" },
   },
   ai: {
     background: "var(--color-purple-50)",
-    border:     "var(--color-purple-500)",
     color:      "var(--color-purple-700)",
     icon:       "fa-solid fa-sparkles",
     button:     { background: "var(--color-purple-50)", border: "var(--color-purple-200)", color: "var(--color-purple-500)" },
@@ -81,7 +76,7 @@ export function Banner({
         padding: 8,
         borderRadius: 8,
         background: v.background,
-        border: `1px solid ${v.border}`,
+        border: v.border ? `1px solid ${v.border}` : "none",
         fontFamily: "'DM Sans', sans-serif",
         ...style,
       }}
@@ -93,7 +88,7 @@ export function Banner({
         </IconWrapper>
         <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0, gap: 4, paddingTop: 2 }}>
           {title && (
-            <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: v.color, lineHeight: "20px" }}>
+            <p style={{ margin: 0, fontSize: 14, fontWeight: 500, color: v.color, lineHeight: "20px" }}>
               {title}
             </p>
           )}
