@@ -97,9 +97,28 @@ const TYPE_STYLES = {
 };
 
 const SIZE = {
-  large: { height: 32, paddingInline: 16, fontSize: 14, iconSize: 14, iconOnly: 32 },
-  small: { height: 28, paddingInline: 12, fontSize: 12, iconSize: 12, iconOnly: 28 },
+  large: { height: 32, paddingInline: 16, fontSize: 14, iconSize: 16, iconWrapper: 24, iconOnly: 32 },
+  small: { height: 28, paddingInline: 12, fontSize: 12, iconSize: 14, iconWrapper: 22, iconOnly: 28 },
 };
+
+// Icon glyph centered inside a larger square hit-box, matching Figma's "IconWrapper".
+function IconSlot({ size, wrapperSize, children }) {
+  return (
+    <span
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: wrapperSize,
+        height: wrapperSize,
+        fontSize: size,
+        flexShrink: 0,
+      }}
+    >
+      {children}
+    </span>
+  );
+}
 
 function Spinner({ size }) {
   return (
@@ -155,7 +174,7 @@ export function Button({
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
-    gap: 5,
+    gap: 4,
     height: s.height,
     width: isIconOnly ? s.iconOnly : undefined,
     paddingInline: isIconOnly ? 0 : s.paddingInline,
@@ -184,15 +203,15 @@ export function Button({
       aria-busy={loading || undefined}
     >
       {loading ? (
-        <Spinner size={s.iconSize} />
+        <IconSlot size={s.iconSize} wrapperSize={s.iconWrapper}><Spinner size={s.iconSize} /></IconSlot>
       ) : isIconOnly ? (
-        <span style={{ fontSize: s.iconSize, display: "inline-flex" }}>{icon}</span>
+        <IconSlot size={s.iconSize} wrapperSize={s.iconWrapper}>{icon}</IconSlot>
       ) : (
-        leadingIcon && <span style={{ fontSize: s.iconSize, display: "inline-flex" }}>{leadingIcon}</span>
+        leadingIcon && <IconSlot size={s.iconSize} wrapperSize={s.iconWrapper}>{leadingIcon}</IconSlot>
       )}
       {children && <span>{children}</span>}
-      {!loading && trailingIcon && (
-        <span style={{ fontSize: s.iconSize, display: "inline-flex" }}>{trailingIcon}</span>
+      {trailingIcon && (
+        <IconSlot size={s.iconSize} wrapperSize={s.iconWrapper}>{trailingIcon}</IconSlot>
       )}
     </button>
   );

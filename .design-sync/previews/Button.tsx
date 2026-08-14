@@ -22,6 +22,13 @@ export function WithIcons() {
       <Button type="secondary" trailingIcon={<i className="fa-regular fa-chevron-right" />}>
         Next
       </Button>
+      <Button
+        type="primary"
+        leadingIcon={<i className="fa-regular fa-plus" />}
+        trailingIcon={<i className="fa-regular fa-chevron-down" />}
+      >
+        Button
+      </Button>
       <Button icon={<i className="fa-regular fa-bell" />} aria-label="Notifications" />
       <Button type="ghost-gray" icon={<i className="fa-regular fa-xmark" />} aria-label="Close" size="small" />
     </div>
@@ -35,6 +42,13 @@ export function States() {
       <Button type="primary" state="focused">Focused</Button>
       <Button type="primary" loading>Saving</Button>
       <Button type="primary" disabled>Disabled</Button>
+      <Button
+        type="primary"
+        loading
+        trailingIcon={<i className="fa-regular fa-chevron-down" />}
+      >
+        Button
+      </Button>
     </div>
   );
 }
