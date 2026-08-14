@@ -96,7 +96,22 @@
       "Bash(grep -oE \".{40}border.{0,80}\" /tmp/figma_code.txt)",
       "Bash(grep -oE \".{40}gray-200.{0,60}\" /tmp/figma_code.txt)",
       "Bash(git fetch *)",
-      "Bash(git ls-tree *)"
+      "Bash(git ls-tree *)",
+      "Bash(npx esbuild *)",
+      "Bash(curl -sL -o /private/tmp/claude-503/-Users-nanosborne-folio/9ef4c036-94cb-4326-a585-1624151984b2/scratchpad/card-page.png \"https://www.figma.com/api/mcp/asset/91cf40f5-410b-4dee-a4db-bef22214781c\")",
+      "Bash(node .ds-sync/package-build.mjs --config .design-sync/config.json --node-modules ./node_modules --entry ./dist/index.js --out ./ds-bundle)",
+      "Bash(node .ds-sync/package-validate.mjs ./ds-bundle)",
+      "Bash(node .ds-sync/lib/preview-rebuild.mjs --config .design-sync/config.json --node-modules ./node_modules --out ./ds-bundle --components Drawer,ImportDrawer,SourceCard,Stepper,Table)",
+      "Bash(node .ds-sync/resync.mjs --config .design-sync/config.json --node-modules ./node_modules --entry ./dist/index.js --out ./ds-bundle --remote .design-sync/.cache/remote-sync.json)",
+      "Bash(find components *)",
+      "Bash(echo '_ds_bundle.js *)",
+      "Read(//tmp/**)",
+      "Bash(cd /Users/nanosborne/folio/ds-bundle *)",
+      "Bash(cp .design-sync/.cache/remote-sync.json /tmp/prior-remote.json)",
+      "Bash(cp ds-bundle/_ds_sync.json .design-sync/.cache/remote-sync.json)",
+      "Bash(node .ds-sync/lib/preview-rebuild.mjs --config .design-sync/config.json --node-modules ./node_modules --out ./ds-bundle --components Banner)",
+      "Bash(node .ds-sync/lib/preview-rebuild.mjs --config .design-sync/config.json --node-modules ./node_modules --out ./ds-bundle --components Stepper,TaskCard)",
+      "Bash(git reset *)"
     ]
   }
 }

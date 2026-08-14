@@ -252,15 +252,35 @@ Error:  border-cube-red-500
 | Variant | Classes |
 |---|---|
 | Primary | `h-8 px-4 py-2 rounded-full bg-cube-cobalt-600 text-white font-medium text-sm` |
-| Secondary | `h-8 px-4 py-2 rounded-full border border-cube-cobalt-600 text-cube-cobalt-600 font-medium text-sm` |
+| Secondary | `h-8 px-4 py-2 rounded-full border border-cube-cobalt-600 bg-white text-cube-cobalt-600 font-medium text-sm` |
+| Subtle Blue | `h-8 px-4 py-2 rounded-full bg-cube-cobalt-50 text-cube-cobalt-500 font-medium text-sm` |
 | Ghost | `h-8 px-4 py-2 rounded-full font-medium text-sm text-cube-gray-900` |
 | Add Source | `h-8 w-full rounded-full border border-cube-cobalt-600 text-cube-cobalt-600 font-medium text-xs text-center` |
+
+#### Subtle Blue States
+```
+Resting: bg-cube-cobalt-50  text-cube-cobalt-500
+Hover:   bg-cube-cobalt-100 text-cube-cobalt-600
+Active:  bg-cube-cobalt-200 text-cube-cobalt-700
+Focus:   + box-shadow focus-ring-default
+```
 
 #### Button Size Scale
 | Size | Height | Padding | Font Size | Font Weight |
 |---|---|---|---|---|
 | large (default) | 32px | `px-4 py-2` | 14px (body) | medium (500) |
 | small | 28px | `px-3 py-1.5` | 12px (caption-1) | medium (500) |
+
+#### Icon-Only Buttons
+Icon-only buttons are a fixed 32px × 32px square (28px × 28px at `small` size) — never rectangular.
+
+Pass the icon through the dedicated `icon` prop, **not** as `children` and **not** as `leadingIcon`/`trailingIcon`. `Button` only applies the fixed square width and zero horizontal padding when `icon` is set and `children` is empty; passing an icon as `children` leaves the button unconstrained width. `aria-label` is required on icon-only buttons — `Button` throws if it's missing.
+
+```tsx
+<Button icon={<i className="fa-regular fa-bell" />} aria-label="Notifications" />
+```
+
+Use `fa-regular` icons at 14px (`large`) / 12px (`small`), matching the `iconSize` token — verify the icon name at fontawesome.com before using it.
 
 ### Side Drawer
 ```

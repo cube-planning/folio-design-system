@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Card 3.0 — Folio DS Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link href="vendor/fontawesome/css/all.min.css" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'Nunito Sans', BlinkMacSystemFont, sans-serif; background: #F0F2F5; display: flex; justify-content: center; padding: 2rem; min-height: 100vh; }
+.wrap { width: 960px; }
+
+.header { padding: 1.5rem 0 1rem; }
+.header h1 { font-size: 22px; font-weight: 700; color: #0E2349; margin-bottom: 4px; }
+.header p { font-size: 13px; color: #677489; }
+
+.sb { background: white; border: 1px solid #E0E5EC; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(16,24,40,.06); }
+
+/* Toolbar */
+.sb-bar { background: white; border-bottom: 1px solid #E5E5E5; display: flex; align-items: center; gap: 4px; padding: 0 14px; height: 42px; }
+.sb-icon { width: 30px; height: 30px; border: none; background: none; cursor: pointer; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: #666; font-size: 14px; }
+.sb-icon:hover { background: #F3F3F3; }
+.sb-sep { width: 1px; height: 18px; background: #E5E5E5; margin: 0 4px; }
+.sb-logo { display: flex; align-items: center; gap: 8px; }
+.sb-logo-mark { display: flex; align-items: center; justify-content: center; }
+.sb-logo-mark svg { display: block; height: 22px; width: auto; }
+.sb-logo-text { font-size: 13px; font-weight: 700; color: #163D83; }
+.sb-bar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.sb-badge { font-size: 11px; font-weight: 600; color: #677489; background: #F1F4F8; padding: 2px 8px; border-radius: 99px; }
+
+/* Canvas */
+.sb-canvas { background: white; min-height: 220px; display: flex; align-items: center; justify-content: center; padding: 2.5rem; border-bottom: 1px solid #E5E5E5; background-image: radial-gradient(#DEE3EC 1px, transparent 1px); background-size: 20px 20px; }
+.sb-canvas.no-dots { background-image: none; }
+.sb-canvas.on-color { background-color: #173D82; background-image: none; }
+
+/* Code bar */
+.sb-codebar { background: white; display: flex; align-items: center; gap: 16px; padding: 8px 16px; border-bottom: 1px solid #E5E5E5; }
+.sb-cbtn { font-size: 12px; color: #888; border: none; background: none; cursor: pointer; display: flex; align-items: center; gap: 5px; padding: 4px 0; }
+.sb-cbtn:hover { color: #333; }
+.code-snippet { display: none; background: #F6F8FA; border: 1px solid #E5E5E5; border-radius: 6px; padding: 10px 14px; font-family: 'SFMono-Regular', monospace; font-size: 12px; color: #333; margin: 0 16px 12px; line-height: 1.6; white-space: pre-wrap; }
+.code-snippet.visible { display: block; }
+#copied-msg { font-size: 12px; color: #229E66; margin-left: auto; opacity: 0; transition: opacity 200ms; }
+#copied-msg.show { opacity: 1; }
+
+/* Tabs */
+.sb-tabs { background: white; display: flex; padding: 0 16px; border-bottom: 1px solid #E5E5E5; }
+.sb-tab { padding: 10px 14px; font-size: 12px; font-weight: 600; color: #999; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px; }
+.sb-tab.on { color: #163D83; border-bottom-color: #163D83; }
+
+/* Controls table */
+.ctl-head { display: grid; grid-template-columns: 160px 1fr 90px 1fr 32px; padding: 8px 16px; background: white; border-bottom: 1px solid #E5E5E5; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #aaa; }
+.ctl-row { display: grid; grid-template-columns: 160px 1fr 90px 1fr 32px; padding: 10px 16px; background: white; border-bottom: 1px solid #F2F2F2; align-items: center; min-height: 48px; }
+.ctl-row:hover { background: #FAFAFA; }
+.ctl-name { font-family: 'SFMono-Regular', 'Menlo', monospace; font-size: 12px; font-weight: 700; color: #333; }
+.ctl-desc { font-family: 'SFMono-Regular', monospace; font-size: 10px; color: #bbb; line-height: 1.5; padding-right: 12px; }
+.ctl-def { font-size: 11px; color: #ccc; }
+select.ctrl { width: 100%; border: 1px solid #E0E0E0; border-radius: 5px; padding: 5px 8px; font-size: 12px; background: white; color: #333; cursor: pointer; }
+select.ctrl:focus { outline: none; border-color: #A6BEEB; }
+input[type=text].ctrl { width: 100%; border: 1px solid #E0E0E0; border-radius: 5px; padding: 5px 8px; font-size: 12px; background: white; color: #333; }
+input[type=text].ctrl:focus { outline: none; border-color: #A6BEEB; }
+.bool-wrap { display: flex; }
+.bool-btn { flex: 1; padding: 4px 8px; font-size: 12px; border: 1px solid #E0E0E0; background: white; cursor: pointer; color: #777; }
+.bool-btn:first-child { border-radius: 5px 0 0 5px; border-right: none; }
+.bool-btn:last-child { border-radius: 0 5px 5px 0; }
+.bool-btn.on { background: #EBEBEB; font-weight: 700; color: #333; }
+.rst { width: 28px; height: 28px; border: none; background: none; cursor: pointer; color: #ccc; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+.rst:hover { background: #F0F0F0; color: #888; }
+
+/* State strip */
+.strip-divider { height: 1px; background: #EBEEF2; }
+.strip-wrap { padding: 20px; background: #FAFAFA; }
+.strip-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.strip-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #aaa; }
+.strip-variant { font-size: 11px; font-weight: 600; color: #677489; background: #EEF2FA; padding: 2px 8px; border-radius: 99px; }
+.strip-row { display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; }
+.strip-cell { display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; }
+.strip-cell:hover .strip-name { color: #163D83; }
+.strip-name { font-size: 10px; color: #aaa; font-weight: 600; letter-spacing: .04em; text-align: center; text-transform: uppercase; transition: color 100ms; }
+
+/* ── THE CARD ─────────────────────────────── */
+.fcard {
+  font-family: 'DM Sans', sans-serif;
+  background: #FFFFFF;
+  border-radius: 16px;
+  border: 1px solid #E3E8EF;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
+}
+.fcard.shadowed { border-color: #F8FAFC; box-shadow: 0 1px 2px rgba(16,24,40,.06), 0 2px 2px rgba(16,24,40,.06); }
+.fcard-title { font-size: 16px; font-weight: 500; color: #222B3A; line-height: 1.5; }
+.fcard-title.label { color: #677489; text-transform: uppercase; letter-spacing: .02em; font-size: 14px; }
+.fcard-body { font-size: 14px; font-weight: 400; color: #4A5567; line-height: 1.43; }
+.fcard-meta { font-size: 12px; color: #4A5567; }
+.fcard-micro { font-size: 10px; color: #677489; }
+.fcard-mono { font-family: 'JetBrains Mono', monospace; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <h1>Card 3.0 — Folio DS Prototype</h1>
+    <p>Task/Progress · Stat · Metric+Ring · Insight · Connector · Promo · Chart · Log/Timeline · Board thumbnail. One shared shell (16px radius, gray-300 border, Title 3/Medium) with per-variant composition.</p>
+  </div>
+
+  <div class="sb">
+    <div class="sb-bar">
+      <div class="sb-logo">
+        <span class="sb-logo-mark">
+          <svg width="20" height="22" viewBox="0 0 29 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11.2464 5.30427L13.5369 4L13.5282 15.7556L11.229 17.0598L11.2464 5.30427Z" fill="#163D83"></path>
+            <path d="M24.6057 21.23L14.8688 15.747V4L24.6057 9.5603V21.23Z" fill="#163D83"></path>
+            <path d="M23.935 22.3624L14.2678 27.9999L4.68762 22.3109L14.1894 16.8622L23.935 22.3624Z" fill="#163D83"></path>
+            <path d="M7.6318 9.67221L9.93103 8.35936L9.9136 17.8153L7.61438 19.1195L7.6318 9.67221Z" fill="#163D83"></path>
+            <path d="M4.01742 14.4599L6.31665 13.1471L6.29923 19.8744L4 21.1786L4.01742 14.4599Z" fill="#163D83"></path>
+          </svg>
+        </span>
+        <span class="sb-logo-text">Folio</span>
+      </div>
+      <div class="sb-sep"></div>
+      <button class="sb-icon" onclick="toggleDots()" title="Toggle dots background"><i class="fa-solid fa-table-cells"></i></button>
+      <button class="sb-icon" onclick="toggleCanvasColor()" title="Toggle colored background"><i class="fa-solid fa-fill-drip"></i></button>
+      <button class="sb-icon" title="Zoom in"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+      <button class="sb-icon" title="Zoom out"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+      <div class="sb-bar-right">
+        <span class="sb-badge">Card · Figma naming · 3.0</span>
+      </div>
+    </div>
+
+    <div class="sb-canvas" id="canvas">
+      <span id="preview"></span>
+    </div>
+
+    <div class="sb-codebar">
+      <button class="sb-cbtn" onclick="toggleCode()"><i class="fa-solid fa-code" style="font-size:13px"></i> Show code</button>
+      <button class="sb-cbtn" onclick="copyCode()"><i class="fa-regular fa-copy" style="font-size:13px"></i> Copy code</button>
+      <span id="copied-msg">Copied!</span>
+    </div>
+    <div class="code-snippet" id="code-block"></div>
+
+    <div class="sb-tabs">
+      <div class="sb-tab on">Controls</div>
+      <div class="sb-tab">Actions</div>
+      <div class="sb-tab">Accessibility</div>
+    </div>
+
+    <div class="ctl-head">
+      <span>Name</span><span>Description</span><span>Default</span><span>Control</span><span></span>
+    </div>
+
+    <!-- variant -->
+    <div class="ctl-row">
+      <span class="ctl-name">variant</span>
+      <span class="ctl-desc">task | stat | ring | insight | connector | promo | chart | log | thumbnail</span>
+      <span class="ctl-def">task</span>
+      <select class="ctrl" id="ctl-variant" onchange="render()">
+        <option value="task">task — Task/Progress</option>
+        <option value="stat">stat — Stat card</option>
+        <option value="ring">ring — Metric + ring</option>
+        <option value="insight">insight — Insight (Risk/Opportunity/Gap)</option>
+        <option value="connector">connector — Source/Destination</option>
+        <option value="promo">promo — Promo/CTA</option>
+        <option value="chart">chart — Chart card</option>
+        <option value="log">log — Log/Timeline</option>
+        <option value="thumbnail">thumbnail — Board thumbnail</option>
+      </select>
+      <button class="rst" onclick="resetSel('ctl-variant','task')" title="Reset">↺</button>
+    </div>
+
+    <!-- title -->
+    <div class="ctl-row">
+      <span class="ctl-name">title</span>
+      <span class="ctl-desc">string · Title 3/Medium, 16px/500, gray-900</span>
+      <span class="ctl-def">—</span>
+      <input type="text" class="ctrl" id="ctl-title" value="EMEA Entity – Intacct Sync Dimensions" oninput="render()">
+      <button class="rst" onclick="document.getElementById('ctl-title').value='EMEA Entity – Intacct Sync Dimensions';render()" title="Reset">↺</button>
+    </div>
+
+    <!-- status -->
+    <div class="ctl-row">
+      <span class="ctl-name">status</span>
+      <span class="ctl-desc">applies to task/connector variants · default | completed | error</span>
+      <span class="ctl-def">default</span>
+      <select class="ctrl" id="ctl-status" onchange="render()">
+        <option value="default">default</option>
+        <option value="completed">completed</option>
+        <option value="error">error</option>
+      </select>
+      <button class="rst" onclick="resetSel('ctl-status','default')" title="Reset">↺</button>
+    </div>
+
+    <!-- hover -->
+    <div class="ctl-row">
+      <span class="ctl-name">hover</span>
+      <span class="ctl-desc">boolean · clickable variants only (promo, thumbnail) · shadow-sm → shadow-md</span>
+      <span class="ctl-def">false</span>
+      <div class="bool-wrap" id="hover-wrap">
+        <button class="bool-btn on" onclick="setBool('hover',false,this,'hover-wrap')">False</button>
+        <button class="bool-btn" onclick="setBool('hover',true,this,'hover-wrap')">True</button>
+      </div>
+      <button class="rst" onclick="setBool('hover',false,document.querySelector('#hover-wrap .bool-btn'),'hover-wrap')" title="Reset">↺</button>
+    </div>
+
+    <!-- All variants strip -->
+    <div class="strip-divider"></div>
+    <div class="strip-wrap">
+      <div class="strip-header">
+        <span class="strip-label">All variants</span>
+        <span class="strip-variant" id="strip-variant-lbl">task</span>
+      </div>
+      <div class="strip-row" id="strip"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var S = { variant: 'task', title: 'EMEA Entity – Intacct Sync Dimensions', status: 'default', hover: false };
+
+var COLORS = {
+  gray900: '#222B3A', gray700: '#4A5567', gray600: '#677489', gray500: '#97A3B6',
+  gray300: '#E3E8EF', gray200: '#F2F5F9', gray100: '#F8FAFC',
+  cobalt600: '#122E64', cobalt500: '#173D82', cobalt100: '#C6D3EC', cobalt25: '#F4F7FC',
+  green700: '#15803D', green100: '#DCFAE6', greenBase: '#229E66',
+  red700: '#B42318', red100: '#FFE6E5',
+  blue600: '#2667D8', blue200: '#9DC4F8',
+  white: '#FFFFFF',
+};
+
+var VARIANT_LABELS = {
+  task: 'Task / Progress', stat: 'Stat', ring: 'Metric + Ring', insight: 'Insight',
+  connector: 'Connector', promo: 'Promo / CTA', chart: 'Chart', log: 'Log / Timeline', thumbnail: 'Board thumbnail'
+};
+
+var codeVisible = false;
+
+function el(tag, style, html) {
+  var e = document.createElement(tag);
+  if (style) Object.assign(e.style, style);
+  if (html != null) e.innerHTML = html;
+  return e;
+}
+
+function cardShell(opts) {
+  opts = opts || {};
+  var c = el('div');
+  c.className = 'fcard' + (opts.shadowed ? ' shadowed' : '');
+  if (opts.hover) {
+    c.style.boxShadow = '0 4px 8px rgba(16,24,40,.1), 0 2px 4px rgba(16,24,40,.06)';
+    c.style.cursor = 'pointer';
+  }
+  c.style.width = opts.width || '340px';
+  return c;
+}
+
+function buildTask(title, status) {
+  var c = cardShell({ width: '360px' });
+  c.appendChild(el('div', null, '<span class="fcard-title">' + title + '</span>'));
+
+  var steps = el('div', { display: 'flex', flexDirection: 'column', gap: '6px' });
+  var track = el('div', { display: 'flex', alignItems: 'center', width: '100%' });
+  var labels = ['Authenticating..', 'Sync', 'Validate', 'Save to Cube'];
+  var doneCount = status === 'completed' ? 4 : 1;
+  labels.forEach(function (lbl, i) {
+    var done = i < doneCount;
+    var dot = el('span', {
+      width: '16px', height: '16px', borderRadius: '9999px', flexShrink: '0',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      background: done ? COLORS.white : COLORS.white,
+      border: '2px solid ' + (done ? COLORS.cobalt500 : COLORS.gray300),
+    });
+    if (done) dot.innerHTML = '<span style="width:6px;height:6px;border-radius:9999px;background:' + COLORS.cobalt500 + '"></span>';
+    track.appendChild(dot);
+    if (i < labels.length - 1) {
+      track.appendChild(el('span', { flex: '1', height: '1px', background: i < doneCount - 1 ? COLORS.cobalt100 : COLORS.gray300 }));
+    }
+  });
+  steps.appendChild(track);
+  var labelRow = el('div', { display: 'flex', justifyContent: 'space-between' });
+  labels.forEach(function (lbl) {
+    labelRow.appendChild(el('span', { fontSize: '10px', color: COLORS.gray900, flex: '1', textAlign: 'center' }, lbl));
+  });
+  steps.appendChild(labelRow);
+  c.appendChild(steps);
+
+  var footer = el('div', { display: 'flex', alignItems: 'center', justifyContent: 'space-between' });
+  var who = el('div', { display: 'flex', alignItems: 'center', gap: '8px' });
+  who.innerHTML =
+    '<span style="width:24px;height:24px;border-radius:9999px;background:#70CF98;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center">JS</span>' +
+    '<span class="fcard-meta">Jessica Smith</span><span class="fcard-meta" style="color:' + COLORS.gray600 + '">Started 4:23 pm</span>';
+  footer.appendChild(who);
+
+  if (status === 'completed') {
+    footer.appendChild(el('span', {
+      fontSize: '12px', fontWeight: '600', color: COLORS.green700, background: COLORS.green100,
+      padding: '3px 10px', borderRadius: '9999px', display: 'inline-flex', alignItems: 'center', gap: '4px'
+    }, '<i class="fa-solid fa-circle-check" style="font-size:10px"></i> Completed'));
+  } else if (status === 'error') {
+    footer.appendChild(el('span', { fontSize: '12px', fontWeight: '600', color: COLORS.red700 }, 'Last import failed'));
+  } else {
+    footer.appendChild(el('button', {
+      height: '28px', padding: '0 14px', borderRadius: '9999px', border: '1px solid ' + COLORS.cobalt500,
+      background: COLORS.white, color: COLORS.cobalt500, fontSize: '12px', fontWeight: '500', cursor: 'pointer'
+    }, 'Stop'));
+  }
+  c.appendChild(footer);
+  return c;
+}
+
+function buildStat(title) {
+  var c = cardShell({ width: '220px' });
+  c.appendChild(el('span', null, '<span class="fcard-title label">' + title.toUpperCase() + '</span>'));
+  var row = el('div', { display: 'flex', alignItems: 'center', gap: '8px' });
+  row.innerHTML =
+    '<span style="font-size:36px;font-weight:700;color:' + COLORS.gray900 + ';letter-spacing:-0.36px">$17.5M</span>' +
+    '<span style="font-size:12px;color:' + COLORS.green700 + '"><i class="fa-solid fa-arrow-trend-up"></i> 16.9%</span>';
+  c.appendChild(row);
+  c.appendChild(el('span', null, '<span class="fcard-micro">vs Last Year from $12.1M</span>'));
+  return c;
+}
+
+function buildRing(title) {
+  var c = cardShell({ width: '260px' });
+  c.appendChild(el('span', null, '<span class="fcard-title label">' + title.toUpperCase() + '</span>'));
+  var row = el('div', { display: 'flex', alignItems: 'center', justifyContent: 'space-between' });
+  var left = el('div', { display: 'flex', flexDirection: 'column', gap: '4px' });
+  left.innerHTML =
+    '<span style="font-size:36px;font-weight:700;color:' + COLORS.gray900 + '">55,000</span>' +
+    '<span class="fcard-meta" style="color:' + COLORS.gray600 + '">50,000 base credits</span>' +
+    '<span style="font-size:20px;font-weight:600;color:' + COLORS.greenBase + '">+ 5,000 purchased</span>';
+  row.appendChild(left);
+  var ring = el('div', {
+    width: '96px', height: '96px', borderRadius: '9999px', flexShrink: '0',
+    background: 'conic-gradient(' + COLORS.blue600 + ' 0% 58%, ' + COLORS.gray200 + ' 58% 100%)',
+    display: 'flex', alignItems: 'center', justifyContent: 'center'
+  });
+  ring.appendChild(el('div', {
+    width: '70px', height: '70px', borderRadius: '9999px', background: COLORS.white,
+    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', fontWeight: '600', color: COLORS.gray900
+  }, '58%'));
+  row.appendChild(ring);
+  c.appendChild(row);
+  return c;
+}
+
+function buildInsight(title) {
+  var kind = { Risk: { bg: '#FDECD8', icon: 'fa-triangle-exclamation', fg: '#D97706' },
+               Opportunity: { bg: '#D6F3E7', icon: 'fa-circle-check', fg: COLORS.greenBase },
+               Gap: { bg: COLORS.cobalt25, icon: 'fa-arrows-left-right', fg: COLORS.cobalt500 } };
+  var t = kind[title] ? title : 'Risk';
+  var k = kind[t];
+  var c = cardShell({ width: '260px' });
+  c.style.padding = '0';
+  c.style.gap = '0';
+  var band = el('div', { background: k.bg, padding: '20px', display: 'flex', justifyContent: 'flex-end' });
+  band.innerHTML = '<span style="width:28px;height:28px;border-radius:9999px;background:#fff;display:flex;align-items:center;justify-content:center"><i class="fa-solid ' + k.icon + '" style="color:' + k.fg + ';font-size:13px"></i></span>';
+  c.appendChild(band);
+  var body = el('div', { padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px' });
+  body.innerHTML =
+    '<span class="fcard-title">' + t + '</span>' +
+    '<span class="fcard-body">Churn assumption of $150K/mo is 17% below your trailing 6-month average — consider stress-testing at actuals.</span>';
+  c.appendChild(body);
+  return c;
+}
+
+function buildConnector(title, status) {
+  var c = cardShell({ width: '240px' });
+  var head = el('div', { display: 'flex', alignItems: 'center', justifyContent: 'space-between' });
+  head.innerHTML =
+    '<span style="display:flex;align-items:center;gap:8px"><span style="width:24px;height:24px;border-radius:9999px;background:' + COLORS.gray100 + ';display:flex;align-items:center;justify-content:center"><i class="fa-brands fa-sellsy" style="font-size:12px;color:' + COLORS.blue600 + '"></i></span><span class="fcard-title" style="font-size:14px;color:' + COLORS.blue600 + '">' + title + '</span></span>' +
+    '<i class="fa-solid fa-pen" style="font-size:12px;color:' + COLORS.gray500 + '"></i>';
+  c.appendChild(head);
+  c.appendChild(el('span', {height: '32px'}));
+  if (status === 'error') {
+    c.appendChild(el('div', {
+      color: COLORS.red700, fontSize: '12px', fontWeight: '600',
+      borderRadius: '9999px', padding: '8px 0', textAlign: 'center'
+    }, 'Last import failed'));
+  } else {
+    c.appendChild(el('button', {
+      height: '32px', width: '100%', borderRadius: '9999px', border: '1px solid ' + COLORS.cobalt500,
+      background: COLORS.white, color: COLORS.cobalt500, fontSize: '12px', fontWeight: '500', cursor: 'pointer'
+    }, 'Source Dimensions'));
+  }
+  return c;
+}
+
+function buildPromo() {
+  var c = cardShell({ width: '260px' });
+  c.style.padding = '0';
+  c.style.gap = '0';
+  c.style.overflow = 'hidden';
+  var band = el('div', { background: COLORS.cobalt500, padding: '20px', display: 'flex', flexDirection: 'column', gap: '10px' });
+  band.innerHTML =
+    '<span style="align-self:flex-start;background:#D3F26A;color:#1a2e05;font-size:10px;font-weight:700;letter-spacing:.04em;padding:3px 10px;border-radius:9999px">FIRESIDE CHAT</span>' +
+    '<span style="color:#fff;font-size:18px;font-weight:700;line-height:1.3">AI-POWERED COLLABORATION: HOW FINANCE PLAYS A KEY ROLE</span>';
+  c.appendChild(band);
+  var body = el('div', { padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' });
+  body.innerHTML =
+    '<span class="fcard-body">Finance plays a key role — not just in operations, but in driving growth.</span>' +
+    '<button style="align-self:flex-start;height:32px;padding:0 16px;border-radius:9999px;border:none;background:' + COLORS.cobalt600 + ';color:#fff;font-size:14px;font-weight:500;cursor:pointer">Learn More</button>';
+  c.appendChild(body);
+  return c;
+}
+
+function buildChart(title) {
+  var c = cardShell({ width: '380px' });
+  c.className += ' shadowed';
+  c.appendChild(el('span', null, '<span class="fcard-title">' + title + '</span>'));
+  var legend = el('div', { display: 'flex', gap: '16px' });
+  legend.innerHTML =
+    '<span style="display:flex;align-items:center;gap:6px;font-size:12px;color:' + COLORS.gray600 + '"><span style="width:8px;height:8px;border-radius:9999px;background:' + COLORS.blue200 + '"></span>Budget</span>' +
+    '<span style="display:flex;align-items:center;gap:6px;font-size:12px;color:' + COLORS.gray600 + '"><span style="width:8px;height:8px;border-radius:9999px;background:' + COLORS.blue600 + '"></span>Actuals</span>';
+  c.appendChild(legend);
+  var bars = el('div', { display: 'flex', alignItems: 'flex-end', gap: '4px', height: '80px' });
+  [40, 70, 60, 70, 60, 70].forEach(function (h, i) {
+    bars.appendChild(el('div', { width: '14px', height: h + 'px', borderRadius: '2px 2px 0 0', background: i % 2 === 0 ? COLORS.blue200 : COLORS.blue600 }));
+  });
+  c.appendChild(bars);
+  return c;
+}
+
+function buildLog(title) {
+  var c = cardShell({ width: '320px' });
+  c.appendChild(el('span', null, '<span class="fcard-title">' + title + '</span>'));
+  var items = ['Established baseline from actuals and current budget', 'Created "FY26 Growth Plan" scenario', 'Applied growth assumptions'];
+  var list = el('div', { display: 'flex', flexDirection: 'column', gap: '10px' });
+  items.forEach(function (txt) {
+    var row = el('div', { display: 'flex', gap: '8px' });
+    row.innerHTML = '<span style="width:6px;height:6px;border-radius:9999px;background:' + COLORS.gray500 + ';margin-top:6px;flex-shrink:0"></span>' +
+      '<span class="fcard-body" style="font-size:12px">' + txt + '<br><span class="fcard-micro">Today at 12:04 pm</span></span>';
+    list.appendChild(row);
+  });
+  c.appendChild(list);
+  return c;
+}
+
+function buildThumbnail(title) {
+  var c = cardShell({ width: '200px' });
+  c.style.gap = '12px';
+  var preview = el('div', {
+    background: COLORS.cobalt25, borderRadius: '8px', height: '90px',
+    display: 'flex', alignItems: 'center', justifyContent: 'center'
+  }, '<i class="fa-solid fa-chart-line" style="color:' + COLORS.cobalt500 + ';font-size:22px"></i>');
+  c.appendChild(preview);
+  c.appendChild(el('span', null, '<span class="fcard-meta">' + title + '</span>'));
+  return c;
+}
+
+var BUILDERS = {
+  task: function (S) { return buildTask(S.title, S.status); },
+  stat: function (S) { return buildStat('Ending ARR'); },
+  ring: function (S) { return buildRing('Credit Pool'); },
+  insight: function (S) { return buildInsight(S.title.match(/Risk|Opportunity|Gap/) ? S.title.match(/Risk|Opportunity|Gap/)[0] : 'Risk'); },
+  connector: function (S) { return buildConnector(S.title, S.status); },
+  promo: function (S) { return buildPromo(); },
+  chart: function (S) { return buildChart('2025 Budget v Actuals'); },
+  log: function (S) { return buildLog('Action Log'); },
+  thumbnail: function (S) { return buildThumbnail('2026 Strategic Plan Scenarios'); },
+};
+
+function buildCard(variant, S, hover) {
+  var fn = BUILDERS[variant] || BUILDERS.task;
+  var node = fn(Object.assign({}, S, { hover: hover }));
+  if (hover) {
+    node.style.boxShadow = '0 4px 8px rgba(16,24,40,.1), 0 2px 4px rgba(16,24,40,.06)';
+    node.style.cursor = 'pointer';
+  }
+  return node;
+}
+
+function render() {
+  S.variant = document.getElementById('ctl-variant').value;
+  S.title   = document.getElementById('ctl-title').value;
+  S.status  = document.getElementById('ctl-status').value;
+
+  var preview = document.getElementById('preview');
+  preview.innerHTML = '';
+  preview.appendChild(buildCard(S.variant, S, S.hover));
+
+  document.getElementById('strip-variant-lbl').textContent = S.variant;
+  updateCode();
+  renderStrip();
+}
+
+function renderStrip() {
+  var strip = document.getElementById('strip');
+  strip.innerHTML = '';
+  Object.keys(VARIANT_LABELS).forEach(function (key) {
+    var cell = document.createElement('div');
+    cell.className = 'strip-cell';
+    var mini = document.createElement('div');
+    mini.style.transform = 'scale(0.6)';
+    mini.style.transformOrigin = 'top center';
+    mini.appendChild(buildCard(key, S, false));
+    cell.appendChild(mini);
+    var nm = document.createElement('span');
+    nm.className = 'strip-name';
+    nm.textContent = VARIANT_LABELS[key];
+    cell.appendChild(nm);
+    cell.addEventListener('click', function () {
+      document.getElementById('ctl-variant').value = key;
+      render();
+    });
+    strip.appendChild(cell);
+  });
+}
+
+function setBool(key, val, btn, wrapId) {
+  S[key] = val;
+  document.querySelectorAll('#' + wrapId + ' .bool-btn').forEach(function (b) { b.classList.remove('on'); });
+  btn.classList.add('on');
+  render();
+}
+
+function resetSel(id, val) {
+  document.getElementById(id).value = val;
+  render();
+}
+
+function toggleDots() {
+  var c = document.getElementById('canvas');
+  c.classList.remove('on-color');
+  c.classList.toggle('no-dots');
+}
+
+function toggleCanvasColor() {
+  document.getElementById('canvas').classList.toggle('on-color');
+}
+
+function updateCode() {
+  var attrs = '\n  variant="' + S.variant + '"';
+  if (S.variant === 'task' || S.variant === 'connector' || S.variant === 'insight') {
+    attrs += '\n  title="' + (S.title || '') + '"';
+  }
+  if (S.status !== 'default') attrs += '\n  status="' + S.status + '"';
+  document.getElementById('code-block').textContent = '<Card' + attrs + '\n/>';
+}
+
+function toggleCode() {
+  codeVisible = !codeVisible;
+  document.getElementById('code-block').classList.toggle('visible', codeVisible);
+}
+
+function copyCode() {
+  updateCode();
+  var code = document.getElementById('code-block').textContent;
+  navigator.clipboard && navigator.clipboard.writeText(code);
+  var msg = document.getElementById('copied-msg');
+  msg.classList.add('show');
+  if (!codeVisible) { document.getElementById('code-block').classList.add('visible'); codeVisible = true; }
+  setTimeout(function () { msg.classList.remove('show'); }, 2000);
+}
+
+render();
+</script>
+</body>
+</html>

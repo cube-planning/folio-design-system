@@ -31,7 +31,7 @@ const TYPE_STYLES = {
     loading:  { background: COLORS.cobalt500 },
   },
   secondary: {
-    default:  { background: "transparent", color: COLORS.cobalt500, border: `1.5px solid ${COLORS.cobalt500}` },
+    default:  { background: COLORS.white, color: COLORS.cobalt500, border: `1.5px solid ${COLORS.cobalt500}` },
     hover:    { background: COLORS.cobalt50 },
     pressed:  { background: COLORS.cobalt100 },
     focused:  { background: "transparent", boxShadow: `0 0 0 3px ${COLORS.cobalt100}` },
@@ -63,12 +63,12 @@ const TYPE_STYLES = {
     loading:  { background: COLORS.red100 },
   },
   "subtle-blue": {
-    default:  { background: COLORS.blue100, color: COLORS.blue700, border: "none" },
-    hover:    { background: "#BFDBFE" },
-    pressed:  { background: "#BFDBFE" },
-    focused:  { background: COLORS.blue100, boxShadow: `0 0 0 3px ${COLORS.blue100}` },
+    default:  { background: COLORS.cobalt50, color: COLORS.cobalt500, border: "none" },
+    hover:    { background: COLORS.cobalt100 },
+    pressed:  { background: COLORS.cobalt100 },
+    focused:  { background: COLORS.cobalt50, boxShadow: `0 0 0 3px ${COLORS.cobalt100}` },
     disabled: { opacity: 0.38 },
-    loading:  { background: COLORS.blue100 },
+    loading:  { background: COLORS.cobalt50 },
   },
   "ghost-blue": {
     default:  { background: "transparent", color: COLORS.blue500, border: "none" },
@@ -124,6 +124,7 @@ export function Button({
   state = "default",
   radius = 16,      // corner radius in px — 16 (default, pill-like) or 8 (squarer)
   stroke = false,   // add a 1px border in the variant's color (no-op on outlined variants)
+  icon,          // icon-only button: pass a Font Awesome <i> element here, not as children
   leadingIcon,
   trailingIcon,
   loading = false,
@@ -137,7 +138,11 @@ export function Button({
   const typeStyle = TYPE_STYLES[type]?.default ?? TYPE_STYLES.primary.default;
   const stateOverride = TYPE_STYLES[type]?.[resolvedState] ?? {};
   const s = SIZE[size] ?? SIZE.large;
-  const isIconOnly = !children;
+  const isIconOnly = !!icon && !children;
+
+  if (isIconOnly && !ariaLabel) {
+    throw new Error("Button: icon-only buttons require an aria-label.");
+  }
 
   // Optional stroke: add a 1px border in the variant's text color, unless the
   // variant is already outlined (secondary / *-secondary define their own border).
@@ -180,6 +185,8 @@ export function Button({
     >
       {loading ? (
         <Spinner size={s.iconSize} />
+      ) : isIconOnly ? (
+        <span style={{ fontSize: s.iconSize, display: "inline-flex" }}>{icon}</span>
       ) : (
         leadingIcon && <span style={{ fontSize: s.iconSize, display: "inline-flex" }}>{leadingIcon}</span>
       )}

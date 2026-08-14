@@ -8,6 +8,18 @@
       "port": 3456
     },
     {
+      "name": "folio-preview",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "-l", "3458", "."],
+      "port": 3458
+    },
+    {
+      "name": "folio-review",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "."],
+      "autoPort": true
+    },
+    {
       "name": "webflow",
       "runtimeExecutable": "npx",
       "runtimeArgs": ["serve", "-l", "3457", "/Users/nanosborne/nanosborne.webflow"],

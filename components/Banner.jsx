@@ -1,22 +1,26 @@
 const VARIANTS = {
   error: {
-    background: "#FFE6E5",
-    color:      "#B42318",
+    background: "var(--color-red-100)",
+    border:     "var(--color-red-300)",
+    color:      "var(--color-red-700)",
     icon:       "fa-solid fa-circle-xmark",
   },
   warning: {
-    background: "#FFFAEB",
-    color:      "#B54708",
+    background: "var(--color-yellow-100)",
+    border:     "var(--color-yellow-300)",
+    color:      "var(--color-yellow-700)",
     icon:       "fa-solid fa-triangle-exclamation",
   },
   info: {
-    background: "#EFF6FF",
-    color:      "#1D40AF",
+    background: "var(--color-blue-50)",
+    border:     "var(--color-blue-300)",
+    color:      "var(--color-blue-700)",
     icon:       "fa-solid fa-circle-info",
   },
   success: {
-    background: "#ECFDF3",
-    color:      "#067647",
+    background: "var(--color-green-100)",
+    border:     "var(--color-green-300)",
+    color:      "var(--color-green-700)",
     icon:       "fa-solid fa-circle-check",
   },
 };
@@ -31,6 +35,7 @@ export function Banner({ variant = "info", title, children, style }) {
       padding: 12,
       borderRadius: 12,
       background: v.background,
+      border: `1px solid ${v.border}`,
       fontFamily: "'DM Sans', sans-serif",
       ...style,
     }}
