@@ -3,18 +3,26 @@
 //
 // Axes from Figma:
 //   type        : "error" | "warning" | "success" | "info" | "ai" | "neutral"
-//   header      : optional bold lead line above the body text
+//   header      : optional SemiBold lead line above the body text (all 6 types
+//                 use SemiBold/600 for the header per Figma — confirmed 2026-08-19)
 //   button      : optional trailing pill CTA
 //   dismissable : optional trailing ghost × button
 //   icon        : leading icon — defaults to the type's glyph; pass a Font Awesome
 //                 class string to swap it, or `false` to omit the icon entirely
+//
+// Error is the only type where header/body use different shades in Figma
+// (header red-800, body red-700) — every other type uses one shade for both.
+// Neutral's Figma feedback-button fill (yellow-200) looks like leftover
+// copy-paste from another variant, not intentional — kept our existing
+// gray-based button styling instead of copying that inconsistency.
 
 const VARIANTS = {
   error: {
-    background: "var(--color-red-100)",
-    color:      "var(--color-red-700)",
-    icon:       "fa-solid fa-circle-xmark",
-    button:     { background: "var(--color-red-50)", border: "var(--color-red-200)", color: "var(--color-red-500)" },
+    background:  "var(--color-red-100)",
+    color:       "var(--color-red-700)",
+    headerColor: "var(--color-red-800)",
+    icon:        "fa-solid fa-circle-xmark",
+    button:      { background: "var(--color-red-50)", border: "var(--color-red-200)", color: "var(--color-red-500)" },
   },
   warning: {
     background: "var(--color-yellow-100)",
@@ -95,7 +103,7 @@ export function Banner({
         )}
         <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0, gap: 4, paddingTop: 2 }}>
           {title && (
-            <p style={{ margin: 0, fontSize: 14, fontWeight: 500, color: v.color, lineHeight: "20px" }}>
+            <p style={{ margin: 0, fontSize: 14, fontWeight: 600, color: v.headerColor ?? v.color, lineHeight: "20px" }}>
               {title}
             </p>
           )}
