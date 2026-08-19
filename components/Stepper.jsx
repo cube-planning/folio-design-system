@@ -1,8 +1,16 @@
 // Stepper — Folio Design System
-// Source of truth: prototypes/stepper-3-prototype.html (3.0)
+// Source of truth: prototypes/stepper-3-prototype.html (3.0), checked against
+// Figma "Folio Design System Beta" › Stepper (node 519:8848) on 2026-08-19.
 //
 // A horizontal progress track of steps, each "done" | "active" | "inactive".
 // Used standalone (e.g. onboarding) or embedded inside a TaskCard.
+//
+// Figma's Stepper primitive is circle+track only — no label. The label here
+// is a deliberate addition on top of the Figma primitive, kept because this
+// component is documented for standalone use where an unlabeled track isn't
+// very useful. Figma's "done" fill and Hover state are baked into image
+// assets with no extractable color value, and this repo skips hover-state
+// variants elsewhere (Radio, Checkbox) for the same reason — left unchanged.
 
 const COLORS = {
   cobalt500: "#173D82",
@@ -13,7 +21,7 @@ const COLORS = {
 };
 
 const SIZE = {
-  md: { circle: 36, font: 12, dot: 10, gap: 8, labelWidth: 88 },
+  md: { circle: 32, font: 12, dot: 10, gap: 8, labelWidth: 88 },
   sm: { circle: 24, font: 11, dot: 7,  gap: 6, labelWidth: 64 },
 };
 
@@ -33,7 +41,7 @@ function Circle({ status, size }) {
   if (status === "done") {
     return (
       <span style={{ ...base, background: COLORS.cobalt50, color: COLORS.cobalt500 }}>
-        <i className="fa-solid fa-check" style={{ fontSize: s.font }} aria-hidden="true" />
+        <i className="fa-regular fa-check" style={{ fontSize: s.font }} aria-hidden="true" />
       </span>
     );
   }

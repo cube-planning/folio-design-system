@@ -10,6 +10,15 @@
    border semantics, and data visualization tokens.
    ============================================================ */
 
+/* Self-hosted Font Awesome, already provisioned in the synced design-system
+   project at this exact path (fontawesome/css/all.min.css + fontawesome/webfonts/).
+   Every component in this system uses fa-* icon classes; without this import
+   they render as empty boxes in any preview that doesn't separately load an
+   FA CDN kit script (which requires a paid kit code most consumers won't have).
+   This file's content is appended into _ds_bundle.css via cfg.cssEntry, so the
+   browser resolves the relative url() below against the served project root. */
+@import url("./fontawesome/css/all.min.css");
+
 :root {
 
   /* ============================================================
