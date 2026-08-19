@@ -6,8 +6,11 @@
 cp -r "<skill-base-dir>"/package-build.mjs ... .ds-sync/   # re-stage scripts first
 node .ds-sync/resync.mjs --config .design-sync/config.json --node-modules ./node_modules \
   --entry ./dist/index.js --out ./ds-bundle --remote .design-sync/.cache/remote-sync.json
+./.design-sync/copy-fontawesome.sh   # REQUIRED — see "Font Awesome" note below; run before any validate/upload
 ```
 Fetch `_ds_sync.json` from the project to `.design-sync/.cache/remote-sync.json` before running.
+
+**Font Awesome — do not skip `copy-fontawesome.sh`.** `resync.mjs`/`package-build.mjs` wipe `ds-bundle/` on every run, so the Font Awesome files that `tokens/tokens.css`'s `@import url("./fontawesome/css/all.min.css")` depends on (see the dated entry below) must be re-copied from `vendor/fontawesome/` every single time, or `package-validate.mjs` fails `[CSS_IMPORT_MISSING]` and the driver's `ok` goes `false`. Run the script right after the build/resync step, before `package-validate.mjs` or any `DesignSync` upload.
 
 ## Component discovery
 
