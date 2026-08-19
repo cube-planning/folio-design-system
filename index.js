@@ -4,6 +4,7 @@ export { Button }     from "./components/Button.jsx";
 export { Input }      from "./components/Input.jsx";
 export { Textarea }   from "./components/Textarea.jsx";
 export { Select }     from "./components/Select.jsx";
+export { ListItem }   from "./components/ListItem.jsx";
 export { Badge }      from "./components/Badge.jsx";
 export { Banner }     from "./components/Banner.jsx";
 export { Drawer }     from "./components/Drawer.jsx";

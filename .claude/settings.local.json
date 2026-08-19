@@ -111,7 +111,19 @@
       "Bash(cp ds-bundle/_ds_sync.json .design-sync/.cache/remote-sync.json)",
       "Bash(node .ds-sync/lib/preview-rebuild.mjs --config .design-sync/config.json --node-modules ./node_modules --out ./ds-bundle --components Banner)",
       "Bash(node .ds-sync/lib/preview-rebuild.mjs --config .design-sync/config.json --node-modules ./node_modules --out ./ds-bundle --components Stepper,TaskCard)",
-      "Bash(git reset *)"
+      "Bash(git reset *)",
+      "Bash(md5 /Users/nanosborne/folio/ds-bundle/_preview/Button.js)",
+      "Bash(claude mcp *)",
+      "mcp__claude-in-chrome__browser_batch",
+      "mcp__claude-in-chrome__javascript_tool",
+      "Bash(curl -sL -o /private/tmp/claude-503/-Users-nanosborne-folio/f68d0247-d7dd-42ac-bae3-abe5ca655f41/scratchpad/node_19_42.png \"https://www.figma.com/api/mcp/asset/fdf11473-1ce1-47ba-a1e4-7099ab7bfc7f.png\")",
+      "Bash(curl -sL -o form_2087_25293.png \"https://www.figma.com/api/mcp/asset/9c6c2e67-1e93-472a-b0f2-70d8a9ed451d.png\")",
+      "Bash(curl -sL -o footer_input_2015_817.png \"https://www.figma.com/api/mcp/asset/d5f9e1cf-a6ac-4bd9-a0eb-ec1c720cde79.png\")",
+      "mcp__e3b9232a-cce4-4558-9af5-73f9834ad683__search_design_system",
+      "mcp__claude-in-chrome__tabs_context_mcp",
+      "mcp__claude-in-chrome__get_page_text",
+      "Bash(python3 -m json.tool)",
+      "Bash(git -C /Users/nanosborne/folio status --short)"
     ]
   }
 }

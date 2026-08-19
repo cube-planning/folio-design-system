@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { ListItem } from "./ListItem.jsx";
 
 const COLORS = {
   cobalt500: "#173D82",
@@ -187,30 +188,16 @@ export function Select({
             </div>
           )}
           {filteredOptions.map(opt => {
-            const selected = multi ? selectedValues.includes(opt) : opt === selectedValues;
+            const isSelected = multi ? selectedValues.includes(opt) : opt === selectedValues;
             return (
-              <div
+              <ListItem
                 key={opt}
+                label={opt}
+                multi={multi}
+                selected={!multi && isSelected}
+                checked={multi ? (isSelected ? "checked" : "unchecked") : "unchecked"}
                 onClick={() => toggleOption(opt)}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  padding: "8px 12px",
-                  fontSize: s.fontSize,
-                  color: selected ? COLORS.cobalt500 : COLORS.gray900,
-                  background: selected && !multi ? COLORS.cobalt50 : "transparent",
-                  cursor: "pointer",
-                  fontFamily: "'DM Sans', sans-serif",
-                }}
-              >
-                {multi && (
-                  <input type="checkbox" readOnly checked={selected}
-                    style={{ accentColor: COLORS.cobalt500, width: 14, height: 14, flexShrink: 0 }}
-                  />
-                )}
-                {opt}
-              </div>
+              />
             );
           })}
         </div>

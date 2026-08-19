@@ -14,6 +14,7 @@
     "Input":        "components/Input.jsx",
     "Textarea":     "components/Textarea.jsx",
     "Select":       "components/Select.jsx",
+    "ListItem":     "components/ListItem.jsx",
     "Badge":        "components/Badge.jsx",
     "Banner":       "components/Banner.jsx",
     "Drawer":       "components/Drawer.jsx",
