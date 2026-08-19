@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Folio — Shell</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Lato:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../vendor/fonts/dm-sans/dm-sans.css">
+  <link rel="stylesheet" href="../vendor/fontawesome/css/all.min.css">
 
   <!-- Icons must load before DOMContentLoaded fires -->
   <script src="../components/_sidebar-icons.js"></script>
@@ -130,14 +130,14 @@
     }
     .sb.col .nav-section { padding: 0; align-items: center; }
 
-    /* Section header — Lato Medium 12px, gray/700 per Figma spec */
+    /* Section header — DM Sans Medium 12px, gray/700 per Figma spec */
     .sec {
       display: flex;
       align-items: center;
       gap: 4px;
       height: 20px;
       padding: 0 8px;
-      font-family: 'Lato', sans-serif;
+      font-family: 'DM Sans', sans-serif;
       font-size: 12px;
       font-weight: 500;
       color: #4A5567;
@@ -215,6 +215,7 @@
       justify-content: center;
       flex-shrink: 0;
       color: #4A5567;
+      font-size: 14px;
     }
 
     /* Inactive label — DM Sans Regular 14px, gray/900 per Figma spec */
@@ -274,13 +275,13 @@
     .apps-wrap { padding: 0 8px 16px; }
     .sb.col .apps-wrap { padding: 0 0 8px; }
 
-    /* Apps section header — same Lato/color treatment as .sec */
+    /* Apps section header — same DM Sans/color treatment as .sec */
     .apps-sec {
       display: flex;
       align-items: center;
       gap: 4px;
       padding: 8px 8px 4px;
-      font-family: 'Lato', sans-serif;
+      font-family: 'DM Sans', sans-serif;
       font-size: 12px;
       font-weight: 500;
       color: #4A5567;
@@ -514,6 +515,7 @@
             <span class="sec-lbl">Reporting &amp; Analytics</span>
           </div>
           <div class="ni" data-label="Cube BI"><div class="ni-ic" data-icon="cubeBI"></div><span class="ni-lbl">Cube BI</span></div>
+          <div class="ni" data-label="Builder"><div class="ni-ic"><i class="fa-regular fa-hammer"></i></div><span class="ni-lbl">Builder</span></div>
           <div class="ni" data-label="Boards"><div class="ni-ic" data-icon="boards"></div><span class="ni-lbl">Boards</span></div>
           <div class="ni" data-label="Smart Variance"><div class="ni-ic" data-icon="smartVariance"></div><span class="ni-lbl">Smart Variance</span></div>
           <div class="ni" data-label="Cube AI"><div class="ni-ic" data-icon="aiAnalyst"></div><span class="ni-lbl">Cube AI</span></div>
