@@ -7,6 +7,7 @@
   "cssEntry": "tokens/tokens.css",
   "tokensGlob": "tokens/typography.css",
   "runtimeFontPrefixes": ["DM Sans", "JetBrains Mono"],
+  "extraFonts": "vendor/fonts/dm-sans/dm-sans.css",
   "componentSrcMap": {
     "Text":         "components/Text.jsx",
     "Avatar":       "components/Avatar.jsx",
