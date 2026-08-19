@@ -9,7 +9,7 @@ export { Badge }      from "./components/Badge.jsx";
 export { Banner }     from "./components/Banner.jsx";
 export { Drawer }     from "./components/Drawer.jsx";
 export { ImportDrawer } from "./components/ImportDrawer.jsx";
-export { Segmented }  from "./components/Segmented.jsx";
+export { SegmentedButton } from "./components/SegmentedButton.jsx";
 export { Toggle }     from "./components/Toggle.jsx";
 export { Table }      from "./components/Table.jsx";
 export { Cell }       from "./components/TableCells.jsx";

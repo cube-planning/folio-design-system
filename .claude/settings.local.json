@@ -123,7 +123,10 @@
       "mcp__claude-in-chrome__tabs_context_mcp",
       "mcp__claude-in-chrome__get_page_text",
       "Bash(python3 -m json.tool)",
-      "Bash(git -C /Users/nanosborne/folio status --short)"
+      "Bash(git -C /Users/nanosborne/folio status --short)",
+      "Bash(jq -r .[].text /Users/nanosborne/.claude/projects/-Users-nanosborne-folio/990d08cf-d9b9-4c18-ab8a-01ba07bca09c/tool-results/mcp-e3b9232a-cce4-4558-9af5-73f9834ad683-get_metadata-1787161222579.txt)",
+      "mcp__e3b9232a-cce4-4558-9af5-73f9834ad683__list_file_components_for_code_connect",
+      "Bash(awk -F': ' '{print $2}')"
     ]
   }
 }

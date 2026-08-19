@@ -18,7 +18,7 @@
     "Badge":        "components/Badge.jsx",
     "Banner":       "components/Banner.jsx",
     "Drawer":       "components/Drawer.jsx",
-    "Segmented":    "components/Segmented.jsx",
+    "SegmentedButton": "components/SegmentedButton.jsx",
     "Toggle":       "components/Toggle.jsx",
     "Table":        "components/Table.jsx",
     "SourceCard":   "components/SourceCard.jsx",

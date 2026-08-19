@@ -1,4 +1,4 @@
-// Segmented — Folio Design System
+// SegmentedButton — Folio Design System
 // Source of truth: Figma "Folio Design System Beta" › Segmented button (node 179:39449)
 //
 //   options : Array<{ value, label?, icon?, "aria-label"? }>
@@ -32,7 +32,7 @@ function IconSlot({ box, size, children }) {
   );
 }
 
-export function Segmented({ options = [], value, onChange, size = "large" }) {
+export function SegmentedButton({ options = [], value, onChange, size = "large" }) {
   const s = SIZE[size] ?? SIZE.large;
 
   return (

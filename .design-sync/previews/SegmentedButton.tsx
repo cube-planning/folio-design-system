@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Segmented } from "folio-design-system";
+import { SegmentedButton } from "folio-design-system";
 
 export function TwoOptions() {
   const [value, setValue] = useState("month");
   return (
-    <Segmented
+    <SegmentedButton
       options={[
         { value: "month", label: "Month" },
         { value: "quarter", label: "Quarter" },
@@ -17,7 +17,7 @@ export function TwoOptions() {
 
 export function ThreeOptionsSelected() {
   return (
-    <Segmented
+    <SegmentedButton
       options={[
         { value: "day", label: "Day" },
         { value: "week", label: "Week" },
@@ -31,7 +31,7 @@ export function ThreeOptionsSelected() {
 
 export function FourOptionsSmall() {
   return (
-    <Segmented
+    <SegmentedButton
       size="small"
       options={[
         { value: "all", label: "All" },
