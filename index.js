@@ -5,7 +5,7 @@ export { Input }      from "./components/Input.jsx";
 export { Textarea }   from "./components/Textarea.jsx";
 export { Select }     from "./components/Select.jsx";
 export { ListItem }   from "./components/ListItem.jsx";
-export { RadioButton } from "./components/RadioButton.jsx";
+export { Radio }      from "./components/Radio.jsx";
 export { Checkbox }   from "./components/Checkbox.jsx";
 export { StatusDot }  from "./components/StatusDot.jsx";
 export { Tag }        from "./components/Tag.jsx";

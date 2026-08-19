@@ -37,7 +37,7 @@ DM Sans is shipped with this project (provisioned by the design-system's self-ch
 
 ## Font Awesome icons
 
-Font Awesome is self-hosted with this project (`fontawesome/css/all.min.css` + `fontawesome/webfonts/`) and loads automatically via `styles.css` — no extra script tag needed. Several components render `fa-*` icon classes directly (`Select` chevron, `Banner` alert icon, `Drawer` close, `Table` sort, `SourceCard` chevron, `Input` error icon, `Checkbox`/`RadioButton` glyphs); they render correctly out of the box as long as `styles.css` is linked.
+Font Awesome is self-hosted with this project (`fontawesome/css/all.min.css` + `fontawesome/webfonts/`) and loads automatically via `styles.css` — no extra script tag needed. Several components render `fa-*` icon classes directly (`Select` chevron, `Banner` alert icon, `Drawer` close, `Table` sort, `SourceCard` chevron, `Input` error icon, `Checkbox`/`Radio` glyphs); they render correctly out of the box as long as `styles.css` is linked.
 
 ## Where to look
 

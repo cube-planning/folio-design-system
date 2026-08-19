@@ -62,9 +62,11 @@ Drawer uses `position: fixed` which breaks out of normal CSS flow. The preview w
 
 **2026-08-19:** The self-check flagged DM Sans as `"status": "no-face"` — the token referenced the family name but no `@font-face` backed it (the repo only ever loaded DM Sans via a Google Fonts `<link>` in `index.html`/`shell.html`, which doesn't reach the sandboxed design-system preview). A separate session vendored the actual variable font files + a hand-written `@font-face` CSS at `vendor/fonts/dm-sans/` (commits `33fb1b4`/`d3cc64e`) for the app shell's own use — reused that directly here via `cfg.extraFonts: "vendor/fonts/dm-sans/dm-sans.css"` rather than duplicating font files. Styling-only change (no component grades affected); the project's existing per-weight `fonts/DMSans-*.ttf` files (server-provisioned earlier) are untouched — these are additive variable-font files living alongside them.
 
-## RadioButton added (first of the 72 missing families)
+## Radio added (first of the 72 missing families), later renamed from RadioButton
 
 **2026-08-19:** Built `RadioButton` from Figma's `Radio` component (node 678:43477, page "Radio") — the first pull from the "72 missing families" list. Figma props: State (Default/Hover/Focused/Disabled/Pressed), Selected (Yes/No), Size (Large/Small), Label (Yes/No), Label Text. Per the component's Figma description it was "built to match Checkbox for visual consistency" (cobalt-500 selected, gray-500 unselected) — implemented as CSS circle + inner dot (no image assets, consistent with how every other component in this repo draws its own chrome) rather than importing the Figma-exported SVG icons, since those asset URLs expire in ~7 days. Hover/Focused/Pressed states from Figma were not implemented as distinct visual states — this repo doesn't implement those for Toggle either, so kept scope consistent with existing components rather than one-off polishing Radio.
+
+**Renamed `RadioButton` → `Radio` later the same day**: the self-check flagged it as a new kit-vocabulary mismatch (Figma's literal name is `Radio`, not `RadioButton`) — same category of fix as `Segmented` → `SegmentedButton`, just the opposite direction (dropping a word instead of adding one). No behavior change, file/export/config rename only.
 
 ## Segmented renamed to SegmentedButton
 

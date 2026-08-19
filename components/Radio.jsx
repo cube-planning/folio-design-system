@@ -1,4 +1,4 @@
-// RadioButton — Folio Design System
+// Radio — Folio Design System
 // Source of truth: Figma "Folio Design System Beta" › Radio (node 678:43477)
 //
 //   selected : boolean, controlled
@@ -20,7 +20,7 @@ const SIZE = {
   small: { box: 22, dot: 9, fontSize: 12 },
 };
 
-export function RadioButton({
+export function Radio({
   selected = false,
   onChange,
   disabled = false,
