@@ -10,6 +10,7 @@ export { Checkbox }   from "./components/Checkbox.jsx";
 export { StatusDot }  from "./components/StatusDot.jsx";
 export { Tag }        from "./components/Tag.jsx";
 export { Tab }        from "./components/Tab.jsx";
+export { Filter }     from "./components/Filter.jsx";
 export { Badge }      from "./components/Badge.jsx";
 export { Banner }     from "./components/Banner.jsx";
 export { Drawer }     from "./components/Drawer.jsx";

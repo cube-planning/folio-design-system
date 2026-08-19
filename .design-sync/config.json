@@ -21,6 +21,7 @@
     "StatusDot":    "components/StatusDot.jsx",
     "Tag":          "components/Tag.jsx",
     "Tab":          "components/Tab.jsx",
+    "Filter":       "components/Filter.jsx",
     "Badge":        "components/Badge.jsx",
     "Banner":       "components/Banner.jsx",
     "Drawer":       "components/Drawer.jsx",
