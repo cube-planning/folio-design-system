@@ -3,7 +3,8 @@
 //
 //   type   : "primary" (card-style, rounded top + gray-300 border) | "secondary" (underline)
 //   active : boolean
-//   icon   : optional leading icon element
+//   icon   : optional leading Font Awesome icon element, e.g. <i className="fa-regular fa-bell" />
+//            — rendered at 16px inside a centered 24x24 icon slot, per Figma's IconWrapper spec
 //   onClick
 
 const COLORS = {
@@ -12,6 +13,24 @@ const COLORS = {
   gray600:   "#677489",
   white:     "#FFFFFF",
 };
+
+function IconWrapper({ children }) {
+  return (
+    <span
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: 24,
+        height: 24,
+        fontSize: 16,
+        flexShrink: 0,
+      }}
+    >
+      {children}
+    </span>
+  );
+}
 
 export function Tab({ children, type = "primary", active = false, icon, onClick }) {
   const textColor = active ? COLORS.cobalt500 : COLORS.gray600;
@@ -46,7 +65,7 @@ export function Tab({ children, type = "primary", active = false, icon, onClick 
 
   return (
     <button onClick={onClick} style={{ ...baseStyle, ...typeStyle }}>
-      {icon}
+      {icon && <IconWrapper>{icon}</IconWrapper>}
       {children}
     </button>
   );

@@ -16,6 +16,22 @@ export function SecondaryInactive() {
   return <Tab type="secondary">Tab</Tab>;
 }
 
+export function WithIconPrimary() {
+  return (
+    <Tab type="primary" active icon={<i className="fa-regular fa-house" />}>
+      Home
+    </Tab>
+  );
+}
+
+export function WithIconSecondary() {
+  return (
+    <Tab type="secondary" icon={<i className="fa-regular fa-gear" />}>
+      Settings
+    </Tab>
+  );
+}
+
 export function Row() {
   return (
     <div style={{ display: "flex" }}>
