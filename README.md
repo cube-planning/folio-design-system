@@ -123,7 +123,7 @@ Swap components, refine layout, apply screen-specific decisions.
 | Templates | 🔨 In progress |
 | Figma MCP push | 🔬 Testing |
 | GitHub | ⏳ When workflow is proven |
-| Team access (Jen, Mahroo) | ⏳ When workflow is proven |
+
 
 ---
 
