@@ -1,105 +1,129 @@
-const COLORS = {
-  cobalt500: "#173D82",
-  cobalt600: "#122E64",
-  cobalt700: "#0E2349",
-  cobalt100: "#C6D3EC",
-  cobalt50:  "#E6EBF4",
-  red500:    "#D92D20",
-  red600:    "#B42318",
-  red700:    "#912018",
-  red100:    "#FFE6E5",
-  red50:     "#FEF3F2",
-  blue500:   "#2667D8",
-  blue600:   "#1D4ED8",
-  blue700:   "#1D40AF",
-  blue100:   "#DBEAFE",
-  blue50:    "#EFF6FF",
-  gray900:   "#101828",
-  gray700:   "#344054",
-  gray200:   "#E4E7EC",
-  gray400:   "#98A2B3",
-  white:     "#FFFFFF",
+import { useState, useRef } from "react";
+
+// Button 3.0 — palette and interaction model sourced from the approved
+// prototype (prototypes/button-3-prototype.html). A few stops (secondary/
+// ghost hover, destructive pressed, focus outline color) are prototype-
+// specific and intentionally don't match tokens.css 1:1.
+
+const SHADOW = {
+  sm: "0 1px 3px rgba(16,24,40,.10), 0 1px 2px rgba(16,24,40,.06)",
+  md: "0 4px 8px rgba(16,24,40,.08), 0 2px 4px rgba(16,24,40,.04)",
 };
 
-const TYPE_STYLES = {
+const VARIANTS = {
   primary: {
-    default:  { background: COLORS.cobalt500, color: COLORS.white, border: "none" },
-    hover:    { background: COLORS.cobalt600 },
-    pressed:  { background: COLORS.cobalt700 },
-    focused:  { background: COLORS.cobalt500, boxShadow: `0 0 0 3px ${COLORS.cobalt100}` },
-    disabled: { background: COLORS.cobalt500, opacity: 0.38 },
-    loading:  { background: COLORS.cobalt500 },
+    default: { background: "#173D82", color: "#FFFFFF", boxShadow: SHADOW.sm },
+    hover: { background: "#122E64", boxShadow: SHADOW.md },
+    pressed: { background: "#0E2349" },
+    focusOutline: "#A6BEEB",
+    ripple: "rgba(14,35,73,.10)",
+    spinner: { border: "rgba(255,255,255,.3)", top: "#FFFFFF" },
   },
   secondary: {
-    default:  { background: COLORS.white, color: COLORS.cobalt500, border: `1.5px solid ${COLORS.cobalt500}` },
-    hover:    { background: COLORS.cobalt50 },
-    pressed:  { background: COLORS.cobalt100 },
-    focused:  { background: "transparent", boxShadow: `0 0 0 3px ${COLORS.cobalt100}` },
-    disabled: { opacity: 0.38 },
-    loading:  { background: "transparent" },
-  },
-  destructive: {
-    default:  { background: COLORS.red500, color: COLORS.white, border: "none" },
-    hover:    { background: COLORS.red600 },
-    pressed:  { background: COLORS.red700 },
-    focused:  { background: COLORS.red500, boxShadow: `0 0 0 3px ${COLORS.red100}` },
-    disabled: { background: COLORS.red500, opacity: 0.38 },
-    loading:  { background: COLORS.red500 },
-  },
-  "destructive-secondary": {
-    default:  { background: "transparent", color: COLORS.red500, border: `1.5px solid ${COLORS.red500}` },
-    hover:    { background: COLORS.red50 },
-    pressed:  { background: COLORS.red100 },
-    focused:  { background: "transparent", boxShadow: `0 0 0 3px ${COLORS.red100}` },
-    disabled: { opacity: 0.38 },
-    loading:  { background: "transparent" },
-  },
-  "destructive-subtle": {
-    default:  { background: COLORS.red100, color: COLORS.red600, border: "none" },
-    hover:    { background: "#FECDCA" },
-    pressed:  { background: "#FECDCA" },
-    focused:  { background: COLORS.red100, boxShadow: `0 0 0 3px ${COLORS.red100}` },
-    disabled: { opacity: 0.38 },
-    loading:  { background: COLORS.red100 },
+    default: { background: "#FFFFFF", color: "#173D82", border: "1.5px solid #173D82", boxShadow: SHADOW.sm },
+    hover: { background: "#EEF2FA", boxShadow: SHADOW.md },
+    pressed: { background: "#D9E3F5" },
+    focusOutline: "#A6BEEB",
+    ripple: "rgba(14,35,73,.10)",
+    spinner: { border: "rgba(23,61,130,.2)", top: "#173D82" },
   },
   "subtle-blue": {
-    default:  { background: COLORS.cobalt50, color: COLORS.cobalt500, border: "none" },
-    hover:    { background: COLORS.cobalt100 },
-    pressed:  { background: COLORS.cobalt100 },
-    focused:  { background: COLORS.cobalt50, boxShadow: `0 0 0 3px ${COLORS.cobalt100}` },
-    disabled: { opacity: 0.38 },
-    loading:  { background: COLORS.cobalt50 },
+    default: { background: "#E6EBF4", color: "#173D82", boxShadow: SHADOW.sm },
+    hover: { background: "#C6D3EC", boxShadow: SHADOW.md },
+    pressed: { background: "#C6D3EC" },
+    focusOutline: "#A6BEEB",
+    ripple: "rgba(14,35,73,.10)",
+    spinner: { border: "rgba(23,61,130,.2)", top: "#173D82" },
   },
   "ghost-blue": {
-    default:  { background: "transparent", color: COLORS.blue500, border: "none" },
-    hover:    { background: COLORS.blue50 },
-    pressed:  { background: COLORS.blue100 },
-    focused:  { background: "transparent", boxShadow: `0 0 0 3px ${COLORS.blue100}` },
-    disabled: { opacity: 0.38 },
-    loading:  { background: "transparent" },
+    default: { background: "transparent", color: "#173D82" },
+    hover: { background: "#EEF2FA" },
+    pressed: { background: "#D9E3F5" },
+    focusOutline: "#A6BEEB",
+    ripple: "rgba(14,35,73,.10)",
+    spinner: { border: "rgba(23,61,130,.2)", top: "#173D82" },
   },
   "ghost-gray": {
-    default:  { background: "transparent", color: COLORS.gray700, border: "none" },
-    hover:    { background: COLORS.gray200 },
-    pressed:  { background: COLORS.gray200 },
-    focused:  { background: "transparent", boxShadow: `0 0 0 3px ${COLORS.gray200}` },
-    disabled: { opacity: 0.38 },
-    loading:  { background: "transparent" },
+    default: { background: "transparent", color: "#4A5567" },
+    hover: { background: "#F1F4F8" },
+    pressed: { background: "#E3E8EF" },
+    focusOutline: "#CDD5E0",
+    ripple: "rgba(14,35,73,.10)",
+    spinner: { border: "rgba(23,61,130,.2)", top: "#173D82" },
+  },
+  destructive: {
+    default: { background: "#D92D20", color: "#FFFFFF", boxShadow: SHADOW.sm },
+    hover: { background: "#B42318", boxShadow: SHADOW.md },
+    pressed: { background: "#7A1A12" },
+    focusOutline: "#FDA29B",
+    ripple: "rgba(217,45,32,.10)",
+    spinner: { border: "rgba(255,255,255,.3)", top: "#FFFFFF" },
+  },
+  "destructive-secondary": {
+    default: { background: "#FFFFFF", color: "#B42318", border: "1.5px solid #D92D20", boxShadow: SHADOW.sm },
+    hover: { background: "#FEF3F2", boxShadow: SHADOW.md },
+    pressed: { background: "#FEE4E2" },
+    focusOutline: "#FDA29B",
+    ripple: "rgba(217,45,32,.10)",
+    spinner: { border: "rgba(180,35,24,.2)", top: "#B42318" },
+  },
+  "destructive-subtle": {
+    default: { background: "#FEF3F2", color: "#B42318", boxShadow: SHADOW.sm },
+    hover: { background: "#FEE4E2", boxShadow: SHADOW.md },
+    pressed: { background: "#FECDC9" },
+    focusOutline: "#FDA29B",
+    ripple: "rgba(217,45,32,.10)",
+    spinner: { border: "rgba(180,35,24,.2)", top: "#B42318" },
   },
   "ghost-destructive": {
-    default:  { background: "transparent", color: COLORS.red500, border: "none" },
-    hover:    { background: COLORS.red50 },
-    pressed:  { background: COLORS.red100 },
-    focused:  { background: "transparent", boxShadow: `0 0 0 3px ${COLORS.red100}` },
-    disabled: { opacity: 0.38 },
-    loading:  { background: "transparent" },
+    default: { background: "transparent", color: "#D92D20" },
+    hover: { background: "#FEF3F2" },
+    pressed: { background: "#FEE4E2" },
+    focusOutline: "#FDA29B",
+    ripple: "rgba(217,45,32,.10)",
+    spinner: { border: "rgba(180,35,24,.2)", top: "#B42318" },
+  },
+  "plain-blue": {
+    plain: true,
+    default: { background: "transparent", color: "#173D82" },
+    hover: { textDecoration: "underline", textUnderlineOffset: "2px" },
+    pressed: { opacity: 0.7 },
+    focusOutline: "#A6BEEB",
+    spinner: { border: "rgba(23,61,130,.2)", top: "#173D82" },
+  },
+  "plain-gray": {
+    plain: true,
+    default: { background: "transparent", color: "#4A5567" },
+    hover: { textDecoration: "underline", textUnderlineOffset: "2px" },
+    pressed: { opacity: 0.7 },
+    focusOutline: "#CDD5E0",
+    spinner: { border: "rgba(23,61,130,.2)", top: "#173D82" },
+  },
+  "plain-destructive": {
+    plain: true,
+    default: { background: "transparent", color: "#D92D20" },
+    hover: { textDecoration: "underline", textUnderlineOffset: "2px" },
+    pressed: { opacity: 0.7 },
+    focusOutline: "#FDA29B",
+    spinner: { border: "rgba(180,35,24,.2)", top: "#B42318" },
   },
 };
 
 const SIZE = {
-  large: { height: 32, paddingInline: 16, fontSize: 14, iconSize: 16, iconWrapper: 24, iconOnly: 32 },
-  small: { height: 28, paddingInline: 12, fontSize: 12, iconSize: 14, iconWrapper: 22, iconOnly: 28 },
+  large: { height: 32, paddingInline: 16, fontSize: 14, iconSize: 14, iconWrapper: 24, iconOnly: 32 },
+  small: { height: 28, paddingInline: 12, fontSize: 12, iconSize: 12, iconWrapper: 22, iconOnly: 28 },
 };
+
+let keyframesInjected = false;
+function ensureKeyframes() {
+  if (keyframesInjected || typeof document === "undefined") return;
+  const style = document.createElement("style");
+  style.textContent =
+    "@keyframes cube-spin { to { transform: rotate(360deg); } } " +
+    "@keyframes cube-ripple { to { transform: scale(4); opacity: 0; } }";
+  document.head.appendChild(style);
+  keyframesInjected = true;
+}
 
 // Icon glyph centered inside a larger square hit-box, matching Figma's "IconWrapper".
 function IconSlot({ size, wrapperSize, children }) {
@@ -120,30 +144,26 @@ function IconSlot({ size, wrapperSize, children }) {
   );
 }
 
-function Spinner({ size }) {
+function Spinner({ size, border, top }) {
   return (
     <svg
       width={size}
       height={size}
       viewBox="0 0 14 14"
       fill="none"
-      style={{ animation: "cube-spin 0.75s linear infinite", flexShrink: 0 }}
+      style={{ animation: "cube-spin 600ms linear infinite", flexShrink: 0 }}
       aria-hidden="true"
     >
-      <circle cx="7" cy="7" r="5.5" stroke="currentColor" strokeOpacity="0.3" strokeWidth="1.5" />
-      <path d="M7 1.5A5.5 5.5 0 0 1 12.5 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-      <style>{`@keyframes cube-spin { to { transform: rotate(360deg); } }`}</style>
+      <circle cx="7" cy="7" r="5.5" stroke={border} strokeWidth="1.5" />
+      <path d="M7 1.5A5.5 5.5 0 0 1 12.5 7" stroke={top} strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   );
 }
 
 export function Button({
-  type = "primary",
+  variant = "primary",
   size = "large",
-  state = "default",
-  radius = 16,      // corner radius in px — 16 (default, pill-like) or 8 (squarer)
-  stroke = false,   // add a 1px border in the variant's color (no-op on outlined variants)
-  icon,          // icon-only button: pass a Font Awesome <i> element here, not as children
+  icon, // icon-only button: pass a Font Awesome <i> element here, not as children
   leadingIcon,
   trailingIcon,
   loading = false,
@@ -153,9 +173,15 @@ export function Button({
   style,
   "aria-label": ariaLabel,
 }) {
-  const resolvedState = disabled ? "disabled" : loading ? "loading" : state;
-  const typeStyle = TYPE_STYLES[type]?.default ?? TYPE_STYLES.primary.default;
-  const stateOverride = TYPE_STYLES[type]?.[resolvedState] ?? {};
+  ensureKeyframes();
+
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const [pressed, setPressed] = useState(false);
+  const [ripples, setRipples] = useState([]);
+  const rippleId = useRef(0);
+
+  const v = VARIANTS[variant] ?? VARIANTS.primary;
   const s = SIZE[size] ?? SIZE.large;
   const isIconOnly = !!icon && !children;
 
@@ -163,22 +189,44 @@ export function Button({
     throw new Error("Button: icon-only buttons require an aria-label.");
   }
 
-  // Optional stroke: add a 1px border in the variant's text color, unless the
-  // variant is already outlined (secondary / *-secondary define their own border).
-  const hasOwnBorder = typeStyle.border && typeStyle.border !== "none";
-  const strokeStyle = stroke && !hasOwnBorder
-    ? { border: `1px solid ${typeStyle.color ?? "currentColor"}` }
-    : {};
+  const interactive = !disabled && !loading;
+
+  const handleClick = (e) => {
+    if (!disabled && !loading && !v.plain) {
+      const btn = e.currentTarget;
+      const rect = btn.getBoundingClientRect();
+      const rippleSize = Math.max(rect.width, rect.height) * 2;
+      const id = ++rippleId.current;
+      setRipples((prev) => [
+        ...prev,
+        { id, x: e.clientX - rect.left - rippleSize / 2, y: e.clientY - rect.top - rippleSize / 2, size: rippleSize },
+      ]);
+      setTimeout(() => setRipples((prev) => prev.filter((r) => r.id !== id)), 450);
+    }
+    onClick?.(e);
+  };
+
+  let visualStyle = { ...v.default };
+  if (interactive && pressed) visualStyle = { ...visualStyle, ...v.pressed };
+  else if (interactive && hovered) visualStyle = { ...visualStyle, ...v.hover };
+
+  const focusStyle = interactive && focused
+    ? { outline: `2px solid ${v.focusOutline}`, outlineOffset: 2, boxShadow: "none" }
+    : { outline: "none" };
+
+  const disabledStyle = disabled ? { opacity: 0.7, boxShadow: "none" } : {};
 
   const baseStyle = {
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
-    gap: 4,
-    height: s.height,
+    gap: 6,
+    position: "relative",
+    overflow: v.plain ? "visible" : "hidden",
+    height: v.plain ? "auto" : s.height,
     width: isIconOnly ? s.iconOnly : undefined,
-    paddingInline: isIconOnly ? 0 : s.paddingInline,
-    borderRadius: radius,
+    paddingInline: v.plain ? 0 : isIconOnly ? 0 : s.paddingInline,
+    borderRadius: v.plain ? 4 : 9999,
     boxSizing: "border-box",
     fontSize: s.fontSize,
     fontFamily: "'DM Sans', sans-serif",
@@ -187,32 +235,65 @@ export function Button({
     cursor: disabled ? "not-allowed" : "pointer",
     border: "none",
     whiteSpace: "nowrap",
-    transition: "background 100ms, box-shadow 100ms",
-    ...typeStyle,
-    ...stateOverride,
-    ...strokeStyle,
+    transition: "background 80ms ease, box-shadow 80ms ease, transform 60ms ease",
+    transform: interactive && pressed ? "scale(0.97)" : "none",
+    ...visualStyle,
+    ...focusStyle,
+    ...disabledStyle,
     ...style,
   };
 
+  const contentStyle = loading ? { color: "transparent" } : undefined;
+
   return (
     <button
+      type="button"
       style={baseStyle}
       disabled={disabled}
-      onClick={onClick}
+      onClick={handleClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => {
+        setHovered(false);
+        setPressed(false);
+      }}
+      onMouseDown={() => setPressed(true)}
+      onMouseUp={() => setPressed(false)}
+      onFocus={() => setFocused(true)}
+      onBlur={() => setFocused(false)}
       aria-label={isIconOnly ? ariaLabel : undefined}
       aria-busy={loading || undefined}
     >
-      {loading ? (
-        <IconSlot size={s.iconSize} wrapperSize={s.iconWrapper}><Spinner size={s.iconSize} /></IconSlot>
-      ) : isIconOnly ? (
-        <IconSlot size={s.iconSize} wrapperSize={s.iconWrapper}>{icon}</IconSlot>
+      {isIconOnly ? (
+        <IconSlot size={s.iconSize} wrapperSize={s.iconWrapper}>{loading ? null : icon}</IconSlot>
       ) : (
-        leadingIcon && <IconSlot size={s.iconSize} wrapperSize={s.iconWrapper}>{leadingIcon}</IconSlot>
+        !loading && leadingIcon && <IconSlot size={s.iconSize} wrapperSize={s.iconWrapper}>{leadingIcon}</IconSlot>
       )}
-      {children && <span>{children}</span>}
-      {trailingIcon && (
+      {children && <span style={contentStyle}>{children}</span>}
+      {!loading && !isIconOnly && trailingIcon && (
         <IconSlot size={s.iconSize} wrapperSize={s.iconWrapper}>{trailingIcon}</IconSlot>
       )}
+      {loading && (
+        <span style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <Spinner size={s.iconSize} border={v.spinner.border} top={v.spinner.top} />
+        </span>
+      )}
+      {ripples.map((r) => (
+        <span
+          key={r.id}
+          style={{
+            position: "absolute",
+            left: r.x,
+            top: r.y,
+            width: r.size,
+            height: r.size,
+            borderRadius: "50%",
+            background: v.ripple,
+            transform: "scale(0)",
+            pointerEvents: "none",
+            animation: "cube-ripple 400ms ease-out forwards",
+          }}
+        />
+      ))}
     </button>
   );
 }

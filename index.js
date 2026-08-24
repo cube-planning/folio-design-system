@@ -22,3 +22,4 @@ export { Cell }       from "./components/TableCells.jsx";
 export { SourceCard } from "./components/SourceCard.jsx";
 export { Stepper }    from "./components/Stepper.jsx";
 export { TaskCard }   from "./components/TaskCard.jsx";
+export { PageHeader } from "./components/PageHeader.jsx";

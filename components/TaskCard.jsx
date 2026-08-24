@@ -67,7 +67,7 @@ export function TaskCard({
           </Badge>
         )}
         {action && (
-          <Button type="destructive-secondary" size="small" onClick={action.onClick}>
+          <Button variant="destructive-secondary" size="small" onClick={action.onClick}>
             {action.label}
           </Button>
         )}

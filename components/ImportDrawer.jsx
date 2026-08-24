@@ -73,8 +73,8 @@ export function ImportDrawer({
       onClose={onClose}
       footer={
         <>
-          <Button type="secondary" onClick={onCancel}>Cancel</Button>
-          <Button type="primary" onClick={onImport} loading={importing}>Import Data</Button>
+          <Button variant="secondary" onClick={onCancel}>Cancel</Button>
+          <Button variant="primary" onClick={onImport} loading={importing}>Import Data</Button>
         </>
       }
     >

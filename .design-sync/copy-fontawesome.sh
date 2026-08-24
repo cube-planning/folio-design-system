@@ -13,5 +13,8 @@ cp vendor/fontawesome/webfonts/fa-solid-900.woff2 \
    vendor/fontawesome/webfonts/fa-regular-400.woff2 \
    vendor/fontawesome/webfonts/fa-light-300.woff2 \
    vendor/fontawesome/webfonts/fa-brands-400.woff2 \
+   vendor/fontawesome/webfonts/fa-duotone-900.woff2 \
+   vendor/fontawesome/webfonts/fa-thin-100.woff2 \
+   vendor/fontawesome/webfonts/fa-v4compatibility.woff2 \
    ds-bundle/fontawesome/webfonts/
 echo "Font Awesome files copied into ds-bundle/fontawesome/"

@@ -415,13 +415,13 @@
      Z-INDEX
      ============================================================ */
 
-  --z-base:     0;    /* @kind: zIndex */
-  --z-raised:   10;   /* @kind: zIndex */
-  --z-dropdown: 100;  /* @kind: zIndex */
-  --z-sticky:   200;  /* @kind: zIndex */
-  --z-overlay:  300;  /* @kind: zIndex */
-  --z-modal:    400;  /* @kind: zIndex */
-  --z-toast:    500;  /* @kind: zIndex */
+  --z-base:     0;    /* @kind: other */
+  --z-raised:   10;   /* @kind: other */
+  --z-dropdown: 100;  /* @kind: other */
+  --z-sticky:   200;  /* @kind: other */
+  --z-overlay:  300;  /* @kind: other */
+  --z-modal:    400;  /* @kind: other */
+  --z-toast:    500;  /* @kind: other */
 
 
   /* ============================================================
