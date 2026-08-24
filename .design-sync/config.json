@@ -40,6 +40,7 @@
     "ImportDrawer": {"cardMode": "single", "primaryStory": "JustworksImport"},
     "SourceCard": {"cardMode": "column"},
     "Stepper": {"cardMode": "column"},
-    "Table": {"cardMode": "column"}
+    "Table": {"cardMode": "column"},
+    "Tab": {"cardMode": "column"}
   }
 }
