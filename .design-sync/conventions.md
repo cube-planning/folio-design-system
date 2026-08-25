@@ -46,6 +46,15 @@ Font Awesome is self-hosted with this project (`fontawesome/css/all.min.css` + `
 - Button `variant` prop values: `"primary" | "secondary" | "destructive" | "destructive-secondary" | "destructive-subtle" | "subtle-blue" | "ghost-blue" | "ghost-gray" | "ghost-destructive" | "plain-blue" | "plain-gray" | "plain-destructive"`
 - Text variant names: `"display-1" | "display-2" | "display-3" | "display-4" | "title-1" | "title-2" | "title-3" | "body" | "caption-1" | "caption-2"`
 
+## Cancel button variant rule
+
+A `Cancel` (or any dismiss/back-out) button's `variant` depends on whether its container already has a header `×` close control:
+
+- **Container has a header `×`** (most modals) → `variant="ghost-gray"`. The `×` already owns dismissal; `Cancel` is a low-emphasis echo and shouldn't compete visually.
+- **Container has no header `×`** (e.g. an inline edit-mode bar/panel) → `variant="secondary"`. `Cancel` is the only way to back out, so it needs enough visual weight to read as a real action.
+
+Check for the header `×` and apply this automatically — don't default to one variant for every `Cancel`.
+
 ## Idiomatic build example
 
 ```jsx
