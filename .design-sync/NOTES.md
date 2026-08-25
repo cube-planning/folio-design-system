@@ -90,9 +90,52 @@ The dropdown overlay (open state) requires a click interaction. Static previews 
 
 **2026-08-13 re-sync:** the config's `overrides` block referenced by "Re-sync risks" below (`Button`/`Drawer` cardMode) was NOT present in `.design-sync/config.json` going into this re-sync — likely lost in the repo reorg along with the deleted previews. All 17 components were re-authored from scratch this run; re-check `package-validate.mjs` output for `[GRID_OVERFLOW]` warns and re-apply `cfg.overrides.<Name>` (`cardMode: "column"` for wide/multi-button rows, `cardMode: "single"` + `primaryStory` for escaping fixed-position content) if it fires again.
 
+## AppIcon added (best-effort, no live Figma access)
+
+**2026-08-24:** Built `AppIcon` ("Apps icons" in the missing-families audit) without being able to pull the real Figma node this session (connector unauthorized). It's a branded square tile per integration/data source (Salesforce, Slack, HubSpot, Google Sheets, Excel, QuickBooks, NetSuite, Workday, Adaptive Insights) using Font Awesome brand icons where one exists and a generic fallback glyph where it doesn't (NetSuite, Workday, Adaptive Insights, QuickBooks — no official FA brand glyph). **Flag to re-check against the real Figma "Apps icons" component once Figma access is available** — colors, icon choices, and size scale (`small`/`medium`/`large`, 20/24/32px) are guesses based on SourceCard's existing token conventions, not sourced from Figma.
+
+## Unclassified-token audit scoped to hand-authored tokens only
+
+**2026-08-24:** The design-sync issue list flagged 4,376 of 4,624 tokens as unclassified (`@kind`), mostly `--fa-*` and `--z-*`-style vars. Confirmed the bulk of these live inside vendored Font Awesome CSS (`vendor/fontawesome/css/all.min.css`) — utility custom properties like `--fa-width`, `--fa-animation-direction`, icon-glyph content vars, etc. — not hand-authored design tokens. Per user decision, `@kind` classification stays scoped to `tokens/tokens.css` (already fully annotated, see z-index/transition/blur entries above); vendored Font Awesome internals are out of scope and won't be annotated. If the self-check's token count needs to reach zero unclassified, it needs an exclusion rule for `vendor/` paths, not per-token comments.
+
+## CLAUDE.md's Tailwind rules don't apply to this repo
+
+**2026-08-25:** A review flagged `AppIcon.jsx` and `Modal.jsx` for using inline
+`style={{}}` and arbitrary hex values, citing CLAUDE.md's "Never use inline
+style attributes" / "always use Tailwind token classes" rules. Checked and
+this repo has **no Tailwind setup at all** — no `tailwind.config`, no
+`lib/utils.ts`/`cn()` helper, no Tailwind/PostCSS in `package.json`. It's a
+plain-JSX package built with esbuild (`build.mjs` → `dist/index.js`), and
+every component (`Button.jsx`, `Modal.jsx`, etc.) is built the same way:
+inline `style` objects, referencing `tokens/tokens.css` custom properties
+(`var(--radius-2xl)`, `var(--shadow-lg)`, ...) or raw resolved pixel values
+that match the token scale. This is the same gap already noted above for the
+Select red-border rule: CLAUDE.md describes the Tailwind+shadcn *consumer*
+app pattern, not this source package. **Do not rewrite components here to
+use Tailwind classes or `cn()`** — inline styles + CSS custom properties are
+the correct, established convention for `components/`. The only real
+violations to check for are: (1) radius/spacing/shadow/color values that
+don't map to an actual token in `tokens/tokens.css` (fix by snapping to the
+nearest real token, not by switching to Tailwind), and (2) arbitrary hex used
+where a Folio token exists (third-party brand colors, e.g. `AppIcon`'s
+per-app backgrounds, are a legitimate exception since they have no token
+equivalent).
+
 ## Known render warns
 
 (None — all warnings were triaged as expected behavior, documented above.)
+
+## Upload plan must include fontawesome/**
+
+**2026-08-25:** The skill's standard `finalize_plan` writes list (`components/**`,
+`tokens/**`, `fonts/**`, `_vendor/**`, `_preview/**`, `guidelines/**`, plus root
+files) does NOT include `fontawesome/**` — but this repo's Font Awesome files
+live there (via `copy-fontawesome.sh`, see above), not under `tokens/` or
+`fonts/`. Omitting it from the plan would upload a project whose
+`_ds_bundle.css` `@import "./fontawesome/css/all.min.css"` 404s for every
+future consumer. Added `"fontawesome/**"` to both `writes` and the uploaded
+file list this run. **Always add `fontawesome/**` to the `finalize_plan`
+writes for this repo** — it's not covered by the generic skill list.
 
 ## Re-sync risks
 
