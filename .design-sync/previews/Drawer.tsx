@@ -10,8 +10,8 @@ export function DrawerShell() {
         onClose={() => {}}
         footer={
           <>
-            <Button type="secondary">Cancel</Button>
-            <Button type="primary">Save changes</Button>
+            <Button variant="secondary">Cancel</Button>
+            <Button variant="primary">Save changes</Button>
           </>
         }
       >

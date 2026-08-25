@@ -163,6 +163,7 @@ function Spinner({ size, border, top }) {
 export function Button({
   variant = "primary",
   size = "large",
+  state, // force a pseudo-state ("hover" | "focused" | "pressed") for docs/preview screenshots
   icon, // icon-only button: pass a Font Awesome <i> element here, not as children
   leadingIcon,
   trailingIcon,
@@ -206,11 +207,15 @@ export function Button({
     onClick?.(e);
   };
 
-  let visualStyle = { ...v.default };
-  if (interactive && pressed) visualStyle = { ...visualStyle, ...v.pressed };
-  else if (interactive && hovered) visualStyle = { ...visualStyle, ...v.hover };
+  const isPressed = pressed || state === "pressed";
+  const isHovered = hovered || state === "hover";
+  const isFocused = focused || state === "focused";
 
-  const focusStyle = interactive && focused
+  let visualStyle = { ...v.default };
+  if (interactive && isPressed) visualStyle = { ...visualStyle, ...v.pressed };
+  else if (interactive && isHovered) visualStyle = { ...visualStyle, ...v.hover };
+
+  const focusStyle = interactive && isFocused
     ? { outline: `2px solid ${v.focusOutline}`, outlineOffset: 2, boxShadow: "none" }
     : { outline: "none" };
 

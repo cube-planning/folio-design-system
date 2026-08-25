@@ -33,8 +33,8 @@ export function IntegrationOverview() {
         badges={<Badge variant="lifecycle">Update Mapping</Badge>}
         topActions={
           <>
-            <Button icon={<i className="fa-regular fa-bell" />} aria-label="Notifications" type="ghost-gray" />
-            <Button type="secondary" leadingIcon={<i className="fa-regular fa-arrow-down-to-line" />}>
+            <Button icon={<i className="fa-regular fa-bell" />} aria-label="Notifications" variant="ghost-gray" />
+            <Button variant="secondary" leadingIcon={<i className="fa-regular fa-arrow-down-to-line" />}>
               Import
             </Button>
           </>
@@ -57,8 +57,8 @@ export function WorkflowPage() {
         status={{ label: "In progress", color: "blue" }}
         actions={
           <>
-            <Button icon={<i className="fa-regular fa-pen" />} aria-label="Edit" type="ghost-gray" />
-            <Button type="primary">Mark Complete</Button>
+            <Button icon={<i className="fa-regular fa-pen" />} aria-label="Edit" variant="ghost-gray" />
+            <Button variant="primary">Mark Complete</Button>
           </>
         }
       />
