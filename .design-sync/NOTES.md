@@ -121,6 +121,22 @@ where a Folio token exists (third-party brand colors, e.g. `AppIcon`'s
 per-app backgrounds, are a legitimate exception since they have no token
 equivalent).
 
+## Button 3.0 prop rename (`type` → `variant`) missed the conventions header
+
+**2026-08-25:** User reported every non-primary `Button` variant rendering identically to
+primary in the synced preview output. Root cause: an earlier session rewrote `Button.jsx`'s
+API from `type`/`stroke`/`radius` to a single `variant` prop (adding `plain-blue`/`plain-gray`/
+`plain-destructive`), and updated `.design-sync/previews/Button.tsx`, `Drawer.tsx`, and
+`PageHeader.tsx` — but that fix was never actually committed/pushed (stashed during a git
+rebase and never popped back before the push). Re-committed and re-synced this run. Separately,
+`.design-sync/conventions.md` — the file inlined into the design agent's system prompt — was
+**also** still teaching the old `type="primary"` prop and was missing the 3 new plain-* variant
+names. Fixed both the mount example and the idiomatic build example, and extended the variant
+list. This is the one file most likely to silently reintroduce this exact bug class (wrong prop
+name in agent-facing docs) since nothing in the render check catches a doc naming a prop that
+doesn't exist — **always grep `conventions.md` for a component's old prop/variant names after
+any prop rename**, not just the previews.
+
 ## Known render warns
 
 (None — all warnings were triaged as expected behavior, documented above.)
