@@ -35,6 +35,32 @@ const VARIANTS = {
     ripple: "rgba(14,35,73,.10)",
     spinner: { border: "rgba(23,61,130,.2)", top: "#173D82" },
   },
+  // AI-branded subtle button — bg/text sourced from Figma "Add-Ons" file
+  // (node 6399:17463, AI Button / "Build with AI" / "Let Cube Analyze for
+  // You"): purple-100 fill, purple-500 text. Hover/pressed stops aren't
+  // specified in that frame; extrapolated one/two steps down the purple
+  // ramp to match subtle-blue's interaction pattern.
+  "subtle-purple": {
+    default: { background: "#EBE9FE", color: "#7A5AF8", boxShadow: SHADOW.sm },
+    hover: { background: "#DDD6FE", boxShadow: SHADOW.md },
+    pressed: { background: "#C7B9FB" },
+    focusOutline: "#D7CFFC",
+    ripple: "rgba(89,37,220,.10)",
+    spinner: { border: "rgba(122,90,248,.2)", top: "#7A5AF8" },
+  },
+  // AI button variant — Figma "Add-Ons" file, node 6548:2969 ("Build with
+  // AI"). Same purple-100/purple-500 spec as subtle-purple; kept as its own
+  // entry since the Figma frame pairs a 14px sparkles icon (fa-solid
+  // fa-sparkles) with a 28px-tall button, oversized relative to the normal
+  // small-size icon scale — pass icon size explicitly if matching that look.
+  ai: {
+    default: { background: "#EBE9FE", color: "#7A5AF8", boxShadow: SHADOW.sm },
+    hover: { background: "#DDD6FE", boxShadow: SHADOW.md },
+    pressed: { background: "#C7B9FB" },
+    focusOutline: "#D7CFFC",
+    ripple: "rgba(89,37,220,.10)",
+    spinner: { border: "rgba(122,90,248,.2)", top: "#7A5AF8" },
+  },
   "ghost-blue": {
     default: { background: "transparent", color: "#173D82" },
     hover: { background: "#EEF2FA" },

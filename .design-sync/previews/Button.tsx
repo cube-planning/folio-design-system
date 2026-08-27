@@ -9,6 +9,13 @@ export function Variants() {
       <Button variant="ghost-gray">Dismiss</Button>
       <Button variant="destructive">Delete source</Button>
       <Button variant="destructive-secondary">Remove</Button>
+      <Button
+        variant="ai"
+        size="small"
+        leadingIcon={<i className="fa-solid fa-sparkles" style={{ fontSize: 14 }} />}
+      >
+        Build with AI
+      </Button>
     </div>
   );
 }

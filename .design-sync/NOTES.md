@@ -137,6 +137,32 @@ name in agent-facing docs) since nothing in the render check catches a doc namin
 doesn't exist — **always grep `conventions.md` for a component's old prop/variant names after
 any prop rename**, not just the previews.
 
+## Button `ai` variant added, conventions.md variant list was stale
+
+**2026-08-27:** Added a new `Button` `variant="ai"` (purple-100/purple-500, pill,
+`shadow-sm`) sourced from Figma "Add-Ons" file node 6548:2969 ("Build with AI").
+Same color spec as the existing `subtle-purple` variant but kept as its own entry
+since that Figma frame pairs a 14px sparkles icon with a 28px-tall button —
+oversized relative to the normal small-size icon scale. Added a `Variants` cell
+example to `.design-sync/previews/Button.tsx` and regraded (all 4 cells `good`).
+While regrading, found `.design-sync/conventions.md`'s enumerated Button `variant`
+list (line ~46) was already missing `subtle-purple` and now also missing `ai` —
+same drift class as the 2026-08-25 `type`→`variant` entry above. Fixed the list;
+**always grep `conventions.md`'s variant enumeration whenever a Button variant is
+added or renamed**, not just on prop renames.
+
+## 10 new components added but deferred to floor cards (2026-08-27)
+
+**2026-08-27:** This resync's diff surfaced 10 components never synced before —
+`AccordionSection`, `AddonSidebar`, `AddonTopNav`, `AnalyzePanel`, `BuildPanel`,
+`ExpandCollapseControl`, `FilterField`, `RangeSelectorTree`, `RangeSelectorTrigger`,
+`Tooltip` — added to `index.js`/`componentSrcMap` by other work in this repo before
+this sync ran. Per user decision, none were authored this run; they uploaded as
+floor cards (render check confirmed 9/10 render real content with synthesized
+default props, only `Tooltip` swaps to the typographic placeholder). **These are
+the standing offer for incremental authoring on a future sync** — see the preview
+scope question in the base skill's §2 step 5.
+
 ## Known render warns
 
 (None — all warnings were triaged as expected behavior, documented above.)
@@ -161,3 +187,4 @@ writes for this repo** — it's not covered by the generic skill list.
 - **DM Sans font provisioning** — server-side. If the self-check behavior changes or fonts need to be explicitly shipped, set `cfg.extraFonts` to the font files.
 - **No TypeScript** — `.d.ts` prop bodies are synthesized from JSX source. Complex prop shapes (unions, callbacks) may not extract perfectly. Improve with `cfg.dtsPropsFor.<Name>` if needed.
 - **2026-08-13: all 17 previews were re-authored from scratch** after a prior "reorganize repo structure" commit deleted the previous set. Grades in `.design-sync/.cache/review/` are fresh, not carried forward from history.
+- **10 components uploaded as floor cards 2026-08-27** (see above) — no authored preview yet: `AccordionSection`, `AddonSidebar`, `AddonTopNav`, `AnalyzePanel`, `BuildPanel`, `ExpandCollapseControl`, `FilterField`, `RangeSelectorTree`, `RangeSelectorTrigger`, `Tooltip`. Author them on any future re-sync per §2.5's preview-scope question.

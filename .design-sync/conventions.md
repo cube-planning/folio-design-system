@@ -43,7 +43,7 @@ Font Awesome is self-hosted with this project (`fontawesome/css/all.min.css` + `
 
 - Per-component API and usage: `components/general/<Name>/<Name>.prompt.md`
 - Token definitions: `styles.css` + `_ds_bundle.css`
-- Button `variant` prop values: `"primary" | "secondary" | "destructive" | "destructive-secondary" | "destructive-subtle" | "subtle-blue" | "ghost-blue" | "ghost-gray" | "ghost-destructive" | "plain-blue" | "plain-gray" | "plain-destructive"`
+- Button `variant` prop values: `"primary" | "secondary" | "destructive" | "destructive-secondary" | "destructive-subtle" | "subtle-blue" | "subtle-purple" | "ai" | "ghost-blue" | "ghost-gray" | "ghost-destructive" | "plain-blue" | "plain-gray" | "plain-destructive"`
 - Text variant names: `"display-1" | "display-2" | "display-3" | "display-4" | "title-1" | "title-2" | "title-3" | "body" | "caption-1" | "caption-2"`
 
 ## Cancel button variant rule
