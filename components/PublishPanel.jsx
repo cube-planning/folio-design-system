@@ -1,4 +1,6 @@
 // PublishPanel — Folio Design System (Feature)
+// Kit vocabulary: no matching family in Figma "Folio Design System Beta"
+// (Q7G87Bmjx2aYNVDKYLlBaG) — confirmed intentional, addon-specific screen.
 // Built from: Button, SegmentedButton, Banner, Input, Select, Textarea, Tag —
 // the Cube Add-on's "Publish" section: push the fetched range to the live
 // model (Data tab) or manage a Web Report (Web Report tab).

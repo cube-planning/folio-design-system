@@ -1,5 +1,9 @@
 // ImportDrawer — Folio Design System
 // Source of truth: Figma "Folio DS — 2026 UI Refresh — Eng Handoff" › Side Draw (node 123:31299)
+// Kit vocabulary: that source file predates and is separate from "Folio
+// Design System Beta" (Q7G87Bmjx2aYNVDKYLlBaG) — the current kit has no
+// distinct "ImportDrawer" family; confirmed intentional as a composite
+// built on top of the kit's own `Drawer`.
 //
 // Composes the existing Drawer / Button / Select / Badge primitives into the
 // "Justworks Import" drawer pattern: a scrollable list of section-titled field

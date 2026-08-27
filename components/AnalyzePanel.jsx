@@ -1,4 +1,7 @@
 // AnalyzePanel — Folio Design System (Feature)
+// Kit vocabulary: no matching family in Figma "Folio Design System Beta"
+// (Q7G87Bmjx2aYNVDKYLlBaG) — confirmed intentional. Addon-specific screen
+// composition, sourced from the separate "Add-Ons" Figma file (see below).
 // Built from: Button, Toggle, ExpandCollapseControl — the Cube Add-on's
 // "Analyze" section: AI analysis, drilldown/expand controls over the
 // fetched range, and a validation shortcut.

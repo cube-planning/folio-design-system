@@ -1,4 +1,8 @@
 // TaskCard — Folio Design System
+// Kit vocabulary: no matching family in Figma "Folio Design System Beta"
+// (Q7G87Bmjx2aYNVDKYLlBaG) — confirmed intentional, generic addition (likely
+// traces to an external "Card" library not present in this kit file, same
+// as SourceCard).
 // Anatomy fix for the Background Tasks drawer: a bordered container (title +
 // optional stepper + footer row) with real internal breathing room instead of
 // uniform 8px spacing squeezing every piece together.

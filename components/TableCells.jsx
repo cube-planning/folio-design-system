@@ -1,4 +1,9 @@
 // Table cell variants — Folio Design System
+// Kit vocabulary: exported as `Cell` — a generic renderer toolkit inspired by
+// but not 1:1 with Figma "Folio Design System Beta" (Q7G87Bmjx2aYNVDKYLlBaG)
+// Table page's "Cell Icon"/"Table cell lead action" families (Cell.Icon and
+// Cell.Actions cover the same idea); confirmed intentional as a code-side
+// abstraction rather than a rename target.
 // Reusable renderers for Table `column.render`, mirroring Figma's "Table Cell" variants.
 // Usage: { key: "owner", label: "Owner", render: (v, row) => <Cell.AvatarText name={v} /> }
 

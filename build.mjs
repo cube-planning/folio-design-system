@@ -6,6 +6,7 @@ const shared = {
   external: ["react", "react-dom"],
   jsx: "automatic",
   logLevel: "info",
+  loader: { ".svg": "dataurl" },
 };
 
 await Promise.all([

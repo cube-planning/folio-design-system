@@ -1,4 +1,6 @@
 // RangeSelector — Folio Design System (Composite)
+// Kit vocabulary: no matching family in Figma "Folio Design System Beta"
+// (Q7G87Bmjx2aYNVDKYLlBaG) — confirmed intentional, addon-specific composite.
 // Built from: Button, ListItem — the range/drilldown context picker used
 // atop the Cube Add-on's Build panel.
 //

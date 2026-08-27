@@ -1,4 +1,7 @@
 // CubeAddonSidebar — Folio Design System (Feature composite)
+// Kit vocabulary: no matching family in Figma "Folio Design System Beta"
+// (Q7G87Bmjx2aYNVDKYLlBaG) — confirmed intentional. This is the top-level
+// addon reference composite, not a kit component.
 // Built from: AddonSidebar, AddonTopNav, AccordionSection, BuildPanel,
 // AnalyzePanel, PublishPanel, TablesPanel — the full Cube Sheets/Excel
 // add-on panel, fully wired with real component state.

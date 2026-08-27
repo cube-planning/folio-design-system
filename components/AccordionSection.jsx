@@ -1,4 +1,7 @@
 // AccordionSection — Folio Design System (Composite)
+// Kit vocabulary: no matching family in Figma "Folio Design System Beta"
+// (Q7G87Bmjx2aYNVDKYLlBaG) — confirmed intentional, generic addition. The
+// collapsible-section pattern isn't a distinct component in that kit.
 // Built from: Icon (Font Awesome), Text, chevron toggle — no domain knowledge.
 //
 // A single collapsible section: icon + title row that expands to reveal

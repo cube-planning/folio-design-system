@@ -1,4 +1,8 @@
 // AddonTopNav — Folio Design System (Feature)
+// Kit vocabulary: no matching family in Figma "Folio Design System Beta"
+// (Q7G87Bmjx2aYNVDKYLlBaG) — confirmed intentional. Distinct from the kit's
+// "Portal Header"/`PageHeader` and "Portal/Navigation/Top" families: this is
+// specifically the Cube Sheets/Excel add-on's own cobalt top bar.
 // Built from: Button, Icon — the top bar of the Cube Sheets/Excel Add-on:
 // menu, active data source, currency, an unresolved-issue warning, and the
 // Cube AI assistant trigger. Domain-specific to the add-on shell, unlike the

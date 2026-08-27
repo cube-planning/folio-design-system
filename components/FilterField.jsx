@@ -1,4 +1,7 @@
 // FilterField — Folio Design System (Composite)
+// Kit vocabulary: no matching family in Figma "Folio Design System Beta"
+// (Q7G87Bmjx2aYNVDKYLlBaG) — confirmed intentional, generic addition (not
+// the same thing as the kit's "Filter dropdown" family — see FilterDropdown.jsx).
 // Built from: Icon, Text — a full-width labeled dropdown row.
 //
 // Distinct from `Filter` (an inline chip used on Search & Filter pages):

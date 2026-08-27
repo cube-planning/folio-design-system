@@ -1,3 +1,8 @@
+// SourceCard — Folio Design System
+// Kit vocabulary: no matching family in Figma "Folio Design System Beta"
+// (Q7G87Bmjx2aYNVDKYLlBaG) — confirmed intentional, generic addition (likely
+// traces to an external "Card" library not present in this kit file).
+
 import { useState } from "react";
 
 const COLORS = {

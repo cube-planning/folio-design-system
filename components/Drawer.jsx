@@ -1,3 +1,9 @@
+// Drawer — Folio Design System
+// Kit vocabulary: matches Figma "Folio Design System Beta"'s "Drawer_d"
+// (Q7G87Bmjx2aYNVDKYLlBaG, Drawer page) — confirmed intentional NOT to adopt
+// the "_d" suffix, which reads as a draft-naming artifact rather than a
+// deliberate part of the family name.
+
 const COLORS = {
   cobalt500: "#173D82",
   gray200:   "#E4E7EC",

@@ -1,4 +1,6 @@
 // BuildPanel — Folio Design System (Feature)
+// Kit vocabulary: no matching family in Figma "Folio Design System Beta"
+// (Q7G87Bmjx2aYNVDKYLlBaG) — confirmed intentional, addon-specific screen.
 // Built from: Button, SegmentedButton, FilterField, RangeSelectorTrigger,
 // RangeSelectorTree — the Cube Add-on's "Build" section.
 //

@@ -1,4 +1,6 @@
 // TablesPanel — Folio Design System (Feature)
+// Kit vocabulary: no matching family in Figma "Folio Design System Beta"
+// (Q7G87Bmjx2aYNVDKYLlBaG) — confirmed intentional, addon-specific screen.
 // Built from: Button, SegmentedButton, Input, Select, Tag, Banner — the Cube
 // Add-on's "Tables" section: create a new live table, or manage an existing
 // one through Setup → Configured → Settings.

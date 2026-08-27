@@ -1,8 +1,16 @@
-// Apps icons — branded tiles for third-party integration/data-source apps,
-// used anywhere a source is listed (SourceCard, ImportDrawer, connection
-// pickers). Best-effort build without a live Figma pull: mirrors SourceCard's
-// tile/token conventions (self-styled inline React, no external assets).
-// Flag to update against the real Figma "Apps icons" component once available.
+// AppIcon — branded tiles for third-party integration/data-source apps
+// (Salesforce, NetSuite, QuickBooks, ...), used anywhere a data source is
+// listed (SourceCard, ImportDrawer, connection pickers).
+//
+// Kit vocabulary: confirmed via a live Figma pull (2026-08-27) that this is
+// NOT the same thing as Figma "Folio Design System Beta"'s "Apps icons"
+// family (node 52:1982, Navigation page) — that family covers a fixed,
+// different set of productivity/AI-tool brands (PowerPoint, Slack, Teams,
+// Claude, ChatGPT, etc.) for inline nav/context UI, now built separately as
+// `AppsIcon`. This component's data-source tile set has no Figma kit
+// equivalent — confirmed intentional, not a rename target. Self-styled
+// inline React (no external assets), mirroring SourceCard's tile/token
+// conventions.
 
 // Backgrounds below are third-party brand colors (Salesforce blue, Slack
 // purple, etc.), not Cube/Folio tokens — intentional exception to the

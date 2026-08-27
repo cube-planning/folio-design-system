@@ -1,6 +1,19 @@
 // PageHeader — Folio Design System
 // Source of truth: Figma "Folio DS — 2026 UI Refresh" › Portal Header (node 186:29002)
 //
+// Kit vocabulary: this is Figma "Folio Design System Beta"'s (Q7G87Bmjx2aYNVDKYLlBaG)
+// "Portal Header"/"Library Portal Header" family (nodes 107:33641, 185:26201)
+// — built earlier from an older sibling file, hence the different node id.
+// Confirmed intentional rename (Portal Header → PageHeader, a more generic
+// name since this is used beyond the "Portal" context) rather than a gap.
+// Re-checked against the current kit (2026-08-27) — two drifts to fix on a
+// future pass, not yet reconciled: (1) the kit's "secondary" hierarchy
+// variant puts action buttons on the breadcrumb row, which maps to this
+// component's `topActions` prop, not `actions` — not obvious from the JSDoc
+// below; (2) the kit's "primary" hierarchy variant has a helper-text +
+// "Last Sync" badge combo this component has no equivalent for (only
+// owner/status).
+//
 // Two row layout, measured from Figma:
 //   Row 1 — breadcrumb (left) + topActions (right), e.g. bell/Import icon buttons
 //   Row 2 — title + inline badges (left) + actions (right), e.g. edit/Mark Complete

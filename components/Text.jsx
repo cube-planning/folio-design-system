@@ -1,3 +1,8 @@
+// Text — Folio Design System
+// Kit vocabulary: no matching family in Figma "Folio Design System Beta"
+// (Q7G87Bmjx2aYNVDKYLlBaG) — confirmed intentional, generic typography
+// primitive (the kit expresses type scale as text styles, not a component).
+
 const VARIANTS = {
   "display-1": { fontSize: 48, lineHeight: "60px", letterSpacing: "-0.02em" },
   "display-2": { fontSize: 36, lineHeight: "48px", letterSpacing: "-0.01em" },
