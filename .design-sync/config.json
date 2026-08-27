@@ -45,7 +45,10 @@
     "AddonTopNav":  "components/AddonTopNav.jsx",
     "BuildPanel":   "components/BuildPanel.jsx",
     "AnalyzePanel": "components/AnalyzePanel.jsx",
-    "AddonSidebar": "components/AddonSidebar.jsx"
+    "AddonSidebar": "components/AddonSidebar.jsx",
+    "PublishPanel": "components/PublishPanel.jsx",
+    "TablesPanel": "components/TablesPanel.jsx",
+    "CubeAddonSidebar": "components/CubeAddonSidebar.jsx"
   },
   "readmeHeader": ".design-sync/conventions.md",
   "overrides": {

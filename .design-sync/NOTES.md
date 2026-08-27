@@ -163,6 +163,46 @@ default props, only `Tooltip` swaps to the typographic placeholder). **These are
 the standing offer for incremental authoring on a future sync** — see the preview
 scope question in the base skill's §2 step 5.
 
+## Cube Add-on Sidebar built out fully, synced so it's editable in claude.ai/design (2026-08-27)
+
+**2026-08-27:** User asked for the full Cube Add-on sidebar (Build/Analyze/Publish/Tables,
+per `docs/cube-addon-design-spec.md` and a much more detailed follow-up spec) implemented
+as real interactive components, then separately reported the page was "read only" in
+claude.ai/design — root cause: the new components existed in the repo but had never been
+synced, so the design agent had nothing editable to build the page with. Fixed by:
+1. Rewrote `BuildPanel.jsx` with an explicit 3-stage state machine (`picker` → `picked` →
+   `fetched`) instead of the old single-shape controlled props, to support the
+   Select/New/Open picker step and the post-fetch Dimensions/Transactions field groups.
+2. Bumped `AccordionSection`'s closed-row height 48px → 56px per spec (open/closed already
+   shared one bordered container with no inner seams, so no further change needed there).
+3. Added `fullWidth`/`style` props to `SegmentedButton` (previously `inline-flex` only,
+   with no style-override escape hatch) — needed for the Dimensions/Transactions and
+   Data/Web Report/New Table/Existing segmented controls to span their containers.
+4. Added `PublishPanel.jsx` and `TablesPanel.jsx` (new), plus a `CubeAddonSidebar.jsx`
+   composite that owns all real `useState` wiring end-to-end (accordion open state per
+   section — independent, not mutually exclusive; Build's stage machine; the range
+   multi-select tree's indeterminate-parent logic; Publish's create-report form; Tables'
+   Setup→Configured→Settings detail screen) as the reference implementation other
+   consumers should copy into their own data layer.
+5. Added all 3 new components to `componentSrcMap` and re-synced (atomic path, `upload.bundle: true`
+   ships the real code regardless of each component's own "unchanged"/"added" classification —
+   that classification only gates preview recapture/regrade, never what ships in `_ds_bundle.js`).
+   All 3 render cleanly with synthesized default props (no floor card needed) — screenshots
+   confirmed styled/complete/plausible without authoring `.tsx` previews for them yet.
+
+Caught two real bugs during interactive verification (esbuild-bundled the actual source
+into a throwaway browser harness and clicked through every state — screenshots alone would
+have missed both):
+- `PublishPanel`'s create-form footer clipped "Create Web Report" text outside its pill
+  when paired 50/50 with "Cancel" in a 300px sidebar — fixed by giving Cancel intrinsic
+  width instead of `flex: 1`, and switching its variant to `secondary` per CLAUDE.md's
+  Cancel-button-variant rule (no header `×` in this inline create panel).
+- `CubeAddonSidebar`'s initial range-tree data hardcoded "All" as `checked` even though
+  Sheet 2/Drilldown 1 start unchecked — should have been `mixed` (indeterminate). The bug
+  was invisible in a screenshot (mixed and checked render as the same filled navy square,
+  differing only in a 9px minus-vs-check glyph) — caught by inspecting the actual icon
+  className via `preview_eval`, not by eyeballing the render.
+
 ## Known render warns
 
 (None — all warnings were triaged as expected behavior, documented above.)
@@ -188,3 +228,4 @@ writes for this repo** — it's not covered by the generic skill list.
 - **No TypeScript** — `.d.ts` prop bodies are synthesized from JSX source. Complex prop shapes (unions, callbacks) may not extract perfectly. Improve with `cfg.dtsPropsFor.<Name>` if needed.
 - **2026-08-13: all 17 previews were re-authored from scratch** after a prior "reorganize repo structure" commit deleted the previous set. Grades in `.design-sync/.cache/review/` are fresh, not carried forward from history.
 - **10 components uploaded as floor cards 2026-08-27** (see above) — no authored preview yet: `AccordionSection`, `AddonSidebar`, `AddonTopNav`, `AnalyzePanel`, `BuildPanel`, `ExpandCollapseControl`, `FilterField`, `RangeSelectorTree`, `RangeSelectorTrigger`, `Tooltip`. Author them on any future re-sync per §2.5's preview-scope question.
+- **3 more floor-card components added same day**: `PublishPanel`, `TablesPanel`, `CubeAddonSidebar` — same deal, no authored `.tsx` yet. `CubeAddonSidebar` in particular is the full addon shell (topnav + all 4 sections wired together); its floor-card render uses whatever default props its own `useState` initializes with, which happens to look complete — but it has no dedicated grade, so a future component-level regression there wouldn't be caught by capture/grade, only by the render check's crash detection.

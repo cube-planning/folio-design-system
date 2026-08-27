@@ -32,18 +32,20 @@ function IconSlot({ box, size, children }) {
   );
 }
 
-export function SegmentedButton({ options = [], value, onChange, size = "large" }) {
+export function SegmentedButton({ options = [], value, onChange, size = "large", fullWidth = false, style }) {
   const s = SIZE[size] ?? SIZE.large;
 
   return (
     <div
       role="radiogroup"
       style={{
-        display: "inline-flex",
+        display: "flex",
         gap: 4,
         background: COLORS.gray200,
         borderRadius: 4,
         fontFamily: "'DM Sans', sans-serif",
+        width: fullWidth ? "100%" : undefined,
+        ...style,
       }}
     >
       {options.map((opt) => {
@@ -71,6 +73,7 @@ export function SegmentedButton({ options = [], value, onChange, size = "large" 
               justifyContent: "center",
               gap: 4,
               height: s.height,
+              flex: fullWidth ? 1 : undefined,
               boxSizing: "border-box",
               borderRadius: active ? 8 : 4,
               border: `1px solid ${active ? COLORS.cobalt500 : "transparent"}`,
