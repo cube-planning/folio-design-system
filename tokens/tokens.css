@@ -415,22 +415,22 @@
      Z-INDEX
      ============================================================ */
 
-  --z-base:     0;    /* @kind: other */
-  --z-raised:   10;   /* @kind: other */
-  --z-dropdown: 100;  /* @kind: other */
-  --z-sticky:   200;  /* @kind: other */
-  --z-overlay:  300;  /* @kind: other */
-  --z-modal:    400;  /* @kind: other */
-  --z-toast:    500;  /* @kind: other */
+  --z-base:     0;    /* @kind other */
+  --z-raised:   10;   /* @kind other */
+  --z-dropdown: 100;  /* @kind other */
+  --z-sticky:   200;  /* @kind other */
+  --z-overlay:  300;  /* @kind other */
+  --z-modal:    400;  /* @kind other */
+  --z-toast:    500;  /* @kind other */
 
 
   /* ============================================================
      TRANSITIONS
      ============================================================ */
 
-  --transition-fast:    150ms ease;  /* @kind: motion */
-  --transition-base:    200ms ease;  /* @kind: motion */
-  --transition-slow:    300ms ease;  /* @kind: motion */
+  --transition-fast:    150ms ease;  /* @kind other */
+  --transition-base:    200ms ease;  /* @kind other */
+  --transition-slow:    300ms ease;  /* @kind other */
 
 
   /* ============================================================
@@ -439,12 +439,12 @@
      RGBA values sourced from matching color tokens.
      ============================================================ */
 
-  --focus-ring-default:        0px 0px 0px 4px rgba(23, 61, 130, 0.24);    /* cobalt-500 at 24% */
-  --focus-ring-default-sm:     0px 0px 0px 2px rgba(23, 61, 130, 0.24);    /* cobalt-500 at 24% — compact */
-  --focus-ring-destructive:    0px 0px 0px 4px rgba(217, 45, 32, 0.24);    /* red-500 at 24% */
-  --focus-ring-destructive-sm: 0px 0px 0px 2px rgba(217, 45, 32, 0.24);    /* red-500 at 24% — compact */
-  --focus-ring-ai:             0px 0px 0px 4px rgba(122, 90, 248, 0.24);   /* purple-500 at 24% */
-  --focus-ring-success:        0px 0px 0px 4px rgba(34, 158, 102, 0.24);   /* green-500 at 24% */
+  --focus-ring-default:        0px 0px 0px 4px rgba(23, 61, 130, 0.24);    /* @kind shadow — cobalt-500 at 24% */
+  --focus-ring-default-sm:     0px 0px 0px 2px rgba(23, 61, 130, 0.24);    /* @kind shadow — cobalt-500 at 24% — compact */
+  --focus-ring-destructive:    0px 0px 0px 4px rgba(217, 45, 32, 0.24);    /* @kind shadow — red-500 at 24% */
+  --focus-ring-destructive-sm: 0px 0px 0px 2px rgba(217, 45, 32, 0.24);    /* @kind shadow — red-500 at 24% — compact */
+  --focus-ring-ai:             0px 0px 0px 4px rgba(122, 90, 248, 0.24);   /* @kind shadow — purple-500 at 24% */
+  --focus-ring-success:        0px 0px 0px 4px rgba(34, 158, 102, 0.24);   /* @kind shadow — green-500 at 24% */
 
 
   /* ============================================================
@@ -453,10 +453,10 @@
      for frosted-glass surfaces.
      ============================================================ */
 
-  --blur-sm: blur(4px);    /* @kind: blur — Subtle layer separation — floating cards */
-  --blur-md: blur(8px);    /* @kind: blur — Popover and tooltip backgrounds */
-  --blur-lg: blur(16px);   /* @kind: blur — Drawer and sidebar overlays */
-  --blur-xl: blur(24px);   /* @kind: blur — Modal and full-screen overlays */
+  --blur-sm: blur(4px);    /* @kind other — Subtle layer separation — floating cards */
+  --blur-md: blur(8px);    /* @kind other — Popover and tooltip backgrounds */
+  --blur-lg: blur(16px);   /* @kind other — Drawer and sidebar overlays */
+  --blur-xl: blur(24px);   /* @kind other — Modal and full-screen overlays */
 
 
   /* ============================================================
@@ -475,12 +475,12 @@
      Alias tokens for component-level border usage.
      ============================================================ */
 
-  --border-table-stroke:   var(--color-gray-200);    /* Table row dividers and grid lines */
-  --border-table-header:   var(--color-gray-200);    /* Column header bottom border */
-  --border-input-default:  var(--color-gray-300);    /* Resting input border */
-  --border-input-hover:    var(--color-gray-400);    /* Input border on hover */
-  --border-input-focus:    var(--color-cobalt-500);  /* Input border on focus */
-  --border-input-error:    var(--color-red-500);     /* Input border on error */
-  --border-input-disabled: var(--color-gray-200);    /* Disabled input */
+  --border-table-stroke:   var(--color-gray-200);    /* @kind color — Table row dividers and grid lines */
+  --border-table-header:   var(--color-gray-200);    /* @kind color — Column header bottom border */
+  --border-input-default:  var(--color-gray-300);    /* @kind color — Resting input border */
+  --border-input-hover:    var(--color-gray-400);    /* @kind color — Input border on hover */
+  --border-input-focus:    var(--color-cobalt-500);  /* @kind color — Input border on focus */
+  --border-input-error:    var(--color-red-500);     /* @kind color — Input border on error */
+  --border-input-disabled: var(--color-gray-200);    /* @kind color — Disabled input */
 
 }
