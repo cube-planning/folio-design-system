@@ -1,6 +1,9 @@
-// TablesPanel — Folio Design System (Feature)
-// Kit vocabulary: no matching family in Figma "Folio Design System Beta"
-// (Q7G87Bmjx2aYNVDKYLlBaG) — confirmed intentional, addon-specific screen.
+// TablesCard — Folio Design System (Feature)
+// Renamed from TablesPanel: Figma "Add-Ons" (kmQDBYBQPuG9bt90qedB6A, node
+// 6399:17463, "Analyze" frame) factors the collapsed Tables section into its
+// own named component, and its own generated reference code names it
+// `TablesCard` (data-name="Tables Card", node 5167:16310) — renamed to match
+// exactly. PublishCard.jsx follows the same vocabulary for its sibling.
 // Built from: Button, SegmentedButton, Input, Select, Tag, Banner — the Cube
 // Add-on's "Tables" section: create a new live table, or manage an existing
 // one through Setup → Configured → Settings.
@@ -211,7 +214,7 @@ function TableDetail({
   );
 }
 
-export function TablesPanel({
+export function TablesCard({
   tab = "new",
   onTabChange,
 

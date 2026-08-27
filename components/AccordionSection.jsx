@@ -1,7 +1,11 @@
 // AccordionSection — Folio Design System (Composite)
-// Kit vocabulary: no matching family in Figma "Folio Design System Beta"
-// (Q7G87Bmjx2aYNVDKYLlBaG) — confirmed intentional, generic addition. The
-// collapsible-section pattern isn't a distinct component in that kit.
+// Checked against Figma "Add-Ons" (kmQDBYBQPuG9bt90qedB6A, node 6399:17463)
+// — the actual source file for the addon. The open/closed "section header"
+// pattern repeats inline across Build/Analyze/Publish/Tables there; only the
+// two collapsed states (Publish, Tables) are factored into named components
+// (`PublishCard`/`TablesCard` — see those files), and the open-state
+// wrapper itself has no distinct name to adopt. Confirmed intentional,
+// generic addition.
 // Built from: Icon (Font Awesome), Text, chevron toggle — no domain knowledge.
 //
 // A single collapsible section: icon + title row that expands to reveal

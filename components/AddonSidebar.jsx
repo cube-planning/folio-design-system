@@ -1,7 +1,10 @@
 // AddonSidebar — Folio Design System (Layout)
-// Kit vocabulary: no matching family in Figma "Folio Design System Beta"
-// (Q7G87Bmjx2aYNVDKYLlBaG) — confirmed intentional. This is the Cube
-// Sheets/Excel add-on's own shell, not a kit component; distinct from
+// Checked against Figma "Add-Ons" (kmQDBYBQPuG9bt90qedB6A, node 6399:17463)
+// — the actual source file for the addon — not just "Folio Design System
+// Beta" (Q7G87Bmjx2aYNVDKYLlBaG). In that file this shell corresponds to the
+// "Drawer" frame (6399:17480), but that name is already taken by the kit's
+// own `Drawer.jsx` (the generic modal side-drawer) — adopting it here would
+// collide. Confirmed intentional NOT to rename; distinct from
 // `PortalSideBarNav`, which IS the kit's main-app sidebar.
 // Defines the Cube Add-on panel's structure only — a fixed-width shell with
 // a docked top nav and a scrollable content column — and delegates all

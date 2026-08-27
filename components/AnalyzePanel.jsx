@@ -1,7 +1,11 @@
 // AnalyzePanel — Folio Design System (Feature)
-// Kit vocabulary: no matching family in Figma "Folio Design System Beta"
-// (Q7G87Bmjx2aYNVDKYLlBaG) — confirmed intentional. Addon-specific screen
-// composition, sourced from the separate "Add-Ons" Figma file (see below).
+// Checked against Figma "Add-Ons" (kmQDBYBQPuG9bt90qedB6A, node 6399:17463)
+// — the actual source file for the addon. This panel's underlying frame is
+// literally named "Product Newsletter Card" (id 6399:17490) there — a
+// leftover copy-paste name from an unrelated task-management template
+// (internal layer names like "Task Management"/"Add Task" confirm this),
+// not a deliberate component name worth adopting. Confirmed intentional to
+// keep `AnalyzePanel`, which actually describes what it does.
 // Built from: Button, Toggle, ExpandCollapseControl — the Cube Add-on's
 // "Analyze" section: AI analysis, drilldown/expand controls over the
 // fetched range, and a validation shortcut.

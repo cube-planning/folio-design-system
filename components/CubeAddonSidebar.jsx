@@ -3,14 +3,16 @@
 // (Q7G87Bmjx2aYNVDKYLlBaG) — confirmed intentional. This is the top-level
 // addon reference composite, not a kit component.
 // Built from: AddonSidebar, AddonTopNav, AccordionSection, BuildPanel,
-// AnalyzePanel, PublishPanel, TablesPanel — the full Cube Sheets/Excel
+// AnalyzePanel, PublishCard, TablesCard — the full Cube Sheets/Excel
 // add-on panel, fully wired with real component state.
+// (PublishCard/TablesCard renamed from PublishPanel/TablesPanel to match
+// Figma "Add-Ons" (kmQDBYBQPuG9bt90qedB6A) vocabulary — see those files.)
 //
 // This is the reference wiring for the add-on shell: every toggle, tab, and
 // selection below is genuine React state, not hardcoded per-screen markup.
 // Consumers embedding the add-on for real should copy this state shape into
 // their own data layer rather than importing this file directly — the
-// individual panels (BuildPanel, AnalyzePanel, PublishPanel, TablesPanel)
+// individual panels (BuildPanel, AnalyzePanel, PublishCard, TablesCard)
 // are the reusable, controlled building blocks.
 //
 // Accordion rule: the 4 sections open independently — opening Analyze does
@@ -24,8 +26,8 @@ import { AddonTopNav } from "./AddonTopNav.jsx";
 import { AccordionSection } from "./AccordionSection.jsx";
 import { BuildPanel } from "./BuildPanel.jsx";
 import { AnalyzePanel } from "./AnalyzePanel.jsx";
-import { PublishPanel } from "./PublishPanel.jsx";
-import { TablesPanel } from "./TablesPanel.jsx";
+import { PublishCard } from "./PublishCard.jsx";
+import { TablesCard } from "./TablesCard.jsx";
 
 // Range tree: All > Sheet 1 > Range 1, Sheet 2 > Drilldown 1
 const INITIAL_RANGE_NODES = [
@@ -209,7 +211,7 @@ export function CubeAddonSidebar({ width = 300 }) {
         open={openSections.publish}
         onToggle={() => toggleSection("publish")}
       >
-        <PublishPanel
+        <PublishCard
           tab={publishTab}
           onTabChange={setPublishTab}
           blockingDimensions={isDrilldown ? [] : ["Entity"]}
@@ -251,7 +253,7 @@ export function CubeAddonSidebar({ width = 300 }) {
         onToggle={() => toggleSection("tables")}
       >
         {!detailTable ? (
-          <TablesPanel
+          <TablesCard
             tab={tablesTab}
             onTabChange={setTablesTab}
             tableName={tableName}
@@ -279,7 +281,7 @@ export function CubeAddonSidebar({ width = 300 }) {
             }}
           />
         ) : (
-          <TablesPanel
+          <TablesCard
             detail={detailTable}
             stage={detailStage}
             onBack={() => setDetailTable(null)}

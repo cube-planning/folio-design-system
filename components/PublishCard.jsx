@@ -1,6 +1,9 @@
-// PublishPanel — Folio Design System (Feature)
-// Kit vocabulary: no matching family in Figma "Folio Design System Beta"
-// (Q7G87Bmjx2aYNVDKYLlBaG) — confirmed intentional, addon-specific screen.
+// PublishCard — Folio Design System (Feature)
+// Renamed from PublishPanel: Figma "Add-Ons" (kmQDBYBQPuG9bt90qedB6A, node
+// 6399:17463, "Analyze" frame) names the collapsed Publish section instance
+// "Publish Card" — matching the sibling Tables section, whose collapsed
+// instance is factored into its own named component "TablesCard" (see
+// TablesCard.jsx). Renamed to match that vocabulary exactly.
 // Built from: Button, SegmentedButton, Banner, Input, Select, Textarea, Tag —
 // the Cube Add-on's "Publish" section: push the fetched range to the live
 // model (Data tab) or manage a Web Report (Web Report tab).
@@ -85,7 +88,7 @@ function KebabMenu({ onAction }) {
   );
 }
 
-export function PublishPanel({
+export function PublishCard({
   tab = "data",
   onTabChange,
 
