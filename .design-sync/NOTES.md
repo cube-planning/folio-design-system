@@ -203,6 +203,24 @@ have missed both):
   differing only in a 9px minus-vs-check glyph) — caught by inspecting the actual icon
   className via `preview_eval`, not by eyeballing the render.
 
+## Full-force re-verify audit (2026-08-27)
+
+**2026-08-27:** User asked to "force a full re-sync" — a deliberate audit of all
+carried-forward grades, not just the changed-since-last-sync set. Ran
+`package-capture.mjs --force`, which cleared grades for all 27 authored
+components (100+ cells total) and re-captured every sheet from scratch. Reviewed
+every sheet and regraded all 27 `good` — no regressions found; this was a clean
+audit, not a bug hunt. Confirmed via a follow-up `package-capture.mjs` run with
+no `--force`: all 27 printed `carried forward` with zero `grade cleared`, proving
+the fresh grades are stable and match the current build. Then did a full atomic
+upload of every component + bundle + styling (not diff-scoped) per the user's
+explicit "everything" request, even though the diff itself reported `upload.any:
+false` (nothing had actually changed in source). Also pruned 11 stale grade/review
+files left over from the pre-rename component set (`CubeBadge`, `CubeButton`,
+`CubeDrawer`, `CubeInput`, `CubeSegmented`, `CubeSelect`, `CubeSourceCard`,
+`CubeTable`, `CubeText`, `CubeToggle`, `RadioButton`) — harmless leftovers from
+the 2026-06-23 rename, cleaned up automatically by `package-capture.mjs`.
+
 ## Known render warns
 
 (None — all warnings were triaged as expected behavior, documented above.)
