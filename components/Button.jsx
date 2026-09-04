@@ -35,6 +35,21 @@ const VARIANTS = {
     ripple: "rgba(14,35,73,.10)",
     spinner: { border: "rgba(23,61,130,.2)", top: "#173D82" },
   },
+  // Neutral counterpart to subtle-blue/subtle-purple — a filled low-emphasis
+  // action that carries no brand or AI meaning. Added for the Cube Add-on's
+  // Publish section, where "Overwrite Web Report" and "Save as New Report" sit
+  // below a primary/secondary pair as tertiary actions: ghost-gray (no fill)
+  // reads as too weak to find, and subtle-blue's blue tint would imply they
+  // rank with the primary action. Gray-200 fill / gray-900 text, escalating
+  // through the same gray ramp ghost-gray uses.
+  "subtle-gray": {
+    default: { background: "#F2F5F9", color: "#222B3A", boxShadow: SHADOW.sm },
+    hover: { background: "#E3E8EF", boxShadow: SHADOW.md },
+    pressed: { background: "#CDD5E0" },
+    focusOutline: "#CDD5E0",
+    ripple: "rgba(34,43,58,.10)",
+    spinner: { border: "rgba(34,43,58,.2)", top: "#222B3A" },
+  },
   // AI-branded subtle button — bg/text sourced from Figma "Add-Ons" file
   // (node 6399:17463, AI Button / "Build with AI" / "Let Cube Analyze for
   // You"): purple-100 fill, purple-500 text. Hover/pressed stops aren't
@@ -195,6 +210,7 @@ export function Button({
   trailingIcon,
   loading = false,
   disabled = false,
+  fullWidth = false, // stretch to the container's width instead of hugging content
   children,
   onClick,
   style,
@@ -248,14 +264,20 @@ export function Button({
   const disabledStyle = disabled ? { opacity: 0.7, boxShadow: "none" } : {};
 
   const baseStyle = {
-    display: "inline-flex",
+    // inline-flex by default so buttons hug their label; fullWidth switches to
+    // a flex block so the button can stretch. An inline-flex element with
+    // width:100% still sits in an inline formatting context, which leaves a
+    // stray text-node gap under it in a column layout.
+    display: fullWidth ? "flex" : "inline-flex",
     alignItems: "center",
     justifyContent: "center",
     gap: 6,
     position: "relative",
     overflow: v.plain ? "visible" : "hidden",
     height: v.plain ? "auto" : s.height,
-    width: isIconOnly ? s.iconOnly : undefined,
+    // fullWidth wins over the icon-only square: an icon-only button asked to
+    // stretch is a deliberate full-width icon affordance, not a 32px square.
+    width: fullWidth ? "100%" : isIconOnly ? s.iconOnly : undefined,
     paddingInline: v.plain ? 0 : isIconOnly ? 0 : s.paddingInline,
     borderRadius: v.plain ? 4 : 9999,
     boxSizing: "border-box",

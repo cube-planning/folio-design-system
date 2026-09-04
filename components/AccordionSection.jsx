@@ -25,8 +25,15 @@
 //   open    : controlled expanded state
 //   onToggle: (nextOpen) => void — fires on header click
 //   badge   : optional trailing node before the chevron (e.g. an info icon)
+//
+// A section with no `children` never renders as open, even when `open` is
+// true: an expanded body wrapper with nothing in it reads as a tall blank
+// card, and the up-chevron/tinted background promise content that isn't
+// there. `open` alone used to drive all four of those, so a section wired
+// up before its panel existed rendered as visibly broken rather than
+// simply collapsed.
 
-import { useId } from "react";
+import { Children, useId } from "react";
 
 const COLORS = {
   gray900: "#222B3A",
@@ -41,19 +48,22 @@ const THEME = {
 export function AccordionSection({ icon, title, theme = "blue", open = false, onToggle, badge, children }) {
   const bodyId = useId();
   const t = THEME[theme] ?? THEME.blue;
+  // Children.toArray drops null/undefined/false, so conditionally-rendered
+  // children that all resolve to nothing count as an empty body.
+  const isOpen = open && Children.toArray(children).length > 0;
 
   return (
     <div
       style={{
         border: `1px solid ${t.border}`,
         borderRadius: 12,
-        background: open ? t.openBg : COLORS.white,
+        background: isOpen ? t.openBg : COLORS.white,
         fontFamily: "'DM Sans', sans-serif",
       }}
     >
       <button
         type="button"
-        aria-expanded={open}
+        aria-expanded={isOpen}
         aria-controls={bodyId}
         onClick={() => onToggle?.(!open)}
         style={{
@@ -80,13 +90,13 @@ export function AccordionSection({ icon, title, theme = "blue", open = false, on
         </span>
         {badge}
         <i
-          className={`fa-solid fa-chevron-${open ? "up" : "down"}`}
+          className={`fa-solid fa-chevron-${isOpen ? "up" : "down"}`}
           style={{ fontSize: 12, color: COLORS.gray900, flexShrink: 0 }}
           aria-hidden="true"
         />
       </button>
 
-      {open && (
+      {isOpen && (
         <div id={bodyId} style={{ padding: "0 16px 16px", display: "flex", flexDirection: "column", gap: 16 }}>
           {children}
         </div>

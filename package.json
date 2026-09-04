@@ -31,6 +31,8 @@
   },
   "scripts": {
     "build": "node build.mjs",
-    "build:watch": "node build.mjs --watch"
+    "build:watch": "node build.mjs --watch",
+    "design-sync": "node build.mjs && node .design-sync/run-resync.mjs",
+    "design-sync:test": "node .design-sync/run-resync.test.mjs"
   }
 }

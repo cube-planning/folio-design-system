@@ -91,13 +91,15 @@ src/
 The full color palette lives in `tokens/cube-colors.md`. Below is a quick-reference for the tokens used most in components.
 
 #### Primary Color
-**Cobalt** is the primary brand color — it replaces the old Blue 500. `cube-cobalt-500` (`#173D82`) is the base hue / core brand stop, and `cube-cobalt-600` (`#122E64`) is the interactive stop used for buttons, focus states, and active indicators. Use `cube-cobalt-*` for all primary actions; use `cube-blue-*` for links and navigation only.
+**Cobalt** is the primary brand color — it replaces the old Blue 500. `cube-cobalt-500` (`#173D82`) is the base hue and the resting/interactive stop used for buttons, toggles, and active indicators. `cube-cobalt-600` (`#122E64`) is the hover escalation, not the resting state. Use `cube-cobalt-*` for all primary actions; use `cube-blue-*` for links and navigation only.
 
 #### Color Rule
 
 | Stop range | Usage |
 |---|---|
-| `600` | Interactive UI — buttons, active states; minimum for AA with white text |
+| `500` | Interactive UI resting state — primary button fill, active/selected borders, toggle "on" |
+| `600` | Hover state for anything at `500` — not the resting color |
+| `700` | Pressed state for anything at `500`/`600`; also colored text/icons |
 | `700–800` | Text & icons — colored headings, labels, icons on light backgrounds |
 | `50–200` | Surfaces & backgrounds — badge fills, banner backgrounds, tinted chips |
 | `25–50` | Chip & page backgrounds — lightest tints for subtle surface differentiation |
@@ -109,7 +111,7 @@ The full color palette lives in `tokens/cube-colors.md`. Below is a quick-refere
 | `cube-cobalt-*` | Primary buttons, CTAs, focus rings, active states, selected indicators |
 | `cube-blue-*` | Links and navigation items only |
 
-**Usage:** `bg-cube-cobalt-600`, `text-cube-gray-900`, `border-cube-gray-300`, etc.
+**Usage:** `bg-cube-cobalt-500`, `text-cube-gray-900`, `border-cube-gray-300`, etc.
 
 ---
 
@@ -117,30 +119,12 @@ The full color palette lives in `tokens/cube-colors.md`. Below is a quick-refere
 
 ### Font Loading
 
-Load both typefaces via Google Fonts in `index.html`:
+Load the typeface via Google Fonts in `index.html`:
 ```html
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 ```
 
-> **Note:** Folio uses two typefaces. DM Sans is the primary typeface for all UI text. JetBrains Mono is the data/decoration typeface — used only for numeric and code-adjacent content. Do not use Lato or Montserrat.
-
----
-
-### JetBrains Mono — Data & Decoration Font
-
-Reserved exclusively for data-adjacent and numeric contexts. One weight only.
-
-| Size | Token | Use for |
-|---|---|---|
-| 14px | `body` | Inline numeric values, chart data labels |
-| 12px | `caption-1` | Timestamps, percentages, metadata values |
-| 10px | `caption-2` | Micro labels, axis ticks, dense data tables |
-
-**Weight:** Regular (400) only — no medium, semibold, or bold variants.
-
-**Use JetBrains Mono for:** timestamps, percentages, numeric values, chart labels, axis ticks, data table numbers.
-
-**Do not use JetBrains Mono for:** @mentions, #tags, links, names, body copy, headings, labels, or any non-numeric inline references. Use DM Sans + color/chip differentiation for those instead.
+> **Note:** DM Sans is the only typeface in Folio — used for all UI text, including numeric and data-adjacent content. Do not use Lato, Montserrat, or JetBrains Mono.
 
 ---
 
@@ -229,8 +213,7 @@ Folio Beta uses a high-border-radius / pill convention throughout. Never use `ro
 |---|---|---|
 | Buttons, chips, badges, toggles, avatars | 9999px (pill) | `rounded-full` |
 | Inputs, selects, textareas | 8px | `rounded-lg` |
-| Cards | 12px | `rounded-xl` |
-| Large containers, modals, drawers | 16px | `rounded-2xl` |
+| Cards, large containers, modals, drawers | 16px | `rounded-2xl` |
 
 ---
 
@@ -243,7 +226,7 @@ font-['DM_Sans'] text-sm text-cube-gray-900
 placeholder → text-cube-gray-500
 
 Hover:  border-cube-gray-600
-Focus:  border-cube-cobalt-600 + box-shadow focus-ring-default
+Focus:  border-cube-cobalt-500 + box-shadow focus-ring-default
 Error:  border-cube-red-500
 ```
 
@@ -251,11 +234,19 @@ Error:  border-cube-red-500
 
 | Variant | Classes |
 |---|---|
-| Primary | `h-8 px-4 py-2 rounded-full bg-cube-cobalt-600 text-white font-medium text-sm` |
-| Secondary | `h-8 px-4 py-2 rounded-full border border-cube-cobalt-600 bg-white text-cube-cobalt-600 font-medium text-sm` |
+| Primary | `h-8 px-4 py-2 rounded-full bg-cube-cobalt-500 text-white font-medium text-sm` (hover: `bg-cube-cobalt-600`, pressed: `bg-cube-cobalt-700`) |
+| Secondary | `h-8 px-4 py-2 rounded-full border border-cube-cobalt-500 bg-white text-cube-cobalt-500 font-medium text-sm` |
 | Subtle Blue | `h-8 px-4 py-2 rounded-full bg-cube-cobalt-50 text-cube-cobalt-500 font-medium text-sm` |
 | Ghost | `h-8 px-4 py-2 rounded-full font-medium text-sm text-cube-gray-900` |
-| Add Source | `h-8 w-full rounded-full border border-cube-cobalt-600 text-cube-cobalt-600 font-medium text-xs text-center` |
+| Add Source | `h-8 w-full rounded-full border border-cube-cobalt-500 text-cube-cobalt-500 font-medium text-xs text-center` |
+
+#### Cancel Button Variant Rule
+`Cancel` (or any dismiss/back-out action) picks its variant based on whether the container already has a header `×` close control:
+
+- **Has a header `×`** (most modals) → `Cancel` uses `ghost-gray`. The `×` already owns the dismiss action; `Cancel` is a low-emphasis echo of it, so it shouldn't compete visually.
+- **No header `×`** (e.g. an inline edit-mode panel/bar) → `Cancel` uses `secondary`. It's the only way to back out, so it needs enough visual weight to read as a real, findable action.
+
+Do not ask which variant to use for a Cancel button — check for a header `×` and apply this rule automatically.
 
 #### Subtle Blue States
 ```
@@ -282,10 +273,13 @@ Pass the icon through the dedicated `icon` prop, **not** as `children` and **not
 
 Use `fa-regular` icons at 14px (`large`) / 12px (`small`), matching the `iconSize` token — verify the icon name at fontawesome.com before using it.
 
+#### Default Variant for Header Icon Buttons
+`PageHeader`'s `topActions` and `actions` slots only accept the Folio `Button` component (see `components/PageHeader.jsx`) — never a raw `<button>`. For icon-only buttons in those slots (bell, import, edit, etc.), default to `variant="ghost-gray"` `size="large"` (32×32) unless the Figma reference or the user specifies a different variant. Do not ask which variant/size to use for a header icon button — apply this default automatically.
+
 ### Side Drawer
 ```
 Container: w-[400px] h-full bg-white rounded-2xl p-4 shadow-lg
-Header:    pb-4 border-b-2 border-cube-cobalt-600 flex justify-between items-start
+Header:    pb-4 border-b-2 border-cube-cobalt-500 flex justify-between items-start
 Footer:    pt-4 mt-4 flex gap-2 justify-end
 ```
 **shadcn:** Use `<Sheet side="right">` with custom width and header styling.
@@ -302,14 +296,14 @@ Header:    font-semibold text-sm text-cube-cobalt-700
 ```
 Container: flex gap-1 bg-cube-gray-200 rounded-full
 Inactive:  flex-1 h-8 rounded-full font-semibold text-sm text-cube-gray-900 bg-cube-gray-200 border border-transparent
-Active:    flex-1 h-8 rounded-full font-semibold text-sm text-cube-cobalt-600 bg-cube-cobalt-100 border border-cube-cobalt-600
+Active:    flex-1 h-8 rounded-full font-semibold text-sm text-cube-cobalt-500 bg-cube-cobalt-100 border border-cube-cobalt-500
 ```
 **shadcn:** Use `<ToggleGroup type="single">` with custom item styling.
 
 ### Toggle
 ```
 w-7 h-3.5 rounded-full
-On:  bg-cube-cobalt-600
+On:  bg-cube-cobalt-500
 Off: bg-cube-gray-400
 Knob: w-2.5 h-2.5 bg-white rounded-full
 ```
@@ -396,7 +390,7 @@ Effect styles pushed to Figma — use these token names in code:
 ## 8. Rules for Claude
 
 ### DO
-- Always use Tailwind utility classes with Cube tokens (`bg-cube-cobalt-600`, not `bg-[#2667D8]`)
+- Always use Tailwind utility classes with Cube tokens (`bg-cube-cobalt-500`, not `bg-[#2667D8]`)
 - Use Cobalt as the primary color — not Blue
 - Use pill/`rounded-full` for all buttons, badges, chips, and toggles
 - Use `rounded-lg` (8px) for inputs and selects
@@ -414,7 +408,7 @@ Effect styles pushed to Figma — use these token names in code:
 - Never use inline `style={{}}` attributes
 - Never use arbitrary hex values — always use token classes
 - Never use Lato or Montserrat — DM Sans only
-- Never reference Blue 500 as primary — Cobalt is primary (base hue `cobalt-500`, interactive `cobalt-600`)
+- Never reference Blue 500 as primary — Cobalt is primary (`cobalt-500` resting/interactive, `cobalt-600` hover)
 - Never use red borders for errors — use soft `bg-cube-red-100` banners
 - Never put lifecycle rules in the create-new-scenario drawer
 - Never use `<form>` tags in components (use event handlers directly)
@@ -440,3 +434,31 @@ To pull design context: `Figma:get_design_context(fileKey, nodeId)`
 To pull variables: `Figma:get_variable_defs(fileKey, nodeId)`
 
 > Always reference the Folio file (`Q7G87Bmjx2aYNVDKYLlBaG`) for tokens and components. Use the legacy Cube file only when checking against existing production screens.
+
+---
+
+## 10. Design Sync
+
+To push this package to the claude.ai/design project, run:
+
+```
+npm run design-sync
+```
+
+**Never call `node .ds-sync/resync.mjs` directly** — a `PreToolUse` hook will block you. On this repo its verdict is *always* `ok: false` and its capture stage is *always* skipped `prior_failure`, even on a perfectly healthy re-sync — `package-build.mjs` wipes `ds-bundle/` including the Font Awesome files that `tokens/tokens.css` `@import`s, so its own validate stage can never pass. Reading that verdict at face value means either believing a healthy sync failed, or missing a real failure inside the expected one. `npm run design-sync` puts the Font Awesome copy in the right place and produces the one trustworthy verdict; `exit 0` means genuinely clean.
+
+Reading the driver is *not* blocked — `grep`/`sed`/`cat` on it are how you re-verify the `renderTier`/`pickCanary` logic that `.design-sync/run-resync.mjs` mirrors from it.
+
+Fetch the anchor before syncing, or the diff reports every component as changed:
+`DesignSync get_file _ds_sync.json` → `.design-sync/.cache/remote-sync.json`
+
+Read `.design-sync/NOTES.md` before any sync work — it records the per-component decisions, the known render warnings (a warning **not** listed there is new and needs looking at), and the upload-plan rules.
+
+### The add-on prototype is not in this repo
+
+The interactive Cube add-on sidebar exists **only** in the design project, as two hand-authored `sc-if` templates that have drifted apart before:
+
+- `templates/cube-addon-sidebar/CubeAddonSidebar.dc.html`
+- `templates/cube-addon-sidebar-sheets-host/CubeAddonSidebar.dc.html`
+
+They do **not** use the packaged components, so editing `components/*.jsx` never reaches them. `DesignSync get_file` → patch → re-upload, and **patch both copies in the same pass** — a previous session edited one while the preview showed the other and reported success on a screen that hadn't changed.

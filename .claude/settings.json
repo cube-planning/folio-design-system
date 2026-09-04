@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh .claude/hooks/block-direct-resync.sh",
+            "if": "Bash(node *)",
+            "timeout": 10,
+            "statusMessage": "Checking design-sync entry point"
+          }
+        ]
+      }
+    ]
+  }
+}

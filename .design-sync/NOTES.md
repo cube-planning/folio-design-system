@@ -3,14 +3,54 @@
 ## Re-sync command
 
 ```sh
-cp -r "<skill-base-dir>"/package-build.mjs ... .ds-sync/   # re-stage scripts first
-node .ds-sync/resync.mjs --config .design-sync/config.json --node-modules ./node_modules \
-  --entry ./dist/index.js --out ./ds-bundle --remote .design-sync/.cache/remote-sync.json
-./.design-sync/copy-fontawesome.sh   # REQUIRED — see "Font Awesome" note below; run before any validate/upload
+npm run design-sync
 ```
-Fetch `_ds_sync.json` from the project to `.design-sync/.cache/remote-sync.json` before running.
 
-**Font Awesome — do not skip `copy-fontawesome.sh`.** `resync.mjs`/`package-build.mjs` wipe `ds-bundle/` on every run, so the Font Awesome files that `tokens/tokens.css`'s `@import url("./fontawesome/css/all.min.css")` depends on (see the dated entry below) must be re-copied from `vendor/fontawesome/` every single time, or `package-validate.mjs` fails `[CSS_IMPORT_MISSING]` and the driver's `ok` goes `false`. Run the script right after the build/resync step, before `package-validate.mjs` or any `DesignSync` upload.
+That's the whole thing. It runs `node build.mjs` then `.design-sync/run-resync.mjs`, which drives build → diff → **Font Awesome copy** → validate → capture in the one order that works, and prints a single verdict plus the upload plan. Exit 0 means genuinely clean.
+
+Two prerequisites it will warn you about rather than silently mis-report:
+1. Re-stage the skill scripts into `.ds-sync/` first (`cp -r "<skill-base-dir>"/package-build.mjs ... .ds-sync/`).
+2. Fetch the anchor: `DesignSync get_file _ds_sync.json` → `.design-sync/.cache/remote-sync.json`. Without it the diff reports every component as changed.
+
+**Do not call `.ds-sync/resync.mjs` directly.** Its verdict is *always* `ok: false` on this repo, for a structural reason that is not a real failure — see the next section. That is exactly what `run-resync.mjs` exists to fix.
+
+This is now **enforced, not just documented.** `.claude/settings.json` registers a `PreToolUse` hook on `Bash` (`.claude/hooks/block-direct-resync.sh`) that denies any `node … .ds-sync/resync.mjs` command and explains why. It matches *execution* only — `grep`/`sed`/`cat`/`shasum` on the driver stay allowed, since reading it is how you re-verify the mirrored `renderTier`/`pickCanary` logic. `npm run design-sync` is unaffected: the wrapper spawns the driver as a child process, which never passes through the Bash tool. Both files are tracked, so the guard travels with the repo.
+
+To change or remove it, edit `.claude/settings.json` or run `/hooks`. If you add the hook to a fresh clone and it doesn't fire, open `/hooks` once — the settings watcher only watches directories that had a settings file when the session started.
+
+**Known limitation — the guard is lexical.** A `PreToolUse` hook only sees the raw Bash command text and cannot tell code from a quoted string, so it matches only at a *command position* (start of line, or after `;` `&&` `||` `|`, allowing leading whitespace and env assignments). That was tightened after the first version denied a `git commit` whose **message described this very hook**. It still cannot be perfect: a command that embeds a separator-prefixed invocation inside a quoted string — e.g. a heredoc or `-m` message containing `; node .ds-sync/resync.mjs` — is denied. If you hit that, put the text in a file (`git commit -F msg.txt`, or a script) so the fixture never appears in a shell command. `.claude/hooks/block-direct-resync.test.mjs` (17 cases, `node .claude/hooks/block-direct-resync.test.mjs`) keeps the fixtures in a file for exactly this reason and covers both directions.
+
+## Why `.ds-sync/resync.mjs` always reports ok:false here (2026-09-03)
+
+`package-build.mjs` opens with `rmSync(OUT, { recursive: true, force: true })` (line ~203) and has **no preserve list**, so every build wipes `ds-bundle/` — including the Font Awesome files that `tokens/tokens.css`'s `@import url("./fontawesome/css/all.min.css")` depends on. `cfg.cssEntry` is appended into `_ds_bundle.css` verbatim (line ~384), `@import` and all, and the converter never resolves or copies the imported asset.
+
+There is **no config hook and no post-build hook** for this. Verified 2026-09-03: `cfg.extraEntries` is JS-module-only (it feeds the bundle's export gates), and `cfg.extraFonts` only extracts `@font-face` blocks and drops the `.fa-*` glyph rules, so neither can carry `all.min.css`.
+
+Because `resync.mjs` runs build → diff → validate → capture in one process, its own validate stage *always* fails `[CSS_IMPORT_MISSING]`, its verdict is *always* `ok: false`, and capture is *always* skipped `"prior_failure"` — even on a healthy re-sync. That made the driver's verdict worthless as a signal and hid real failures inside an expected one.
+
+`.design-sync/run-resync.mjs` fixes it by treating only resync's **build and diff** stages as authoritative, then doing the FA copy and re-running validate and capture itself. It captures the diff's plain `changed + added` worklist and prints it, because grading is still yours.
+
+Two things it does to avoid paying for the workaround twice:
+- It passes `--no-render-check` **into** resync. That stage is doomed to fail `[CSS_IMPORT_MISSING]` regardless, but it runs the full 56-preview chromium render check on the way there — so without the flag every re-sync did two full render passes and discarded the first. Safe because the diff runs *before* validate and `renderChurned` comes from hashes, not rendering, and capture is scoped by `.sync-diff.json`, not by validate.
+- It mirrors the driver's **render-check tiering** on the authoritative pass (skip on an anchored no-change re-sync, `--render-sample 10` when nothing render-affecting moved, full otherwise). Kept in sync with the block in `resync.mjs` by hand; if a skill update changes that condition this goes stale in the *safe* direction — it over-renders. A clean no-change re-sync now takes ~4s.
+
+Both mirrored decisions — `renderTier` and `pickCanary` — are exported pure functions with tests: `npm run design-sync:test` (19 cases, covering every tier branch and the canary's bound, dedupe, floor-card drop, single/portal preference and graded-over-ungraded ordering). They exist as tests because those branches only fire on a diff shape you can't choose on demand, so they'd otherwise ship unverified.
+
+`MIRRORED_DRIVER_SHA` in the wrapper pins the `.ds-sync/resync.mjs` version they were copied from (currently `509db748227c1ea3`). On mismatch the wrapper warns and continues — re-read the driver's tiering block and canary pick, then update the constant. Not a hard stop, because both mirrors fail safe: stale, they over-render and over-capture, never under.
+
+**Not mirrored:** the driver's reference-drift baseline. It's gated on `shape === 'storybook'` and cannot trigger on this package-shape repo, so there's nothing to lose.
+
+## The proper fix is upstream — see UPSTREAM-REQUEST.md
+
+Everything above is a workaround. The root cause is that the converter has no static-asset copy hook, which no amount of local scripting fixes. [`UPSTREAM-REQUEST.md`](./UPSTREAM-REQUEST.md) is a ready-to-send request for a `cfg.extraAssets` key, with the file:line evidence and a list of what we'd delete once it lands. **Send it to whoever maintains the design-sync skill.** The skill is not installed on this machine, so there's no local repo or issue tracker to file it against.
+
+## `ds-base.js`'s `base = '../..'` is correct — do not "fix" it
+
+All three local templates (`cube-addon-demo`, `audit-trail-demo`, `page-header-demo`) set `const base = '../..'`, which resolves to the *repo root* locally — where there is no `_ds_bundle.js`. That looks like a bug and isn't. Templates run **uploaded**, at `templates/<name>/` in the design project, where `../..` is the project root and `_ds_bundle.js`, `_ds_bundle.css`, `styles.css`, `fonts/` and `fontawesome/` all sit at the top level. The path is authored for the deployed layout. Repointing it at `ds-bundle` would fix a local preview and break every template in the project.
+
+**Why the wrapper lives in `.design-sync/` and not `.ds-sync/`:** `.ds-sync/` is vendored and gets re-staged from the skill, so a patch to `package-build.mjs` there would be silently wiped (see "Re-sync risks"). `.design-sync/` is ours and survives.
+
+Ordering footnote: the FA copy lands *after* the diff, so the `styleSha`/`auxSha` in `_ds_sync.json` are computed pre-copy. That is self-consistent — every run's diff compares a pre-copy build against a pre-copy anchor — and post-copy `package-validate` confirms "anchor matches the bundle". Don't "fix" this by moving the copy earlier; it would fork the sidecar hashes from every previously uploaded anchor.
 
 ## Component discovery
 
@@ -256,8 +296,42 @@ For the remaining addon components, re-checked against the same "Add-Ons" file a
 
 **Task 3, closing note — the self-check's naming finding is not a reliable per-component signal, and should stop being chased as one.** After the `PublishCard`/`TablesCard` rename synced clean, the next report repeated the *same* "33 components named outside kit vocabulary" finding, still including `AccordionSection`/`AddonSidebar`/`AddonTopNav`/`BuildPanel`/`AnalyzePanel`/`PublishCard`/`TablesCard`. Asked the user for the finding's literal text (not a paraphrase) to check for a specific confirmation mechanism — there isn't one; it's fixed boilerplate ("rename to the kit's vocabulary or confirm they're intentional additions") with no named file, marker, or field. More importantly, the literal 10-name sample it gave included **`Banner`** and **`Drawer`** — both of which already have exact, cited, previously-confirmed Figma matches (`Banner` → node 179:23016, confirmed 2026-08-19; `Drawer` → kit's `Drawer_d`, documented above). A check that still flags components with a verified correct match isn't testing "does this name exist in the kit" per-component — it reads as a static name-string list that isn't recomputed against current repo state (comments, `.d.ts`, `.prompt.md` content) at all. Chasing it further would mean either renaming components already proven correct, or inventing an unverifiable "confirmation" format on spec. Decision: stop treating this specific finding as actionable per-component signal. The two real, evidence-backed renames (`PublishCard`, `TablesCard`) already happened; everything else in this family has a documented, Figma-checked reason to keep its current name, and that documentation is the correct end state regardless of whether this self-check clears.
 
+## JetBrains Mono removed — DM Sans is now the sole typeface (2026-09-01)
+
+**2026-09-01:** Per user decision, JetBrains Mono was removed from Folio entirely (CLAUDE.md, `Text.jsx`, `Input.jsx`, `Card.md`, `.design-sync/conventions.md`, `.design-sync/config.json`'s `runtimeFontPrefixes`). `Text`'s `mono` prop was deleted outright (it only ever switched `fontFamily`; once that branch was removed it was dead weight forcing `fontWeight: 400`) — the `.design-sync/previews/Text.tsx` `MonoData` export was removed along with it, since it existed solely to demo the mono variant. Re-synced: only `Text`'s render hash changed (Input's mono removal didn't change its own hash — check why if that's surprising later, but the render check came back clean either way). Regraded both remaining `Text` cells (`ColorOverride`, `Scale`) `good` from the fresh sheet. **If any future component reintroduces a monospace/data-font treatment, it should use DM Sans + `font-variant-numeric: tabular-nums` or similar CSS, not a second typeface** — CLAUDE.md now states DM Sans is the only typeface, no exception for numeric/data content.
+
+## The add-on prototype exists in TWO remote copies and NEITHER is in this repo (2026-09-03)
+
+**2026-09-03:** The interactive add-on prototype lives only in the claude.ai/design project, as two near-identical hand-authored `sc-if` templates:
+
+- `templates/cube-addon-sidebar/CubeAddonSidebar.dc.html` — standalone, 320px sidebar on a gray page
+- `templates/cube-addon-sidebar-sheets-host/CubeAddonSidebar.dc.html` — the same sidebar embedded in `GoogleSheetsHost.dc.html`
+
+Neither is mirrored locally, and neither uses the packaged `AccordionSection`/`BuildPanel`/`PublishCard` components — they're 78KB of inline markup with their own `state = { … }` block. **A fix to `components/*.jsx` does not reach them.** Fetch, patch, and re-upload the template itself.
+
+This caused a real, confusing bug: a session asked to fix the empty-sheet default state edited the **standalone** copy while the preview pane was showing the **sheets-host** copy, then reported success. The render didn't change, because the two files had diverged (`analyzeOpen: true` in one, `publishOpen/tablesOpen: true` in the other). **When editing the add-on prototype, patch both copies in the same pass and say which one the preview is showing.**
+
+Empty-sheet default is now `buildOpen: true, analyzeOpen: false, publishOpen: false, tablesOpen: false` in both, matching `components/CubeAddonSidebar.jsx`. Confirmed with the user on 2026-09-03: on an empty sheet, Build is the only actionable section.
+
+## AccordionSection: no children ⇒ never renders open (2026-09-03)
+
+**2026-09-03:** `AccordionSection` used to drive the body wrapper, the tinted background, the up-chevron, and `aria-expanded` off the `open` prop alone. A section given `open` but no `children` therefore rendered a tall blank padded card promising content that wasn't there — which is exactly how the add-on demo's Publish and Tables sections looked, since they were created with no children at all. Now `isOpen = open && Children.toArray(children).length > 0` drives all four. `templates/cube-addon-demo/CubeAddonDemo.dc.html` was also wired up with real `PublishCard`/`TablesCard` children and switched from single-active `openSection` to independent `openSections`, matching the accordion rule documented in `CubeAddonSidebar.jsx`.
+
+Note this is a **bundle-level** fix: in `package` shape the per-component `ds-bundle/components/general/*/*.jsx` files are only re-export shims, so `remote-diff` correctly reported `AccordionSection` **unchanged** (its preview render is byte-identical) while flagging `bundle: true`. Don't read "unchanged" as "my edit didn't land" — check `ds-bundle/_ds_bundle.js`.
+
+## Uploaded SVGs come back changed — that is not corruption (2026-09-03)
+
+**2026-09-03:** `DesignSync write_files` injects C2PA provenance into uploaded SVGs and round-trips them through an XML parser. A 38KB export came back as 50KB with an added `xmlns:c2pa` attribute, a `<metadata><c2pa:manifest>` block, and every self-closing `<rect .../>` expanded to `<rect ...></rect>`. **A byte comparison against the local file will fail.** It is still semantically identical and renders the same — `<metadata>` is a valid, non-rendering SVG element. To verify an uploaded SVG, normalise before comparing: strip `<metadata>`, strip `xmlns:c2pa`, collapse whitespace, and canonicalise self-closing tags. Element counts (paths, filters, gradients, masks) are the quick check.
+
+## Illustration assets: reference as sibling files, don't inline
+
+The web-report empty state lives at `templates/cube-addon-sidebar*/web-report-empty-state.svg` and is referenced as `<img src="./web-report-empty-state.svg">`. `./file.svg` is the established pattern for sibling assets in this project (see `templates/integrations-page`, `templates/boards-page/thumb-*.svg`).
+
+Prefer this over inlining for anything non-trivial. The real export is 38KB — mostly a 400-path decorative backdrop — which would have grown each 76KB template by ~50%, and it carries Figma-generated ids (`filter0_d_5276_8740`, `mask0_5276_8740`, `paint0_radial_…`). Inline, those ids are global to the page and collide if the sidebar is ever rendered twice; as a separate document they stay scoped to the image. **Both prototype copies need their own copy of the asset** — template folders don't share assets in this project.
+
 ## Known render warns
 
+- **`AppsIcon` is a canary for a skipped Font Awesome copy.** Verified 2026-09-03: pre-copy, validate flags `[RENDER_BLANK]` on *both* `AppsIcon` and `SidenavIcon`; post-copy, only `SidenavIcon` remains (55/56 clean). `AppsIcon` renders nothing but its icon glyph, so it drops under the 5KB floor exactly when `fontawesome/` is absent. If you ever see `AppsIcon` in this list, the Font Awesome copy did not run — don't whitelist it, fix the pipeline.
 - `SidenavIcon` — genuinely tiny (14px glyph in a 22px slot), same class of warning as `StatusDot`. `[RENDER_BLANK]` fires because the floor-card PNG is <5KB, not because it's broken — confirmed via screenshot the icon renders correctly.
 
 (All other warnings were triaged as expected behavior, documented above.)
