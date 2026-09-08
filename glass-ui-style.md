@@ -199,33 +199,67 @@ Always **three distinct hues**, never monochrome shades of one color — a
 monochrome ramp loses its series separation entirely once it's behind blur and
 saturation shifts.
 
-Use `--color-dataviz-*` from `tokens/tokens.css`:
+Use `--color-dataviz-*` from `tokens/tokens.css`. For a three-series glass
+graphic, use slots **1, 4 and 6**:
 
 | Token | Hex | Ramp |
 |---|---|---|
 | `--color-dataviz-1` | `#14B8A6` | Teal 500 |
-| `--color-dataviz-2` | `#06B6D4` | Cyan 500 |
 | `--color-dataviz-4` | `#6366F1` | Indigo 500 |
+| `--color-dataviz-6` | `#F97316` | Orange 500 |
 
-> **Unresolved conflict — read before shipping a chart.**
-> `docs/BRAND-FOUNDATION.md` § "Chart series order" declares a *different*
-> series sequence as FINAL and shared by both personas:
-> `#12264D, #219E66, #173D82, #70CF98, #30886C, #97A3B6`. That sequence is
-> mostly navy/cobalt plus greens, which is close to monochrome over glass and
-> is what the teal/cyan/indigo choice above was made to avoid. Both cannot be
-> true. Until it's resolved, glass marketing graphics use the
-> `--color-dataviz-*` tokens above, and this file is the exception on record
-> rather than a silent override — per that doc's own instruction, a persona
-> rule contradicting it is a bug in one of the two, so one of them needs
-> editing.
+Skipping slots is fine; **reordering** them is not — slot order still ascends
+(1 → 4 → 6), per the "assign in fixed order, never cycled" rule.
 
-Line weight `2.5–3px` with `stroke-linecap: round`. No fills under the lines —
-an area fill over a translucent panel muddies both.
+**Slot 2 (cyan) is excluded on purpose.** Teal ↔ cyan is the worst
+normal-vision pair in the palette (ΔE 7.1, against a floor of 15) and a glass
+panel's `saturate()` closes the gap further. Slots 1 / 4 / 6 pass every check:
+worst CVD pair ΔE 16.3, worst normal-vision pair ΔE 27.4. Two cools plus one
+warm accent is also a near-triadic split, so the three read as a set.
 
-Teal and cyan are adjacent on the wheel, and a glass panel's `saturate()`
-pushes them closer still. Space the series **geometrically** as well as by hue —
-at hero scale, two closely-tracking lines in adjacent hues read as one thick
-line no matter what the legend says.
+Space the series **geometrically** as well as by hue — at hero scale, two
+closely-tracking lines in adjacent hues read as one thick line no matter what
+the legend says.
+
+> **Open — the full 6-slot palette fails validation.** As a complete 6-series
+> categorical set the dataviz family FAILs CVD separation and the
+> normal-vision floor (teal/cyan/emerald crowd each other; indigo/fuchsia
+> collide under protanopia). Three series on 1 / 4 / 6 are safe; **a 4+ series
+> chart on any surface needs the palette re-stepped**, which is a brand
+> decision — don't fix it by inventing hexes inline.
+
+### Marks
+
+| Property | Value |
+|---|---|
+| Line weight | `2px`, `stroke-linecap: round` |
+| Area fills | None — an area fill over a translucent panel muddies both |
+| Marker diameter | `8px` (`r=4`) — the floor, and ~4× the stroke. Past ~10px the dots dominate the line they sit on |
+| Marker border | None over glass — a white surface ring breaks the hue and reads as a separate bead |
+| Marker density | Markers only below 12 points per series |
+
+### Data point labels — decorative graphics omit them
+
+A glass graphic is almost always a **decorative** chart: a hero image, a
+section illustration, a deck cover, standing in for "we do finance analytics"
+rather than reporting a figure. In that case **omit the per-point numbers.** A
+value beside every dot competes with the line it belongs to, and nobody reads
+eighteen of them. The trend shape and the color relationships are the payload;
+the y-axis carries magnitude.
+
+This is a scoped exemption from `docs/BRAND-FOUNDATION.md` § "Chart data-point
+display", granted there explicitly — **not** a licence to drop labels from a
+chart someone reads figures off. The moment a glass panel carries a real
+reportable number (a dashboard behind glass, a report screenshot), the
+labelling rule applies in full and the constraints below govern how.
+
+**If you do label over glass:**
+
+| Concern | Rule |
+|---|---|
+| Chip | Solid `gray-900` fill with `gray-50` type reversed out, Regular weight. Fully opaque — a translucent chip lets the blur behind it bleed through the value |
+| Color | Text tokens only, never the series color. A teal number on a saturated glass panel is the worst case in the system |
+| Never | Bare text directly over a `backdrop-filter` region, where a blob passing behind it changes the contrast |
 
 ### AI accents
 
@@ -314,7 +348,9 @@ are Font Awesome `fa-regular` only.
 - [ ] Small/simple panels have an internal diagonal skew cue
 - [ ] Nested cards use the lighter fill and cast no drop shadow
 - [ ] Exactly one drop shadow per panel, from the panel itself
-- [ ] Three distinct dataviz hues, no area fills
+- [ ] Dataviz slots 1 / 4 / 6, no area fills, 2px strokes
+- [ ] Markers 8px (`r=4`), borderless, only below 12 points per series
+- [ ] No per-point value labels (decorative) — or, if it carries real figures, every value labelled on a solid `gray-900` chip
 - [ ] Purple appears only on the AI element; no purple background blob
 - [ ] No `#5547A5`, `#6938EF`, `#8B7FD1`, or `#335CFF`
 - [ ] Background is blurred blobs, not a hard gradient

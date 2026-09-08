@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chart Rules Mock — Cube Design System</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     Tokens — mirrored from tokens/tokens.css. This is a standalone
+     specimen page (same class as Cube BRAND Design System/preview/*.html),
+     so the ramp is restated here as custom properties rather than
+     imported. Never hand-edit a hex below: copy it from tokens.css.
+     ============================================================ */
+  :root {
+    /* Dataviz — canonical series order, docs/BRAND-FOUNDATION.md */
+    --color-dataviz-1: #14B8A6;   /* Teal 500    — series 1 */
+    --color-dataviz-2: #06B6D4;   /* Cyan 500    — series 2 (NOT used over glass) */
+    --color-dataviz-3: #10B981;   /* Emerald 500 — series 3 */
+    --color-dataviz-4: #6366F1;   /* Indigo 500  — series 4 */
+    --color-dataviz-5: #D946EF;   /* Fuchsia 500 — series 5 */
+    --color-dataviz-6: #F97316;   /* Orange 500  — series 6 */
+    --color-dataviz-1-subtle: #CCFBF1;
+
+    /* Gray ramp — chart chrome only, never a data mark */
+    --color-gray-200: #F2F5F9;
+    --color-gray-300: #E3E8EF;   /* gridlines */
+    --color-gray-400: #CDD5E0;   /* axis line */
+    --color-gray-500: #97A3B6;   /* zero / reference line, "Other" series */
+    --color-gray-600: #677489;   /* axis tick labels */
+    --color-gray-700: #4A5567;   /* axis title */
+    --color-gray-800: #353F4F;   /* legend text */
+    --color-gray-900: #222B3A;   /* chart title */
+
+    /* Variance — diverging pair, drawn from the dataviz palette rather
+       than the red/green status ramp. See the note in § 2. */
+    --color-variance-fav:   #F97316;   /* = dataviz-6 Orange 500 — warm pole */
+    --color-variance-unfav: #6366F1;   /* = dataviz-4 Indigo 500 — cool pole */
+    --color-green-500: #229E66;        /* retained for the ✓ ticks only, not a data mark */
+
+    --radius-2xl: 16px;
+  }
+
+  *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 48px 32px 64px;
+    position: relative;
+    color: var(--color-gray-900);
+  }
+
+  /* ---- Background: blurred blobs, never a hard-edged gradient.
+     Cobalt / blue / teal only — no purple (reserved for AI). ---- */
+  .bg { position: fixed; inset: 0; background: #F5F7FA; overflow: hidden; z-index: -1; }
+  .blob { position: absolute; border-radius: 50%; }
+  .blob-1 { width: 640px; height: 640px; left: -100px; top: -160px;   background: #4B7CD8; opacity: .26; filter: blur(110px); }
+  .blob-2 { width: 560px; height: 560px; right: -80px; top: -60px;    background: #14B8A6; opacity: .20; filter: blur(100px); }
+  .blob-3 { width: 600px; height: 600px; left: 40%;    bottom: -220px; background: #173D82; opacity: .22; filter: blur(110px); }
+
+  .wrap { max-width: 1180px; margin: 0 auto; }
+
+  /* ---- Page heading -------------------------------------------- */
+  .page-title { font-size: 30px; line-height: 40px; font-weight: 700; }          /* display-3 Bold */
+  .page-sub   { font-size: 14px; line-height: 20px; color: var(--color-gray-700); margin-top: 4px; }
+  .page-sub code { font-size: 13px; background: rgba(255,255,255,.6); padding: 1px 5px; border-radius: 4px; }
+
+  /* ---- Glass panel: frosted matte, glass-ui-style.md § 1 -------- */
+  .panel {
+    background: linear-gradient(135deg, rgba(255,255,255,0.55), rgba(255,255,255,0.28));
+    backdrop-filter: blur(22px) saturate(170%);
+    -webkit-backdrop-filter: blur(22px) saturate(170%);
+    border: 1px solid rgba(255,255,255,0.65);
+    border-radius: var(--radius-2xl);
+    box-shadow: 0 40px 80px -20px rgba(40,50,90,0.28),
+                inset 0 1px 0 rgba(255,255,255,0.8);
+    padding: 28px;
+    margin-top: 32px;
+  }
+
+  /* ---- Nested chart card: half the fill, half the blur, NO outer
+     shadow — only the panel casts one. glass-ui-style.md § 1 ----- */
+  .chart-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.34), rgba(255,255,255,0.16));
+    backdrop-filter: blur(10px) saturate(150%);
+    -webkit-backdrop-filter: blur(10px) saturate(150%);
+    border: 1px solid rgba(255,255,255,0.55);
+    border-radius: var(--radius-2xl);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    padding: 24px;
+  }
+
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+
+  /* ---- Card typography — components/Card.md, unchanged by glass -- */
+  .card-title { font-size: 16px; line-height: 24px; font-weight: 500; color: var(--color-gray-900); }  /* title-3 Medium */
+  .card-meta  { font-size: 12px; line-height: 18px; color: var(--color-gray-600); margin-top: 2px; }   /* caption-1 */
+
+  .card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+
+  /* ---- Legend: always present at >= 2 series -------------------- */
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; line-height: 18px; font-weight: 500; color: var(--color-gray-800); }
+  .swatch { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+  .swatch-dash { width: 14px; height: 0; border-top: 2px dashed currentColor; border-radius: 0; }
+
+  /* ---- Rule annotation strip ----------------------------------- */
+  .notes { margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.6); }
+  .note { display: flex; gap: 8px; font-size: 12px; line-height: 18px; color: var(--color-gray-700); }
+  .note + .note { margin-top: 5px; }
+  .note b { color: var(--color-gray-900); font-weight: 600; }
+  .tick { color: var(--color-green-500); font-weight: 700; flex: none; }
+
+  .section-label { font-size: 12px; line-height: 18px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--color-gray-600); margin: 40px 0 -12px; }
+</style>
+</head>
+<body>
+<div class="bg">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<div class="wrap">
+  <h1 class="page-title">Chart form — graphic treatment</h1>
+  <p class="page-sub">
+    Marketing / graphic-design treatment: shape and color carry the story, not
+    the numbers. Specimen for <code>glass-ui-style.md</code> § 4 and the form
+    rules in the brand README.
+    <strong>Not</strong> the product/report treatment &mdash; see the note at the foot of the page.
+  </p>
+
+  <div class="section-label">1 — Three-series categorical, over glass</div>
+  <div class="panel">
+    <div class="chart-card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Revenue by segment</div>
+          <div class="card-meta">FY26 · $M · actuals through Jun</div>
+        </div>
+        <div class="legend" id="legend-1"></div>
+      </div>
+      <svg id="chart-1" width="100%" viewBox="0 0 660 300" role="img"
+           aria-label="Trend graphic: FY26 revenue by segment, three series rising from January to June. Decorative — exact values are not shown."></svg>
+      <div class="notes">
+        <div class="note"><span class="tick">✓</span><span><b>Slots 1 / 4 / 6</b> — teal, indigo, orange. Cyan (slot 2) is skipped: teal ↔ cyan is ΔE 7.1 in normal vision, the worst pair in the palette.</span></div>
+        <div class="note"><span class="tick">✓</span><span><b>No per-point numbers</b> — a value beside every dot competes with the line it belongs to. The shape of the trend is the message here; the y-axis carries magnitude.</span></div>
+        <div class="note"><span class="tick">✓</span><span><b>8px borderless bullets</b> (r=4) — the marker floor, and ~4× the stroke width. Past ~10px the dots start dominating the line they sit on.</span></div>
+        <div class="note"><span class="tick">✓</span><span><b>2px stroke</b>, round caps, no area fill. Two cools + one warm accent — a near-triadic split, so the three read as a set rather than three unrelated hues.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">2 — Actuals vs forecast, and variance</div>
+  <div class="panel">
+    <div class="row">
+      <div class="chart-card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Total revenue</div>
+            <div class="card-meta">Actuals to Apr, forecast to Jun · $M</div>
+          </div>
+          <div class="legend" id="legend-2"></div>
+        </div>
+        <svg id="chart-2" width="100%" viewBox="0 0 520 260" role="img"
+             aria-label="Trend graphic: total revenue, actuals solid through April then forecast dashed in the same hue. Decorative — exact values are not shown."></svg>
+        <div class="notes">
+          <div class="note"><span class="tick">✓</span><span><b>Same hue, forecast dashed</b> <code>4 4</code> — the hue is not switched for forecast, so the series still reads as one measure.</span></div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Budget variance</div>
+            <div class="card-meta">Favorable vs unfavorable · $K</div>
+          </div>
+        </div>
+        <svg id="chart-3" width="100%" viewBox="0 0 520 260" role="img"
+             aria-label="Variance graphic: budget variance by month, favorable columns above the zero line and unfavorable below. Decorative — exact values are not shown."></svg>
+        <div class="notes">
+          <div class="note"><span class="tick">✓</span><span><b>Diverging pair, not red/green</b> — warm orange vs cool indigo across a neutral <code>gray-500</code> zero. Red/green separate by only ΔE 8.0 under deuteranopia; this pair scores 32.5.</span></div>
+          <div class="note"><span class="tick">✓</span><span><b>Two channels, not one</b> — the poles differ in temperature <em>and</em> lightness, so the split survives greyscale printing. Sign is carried by the column's side of the zero line, so it never rests on hue alone.</span></div>
+          <div class="note"><span class="tick">✓</span><span><b>4px radius on the value end only</b> — the baseline end stays square, so the bar reads as anchored.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Scope — read before reusing this</div>
+  <div class="panel scope">
+    <p><b>These are decorative graphics, not readable charts.</b> No value on this
+    page can be read to a number, by design — the trend shape and the color
+    relationships are the whole payload.</p>
+    <p>That makes this the <b>graphic-design / marketing</b> treatment only: hero
+    images, section illustrations, deck covers, anywhere a chart is standing in
+    for "we do finance analytics" rather than reporting a figure.</p>
+    <p><b>Product and report charts are the opposite case</b> and are governed by
+    <code>docs/BRAND-FOUNDATION.md</code> § "Chart data-point display": every
+    plotted value must be readable without interaction, because the reader is
+    there for the number and will screenshot it into a board deck where hover
+    does not exist. Do not copy this page's treatment into a dashboard, a report,
+    or anything a persona reads figures off.</p>
+  </div>
+</div>
+
+<style>
+  .scope p { font-size: 13px; line-height: 20px; color: var(--color-gray-700); }
+  .scope p + p { margin-top: 10px; }
+  .scope b { color: var(--color-gray-900); font-weight: 600; }
+  .scope code { font-size: 12px; background: rgba(255,255,255,.55); padding: 1px 5px; border-radius: 4px; }
+</style>
+
+<script>
+/* ================================================================
+   Chart rendering. Plain SVG, no dependencies — this doubles as a
+   reference implementation of the form rules, so the specs live in
+   named constants rather than magic numbers scattered inline.
+   ================================================================ */
+const T = {
+  gridline:  'var(--color-gray-300)',
+  axis:      'var(--color-gray-400)',
+  zero:      'var(--color-gray-500)',
+  tick:      'var(--color-gray-600)',
+  axisTitle: 'var(--color-gray-700)',
+  good:      'var(--color-variance-fav)',
+  bad:       'var(--color-variance-unfav)',
+};
+
+/* Line weight. The form rule's canonical value is 2px; glass-ui-style.md § 4
+   currently asks for 2.5–3px over a blurred panel. Set to 2 here — see the
+   note under chart 1. Markers scale with it. */
+const STROKE = 2;
+/* Marker radius. Floor is 8px diameter (r >= 4) and the diameter wants to
+   stay near 4x the stroke width — at 2px stroke that lands exactly on r=4.
+   r=6 read as beads on a wire; r=3.5 was under the floor. */
+const MARKER_R = 4;
+const svgNS = 'http://www.w3.org/2000/svg';
+
+function el(name, attrs, text) {
+  const n = document.createElementNS(svgNS, name);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  if (text !== undefined) n.textContent = text;
+  return n;
+}
+
+
+function legend(node, items) {
+  node.innerHTML = '';
+  items.forEach((s) => {
+    const wrap = document.createElement('span');
+    wrap.className = 'legend-item';
+    const sw = document.createElement('span');
+    if (s.dashed) { sw.className = 'swatch swatch-dash'; sw.style.color = s.color; }
+    else { sw.className = 'swatch'; sw.style.background = s.color; }
+    wrap.append(sw, document.createTextNode(s.label));
+    node.appendChild(wrap);
+  });
+}
+
+/* ---- Chart 1: three-series categorical line ------------------- */
+(function () {
+  const svg = document.getElementById('chart-1');
+  const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+  const SERIES = [
+    // Slots 1 / 4 / 6. Slot 2 (cyan) deliberately skipped — see notes.
+    { label: 'Enterprise', color: 'var(--color-dataviz-1)', v: [4.2, 4.8, 5.1, 6.0, 6.4, 7.2] },
+    { label: 'Mid-Market', color: 'var(--color-dataviz-4)', v: [2.8, 3.0, 3.4, 3.6, 4.1, 4.5] },
+    { label: 'SMB',        color: 'var(--color-dataviz-6)', v: [1.4, 1.5, 1.6, 1.9, 2.0, 2.2] },
+  ];
+  const L = 54, R = 646, TOP = 34, BOT = 252, MAX = 8;
+  const x = (i) => L + (R - L) * (i / (MONTHS.length - 1));
+  const y = (v) => BOT - (v / MAX) * (BOT - TOP);
+
+  // Gridlines + y ticks, rounded to clean numbers.
+  for (let v = 0; v <= MAX; v += 2) {
+    svg.appendChild(el('line', { x1: L, y1: y(v), x2: R, y2: y(v), stroke: T.gridline, 'stroke-width': 1 }));
+    svg.appendChild(el('text', {
+      x: L - 10, y: y(v) + 4, 'text-anchor': 'end',
+      'font-family': 'DM Sans, sans-serif', 'font-size': 11, fill: T.tick,
+    }, '$' + v + 'M'));
+  }
+  svg.appendChild(el('line', { x1: L, y1: BOT, x2: R, y2: BOT, stroke: T.axis, 'stroke-width': 1 }));
+  MONTHS.forEach((m, i) => svg.appendChild(el('text', {
+    x: x(i), y: BOT + 20, 'text-anchor': 'middle',
+    'font-family': 'DM Sans, sans-serif', 'font-size': 11, fill: T.tick,
+  }, m)));
+
+  // 2px stroke, round caps, no area fill under the lines.
+  SERIES.forEach((s) => {
+    svg.appendChild(el('polyline', {
+      points: s.v.map((v, i) => x(i) + ',' + y(v)).join(' '),
+      fill: 'none', stroke: s.color, 'stroke-width': STROKE,
+      'stroke-linecap': 'round', 'stroke-linejoin': 'round',
+    }));
+    // Markers allowed: fewer than 12 points. No surface ring — the
+    // series hue reads unbroken, per the styling call in this mock.
+    s.v.forEach((v, i) => svg.appendChild(el('circle', {
+      cx: x(i), cy: y(v), r: MARKER_R, fill: s.color,
+    })));
+  });
+
+  legend(document.getElementById('legend-1'), SERIES);
+})();
+
+/* ---- Chart 2: actuals solid, forecast dashed, same hue -------- */
+(function () {
+  const svg = document.getElementById('chart-2');
+  const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+  const ACTUAL = [8.4, 9.3, 10.1, 11.5, null, null];
+  const FCAST  = [null, null, null, 11.5, 12.4, 13.9];
+  const HUE = 'var(--color-dataviz-1)';
+  const L = 52, R = 500, TOP = 30, BOT = 208, MAX = 16;
+  const x = (i) => L + (R - L) * (i / (MONTHS.length - 1));
+  const y = (v) => BOT - (v / MAX) * (BOT - TOP);
+
+  for (let v = 0; v <= MAX; v += 4) {
+    svg.appendChild(el('line', { x1: L, y1: y(v), x2: R, y2: y(v), stroke: T.gridline, 'stroke-width': 1 }));
+    svg.appendChild(el('text', {
+      x: L - 10, y: y(v) + 4, 'text-anchor': 'end',
+      'font-family': 'DM Sans, sans-serif', 'font-size': 11, fill: T.tick,
+    }, '$' + v + 'M'));
+  }
+  svg.appendChild(el('line', { x1: L, y1: BOT, x2: R, y2: BOT, stroke: T.axis, 'stroke-width': 1 }));
+  MONTHS.forEach((m, i) => svg.appendChild(el('text', {
+    x: x(i), y: BOT + 20, 'text-anchor': 'middle',
+    'font-family': 'DM Sans, sans-serif', 'font-size': 11, fill: T.tick,
+  }, m)));
+
+  const pts = (arr) => arr.map((v, i) => v === null ? null : x(i) + ',' + y(v)).filter(Boolean).join(' ');
+  svg.appendChild(el('polyline', {
+    points: pts(ACTUAL), fill: 'none', stroke: HUE, 'stroke-width': STROKE,
+    'stroke-linecap': 'round', 'stroke-linejoin': 'round',
+  }));
+  svg.appendChild(el('polyline', {
+    points: pts(FCAST), fill: 'none', stroke: HUE, 'stroke-width': STROKE,
+    'stroke-dasharray': '4 4', 'stroke-linecap': 'round', 'stroke-linejoin': 'round',
+  }));
+
+  [ACTUAL, FCAST].forEach((arr) => arr.forEach((v, i) => {
+    if (v === null) return;
+    svg.appendChild(el('circle', { cx: x(i), cy: y(v), r: MARKER_R, fill: HUE }));
+  }));
+
+  legend(document.getElementById('legend-2'), [
+    { label: 'Actuals', color: '#14B8A6' },
+    { label: 'Forecast', color: '#14B8A6', dashed: true },
+  ]);
+})();
+
+/* ---- Chart 3: variance delta column -------------------------- */
+(function () {
+  const svg = document.getElementById('chart-3');
+  const DATA = [
+    { m: 'Jan', v:  180 }, { m: 'Feb', v: -120 }, { m: 'Mar', v: 240 },
+    { m: 'Apr', v:   90 }, { m: 'May', v:  -60 }, { m: 'Jun', v: 310 },
+  ];
+  const L = 56, R = 500, ZERO = 128, MAX = 400, SPAN = 84, BW = 40;
+  const step = (R - L) / DATA.length;
+  const cx = (i) => L + step * i + step / 2;
+  const h = (v) => Math.abs(v) / MAX * SPAN;
+
+  svg.appendChild(el('text', {
+    x: L - 12, y: ZERO + 4, 'text-anchor': 'end',
+    'font-family': 'DM Sans, sans-serif', 'font-size': 11, fill: T.tick,
+  }, '0'));
+
+  DATA.forEach((d, i) => {
+    const up = d.v >= 0, bh = h(d.v), r = 4;
+    const x0 = cx(i) - BW / 2, x1 = cx(i) + BW / 2;
+    // 4px radius on the value end ONLY — the baseline end stays square.
+    const p = up
+      ? `M ${x0} ${ZERO} L ${x0} ${ZERO - bh + r} Q ${x0} ${ZERO - bh} ${x0 + r} ${ZERO - bh} L ${x1 - r} ${ZERO - bh} Q ${x1} ${ZERO - bh} ${x1} ${ZERO - bh + r} L ${x1} ${ZERO} Z`
+      : `M ${x0} ${ZERO} L ${x0} ${ZERO + bh - r} Q ${x0} ${ZERO + bh} ${x0 + r} ${ZERO + bh} L ${x1 - r} ${ZERO + bh} Q ${x1} ${ZERO + bh} ${x1} ${ZERO + bh - r} L ${x1} ${ZERO} Z`;
+    svg.appendChild(el('path', { d: p, fill: up ? T.good : T.bad }));
+
+
+    svg.appendChild(el('text', {
+      x: cx(i), y: up ? ZERO + 20 : ZERO - 10, 'text-anchor': 'middle',
+      'font-family': 'DM Sans, sans-serif', 'font-size': 11, fill: T.tick,
+    }, d.m));
+  });
+
+  // Zero / reference line drawn last so it sits above the columns.
+  svg.appendChild(el('line', { x1: L, y1: ZERO, x2: R, y2: ZERO, stroke: T.zero, 'stroke-width': 1 }));
+})();
+</script>
+</body>
+</html>

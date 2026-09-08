@@ -15,7 +15,7 @@ preview-local.sh             regenerates the local-only preview copy
 | Panel | Variant | `translateZ` | Contents |
 |---|---|---|---|
 | Back | Frosted matte | `0` | `PageHeader`, `Badge`, three nested-glass stat tiles (`Text` + `IconBadge`), `Table` + `StatusDot` + `Cell.Link` |
-| Middle | Clear mirror + streak | `70px` | Chart card — `Text` title, legend, 3-series inline SVG |
+| Middle | Clear mirror + streak | `70px` | Chart card — `Text` title, legend, 3-series inline SVG (slots 1/4/6, 2px strokes, forecast dashed, no value labels) |
 | Front | Clear mirror + streak + AI glow | `160px` | AI insight callout — AI-gradient icon, `Badge color="ai"`, gradient-clipped `Text`, internal skew lines |
 
 Every panel shares one `rotateX(8deg) rotateY(-14deg) rotateZ(1.5deg)`. If you

@@ -134,17 +134,22 @@
 //   middle — Revenue chart card,          clear mirror, translateZ 70px
 //   front  — AI insight callout,          clear mirror + AI glow, translateZ 160px
 
-// Dataviz series: three distinct hues from --color-dataviz-*. See the
-// unresolved conflict note in glass-ui-style.md §4 before reusing these
-// in a non-glass chart.
+// Dataviz series: slots 1 / 4 / 6 from --color-dataviz-*. Slot 2 (cyan) is
+// excluded on purpose — teal <-> cyan is the worst normal-vision pair in the
+// palette (dE 7.1) and a glass panel's saturate() closes the gap further.
+// See glass-ui-style.md §4; history in docs/DESIGN-DECISIONS.md.
 //
-// Teal and cyan are adjacent on the wheel, so the series are also spaced
-// geometrically — at hero scale, over blur and a saturation shift, hue alone
-// doesn't separate them (glass-ui-style.md §4).
+// Actuals vs. forecast share a hue with the forecast dashed, per the form
+// rule — the hue is never switched for forecast. Budget is the one separate
+// categorical series, so it takes the next slot.
+//
+// The series are also spaced geometrically: at hero scale, over blur and a
+// saturation shift, hue alone doesn't separate closely-tracking lines.
 const SERIES = [
-  { label: 'Actuals',  color: '#14B8A6', points: '0,88 84,72 168,74 252,44 336,34 420,14' },     // dataviz-1 Teal
-  { label: 'Forecast', color: '#06B6D4', points: '0,110 84,100 168,86 252,76 336,54 420,40' },   // dataviz-2 Cyan
-  { label: 'Budget',   color: '#6366F1', points: '0,132 84,128 168,120 252,114 336,104 420,92' }, // dataviz-4 Indigo
+  { label: 'Actuals',  color: '#14B8A6', points: '0,88 84,72 168,74 252,44 336,34 420,14' },      // dataviz-1 Teal
+  { label: 'Forecast', color: '#14B8A6', dashed: true,
+                                         points: '0,110 84,100 168,86 252,76 336,54 420,40' },   // dataviz-1 Teal, dashed
+  { label: 'Budget',   color: '#F97316', points: '0,132 84,128 168,120 252,114 336,104 420,92' }, // dataviz-6 Orange
 ];
 
 const STATS = [
@@ -255,12 +260,20 @@ class Component extends DCLogic {
         key: s.label,
         style: { display: 'inline-flex', alignItems: 'center', gap: 6 },
       },
-        React.createElement('span', { style: { width: 8, height: 8, borderRadius: 9999, background: s.color } }),
+        // A dashed series gets a dashed line-key, not a dot — otherwise
+        // Actuals and Forecast show as two identical teal dots.
+        React.createElement('span', {
+          style: s.dashed
+            ? { width: 14, height: 0, borderTop: '2px dashed ' + s.color }
+            : { width: 8, height: 8, borderRadius: 9999, background: s.color },
+        }),
         React.createElement(Text, { variant: 'caption-1', color: '#4A5567' }, s.label),
       )),
     );
 
-    // Three distinct hues, 3px round-capped strokes, no area fills.
+    // 2px round-capped strokes, no area fills. No per-point value labels:
+    // this is a decorative hero graphic, which BRAND-FOUNDATION.md's
+    // "Chart data-point display" rule explicitly exempts.
     const chartEl = React.createElement('svg', {
       viewBox: '0 0 420 140', width: '100%', height: 160, role: 'img',
       'aria-label': 'Revenue trend — actuals, forecast, and budget',
@@ -271,7 +284,8 @@ class Component extends DCLogic {
       })),
       SERIES.map((s) => React.createElement('polyline', {
         key: s.label, points: s.points, fill: 'none',
-        stroke: s.color, strokeWidth: 3, strokeLinecap: 'round', strokeLinejoin: 'round',
+        stroke: s.color, strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round',
+        strokeDasharray: s.dashed ? '4 4' : undefined,
       })),
     );
 

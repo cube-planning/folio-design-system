@@ -282,7 +282,14 @@
       "Bash(node .ds-sync/package-capture.mjs --out ./ds-bundle --components AgentCard,IconBadge)",
       "Bash(awk -F/ 'NF>1{print $1}' /tmp/upload-list.txt)",
       "Bash(echo \"EXIT: $?\")",
-      "Bash(grep -rIl -E 'kit\\\\.fontawesome\\\\.com/[a-z0-9]{8,}|sk-[A-Za-z0-9]{20,}|ghp_[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|BEGIN \\(RSA|OPENSSH|PRIVATE\\)' 'Cube BRAND Design System' docs tokens templates components glass-ui-style.md marketing-landing-page .design-sync)"
+      "Bash(grep -rIl -E 'kit\\\\.fontawesome\\\\.com/[a-z0-9]{8,}|sk-[A-Za-z0-9]{20,}|ghp_[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|BEGIN \\(RSA|OPENSSH|PRIVATE\\)' 'Cube BRAND Design System' docs tokens templates components glass-ui-style.md marketing-landing-page .design-sync)",
+      "Bash(node scripts/validate_palette.js \"#14B8A6,#06B6D4,#10B981,#6366F1,#D946EF,#F97316\" --mode light)",
+      "Bash(node scripts/validate_palette.js \"#12264D,#219E66,#173D82,#70CF98,#30886C,#97A3B6\" --mode light)",
+      "Bash(node scripts/validate_palette.js \"#14B8A6,#06B6D4,#10B981,#6366F1,#D946EF,#F97316\" --mode light --pairs all)",
+      "Bash(node scripts/validate_palette.js \"#12264D,#219E66,#173D82,#70CF98,#30886C,#97A3B6\" --mode light --pairs all)",
+      "Bash(python3 -c \"import json;print\\(json.dumps\\(json.load\\(open\\('package.json'\\)\\).get\\('scripts',{}\\),indent=2\\)\\)\")",
+      "Bash(awk -F'border-radius: *' '{print $2}')",
+      "Bash(grep -rIl -E 'kit\\\\.fontawesome\\\\.com/[a-z0-9]{8,}|sk-[A-Za-z0-9]{20,}|localhost:[0-9]+' templates/chart-rules-mock docs/DESIGN-DECISIONS.md)"
     ]
   }
 }

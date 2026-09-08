@@ -344,6 +344,8 @@ Prefer this over inlining for anything non-trivial. The real export is 38KB — 
 
 **Upload was scoped, deliberately excluding a new doc.** Uploaded the 8 component files, 2 `_preview/*.js`, bundle, `styles.css`, `README.md`, `fontawesome/**`, then `_ds_sync.json` last. Did **not** upload `guidelines/**`, because `docs/CHATGPT-PROJECT-INSTRUCTIONS.md` is a new local doc that doesn't exist remotely and publishing it wasn't part of the request — the rest of `guidelines/docs/` is unchanged from what's already there. If a future sync needs the aux tree pushed, decide about that file explicitly rather than letting a glob carry it.
 
+> **Resolved 2026-09-08 — this open question is now closed.** `docs/CHATGPT-PROJECT-INSTRUCTIONS.md` was deleted from the repo (the project is standardising on Claude, so a ChatGPT-targeted instruction wrapper has no audience). Its unique chart rules — banned-from-series colors, the variance exception, chart chrome, and the form specs — were migrated into `Cube BRAND Design System/README.md` § "Charts & data display" first; the named board themes already lived in `docs/boards_color_theme_project_summary.md`. Since it never existed remotely, **no remote deletion is required** — a future `guidelines/**` push is now safe to let a glob carry.
+
 ## Known render warns
 
 - **`AppsIcon` is a canary for a skipped Font Awesome copy.** Verified 2026-09-03: pre-copy, validate flags `[RENDER_BLANK]` on *both* `AppsIcon` and `SidenavIcon`; post-copy, only `SidenavIcon` remains (55/56 clean). `AppsIcon` renders nothing but its icon glyph, so it drops under the 5KB floor exactly when `fontawesome/` is absent. If you ever see `AppsIcon` in this list, the Font Awesome copy did not run — don't whitelist it, fix the pipeline.

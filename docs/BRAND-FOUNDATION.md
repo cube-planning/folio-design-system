@@ -91,9 +91,100 @@ functionally the same rule, worth stating once, consistently, here rather than
 twice with different wording.
 
 ### Chart series order
-Folio adopts Cube Software's documented sequence:
-`#12264D, #219E66, #173D82, #70CF98, #30886C, #97A3B6`. Same order, both
-personas.
+**Corrected 2026-09-08.** The canonical categorical series order is the
+`--color-dataviz-*` family from `tokens/tokens.css`, same order, both personas:
+
+```js
+const CUBE_DATAVIZ = ['#14B8A6', '#06B6D4', '#10B981', '#6366F1', '#D946EF', '#F97316'];
+//                     teal       cyan       emerald    indigo     fuchsia    orange
+```
+
+Assign in fixed slot order, never cycled. Skipping slots is allowed (a
+three-series chart may use 1 / 4 / 6); reordering them is not.
+
+Supersedes the navy/green sequence this section previously declared FINAL —
+evidence and reasoning in `docs/DESIGN-DECISIONS.md` (2026-09-08).
+
+> **Known open issue — the 6-slot palette does not pass validation.** As a
+> complete categorical set, the dataviz family FAILs the `dataviz` skill's CVD
+> separation and normal-vision-floor checks: teal/cyan/emerald crowd each
+> other (teal ↔ cyan ΔE 7.1 normal vision, against a hard floor of 15) and
+> indigo ↔ fuchsia are effectively identical under protanopia (ΔE 0.6).
+> Charts of **three** series are safe using slots 1 / 4 / 6 (worst CVD ΔE 16.3,
+> worst normal-vision ΔE 27.4, verified with
+> `scripts/validate_palette.js --pairs all`). **A 4+ series categorical chart
+> needs the palette re-stepped**, and that is a brand decision awaiting a
+> human — do not paper over it by inventing hexes at the point of use, and do
+> not treat the direct-labelling rule below as covering it (secondary encoding
+> does not excuse a normal-vision-floor failure).
+
+### Chart data-point display — no value is hover-only
+**Every plotted value must be readable without interaction.** Tooltips,
+crosshairs and hover states are an enhancement layer, never the only path to a
+number.
+
+This is a persona rule, not a stylistic one. It is keyed to what all four
+personas in `docs/cube-personas.md` share rather than to any one of them:
+
+- "Difficulty communicating insights" / "communicating financial insights to
+  non-finance stakeholders" is a listed pain point for **every** persona —
+  Max, Ava, Tobias and Chris.
+- Every one of them moves Cube output into a medium where hover does not
+  exist: board and exec decks (Max, Ava, Tobias), PowerPoint (all four list it
+  under Technology), PDFs, screenshots pasted into Slack and email. The
+  Reporter segments (Q1/Q3) are explicitly described as wanting "to use Cube
+  outputs in other media (slide decks, etc.)."
+- Chris, the non-finance budget owner, is the floor case: a read-only consumer
+  of someone else's chart who will not go hunting for a number.
+
+A value that only appears on hover is a value that does not survive the
+export. That makes "labelled by default" a persona requirement, not a
+preference to be traded away for a cleaner-looking chart.
+
+**How to satisfy it without flooding the chart.** Density decides the
+mechanism, not whether the rule applies:
+
+| Chart density | Requirement |
+|---|---|
+| ≤ 12 marks (bar, column, pie/donut, short line/trend) | Direct-label **every** mark — value at the bar tip, on the column cap, at the line end |
+| > 12 points per series (dense trends, time series) | Direct-label the endpoints, the min, the max, and the series the story is about; keep clean y-axis ticks; **and** ship a table/value view alongside, so every remaining value is still reachable without hover |
+| Single headline number | Not a chart — use a stat tile / hero number |
+
+Labels wear text tokens (primary/secondary/muted ink), never the series
+color — the mark beside them already carries identity.
+
+**Scoped exemption — decorative graphics.** A chart that is *illustration*
+rather than *reporting* omits the per-point numbers entirely. Hero images,
+section illustrations, deck covers, glass marketing panels: the trend shape and
+the color relationships are the whole payload, the y-axis carries magnitude,
+and a value beside every dot competes with the line it belongs to. The
+`dataviz` skill's own non-negotiable agrees — "direct labels work *because*
+they are sparing."
+
+The boundary is **who reads it and for what**, not where it sits:
+
+| Case | Treatment |
+|---|---|
+| Reader is there for the number — dashboards, reports, board packs, anything a persona reads figures off | Labelling rule above applies in full |
+| Chart stands in for "we do finance analytics" — marketing, hero, decorative | Omit per-point numbers; keep the legend and clean axis ticks |
+
+If you can't tell which case you're in, you're in the first one. A decorative
+graphic that starts getting used as a reference for real figures has become a
+product chart and needs the labels.
+
+Reference implementation of the decorative treatment:
+`templates/chart-rules-mock/`. Glass-specific constraints:
+`glass-ui-style.md` § 4.
+
+> **Reconciling with the `dataviz` skill.** That skill's non-negotiables say
+> "selective direct labels (never a number on every point)," aimed at dense
+> series where a number per dot becomes noise. The table above is the
+> reconciliation, not an override: at ≤ 12 marks "every mark" and "selective"
+> are the same instruction, and above 12 we follow the skill's selective
+> labelling *plus* a table view so nothing is hover-gated. If a case ever
+> genuinely forces a choice between the two, this file wins and the exception
+> gets recorded here — same handling as the glass/series-order conflict noted
+> in `glass-ui-style.md`.
 
 ### Spacing and radius — "high-radius / pill" style
 **4px base grid** for all spacing (4, 8, 12, 16, 20, 24, 28, 32, 40, 48, 64...).
