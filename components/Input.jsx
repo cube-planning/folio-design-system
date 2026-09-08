@@ -147,7 +147,7 @@ export function Input({
           {charCount && maxChars && (
             <span style={{
               fontSize: 10,
-              fontFamily: "'JetBrains Mono', monospace",
+              fontFamily: "'DM Sans', sans-serif",
               fontWeight: 400,
               color: COLORS.gray400,
               flexShrink: 0,

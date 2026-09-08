@@ -15,16 +15,6 @@ export function Scale() {
   );
 }
 
-export function MonoData() {
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-      <Text variant="body" mono>128,540</Text>
-      <Text variant="caption-1" mono>2026-08-13 09:41:02</Text>
-      <Text variant="caption-2" mono>+4.2%</Text>
-    </div>
-  );
-}
-
 export function ColorOverride() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>

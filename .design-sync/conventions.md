@@ -21,11 +21,11 @@ Token names (from `styles.css` / `_ds_bundle.css`):
 | Spacing | `--spacing-1` (4px) through `--spacing-10` (40px) |
 | Radius | `--radius-sm` (4px), `--radius-md` (8px), `--radius-lg` (12px), `--radius-xl` (16px), `--radius-full` (9999px) |
 | Shadows | `--shadow-xs`, `--shadow-sm`, `--shadow-md`, `--shadow-lg` |
-| Typography | `--font-base` (DM Sans). There is no `--font-mono` token — get JetBrains Mono via `<Text mono>`, which hardcodes `'JetBrains Mono', monospace` itself. |
+| Typography | `--font-base` (DM Sans) — the only typeface in this system. |
 
 ## Fonts
 
-DM Sans is shipped with this project (provisioned by the design-system's self-check into `fonts/`). Designs built with this DS will render DM Sans without any additional setup. JetBrains Mono is used only for `Text mono={true}` and `Input`/`Textarea` char-count; it falls back to a system monospace if not available.
+DM Sans is shipped with this project (provisioned by the design-system's self-check into `fonts/`). Designs built with this DS will render DM Sans without any additional setup.
 
 ## Icon-only buttons
 

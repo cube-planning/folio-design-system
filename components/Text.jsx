@@ -39,7 +39,6 @@ const DEFAULT_TAG = {
 export function Text({
   variant = "body",
   weight = "regular",
-  mono = false,
   color,
   as,
   style,
@@ -50,11 +49,11 @@ export function Text({
   const Tag = as ?? DEFAULT_TAG[variant] ?? "span";
 
   const computedStyle = {
-    fontFamily: mono ? "'JetBrains Mono', monospace" : "'DM Sans', sans-serif",
+    fontFamily: "'DM Sans', sans-serif",
     fontSize: scale.fontSize,
     lineHeight: scale.lineHeight,
     letterSpacing: scale.letterSpacing,
-    fontWeight: mono ? 400 : (WEIGHTS[weight] ?? 400),
+    fontWeight: WEIGHTS[weight] ?? 400,
     margin: 0,
     ...(color ? { color } : {}),
     ...style,
