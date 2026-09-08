@@ -1,0 +1,33 @@
+<!doctype html>
+<!-- @dsCard group="Components" name="Agent panel" subtitle="FP&Agent card with Trace-to-Truth reference" viewport="700x200" -->
+<html><head><meta charset="utf-8"><title>Agent panel</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  body { padding: 20px; background: var(--cube-white); }
+  .panel { background: #fff; border-radius: 14px; padding: 18px; box-shadow: 0 0 0 1px rgba(85,71,165,.25), 0 8px 24px rgba(85,71,165,.12); position: relative; overflow: hidden; }
+  .panel::before { content:""; position:absolute; inset: 0 0 auto 0; height: 3px; background: linear-gradient(90deg, #0A1A39, #5547A5); }
+  .head { display: flex; align-items: center; gap: 10px; }
+  .ava { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, #5547A5, #173D82); display:flex; align-items:center; justify-content:center; color:#fff; font-family: var(--font-display); font-weight: 700; font-size: 14px; }
+  .name { font-family: var(--font-display); font-weight: 700; font-size: 14px; color: var(--new-blue); }
+  .role { font-family: var(--font-body); font-size: 12px; color: var(--gray-600); }
+  .pill { margin-left: auto; font-family: var(--font-body); font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: #EDEAFF; color: #5547A5; display: inline-flex; align-items: center; gap: 5px; }
+  .pill .d { width: 6px; height: 6px; border-radius: 50%; background: #5547A5; animation: pulse 1.4s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+  .msg { margin-top: 12px; font-family: var(--font-body); font-size: 14px; color: var(--gray-800); line-height: 1.55; }
+  .msg b { color: var(--new-blue); font-weight: 600; }
+  .trace { margin-top: 12px; display: inline-flex; gap: 6px; align-items: center; font-family: var(--font-mono); font-size: 11px; color: var(--gray-600); background: var(--gray-200); padding: 4px 9px; border-radius: 6px; }
+</style>
+</head><body>
+  <div class="panel">
+    <div class="head">
+      <div class="ava">A</div>
+      <div>
+        <div class="name">The Analyst</div>
+        <div class="role">Ad-hoc analysis · anomaly detection</div>
+      </div>
+      <span class="pill"><span class="d"></span>Running</span>
+    </div>
+    <div class="msg">Marketing OpEx is <b>$420K</b> over plan for Q2, driven by a single $380K invoice mis-classified from Capex. Reclassifying would bring OpEx within <b>1.1%</b> of plan.</div>
+    <div class="trace">↳ Trace · GL-4210 · JE-008421 · NetSuite</div>
+  </div>
+</body></html>

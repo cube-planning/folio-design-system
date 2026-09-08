@@ -1,0 +1,38 @@
+<!doctype html>
+<!-- @dsCard group="Components" name="Navigation & tabs" subtitle="Marketing top-nav (glass) + product segmented tabs" viewport="700x160" -->
+<html><head><meta charset="utf-8"><title>Navigation</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  body { padding: 16px; background: var(--cube-white); }
+  .nav { background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border-radius: 12px; box-shadow: 0 2px 6px rgba(10,18,41,.06), inset 0 0 0 1px var(--gray-300); padding: 10px 16px; display: flex; align-items: center; gap: 18px; }
+  .logo { height: 22px; }
+  .item { font-family: var(--font-body); font-size: 14px; font-weight: 500; color: var(--gray-600); cursor: pointer; }
+  .item:hover { color: var(--new-blue); }
+  .item.active { color: var(--new-blue); font-weight: 600; }
+  .spacer { flex: 1; }
+  .cta { background: linear-gradient(90deg, #5547A5, #0A1A39); color:#fff; font-family: var(--font-body); font-weight:600; font-size: 13px; padding: 8px 14px; border-radius: 8px; }
+  .ghost { font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--new-blue); padding: 8px 10px; }
+
+  .tabs { margin-top: 16px; display: flex; gap: 4px; background: #fff; border-radius: 10px; box-shadow: inset 0 0 0 1px var(--gray-300); padding: 4px; width: fit-content; }
+  .tab { font-family: var(--font-body); font-size: 13px; font-weight: 500; color: var(--gray-600); padding: 6px 14px; border-radius: 7px; cursor: pointer; }
+  .tab.on { background: var(--new-blue); color: #fff; font-weight: 600; }
+</style>
+</head><body>
+  <div class="nav">
+    <img src="../assets/logo-dark.png" class="logo" alt="">
+    <span class="item active">Platform</span>
+    <span class="item">FP&Agents</span>
+    <span class="item">Customers</span>
+    <span class="item">Pricing</span>
+    <span class="item">Company</span>
+    <span class="spacer"></span>
+    <span class="ghost">Sign in</span>
+    <span class="cta">Request a demo</span>
+  </div>
+  <div class="tabs">
+    <span class="tab on">Overview</span>
+    <span class="tab">Variances</span>
+    <span class="tab">Plan vs Actuals</span>
+    <span class="tab">Trace</span>
+  </div>
+</body></html>

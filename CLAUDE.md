@@ -113,6 +113,25 @@ The full color palette lives in `tokens/cube-colors.md`. Below is a quick-refere
 
 **Usage:** `bg-cube-cobalt-500`, `text-cube-gray-900`, `border-cube-gray-300`, etc.
 
+#### Token usage flow — a worked example
+Same fan-out pattern documented in `docs/BRAND-FOUNDATION.md`'s "Token usage flow"
+section, worked here with a Folio-only case (this one doesn't apply to Cube Software):
+
+```
+GLOBAL TOKEN               SEMANTIC TOKENS               COMPONENT TOKENS              UI
+--color-cobalt-500   ┬──  color-bg-fill-primary    ┬──  Button.primary.bg         →  primary button fill
+   (#173D82)          │                              └──  Toggle.on.bg             →  toggle "on" state
+                       │
+                       ├──  color-border-active      ┬──  Input.focus-border       →  input focus ring color
+                       │                              └──  SegmentedButton.active   →  active segment border
+                       │
+                       └──  color-border-accent      ──  Drawer.header-border      →  side drawer header rule
+```
+
+One global cobalt value, three semantic roles (fill, focus/active border, accent border),
+each reused across more than one component — same shape as the AI-purple example, just
+scoped to Folio's own primary color rather than the shared AI accent.
+
 ---
 
 ## 4. Typography

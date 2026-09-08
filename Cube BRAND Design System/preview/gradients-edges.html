@@ -1,0 +1,28 @@
+<!doctype html>
+<!-- @dsCard group="Colors" name="Edge-pair gradients" subtitle="Thin 2–4px accent borders for cards and panels" viewport="700x220" -->
+<html><head><meta charset="utf-8"><title>Edge pairs</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  body { padding: 16px; }
+  .grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .card-ep { background:#fff; border-radius: 10px; overflow: hidden; box-shadow: var(--shadow-sm); padding: 14px 14px 12px; position: relative; }
+  .card-ep::before { content:""; position:absolute; inset: 0 0 auto 0; height: 3px; }
+  .card-ep .n { font-family: var(--font-body); font-weight: 700; font-size: 13px; color: var(--new-blue); }
+  .card-ep .d { font-family: var(--font-body); font-size: 11px; color: var(--gray-600); margin-top: 2px; }
+  .e1::before { background: linear-gradient(90deg, #0A1A39, #70CF98); }
+  .e2::before { background: linear-gradient(90deg, #0A1A39, #5547A5); }
+  .e3::before { background: linear-gradient(90deg, #12264D, #70CF98); }
+  .e4::before { background: linear-gradient(90deg, #173D82, #5547A5); }
+  .e5::before { background: linear-gradient(90deg, #5547A5, #70CF98); }
+  .e6::before { background: linear-gradient(90deg, #30886C, #70CF98); }
+</style>
+</head><body>
+  <div class="grid">
+    <div class="card-ep e1"><div class="n">Navy → Light Green</div><div class="d">Default panel, data cards</div></div>
+    <div class="card-ep e2"><div class="n">Navy → Deep Purple</div><div class="d">AI panels, agent cards</div></div>
+    <div class="card-ep e3"><div class="n">New Blue → Light Green</div><div class="d">Reports, dashboards</div></div>
+    <div class="card-ep e4"><div class="n">Blue OG → Deep Purple</div><div class="d">Premium features</div></div>
+    <div class="card-ep e5"><div class="n">Deep Purple → Light Green</div><div class="d">AI-to-outcome</div></div>
+    <div class="card-ep e6"><div class="n">New Green → Light Green</div><div class="d">Success, growth</div></div>
+  </div>
+</body></html>

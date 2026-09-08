@@ -1,0 +1,36 @@
+<!doctype html>
+<!-- @dsCard group="Components" name="Data cards" subtitle="KPI cards with edge-pair accents (report, growth, AI)" viewport="700x180" -->
+<html><head><meta charset="utf-8"><title>Data card</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  body { padding: 20px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .dc { background: #fff; border-radius: 12px; box-shadow: 0 2px 6px rgba(10,18,41,.06), 0 1px 2px rgba(10,18,41,.04); padding: 16px; position: relative; overflow: hidden; }
+  .dc::before { content:""; position:absolute; inset: 0 0 auto 0; height: 3px; }
+  .dc.ai::before { background: linear-gradient(90deg, #0A1A39, #5547A5); }
+  .dc.ok::before { background: linear-gradient(90deg, #30886C, #70CF98); }
+  .dc.rep::before { background: linear-gradient(90deg, #12264D, #70CF98); }
+  .eyebrow { font-family: var(--font-body); font-size: 11px; font-weight: 600; color: var(--gray-600); text-transform: uppercase; letter-spacing: 0.06em; }
+  .fig { font-family: var(--font-mono); font-size: 26px; font-weight: 500; color: var(--new-blue); font-variant-numeric: tabular-nums; margin-top: 8px; }
+  .delta { font-family: var(--font-body); font-size: 12px; font-weight: 600; color: #219E66; }
+  .sub { font-family: var(--font-body); font-size: 12px; color: var(--gray-600); margin-top: 4px; }
+</style>
+</head><body>
+  <div class="grid">
+    <div class="dc rep">
+      <span class="eyebrow">Net Revenue · Q2</span>
+      <div class="fig">$48.2M</div>
+      <div><span class="delta">+12.4%</span> <span class="sub">vs plan</span></div>
+    </div>
+    <div class="dc ok">
+      <span class="eyebrow">GL entries reconciled</span>
+      <div class="fig">128,402</div>
+      <div class="sub">100% · last sync 12s ago</div>
+    </div>
+    <div class="dc ai">
+      <span class="eyebrow" style="color: #5547A5">The Analyst</span>
+      <div class="fig" style="font-size: 15px; font-family: var(--font-body); font-weight: 600; line-height: 1.35">3 variances flagged in OpEx. Largest: Marketing -$420K vs plan.</div>
+      <div class="sub" style="margin-top: 8px">Trace to Truth ready</div>
+    </div>
+  </div>
+</body></html>

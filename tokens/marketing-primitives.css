@@ -1,0 +1,64 @@
+/* ============================================================
+   FOLIO MARKETING SITE — PRIMITIVE TOKENS
+   Version: working draft
+
+   Primitives = raw values, no meaning attached. The semantic
+   layer (marketing-semantic-tokens.css) is what assigns meaning.
+
+   Color and font primitives already exist for the app in
+   tokens/tokens.css and tokens/typography.css — marketing reuses
+   those ramps directly rather than redefining them here. This
+   file holds ONLY primitives that don't exist anywhere yet:
+   marketing-only gradients, glows, and the type sizes identified
+   as gaps against the app's type scale (MARKETING-DESIGN-SYSTEM.md §3).
+   ============================================================ */
+
+:root {
+
+  /* ============================================================
+     PRIMITIVE COLORS — gradients & glows
+     Not expressible as a single flat --color-* value, so they
+     live here rather than in tokens.css.
+     ============================================================ */
+
+  /* Dark hero section background — diagonal 3-stop gradient.
+     Close to but distinct from cobalt-700/800/900; do not
+     substitute a flat cobalt value. Source: Hero, node 56:45490. */
+  --primitive-gradient-hero-navy: linear-gradient(139deg, #0A1229 0%, #12264D 40%, #0A1A39 100%);
+
+  /* Decorative radial glow behind hero copy. Green-400 at 6% opacity,
+     fading to 0 at 70%. Source: Hero, node 56:45491. */
+  --primitive-glow-green-radial: radial-gradient(rgba(112, 207, 152, 0.06), rgba(112, 207, 152, 0) 70%);
+
+  /* Ambient "AI-forward" glow (hero email-capture pill's box-shadow).
+     Purple-500 at 40% opacity — same hue as tokens.css's
+     --focus-ring-ai but a different opacity (that one is 24%) and a
+     different job (ambient background glow, not a focus ring).
+     Source: Hero CTA row, node 56:45496. */
+  --primitive-glow-purple-40: rgba(122, 90, 248, 0.4);
+
+
+  /* ============================================================
+     PRIMITIVE FONTS — sizes/line-heights not in typography.css
+     Font family and weights are unchanged from the app (DM Sans;
+     Regular/Medium/SemiBold/Bold) — see typography.css. These are
+     only the additional sizes marketing sections use.
+     ============================================================ */
+
+  /* Hero/content supporting text. Source: Content Section, node 1431:222559. */
+  --primitive-font-size-20: 20px;
+  --primitive-line-height-30: 30px;
+
+  /* Content-section body copy. Source: Content Section, node 1431:222559. */
+  --primitive-font-size-18: 18px;
+  --primitive-line-height-28: 28px;
+
+  /* Hero subhead. Source: Hero Copy, node 56:45495.
+     NOTE: Figma uses DM Sans Light here, which is not a weight that
+     exists anywhere in typography.css (Regular/Medium/SemiBold/Bold
+     only). This primitive intentionally has no matching weight
+     primitive yet — see Open Decision #3 in MARKETING-DESIGN-SYSTEM.md.
+     Do not assume Regular; that's a default, not a decision. */
+  --primitive-font-size-16: 16px;
+  --primitive-line-height-24: 24px;
+}

@@ -403,28 +403,37 @@ button { font-family: inherit; cursor: pointer; }
 .finance-layer-copy p { font-size: var(--text-title-3-size); line-height: var(--text-title-3-lh); color: var(--color-cobalt-25); margin-bottom: 28px; }
 .btn-outline-white { background: transparent; color: var(--color-white); border: 1px solid rgba(255,255,255,0.4); }
 .btn-outline-white:hover { background: rgba(255,255,255,0.08); }
-/* Translucent isometric "blade" shapes (Nan's exported SVGs) — 213x486,
-   same path across all four, distinguished only by fill/opacity.
-   Structure per card: .layer-card (outer, positions the card + slide-in
-   entrance via transform: translateX) > .layer-card-inner (idle bob via
-   transform: translateY, kept on a separate element so it doesn't fight
-   the entrance transition) > img + .layer-annotation (nested so the dot/
-   line/label ride along with the card's slide and bob). */
+/* Translucent isometric "blade" shapes — motion rebuilt from Nan's Figma
+   prototype (node 94:64741, "Isometric Wave Motion") via get_motion_context.
+   One synchronized 8.2s timeline, looping forever:
+     0.0s–1.0s   the whole stack fades in and drops down from +30px
+     1.0s–7.4s   a traveling wave ripples translateY through the 4 cards,
+                 staggered ~0.4s apart (Cube Web -> Surfaces -> Finance
+                 Layer -> Source Connections)
+     1.0s–4.8s   each label fades + slides in on its own window, staggered
+                 to roughly track its card's wave
+   All keyframe %s/timing-functions are copied verbatim from the tool's
+   codeSnippets output, not re-derived, per the motion skill's fidelity rule.
+   CSS `translate` (not `transform`) is used deliberately: it's a separate
+   property from `transform`, so the group's entrance drop, each card's own
+   wave, and each label's own slide can all live on nested elements without
+   fighting each other or needing an extra wrapper element. */
 .layer-stack { flex: 1.1; position: relative; height: 420px; }
-.layer-card {
-  position: absolute; top: 0; width: 140px; height: 320px;
-  opacity: 0; transform: translateX(140px);
-  transition: transform 800ms cubic-bezier(0.16, 1, 0.3, 1), opacity 700ms ease;
+.layer-group { position: absolute; inset: 0; opacity: 0; }
+.layer-group.playing {
+  animation: layerGroupFade 8.2s linear infinite, layerGroupDrop 8.2s linear infinite;
 }
-.layer-card.in { opacity: 1; transform: translateX(0); }
-.layer-card-inner { position: relative; width: 100%; height: 100%; }
-.layer-card.in .layer-card-inner {
-  animation: layerBob var(--bob-dur, 3.6s) ease-in-out var(--bob-delay, 0s) infinite;
+@keyframes layerGroupFade {
+  0%      { animation-timing-function: ease; opacity: 0; }
+  12.195% { opacity: 1; }
+  100%    { opacity: 1; }
 }
-@keyframes layerBob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(var(--bob-amp, -6px)); }
+@keyframes layerGroupDrop {
+  0%      { animation-timing-function: ease; translate: 0px 30px; }
+  12.195% { translate: 0px 0px; }
+  100%    { translate: 0px 0px; }
 }
+.layer-card { position: absolute; top: 0; width: 140px; height: 320px; }
 .layer-card img { width: 100%; height: 100%; display: block; }
 .layer-card-1 { left: 60px; top: 40px; z-index: 4; }
 .layer-card-2 { left: 100px; top: 10px; z-index: 3; }
@@ -432,22 +441,129 @@ button { font-family: inherit; cursor: pointer; }
 .layer-card-4 { left: 180px; top: 0; z-index: 1; }
 .layer-stack-wrap { flex: 1.1; position: relative; }
 
+/* Per-card wave — exact stop %s from get_motion_context (94:64743-46) */
+.layer-card-1.playing { animation: waveCubeWeb 8.2s linear infinite; }
+@keyframes waveCubeWeb {
+  0%      { translate: 0px 0px; }
+  12.195% { animation-timing-function: ease-in-out; translate: 0px 0px; }
+  21.341% { animation-timing-function: ease-in-out; translate: 0px -8px; }
+  30.488% { animation-timing-function: ease-in-out; translate: 0px 0px; }
+  39.634% { animation-timing-function: ease-in-out; translate: 0px 8px; }
+  48.78%  { animation-timing-function: ease-in-out; translate: 0px 0px; }
+  57.927% { animation-timing-function: ease-in-out; translate: 0px -8px; }
+  67.073% { animation-timing-function: ease-in-out; translate: 0px 0px; }
+  76.22%  { animation-timing-function: ease-in-out; translate: 0px 8px; }
+  85.366% { translate: 0px 0px; }
+  100%    { translate: 0px 0px; }
+}
+.layer-card-3.playing { animation: waveSurfaces 8.2s linear infinite; }
+@keyframes waveSurfaces {
+  0%      { translate: 0px 0px; }
+  17.073% { animation-timing-function: ease-in-out; translate: 0px 0px; }
+  26.22%  { animation-timing-function: ease-in-out; translate: 0px -8px; }
+  35.366% { animation-timing-function: ease-in-out; translate: 0px 0px; }
+  44.512% { animation-timing-function: ease-in-out; translate: 0px 8px; }
+  53.659% { animation-timing-function: ease-in-out; translate: 0px 0px; }
+  62.805% { animation-timing-function: ease-in-out; translate: 0px -8px; }
+  71.951% { animation-timing-function: ease-in-out; translate: 0px 0px; }
+  81.098% { animation-timing-function: ease-in-out; translate: 0px 8px; }
+  90.244% { translate: 0px 0px; }
+  100%    { translate: 0px 0px; }
+}
+.layer-card-2.playing { animation: waveFinanceLayer 8.2s linear infinite; }
+@keyframes waveFinanceLayer {
+  0%      { translate: 0px 0px; }
+  21.951% { animation-timing-function: ease-in-out; translate: 0px 0px; }
+  31.098% { animation-timing-function: ease-in-out; translate: 0px -8px; }
+  40.244% { animation-timing-function: ease-in-out; translate: 0px 0px; }
+  49.39%  { animation-timing-function: ease-in-out; translate: 0px 8px; }
+  58.537% { animation-timing-function: ease-in-out; translate: 0px 0px; }
+  67.683% { animation-timing-function: ease-in-out; translate: 0px -8px; }
+  76.829% { animation-timing-function: ease-in-out; translate: 0px 0px; }
+  85.976% { animation-timing-function: ease-in-out; translate: 0px 8px; }
+  95.122% { translate: 0px 0px; }
+  100%    { translate: 0px 0px; }
+}
+.layer-card-4.playing { animation: waveSourceConnections 8.2s linear infinite; }
+@keyframes waveSourceConnections {
+  0%      { translate: 0px 0px; }
+  26.829% { animation-timing-function: ease-in-out; translate: 0px 0px; }
+  35.976% { animation-timing-function: ease-in-out; translate: 0px -8px; }
+  45.122% { animation-timing-function: ease-in-out; translate: 0px 0px; }
+  54.268% { animation-timing-function: ease-in-out; translate: 0px 8px; }
+  63.415% { animation-timing-function: ease-in-out; translate: 0px 0px; }
+  72.561% { animation-timing-function: ease-in-out; translate: 0px -8px; }
+  81.707% { animation-timing-function: ease-in-out; translate: 0px 0px; }
+  90.854% { animation-timing-function: ease-in-out; translate: 0px 8px; }
+  100%    { translate: 0px 0px; }
+}
+
 /* Annotation callouts — dot marker + vertical leader line + label. Each sits
    at a real corner of its own blade's path geometry (213x486 viewBox, scaled
-   ~0.658x to our 140x320 display size), so the dot lands exactly on the
-   shape's edge instead of an eyeballed guess. Reveal one at a time,
-   cumulative, as each card lands (see script below). */
+   ~0.658x to our 140x320 display size). Fade+slide-in windows are exact
+   from get_motion_context (97:64776/64792/64796/64800), one label per card,
+   nested inside that card so it rides along with the wave automatically. */
 .layer-annotation {
   position: absolute; display: flex; flex-direction: column; align-items: center;
-  opacity: 0; transform: scale(0.85); transition: opacity 450ms ease, transform 450ms ease;
-  pointer-events: none;
+  opacity: 0; pointer-events: none;
 }
-.layer-annotation.in { opacity: 1; transform: scale(1); }
 .layer-annotation .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--color-white); flex-shrink: 0; }
 .layer-annotation .line { width: 1px; background: rgba(255,255,255,0.6); }
 .layer-annotation .label {
-  font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.04em;
+  font-family: 'DM Sans', sans-serif; font-size: 10px; letter-spacing: 0.04em;
   color: rgba(255,255,255,0.85); white-space: nowrap; margin: 4px 0;
+}
+.layer-annotation[data-index="0"].playing { animation: labelCubeWebOpacity 8.2s linear infinite, labelCubeWebSlide 8.2s linear infinite; }
+@keyframes labelCubeWebOpacity {
+  0%      { animation-timing-function: ease; opacity: 0; }
+  12.195% { opacity: 0; }
+  21.951% { opacity: 1; }
+  100%    { opacity: 1; }
+}
+@keyframes labelCubeWebSlide {
+  0%      { animation-timing-function: ease; translate: 15px 0px; }
+  12.195% { translate: 15px 0px; }
+  21.951% { translate: 0px 0px; }
+  100%    { translate: 0px 0px; }
+}
+.layer-annotation[data-index="1"].playing { animation: labelFinanceLayerOpacity 8.2s linear infinite, labelFinanceLayerSlide 8.2s linear infinite; }
+@keyframes labelFinanceLayerOpacity {
+  0%      { opacity: 0; }
+  24.39%  { animation-timing-function: ease; opacity: 0; }
+  34.146% { opacity: 1; }
+  100%    { opacity: 1; }
+}
+@keyframes labelFinanceLayerSlide {
+  0%      { translate: -15px 0px; }
+  24.39%  { animation-timing-function: ease; translate: -15px 0px; }
+  34.146% { translate: 0px 0px; }
+  100%    { translate: 0px 0px; }
+}
+.layer-annotation[data-index="2"].playing { animation: labelSurfacesOpacity 8.2s linear infinite, labelSurfacesSlide 8.2s linear infinite; }
+@keyframes labelSurfacesOpacity {
+  0%      { opacity: 0; }
+  36.585% { animation-timing-function: ease; opacity: 0; }
+  46.341% { opacity: 1; }
+  100%    { opacity: 1; }
+}
+@keyframes labelSurfacesSlide {
+  0%      { translate: 0px 12px; }
+  36.585% { animation-timing-function: ease; translate: 0px 12px; }
+  46.341% { translate: 0px 0px; }
+  100%    { translate: 0px 0px; }
+}
+.layer-annotation[data-index="3"].playing { animation: labelSourceConnectionsOpacity 8.2s linear infinite, labelSourceConnectionsSlide 8.2s linear infinite; }
+@keyframes labelSourceConnectionsOpacity {
+  0%      { opacity: 0; }
+  48.78%  { animation-timing-function: ease; opacity: 0; }
+  58.537% { opacity: 1; }
+  100%    { opacity: 1; }
+}
+@keyframes labelSourceConnectionsSlide {
+  0%      { translate: -15px 0px; }
+  48.78%  { animation-timing-function: ease; translate: -15px 0px; }
+  58.537% { translate: 0px 0px; }
+  100%    { translate: 0px 0px; }
 }
 
 /* ============================================================
@@ -518,7 +634,7 @@ button { font-family: inherit; cursor: pointer; }
 .connect-yaxis span { display: block; height: 1px; background: var(--color-gray-200); }
 .connect-xaxis {
   position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between;
-  font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--color-gray-600);
+  font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--color-gray-600);
 }
 .connect-chart-lines { position: absolute; inset: 0 0 27px 0; }
 .connect-chart-lines img { position: absolute; width: 100%; }
@@ -895,9 +1011,9 @@ button { font-family: inherit; cursor: pointer; }
         <div class="layer-stack" id="financeStack">
           <!-- Annotation dot positions are the shape's real path corners (scaled
                0.658x from the 213x486 viewBox to our 140x320 display size),
-               local to each card so they ride along with its slide-in + bob. -->
-          <div class="layer-card layer-card-1" style="--bob-amp: -5px; --bob-dur: 3.4s; --bob-delay: 0.8s;">
-            <div class="layer-card-inner">
+               local to each card so they ride along with its own wave motion. -->
+          <div class="layer-group" id="financeGroup">
+            <div class="layer-card layer-card-1">
               <img src="assets/layer-cube-web.svg" alt="Cube Web layer" />
               <div class="layer-annotation" data-index="0" style="left: 1px; top: 236px;">
                 <div class="dot"></div>
@@ -905,9 +1021,7 @@ button { font-family: inherit; cursor: pointer; }
                 <div class="label">CUBE WEB</div>
               </div>
             </div>
-          </div>
-          <div class="layer-card layer-card-2" style="--bob-amp: -7px; --bob-dur: 4.1s; --bob-delay: 1.7s;">
-            <div class="layer-card-inner">
+            <div class="layer-card layer-card-2">
               <img src="assets/layer-finance-layer.svg" alt="The Finance Layer" />
               <div class="layer-annotation" data-index="1" style="left: 4px; top: 3px; flex-direction: column-reverse;">
                 <div class="dot"></div>
@@ -915,9 +1029,7 @@ button { font-family: inherit; cursor: pointer; }
                 <div class="label">THE FINANCE LAYER</div>
               </div>
             </div>
-          </div>
-          <div class="layer-card layer-card-3" style="--bob-amp: -4px; --bob-dur: 3.8s; --bob-delay: 2.6s;">
-            <div class="layer-card-inner">
+            <div class="layer-card layer-card-3">
               <img src="assets/layer-surfaces.svg" alt="Surfaces layer" />
               <div class="layer-annotation" data-index="2" style="left: 136px; top: 317px;">
                 <div class="dot"></div>
@@ -925,9 +1037,7 @@ button { font-family: inherit; cursor: pointer; }
                 <div class="label">SURFACES</div>
               </div>
             </div>
-          </div>
-          <div class="layer-card layer-card-4" style="--bob-amp: -6px; --bob-dur: 4.4s; --bob-delay: 3.5s;">
-            <div class="layer-card-inner">
+            <div class="layer-card layer-card-4">
               <img src="assets/layer-source-connections.svg" alt="Source Connections layer" />
               <div class="layer-annotation" data-index="3" style="left: 139px; top: 80px; flex-direction: column-reverse;">
                 <div class="dot"></div>
@@ -1514,36 +1624,26 @@ button { font-family: inherit; cursor: pointer; }
   </script>
 
   <script>
-    // "The Agentic Finance Layer" card stack — each translucent blade slides in from
-    // the right, and its dot+leader-line annotation fades in right as it lands —
-    // one layer at a time, cumulatively: Cube Web -> The Finance Layer -> Surfaces ->
-    // Source Connections — matching the reference video/frames — once, the first
-    // time the section scrolls into view.
+    // "The Agentic Finance Layer" card stack — rebuilt from Nan's Figma motion
+    // prototype (node 94:64741). All timing/easing/keyframe values live in CSS
+    // (see the waveCubeWeb/waveSurfaces/waveFinanceLayer/waveSourceConnections
+    // and labelXOpacity/labelXSlide @keyframes above) as one synchronized 8.2s
+    // loop, so this script only has to start that loop once the section is
+    // visible, and pause/resume it for performance when scrolled away —
+    // it does not compute or stagger any positions itself.
     (function() {
       const section = document.getElementById('financeLayer');
       const stack = document.getElementById('financeStack');
-      const cards = document.querySelectorAll('#financeStack .layer-card');
-      const annotations = document.querySelectorAll('#financeStack .layer-annotation');
-      if (!section || !stack) return;
+      const group = document.getElementById('financeGroup');
+      if (!section || !stack || !group) return;
 
-      const STAGGER_MS = 900;
-      let revealed = false;
-
-      function reveal() {
-        if (revealed) return;
-        revealed = true;
-        cards.forEach((card, i) => {
-          setTimeout(() => card.classList.add('in'), i * STAGGER_MS);
-        });
-        annotations.forEach((el, i) => {
-          setTimeout(() => el.classList.add('in'), i * STAGGER_MS + 650);
-        });
-      }
+      const players = [group, ...group.querySelectorAll('.layer-card, .layer-annotation')];
+      let started = false;
 
       function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
 
       // Subtle parallax drift on the whole card stack as you scroll past it —
-      // unrelated to the build-in reveal, just a little continuous life.
+      // unrelated to the 8.2s loop, just a little continuous life tied to scroll.
       let ticking = false;
       function onScroll() {
         if (ticking) return;
@@ -1561,8 +1661,14 @@ button { font-family: inherit; cursor: pointer; }
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            reveal();
+            if (!started) {
+              started = true;
+              players.forEach((el) => el.classList.add('playing'));
+            }
+            players.forEach((el) => { el.style.animationPlayState = 'running'; });
             window.addEventListener('scroll', onScroll, { passive: true });
+          } else if (started) {
+            players.forEach((el) => { el.style.animationPlayState = 'paused'; });
           }
         });
       }, { rootMargin: '200px 0px 200px 0px' });

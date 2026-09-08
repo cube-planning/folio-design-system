@@ -1,0 +1,25 @@
+<!doctype html>
+<!-- @dsCard group="Spacing" name="Spacing scale" subtitle="4px base grid — tokens 1 through 24" viewport="700x140" -->
+<html><head><meta charset="utf-8"><title>Spacing</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  body { padding: 20px; }
+  .row { display: flex; gap: 14px; align-items: flex-end; flex-wrap: wrap; }
+  .tok { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+  .bar { background: linear-gradient(90deg, #12264D, #70CF98); height: 10px; border-radius: 3px; }
+  .n { font-family: var(--font-body); font-size: 11px; font-weight: 600; color: var(--new-blue); }
+  .v { font-family: var(--font-mono); font-size: 10px; color: var(--gray-500); }
+</style>
+</head><body>
+  <div class="row">
+    <div class="tok"><div class="bar" style="width:4px"></div><span class="n">1</span><span class="v">4px</span></div>
+    <div class="tok"><div class="bar" style="width:8px"></div><span class="n">2</span><span class="v">8px</span></div>
+    <div class="tok"><div class="bar" style="width:12px"></div><span class="n">3</span><span class="v">12px</span></div>
+    <div class="tok"><div class="bar" style="width:16px"></div><span class="n">4</span><span class="v">16px</span></div>
+    <div class="tok"><div class="bar" style="width:24px"></div><span class="n">6</span><span class="v">24px</span></div>
+    <div class="tok"><div class="bar" style="width:32px"></div><span class="n">8</span><span class="v">32px</span></div>
+    <div class="tok"><div class="bar" style="width:48px"></div><span class="n">12</span><span class="v">48px</span></div>
+    <div class="tok"><div class="bar" style="width:64px"></div><span class="n">16</span><span class="v">64px</span></div>
+    <div class="tok"><div class="bar" style="width:96px"></div><span class="n">24</span><span class="v">96px</span></div>
+  </div>
+</body></html>

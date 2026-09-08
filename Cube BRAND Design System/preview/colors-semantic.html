@@ -1,0 +1,37 @@
+<!doctype html>
+<!-- @dsCard group="Colors" name="Semantic color pairs" subtitle="Success, Warning, AI, Error — fg + bg pairs" viewport="700x200" -->
+<html><head><meta charset="utf-8"><title>Semantic colors</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  body { padding: 16px; }
+  .row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .sem { border-radius: 10px; padding: 14px; display:flex; flex-direction:column; gap: 8px; min-height: 120px; }
+  .sem .k { font-family: var(--font-body); font-weight: 700; font-size: 13px; }
+  .sem .v { font-family: var(--font-mono); font-size: 10px; opacity: .9; }
+  .sem .chip { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-body); font-weight: 600; font-size: 12px; padding: 3px 10px; border-radius: 999px; align-self: flex-start; }
+  .dot { width: 6px; height: 6px; border-radius: 999px; }
+</style>
+</head><body>
+  <div class="row">
+    <div class="sem" style="background:#EBFFE8; color:#219E66">
+      <span class="k">Success</span>
+      <span class="chip" style="background:#fff; color:#219E66"><span class="dot" style="background:#219E66"></span>Reconciled</span>
+      <span class="v">fg #219E66 · bg #EBFFE8</span>
+    </div>
+    <div class="sem" style="background:#FEF3E0; color:#D4802A">
+      <span class="k">Warning</span>
+      <span class="chip" style="background:#fff; color:#D4802A"><span class="dot" style="background:#D4802A"></span>Variance</span>
+      <span class="v">fg #D4802A · bg #FEF3E0</span>
+    </div>
+    <div class="sem" style="background:#EDEAFF; color:#5547A5">
+      <span class="k">AI</span>
+      <span class="chip" style="background:#fff; color:#5547A5"><span class="dot" style="background:#5547A5"></span>Agent running</span>
+      <span class="v">fg #5547A5 · bg #EDEAFF</span>
+    </div>
+    <div class="sem" style="background:#FFE6E5; color:#E53E3E">
+      <span class="k">Error</span>
+      <span class="chip" style="background:#fff; color:#E53E3E"><span class="dot" style="background:#E53E3E"></span>Disconnected</span>
+      <span class="v">fg #E53E3E · bg #FFE6E5</span>
+    </div>
+  </div>
+</body></html>
