@@ -137,6 +137,65 @@ Reference implementation: `templates/chart-rules-mock/`.
 
 ---
 
+## 2026-09-08 — Brand radius scale realigned to Folio's names
+
+**Changed:** `Cube BRAND Design System/colors_and_type.css` and its dependents.
+
+The two systems had radius scales shifted by one step, so the same token name
+meant different values:
+
+| Token | Folio | Brand (was) | Brand (now) |
+|---|---|---|---|
+| `md` | 6px | 8px | 6px |
+| `lg` | 8px | 12px | 8px |
+| `xl` | 12px | **16px** | 12px |
+| `2xl` | 16px | **24px** | 16px |
+| `full` / `pill` | 9999px | 999px (`pill`) | 9999px (`full`) |
+
+A 16px card was therefore `--radius-xl` in the brand system and `--radius-2xl`
+in Folio. BRAND-FOUNDATION had asserted the two were "already consistent — no
+conflict," which was true of the values and false of the names.
+
+**Safe because nothing consumed the shifted names.** `--radius-2xl` (24px) was
+used nowhere; `--radius-md`/`lg`/`xl` appeared only in README prose; the only
+real code consumer was `.cube-code` → `--radius-xs`, which is unchanged. All 24
+`preview/*.html` cards hardcode px values and reference no radius token, so no
+rendered card broke.
+
+Kept deliberately:
+- `--radius-xs: 2px` — brand-only extension, Folio has no 2px stop, and icon
+  corners need it.
+- `--radius-pill` — now a deprecated alias of `--radius-full` rather than an
+  independent `999px`, so existing references keep working.
+
+Fixed in the same pass:
+- Two README refs reading `var(--radius-xl) (16px)` → `--radius-2xl`.
+- Mega-menu nav-item card said `var(--radius-md)`, meaning 8px under the old
+  scale — would have silently become 6px. Now `var(--radius-lg) (8px)`, the
+  grounded value preserved. **This is the failure mode to watch for**: prose
+  written against the old scale changes meaning under the new names unless the
+  px value is stated.
+- `docs/COMPONENT-DOC-TEMPLATE.md` said `Card radius | radius-xl 12px`, a
+  straight contradiction of `components/Card.md`. Now `radius-2xl` 16px.
+- `tokens/tokens.css` labelled `--radius-xl: 12px` as `/* Cards */`. Now
+  "Nested tiles inside a card — NOT card containers."
+- `.design-sync/conventions.md` documented the *shifted* scale as the Folio
+  bundle's own — verified wrong against `ds-bundle/_ds_bundle.css`, which ships
+  `md 6 / lg 8 / xl 12 / 2xl 16`. This one mattered most: that file tells
+  designers in the synced design project which token names to use.
+- `preview/spacing-radii.html` (the card that *documents* the scale) now reads
+  its swatches from the tokens instead of hardcoding them, so it can't drift
+  from the CSS again. Verified in-browser: all seven labels match their rendered
+  `borderRadius`.
+
+**Not done:** remote propagation. `npm run design-sync` is Folio-only
+(`.design-sync/config.json`, `pkg: folio-design-system`); the brand system is a
+separate project (`source: "spa"`, 0 components, 24 cards) needing a
+`DesignSync get_file` → patch → upload pass. Also still open: the other 23
+preview cards hardcode `10px`/`7px`/`3px` radii that sit on neither scale.
+
+---
+
 ## 2026-09-08 — Line weight 2px, markers 8px borderless
 
 **Changed:** `glass-ui-style.md` § 4. Line weight was `2.5–3px`; the new value

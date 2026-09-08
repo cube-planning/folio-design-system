@@ -190,9 +190,66 @@ Reference implementation of the decorative treatment:
 **4px base grid** for all spacing (4, 8, 12, 16, 20, 24, 28, 32, 40, 48, 64...).
 **Radius scale**: pill (`9999px`) for buttons, chips, badges, toggles, avatars;
 `8px` for inputs, selects, textareas; `16px` for cards, large containers,
-modals, drawers. Already consistent between Folio (`CLAUDE.md` section 5) and
-Cube Software's `colors_and_type.css` — no conflict, just wasn't written down
-here yet.
+modals, drawers.
+
+One scale, one set of names, both personas:
+
+| Token | Value | Use |
+|---|---|---|
+| `--radius-none` | 0 | — |
+| `--radius-xs` | 2px | Brand-system only (icon corners); Folio has no 2px stop |
+| `--radius-sm` | 4px | Chips, small inline surfaces |
+| `--radius-md` | 6px | — |
+| `--radius-lg` | 8px | Inputs, selects, textareas |
+| `--radius-xl` | 12px | Nested tiles inside a card — **not** card containers |
+| `--radius-2xl` | 16px | Cards, large containers, modals, drawers |
+| `--radius-full` | 9999px | Buttons, chips, badges, toggles, avatars |
+
+**Always state the px value alongside the token name** in a cross-persona
+rule. Card containers are 16px — never 12px; see `components/Card.md`
+("never `rounded-xl`").
+
+> **Realigned 2026-09-08.** This section used to claim the scale was "already
+> consistent between Folio and Cube Software's `colors_and_type.css` — no
+> conflict." The *values* agreed; the *names* did not. The brand scale was
+> shifted one step (`md` 8, `lg` 12, `xl` 16, `2xl` 24), so a 16px card was
+> `--radius-xl` there and `--radius-2xl` in Folio. The brand scale has now been
+> renamed to match Folio name-for-name; `--radius-pill` survives as a
+> deprecated alias of `--radius-full`. Details in `docs/DESIGN-DECISIONS.md`.
+>
+> **Local only — not yet pushed.** The brand system is its own design project
+> (`_ds_manifest.json` namespace `CubeAIDesignSystem_484d47`) and is **not**
+> covered by `npm run design-sync`, which is Folio-only. Propagating this needs
+> a `DesignSync get_file` → patch → upload pass against that project, and the
+> local/remote copies have drifted before.
+>
+> **Still open:** the 24 `preview/*.html` specimen cards hardcode radii of
+> `10px`, `7px`, `3px` and `2px` — values on neither scale, before or after.
+> Only `preview/spacing-radii.html` was converted to read from the tokens.
+>
+> **Not yet realigned — scope, verified 2026-09-08.** Smaller than it looks.
+> **Nothing in `Cube BRAND Design System/preview/` references the radius tokens
+> at all** — all 24 specimen cards hardcode px values — so renaming the tokens
+> breaks no rendered card. The real consumers are:
+>
+> | File | What needs doing |
+> |---|---|
+> | `colors_and_type.css` | The definitions; one internal use (`.cube-code` → `--radius-xs`) |
+> | `_adherence.oxlintrc.json` | Two lists of allowed radius token names |
+> | `_ds_manifest.json` | Generated token inventory — regenerated, not hand-edited |
+> | `README.md` | Two prose refs reading "var(--radius-xl) (16px)" |
+> | `preview/spacing-radii.html` | The card that *documents* the scale — its `@dsCard` subtitle and six swatches assert the brand-shifted scale as truth |
+> | `.design-sync/conventions.md` | Documents the brand-shifted scale as if it were the only one |
+>
+> `npm run design-sync` does **not** cover this folder — see
+> `.design-sync/config.json`, which is Folio-only (`pkg: folio-design-system`).
+> The brand system is its own design project (`_ds_manifest.json` namespace
+> `CubeAIDesignSystem_484d47`, `source: "spa"`, 0 components, 24 cards), so
+> propagating a realignment remotely is a `DesignSync get_file` → patch →
+> upload pass against *that* project.
+>
+> Separate issue found while scoping: the preview cards hardcode radii of
+> `10px`, `7px`, `3px` and `2px`, which sit on **neither** scale.
 
 This is the **"high-radius / pill" style**, not to be confused with the old
 legacy Cube Design System (the separate, superseded Figma file referenced in

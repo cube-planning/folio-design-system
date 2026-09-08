@@ -151,13 +151,23 @@
   --space-24: 96px;
 
   /* ---------- RADII ---------- */
-  --radius-xs: 2px;   /* icon corners */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-2xl: 24px;
-  --radius-pill: 999px;
+  /* Radius scale — realigned 2026-09-08 to match Folio's tokens/tokens.css
+     name-for-name. This scale used to be shifted one step (md 8, lg 12,
+     xl 16, 2xl 24), so "16px card" was --radius-xl here and --radius-2xl in
+     Folio. Same names now mean the same values in both systems.
+     See docs/BRAND-FOUNDATION.md § "Spacing and radius". */
+  --radius-none: 0px;
+  --radius-xs:   2px;      /* brand-only extension: icon corners. Folio has no 2px stop */
+  --radius-sm:   4px;
+  --radius-md:   6px;
+  --radius-lg:   8px;      /* Inputs, selects, textareas */
+  --radius-xl:   12px;     /* Nested tiles inside a card — NOT card containers */
+  --radius-2xl:  16px;     /* Cards, large containers, modals, drawers */
+  --radius-full: 9999px;   /* Buttons, chips, badges, toggles, avatars */
+
+  /* Deprecated alias — was 999px, now points at the shared token. Prefer
+     --radius-full in new work. */
+  --radius-pill: var(--radius-full);
 
   /* ---------- SHADOWS (airy, glass-panel) ---------- */
   --shadow-xs: 0 1px 2px rgba(10, 18, 41, 0.04);

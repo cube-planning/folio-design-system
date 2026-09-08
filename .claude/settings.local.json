@@ -289,7 +289,8 @@
       "Bash(node scripts/validate_palette.js \"#12264D,#219E66,#173D82,#70CF98,#30886C,#97A3B6\" --mode light --pairs all)",
       "Bash(python3 -c \"import json;print\\(json.dumps\\(json.load\\(open\\('package.json'\\)\\).get\\('scripts',{}\\),indent=2\\)\\)\")",
       "Bash(awk -F'border-radius: *' '{print $2}')",
-      "Bash(grep -rIl -E 'kit\\\\.fontawesome\\\\.com/[a-z0-9]{8,}|sk-[A-Za-z0-9]{20,}|localhost:[0-9]+' templates/chart-rules-mock docs/DESIGN-DECISIONS.md)"
+      "Bash(grep -rIl -E 'kit\\\\.fontawesome\\\\.com/[a-z0-9]{8,}|sk-[A-Za-z0-9]{20,}|localhost:[0-9]+' templates/chart-rules-mock docs/DESIGN-DECISIONS.md)",
+      "Bash(awk '/^\\\\+\\\\+\\\\+ /{f=$2} /radius-2xl|radius-full|radius-pill/{print f\": \"$0}')"
     ]
   }
 }

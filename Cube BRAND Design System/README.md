@@ -200,7 +200,7 @@ independently, so they're rules, not single data points.
 **Card rule.** Every card seen so far (Blog Post Card, and each card in the Solutions Section grid)
 follows the same structure:
 ```
-Image — 16:9 or similar, var(--radius-xl) (16px) corners, var(--border-subtle) hairline border
+Image — 16:9 or similar, var(--radius-2xl) (16px) corners, var(--border-subtle) hairline border
   ↓ var(--space-5) gap
 Title — 18px Semibold, var(--fg-heading)
   ↓
@@ -246,7 +246,7 @@ the same rule, or could be coincidence; one more example of either settles it.
 Height 64px · background var(--surface-default) · flex justify-between items-center
 Padding: var(--space-12) horizontal / var(--space-4) vertical
 Nav link gap: var(--space-8) · 14px · var(--fg-secondary)
-Button gap: var(--space-2) · var(--shadow-sm) · var(--radius-pill), 32px tall
+Button gap: var(--space-2) · var(--shadow-sm) · var(--radius-full), 32px tall
 ```
 
 ### Header sections (marketing hero)
@@ -301,8 +301,8 @@ Card grid: 3 cards, each following the Card rule above, min-width 320px, wraps r
 ```
 Large display heading (~48px/60px) + secondary text (~30px) — see "Observed once," not fully
   mapped to this system's tokens yet
-Pill buttons: var(--radius-pill)
-Card radius: var(--radius-xl) (16px)
+Pill buttons: var(--radius-full)
+Card radius: var(--radius-2xl) (16px)
 Accent colors in play: green-og and a light surface tint
 ```
 Pulled at a shallower level of detail than the sections above — the underlying markup was too
@@ -315,7 +315,7 @@ choices didn't (see deviations below).
 ```
 Container: var(--space-24) side padding · 3–4 equal columns · var(--space-5) gutter
 Column top padding: var(--space-6) · label-to-list gap: var(--space-8)
-Nav-item card: var(--space-3) padding/gap · var(--radius-md) · hover fill var(--surface-muted)
+Nav-item card: var(--space-3) padding/gap · var(--radius-lg) (8px) · hover fill var(--surface-muted)
 ```
 
 ### Scaffolds — not yet filled in

@@ -19,7 +19,7 @@ Token names (from `styles.css` / `_ds_bundle.css`):
 |---|---|
 | Colors | `--color-cobalt-500`, `--color-cobalt-100`, `--color-gray-900`, `--color-red-500` |
 | Spacing | `--spacing-1` (4px) through `--spacing-10` (40px) |
-| Radius | `--radius-sm` (4px), `--radius-md` (8px), `--radius-lg` (12px), `--radius-xl` (16px), `--radius-full` (9999px) |
+| Radius | `--radius-none` (0), `--radius-sm` (4px), `--radius-md` (6px), `--radius-lg` (8px — inputs/selects), `--radius-xl` (12px — nested tiles, **not** card containers), `--radius-2xl` (16px — cards, modals, drawers), `--radius-full` (9999px — buttons, chips, badges) |
 | Shadows | `--shadow-xs`, `--shadow-sm`, `--shadow-md`, `--shadow-lg` |
 | Typography | `--font-base` (DM Sans) — the only typeface in this system. |
 

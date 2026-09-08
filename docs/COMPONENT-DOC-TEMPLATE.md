@@ -205,7 +205,7 @@ When filling in the Tokens section, use these:
 | AI accent | `color-purple-500` `#7A5AF8` |
 | Focus ring | `focus-ring-default` cobalt at 24% |
 | Button / pill radius | `radius-full` 9999px |
-| Card radius | `radius-xl` 12px |
+| Card radius | `radius-2xl` 16px |
 | Input radius | `radius-lg` 8px |
 | Input height | — 32px (large) · 28px (small) |
 | Button height | — 32px (large) · 28px (small) |
