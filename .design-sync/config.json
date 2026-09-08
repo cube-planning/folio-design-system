@@ -6,7 +6,7 @@
   "buildCmd": "node build.mjs",
   "cssEntry": "tokens/tokens.css",
   "tokensGlob": "tokens/typography.css",
-  "runtimeFontPrefixes": ["DM Sans", "JetBrains Mono"],
+  "runtimeFontPrefixes": ["DM Sans"],
   "extraFonts": "vendor/fonts/dm-sans/dm-sans.css",
   "componentSrcMap": {
     "Text":         "components/Text.jsx",
@@ -19,6 +19,8 @@
     "Radio":        "components/Radio.jsx",
     "Checkbox":     "components/Checkbox.jsx",
     "StatusDot":    "components/StatusDot.jsx",
+    "IconBadge":    "components/IconBadge.jsx",
+    "AgentCard":    "components/AgentCard.jsx",
     "Tag":          "components/Tag.jsx",
     "Tab":          "components/Tab.jsx",
     "Filter":       "components/Filter.jsx",
@@ -75,6 +77,7 @@
     "Stepper": {"cardMode": "column"},
     "Table": {"cardMode": "column"},
     "Tab": {"cardMode": "column"},
-    "PageHeader": {"cardMode": "column"}
+    "PageHeader": {"cardMode": "column"},
+    "IconBadge": {"cardMode": "column"}
   }
 }

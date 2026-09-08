@@ -25,6 +25,7 @@ Don't use a card when content is already inside a drawer, modal, or table row �
 | **Log / timeline card** | Vertical list of timestamped entries connected by a rail | Action Log |
 | **Prompt card** | Icon + title + description, used as a suggestion chip | Variance Insights |
 | **Board thumbnail card** | Layout preview (mini chart/text blocks) + label, used for template pickers | 2026 Strategic Plan Scenarios |
+| **Agent card** | One agent's response: avatar (`IconBadge` or gradient initial) + name/role + status `Badge`, body copy, optional trace chip — see `AgentCard` | Data Manager, Variance Analyst |
 
 All variants share the same container rules below — they differ in header, media, and footer composition.
 
@@ -53,7 +54,7 @@ Verified from Figma — one title token for every standalone card, not a per-var
 | Metadata / footer text | `caption-1` — 12px Regular, `gray-600`/`gray-700` | Avatar name, timestamp, "50,000 base credits" |
 | Micro label | `caption-2` — 10px Regular, `gray-600` | "across all statuses", axis labels |
 
-Numeric values inside charts and data-dense areas use JetBrains Mono per the type system; titles, labels, and body copy stay DM Sans.
+Numeric values inside charts and data-dense areas use DM Sans, same as titles, labels, and body copy — Folio has one typeface only.
 
 ## States
 
@@ -67,7 +68,7 @@ Numeric values inside charts and data-dense areas use JetBrains Mono per the typ
 
 - Titles are sentence case, one line, truncate with ellipsis rather than wrap
 - Trend deltas always pair a direction arrow icon with the percentage — never color alone
-- Numeric values (metric card numbers, percentages, timestamps) use JetBrains Mono per the type system; labels and titles stay in DM Sans
+- Numeric values (metric card numbers, percentages, timestamps) use DM Sans, same as labels and titles
 - Footer status is either a `Badge` or an action `Button`, never plain text — keeps status scannable across a list of cards
 
 ## Do / Don't
@@ -207,4 +208,25 @@ const { Badge, Button, Avatar, Stepper } = window.FolioDS;
   </div>
   <span className="caption-1 text-cube-gray-700">2026 Strategic Plan Scenarios</span>
 </button>
+
+// Agent card — the avatar is either/or: `icon` renders an IconBadge, `initial`
+// renders the gradient square. Props: initial, icon, hue ("indigo" default),
+// name, role, status ("running" | "done"), message, trace.
+<AgentCard
+  icon="fa-regular fa-database"
+  hue="orange"
+  name="Data Manager"
+  role="Source reconciliation"
+  status="done"
+  message="Reconciled 3 sources; APAC Holdings is 4 hours stale."
+  trace="netsuite_sync.log:118"
+/>
+
+// Same card without `icon` — falls back to the gradient initial avatar
+<AgentCard
+  initial="V"
+  name="Variance Analyst"
+  role="FY26 plan vs actuals"
+  message="Opex is $1.2M favourable to budget, concentrated in headcount."
+/>
 ```

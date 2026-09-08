@@ -8,6 +8,8 @@ export { ListItem }   from "./components/ListItem.jsx";
 export { Radio }      from "./components/Radio.jsx";
 export { Checkbox }   from "./components/Checkbox.jsx";
 export { StatusDot }  from "./components/StatusDot.jsx";
+export { IconBadge }  from "./components/IconBadge.jsx";
+export { AgentCard }  from "./components/AgentCard.jsx";
 export { Tag }        from "./components/Tag.jsx";
 export { Tab }        from "./components/Tab.jsx";
 export { Filter }     from "./components/Filter.jsx";
