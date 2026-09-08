@@ -24,6 +24,12 @@
       "runtimeExecutable": "npx",
       "runtimeArgs": ["serve", "-l", "3457", "/Users/nanosborne/nanosborne.webflow"],
       "port": 3457
+    },
+    {
+      "name": "scratchpad-preview",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "-l", "3459", "/private/tmp/claude-503/-Users-nanosborne-Folio-Design-System/e61427ea-8429-4a9f-b118-a4038444c99f/scratchpad"],
+      "port": 3459
     }
   ]
 }
