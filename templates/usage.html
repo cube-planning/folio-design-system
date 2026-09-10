@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function () {
   --color-cobalt-25:  #F5F7FA;
   --color-cobalt-50:  #E6EBF4;
   --color-cobalt-100: #C6D3EC;
-  --color-cobalt-200: #8EABE1;
+  --color-cobalt-200: #8EA8E1;
   --color-cobalt-300: #4B7CD8;
   --color-cobalt-400: #2357B8;
   --color-cobalt-500: #173D82;   /* Blue OG — marketing primary anchor */
@@ -145,11 +145,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
   /* ============================================================
-     COLORS — ULTRAMARINE
+     COLORS — ULTRAMARINE (deprecated)
+     There is no ultramarine family in tokens/tokens.css. These were
+     #0CDCF8 / #000087, neither on any ramp. Repointed at cobalt on
+     2026-09-09; the names are kept only so any stray reference still
+     resolves. Use --color-cobalt-* directly in new work.
      ============================================================ */
 
-  --color-ultramarine-100: #0CDCF8;  /* Add/On-Bar */
-  --color-ultramarine-500: #000087;  /* Add/On-Bar */
+  --color-ultramarine-100: var(--color-cobalt-100);  /* Add/On-Bar */
+  --color-ultramarine-500: var(--color-cobalt-500);  /* Add/On-Bar */
 
 
   /* ============================================================
@@ -617,8 +621,8 @@ document.addEventListener('DOMContentLoaded', function () {
     .sb.col .sec-lbl, .sb.col .sec-crt { display: none; }
     .ni { height: 32px; padding: 0 16px; display: flex; align-items: center; gap: 8px; border-radius: 4px; cursor: pointer; position: relative; white-space: nowrap; text-decoration: none; color: inherit; width: 100%; }
     .ni.home { padding: 0 24px; border-radius: 0; }
-    .nav-section .ni:hover { background: #E8F0FE; border-radius: 0; margin-left: -8px; margin-right: -8px; width: calc(100% + 16px); padding-left: 24px; padding-right: 24px; }
-    .ni.home:hover { background: #E8F0FE; border-radius: 0; }
+    .nav-section .ni:hover { background: #E6EBF4; border-radius: 0; margin-left: -8px; margin-right: -8px; width: calc(100% + 16px); padding-left: 24px; padding-right: 24px; }
+    .ni.home:hover { background: #E6EBF4; border-radius: 0; }
     .nav-section .ni.active { background: #EFF6FF; border-left: 3px solid #2667D8; border-radius: 0; padding-left: 21px; padding-right: 24px; margin-left: -8px; margin-right: -8px; width: calc(100% + 16px); }
     .ni.home.active { background: #EFF6FF; border-left: 3px solid #2667D8; padding-left: 21px; border-radius: 0; }
     .ni.active .ni-lbl { color: #2667D8; font-weight: 600; }
@@ -638,8 +642,8 @@ document.addEventListener('DOMContentLoaded', function () {
     .apps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 4px 0; }
     .sb.col .apps-grid { display: flex; flex-direction: column; align-items: center; gap: 4px; }
     .app-tile { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 4px 0; border-radius: 8px; cursor: pointer; position: relative; }
-    .app-tile:hover { background: #E8F0FE; }
-    .app-circ { width: 32px; height: 32px; border-radius: 50%; background: #EEF0F4; border: 1.5px solid #DDE1E8; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .app-tile:hover { background: #E6EBF4; }
+    .app-circ { width: 32px; height: 32px; border-radius: 50%; background: #F2F5F9; border: 1.5px solid #E3E8EF; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .app-lbl { font-size: 10px; font-weight: 500; color: #353F4F; text-align: center; line-height: 1.2; }
     .sb.col .app-lbl { display: none; }
     .sb.col .app-tile:hover::after { content: attr(data-label); position: absolute; left: calc(100% + 8px); top: 50%; transform: translateY(-50%); background: #222B3A; color: #fff; font-size: 12px; padding: 4px 10px; border-radius: 4px; white-space: nowrap; z-index: 300; pointer-events: none; }
@@ -678,8 +682,8 @@ document.addEventListener('DOMContentLoaded', function () {
     .btn-outline:hover { background: #E6EBF4; }
     .btn-primary { height: 32px; padding: 0 16px; background: #173D82; border: none; border-radius: 9999px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: #FFFFFF; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; transition: background 100ms; }
     .btn-primary:hover { background: #122E64; }
-    .btn-ghost { height: 32px; padding: 0 16px; background: transparent; border: none; border-radius: 9999px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: #344054; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; transition: background 100ms; }
-    .btn-ghost:hover { background: #E4E7EC; }
+    .btn-ghost { height: 32px; padding: 0 16px; background: transparent; border: none; border-radius: 9999px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: #4A5567; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; transition: background 100ms; }
+    .btn-ghost:hover { background: #F2F5F9; }
 
     /* Tabs */
     .view-tabs { display: flex; border-bottom: 1px solid #E3E8EF; margin-bottom: 24px; gap: 0; }
@@ -701,7 +705,7 @@ document.addEventListener('DOMContentLoaded', function () {
     .credits-trend { font-size: 12px; color: #229E66; font-weight: 500; margin-bottom: 16px; }
     .credits-footer { display: flex; justify-content: space-between; align-items: flex-start; padding-top: 12px; border-top: 1px solid #F2F5F9; }
     .credits-footer-left { font-size: 12px; color: #677489; }
-    .credits-footer-left .label { font-size: 11px; color: #9AA5B4; margin-bottom: 2px; }
+    .credits-footer-left .label { font-size: 11px; color: #97A3B6; margin-bottom: 2px; }
     .credits-footer-left .value { font-size: 13px; font-weight: 600; color: #222B3A; }
     .credits-footer-right { text-align: right; font-size: 12px; color: #677489; }
     .credits-footer-right .added { font-size: 13px; font-weight: 600; color: #2667D8; }
@@ -717,7 +721,7 @@ document.addEventListener('DOMContentLoaded', function () {
     .tier-card { background: #FFFFFF; border: 1px solid #E3E8EF; border-radius: 8px; padding: 24px; }
     .tier-card-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .tier-card-label { font-size: 11px; font-weight: 600; color: #677489; text-transform: uppercase; letter-spacing: 0.06em; }
-    .tier-card-meta { font-size: 11px; color: #9AA5B4; display: flex; align-items: center; gap: 4px; cursor: pointer; }
+    .tier-card-meta { font-size: 11px; color: #97A3B6; display: flex; align-items: center; gap: 4px; cursor: pointer; }
     .tier-card-meta:hover { color: #677489; }
     .tier-card-body { display: flex; align-items: center; gap: 24px; }
     .donut-wrap { flex-shrink: 0; }
@@ -753,7 +757,7 @@ document.addEventListener('DOMContentLoaded', function () {
     .filter-search-wrap { margin-left: auto; position: relative; }
     .filter-search { height: 32px; padding: 0 10px 0 32px; border: 1px solid #E3E8EF; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: #353F4F; background: #FFFFFF; width: 200px; }
     .filter-search:focus { outline: none; border-color: #2667D8; }
-    .filter-search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #9AA5B4; pointer-events: none; }
+    .filter-search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #97A3B6; pointer-events: none; }
 
     /* Table */
     .tbl-card { border: 1px solid var(--color-border-strong); border-radius: 8px; padding: 8px; overflow: hidden; font-family: 'DM Sans', sans-serif; background: var(--color-white); }
@@ -959,12 +963,12 @@ document.addEventListener('DOMContentLoaded', function () {
               <div class="credits-footer-left">
                 <div class="label">Total</div>
                 <div class="value">55,000</div>
-                <div style="font-size:11px;color:#9AA5B4;margin-top:2px">Billing period · May 13, 2026 – Jun 13, 2027</div>
+                <div style="font-size:11px;color:#97A3B6;margin-top:2px">Billing period · May 13, 2026 – Jun 13, 2027</div>
               </div>
               <div class="credits-footer-right">
-                <div class="label" style="font-size:11px;color:#9AA5B4;margin-bottom:2px">50,000 base credits</div>
+                <div class="label" style="font-size:11px;color:#97A3B6;margin-bottom:2px">50,000 base credits</div>
                 <div class="added">+ 5,000</div>
-                <div style="font-size:11px;color:#9AA5B4;margin-top:2px">On Apr 13, 2026</div>
+                <div style="font-size:11px;color:#97A3B6;margin-top:2px">On Apr 13, 2026</div>
               </div>
             </div>
           </div>
@@ -1067,13 +1071,13 @@ document.addEventListener('DOMContentLoaded', function () {
         <div class="tbl-card">
           <table class="usage-tbl">
             <thead><tr>
-              <th><span class="th-sort">USER <svg width="8" height="10" viewBox="0 0 8 10" fill="none"><path d="M4 1v8M1 5l3 3 3-3M1 5l3-3 3 3" stroke="#9AA5B4" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></th>
-              <th><span class="th-sort">ROLE <svg width="8" height="10" viewBox="0 0 8 10" fill="none"><path d="M4 1v8M1 5l3 3 3-3M1 5l3-3 3 3" stroke="#9AA5B4" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></th>
-              <th><span class="th-sort">LAST ACTIVE <svg width="8" height="10" viewBox="0 0 8 10" fill="none"><path d="M4 1v8M1 5l3 3 3-3M1 5l3-3 3 3" stroke="#9AA5B4" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></th>
-              <th><span class="th-sort">ASK <svg width="8" height="10" viewBox="0 0 8 10" fill="none"><path d="M4 1v8M1 5l3 3 3-3M1 5l3-3 3 3" stroke="#9AA5B4" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></th>
-              <th><span class="th-sort">BUILD <svg width="8" height="10" viewBox="0 0 8 10" fill="none"><path d="M4 1v8M1 5l3 3 3-3M1 5l3-3 3 3" stroke="#9AA5B4" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></th>
-              <th><span class="th-sort">MCP <svg width="8" height="10" viewBox="0 0 8 10" fill="none"><path d="M4 1v8M1 5l3 3 3-3M1 5l3-3 3 3" stroke="#9AA5B4" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></th>
-              <th><span class="th-sort">TOTAL <svg width="8" height="10" viewBox="0 0 8 10" fill="none"><path d="M4 1v8M1 5l3 3 3-3M1 5l3-3 3 3" stroke="#9AA5B4" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></th>
+              <th><span class="th-sort">USER <svg width="8" height="10" viewBox="0 0 8 10" fill="none"><path d="M4 1v8M1 5l3 3 3-3M1 5l3-3 3 3" stroke="#97A3B6" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></th>
+              <th><span class="th-sort">ROLE <svg width="8" height="10" viewBox="0 0 8 10" fill="none"><path d="M4 1v8M1 5l3 3 3-3M1 5l3-3 3 3" stroke="#97A3B6" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></th>
+              <th><span class="th-sort">LAST ACTIVE <svg width="8" height="10" viewBox="0 0 8 10" fill="none"><path d="M4 1v8M1 5l3 3 3-3M1 5l3-3 3 3" stroke="#97A3B6" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></th>
+              <th><span class="th-sort">ASK <svg width="8" height="10" viewBox="0 0 8 10" fill="none"><path d="M4 1v8M1 5l3 3 3-3M1 5l3-3 3 3" stroke="#97A3B6" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></th>
+              <th><span class="th-sort">BUILD <svg width="8" height="10" viewBox="0 0 8 10" fill="none"><path d="M4 1v8M1 5l3 3 3-3M1 5l3-3 3 3" stroke="#97A3B6" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></th>
+              <th><span class="th-sort">MCP <svg width="8" height="10" viewBox="0 0 8 10" fill="none"><path d="M4 1v8M1 5l3 3 3-3M1 5l3-3 3 3" stroke="#97A3B6" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></th>
+              <th><span class="th-sort">TOTAL <svg width="8" height="10" viewBox="0 0 8 10" fill="none"><path d="M4 1v8M1 5l3 3 3-3M1 5l3-3 3 3" stroke="#97A3B6" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></th>
             </tr></thead>
             <tbody>
               <tr><td><span class="u-name">Sophia Kim</span></td><td class="u-role">Marketing</td><td class="u-active">1 day ago</td><td class="ask-val">5,732</td><td class="build-val">6,120</td><td class="mcp-val">6,120</td><td class="total-val">6,120</td></tr>
@@ -1104,7 +1108,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <div class="credits-spent-row">
               <div>
                 <div style="font-size:13px;color:#4A5567;font-weight:500">85% spent</div>
-                <div style="font-size:12px;color:#9AA5B4;margin-top:2px">Spend limit · Resets Tue, Jun 30, 8:00 PM EDT</div>
+                <div style="font-size:12px;color:#97A3B6;margin-top:2px">Spend limit · Resets Tue, Jun 30, 8:00 PM EDT</div>
               </div>
               <span class="credits-add-link">Add Credit</span>
             </div>

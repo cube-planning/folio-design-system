@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="../components/_sidebar-icons.js"></script>
-  <link rel="stylesheet" href="../tokens.css">
+  <link rel="stylesheet" href="../tokens/tokens.css">
 
   <!-- ── SHELL STYLES (copied from shell.html) ─────────────── -->
   <style>
@@ -49,8 +49,8 @@
     .sb.col .sec-lbl, .sb.col .sec-crt { display: none; }
     .ni { height: 32px; padding: 0 16px; display: flex; align-items: center; gap: 8px; border-radius: 4px; cursor: pointer; position: relative; white-space: nowrap; text-decoration: none; color: inherit; width: 100%; }
     .ni.home { padding: 0 24px; border-radius: 0; }
-    .nav-section .ni:hover { background: #E8F0FE; border-radius: 0; margin-left: -8px; margin-right: -8px; width: calc(100% + 16px); padding-left: 24px; padding-right: 24px; }
-    .ni.home:hover { background: #E8F0FE; border-radius: 0; }
+    .nav-section .ni:hover { background: #E6EBF4; border-radius: 0; margin-left: -8px; margin-right: -8px; width: calc(100% + 16px); padding-left: 24px; padding-right: 24px; }
+    .ni.home:hover { background: #E6EBF4; border-radius: 0; }
     .nav-section .ni.active { background: #EFF6FF; border-left: 3px solid #2667D8; border-radius: 0; padding-left: 21px; padding-right: 24px; margin-left: -8px; margin-right: -8px; width: calc(100% + 16px); }
     .ni.home.active { background: #EFF6FF; border-left: 3px solid #2667D8; padding-left: 21px; border-radius: 0; }
     .ni.active .ni-lbl { color: #2667D8; font-weight: 600; }
@@ -70,8 +70,8 @@
     .apps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 4px 0; }
     .sb.col .apps-grid { display: flex; flex-direction: column; align-items: center; gap: 4px; }
     .app-tile { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 4px 0; border-radius: 8px; cursor: pointer; position: relative; }
-    .app-tile:hover { background: #E8F0FE; }
-    .app-circ { width: 32px; height: 32px; border-radius: 50%; background: #EEF0F4; border: 1.5px solid #DDE1E8; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .app-tile:hover { background: #E6EBF4; }
+    .app-circ { width: 32px; height: 32px; border-radius: 50%; background: #F2F5F9; border: 1.5px solid #E3E8EF; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .app-lbl { font-size: 10px; font-weight: 500; color: #353F4F; text-align: center; line-height: 1.2; }
     .sb.col .app-lbl { display: none; }
     .sb.col .app-tile:hover::after { content: attr(data-label); position: absolute; left: calc(100% + 8px); top: 50%; transform: translateY(-50%); background: #222B3A; color: #fff; font-size: 12px; padding: 4px 10px; border-radius: 4px; white-space: nowrap; z-index: 300; pointer-events: none; }
@@ -129,7 +129,7 @@
     .pg-welcome h1 {
       font-size: 24px;
       font-weight: 600;
-      color: #12264D;
+      color: #122E64;
       white-space: nowrap;
     }
     .pg-welcome h1 span { color: #173D82; }
@@ -229,8 +229,8 @@
     .ai-card-text { font-size: 14px; line-height: 1.6; opacity: 0.9; }
     .ai-card-btn { align-self: flex-end; padding: 0 16px; height: 32px; background: rgba(255,255,255,0.2); border-radius: 9999px; border: 1px solid rgba(255,255,255,0.3); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: #fff; cursor: pointer; display: inline-flex; align-items: center; transition: background 100ms; }
     .ai-card-btn:hover { background: rgba(255,255,255,0.3); }
-    .btn-icon-ghost { width: 32px; height: 32px; border: none; border-radius: 9999px; background: transparent; color: #344054; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 16px; transition: background 100ms; }
-    .btn-icon-ghost:hover { background: #E4E7EC; }
+    .btn-icon-ghost { width: 32px; height: 32px; border: none; border-radius: 9999px; background: transparent; color: #4A5567; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 16px; transition: background 100ms; }
+    .btn-icon-ghost:hover { background: #F2F5F9; }
 
     /* Suggested prompts */
     .pg-prompts { padding: 0 24px 24px; }
@@ -499,7 +499,7 @@
             <span class="pg-card-title">What's New</span>
           </div>
           <div class="newsletter-item">
-            <div class="newsletter-thumb" style="background:#EFF5FF;border-radius:4px;"></div>
+            <div class="newsletter-thumb" style="background:#EFF6FF;border-radius:4px;"></div>
             <div>
               <p class="newsletter-title">Smart Variance now supports multi-dimensional analysis across time periods</p>
             </div>
@@ -534,7 +534,7 @@
             </div>
           </div>
           <div class="recent-item">
-            <div class="recent-avatar" style="background:#F2F3F5;">
+            <div class="recent-avatar" style="background:#F2F5F9;">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="2" stroke="#677489" stroke-width="1.5"/><path d="M7 10h6M7 7h6M7 13h4" stroke="#677489" stroke-width="1.5" stroke-linecap="round"/></svg>
             </div>
             <div>
@@ -543,7 +543,7 @@
             </div>
           </div>
           <div class="recent-item">
-            <div class="recent-avatar" style="background:#F2F3F5;">
+            <div class="recent-avatar" style="background:#F2F5F9;">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="2" stroke="#677489" stroke-width="1.5"/><path d="M7 10h6M7 7h6M7 13h4" stroke="#677489" stroke-width="1.5" stroke-linecap="round"/></svg>
             </div>
             <div>

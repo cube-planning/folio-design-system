@@ -14,6 +14,54 @@
 
 ---
 
+## 2026-09-09 — Stale hexes in usage.html / homepage.html replaced from the ramp
+
+**Changed:** `templates/usage.html`, `templates/homepage.html`, plus a broken
+stylesheet path in three templates.
+
+The two files held 41 off-ramp values. 30 are **third-party brand marks** inside
+app-icon SVGs (Excel, PowerPoint, Teams, Slack, Sheets, Slides, Claude) and were
+deliberately left alone — recolouring them would misrepresent someone else's
+logo. The remaining 12 were ours, and split into two kinds.
+
+**Known stale values** — these were ramp stops under an older ramp, so the
+mapping is semantic rather than a nearest-colour guess:
+
+| Was | Now | Basis |
+|---|---|---|
+| `#344054` (2) | `gray-700` `#4A5567` | same stop, Untitled UI ramp (ΔE 7.8, visible) |
+| `#E4E7EC` (2) | `gray-200` `#F2F5F9` | same stop, Untitled UI ramp (ΔE 4.2) |
+| `#12264D` (2) | `cobalt-600` `#122E64` | the pre-alignment cobalt-600 value |
+| `#8EABE1` (1) | `cobalt-200` `#8EA8E1` | **transposition typo** of `8EA8E1` |
+
+**Near-identical drift** — ΔE ≤ 2.1, visually indistinguishable:
+
+`#9AA5B4` ×14 → `gray-500`; `#F2F3F5` ×2 → `gray-200`; `#EFF5FF` → `blue-50`;
+`#DDE1E8` → `gray-300`; `#E8F0FE` ×6 → `cobalt-50`; `#EEF0F4` ×2 → `gray-200`.
+
+For the last two, arithmetic nearest was `indigo-50`, but that was overridden:
+a nav hover state and a neutral app-circle belong on cobalt and gray, not on a
+data-viz accent hue. **Nearest-by-distance is the wrong tiebreak when the
+semantic role is clear.**
+
+**Ultramarine retired.** `--color-ultramarine-100: #0CDCF8` and
+`--color-ultramarine-500: #000087` were a token family with no ramp behind it
+and zero consumers. Repointed at `cobalt-100` / `cobalt-500` per direction; the
+names survive only so a stray reference still resolves.
+
+**Bug found while verifying:** `templates/{homepage,shell,library}.html` linked
+`../tokens.css`, which resolves to the repo root — but the file is at
+`tokens/tokens.css`. The stylesheet had been 404ing, so every `var(--color-*)`
+in those templates silently fell back to nothing. Fixed to
+`../tokens/tokens.css`; verified in-browser that `--color-gray-100`,
+`--color-gray-800` and `--color-cobalt-500` now resolve.
+
+*Caught in review:* the global hex replace also rewrote a historical note so it
+read "was stale #122E64" instead of `#12264D`. Restored. Global find-replace
+across a file that documents its own old values will corrupt those notes.
+
+---
+
 ## 2026-09-09 — Charlie superagent orb: radial gradient removed
 
 **Changed:** `marketing-landing-page/index.html`, `Charlie animate graphic`.
@@ -99,11 +147,8 @@ mistake propagated.
    angle and stop positions still differ from the canonical `135deg 10/50/100`,
    which the gradient-direction rule arguably forbids. Normalising changes how
    the add-on AI button and homepage render, so it needs a deliberate call.
-3. **Stale Folio hexes in `templates/usage.html` and `templates/homepage.html`**
-   — `#344054`, `#E4E7EC`, `#9AA5B4`, `#12264D` (old cobalt-600) and similar.
-   Distinct from the many third-party brand colors in those files (Google
-   `#0F9D58`, Excel `#107C41`, Teams `#5059C9`, Outlook `#ED6C47`…), which are
-   legitimately off-ramp and must not be recoloured.
+3. ~~Stale Folio hexes in `templates/usage.html` and `templates/homepage.html`.~~
+   **Resolved 2026-09-09** — see the entry below.
 
 ---
 
