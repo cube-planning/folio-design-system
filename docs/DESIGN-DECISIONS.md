@@ -14,6 +14,37 @@
 
 ---
 
+## 2026-09-09 — Charlie superagent orb: radial gradient removed
+
+**Changed:** `marketing-landing-page/index.html`, `Charlie animate graphic`.
+
+The orb was a `radialGradient`, which the gradient-direction rule forbids
+outright ("never radial, never reversed"). Converted to a `linearGradient` with
+the vector `x1=0 y1=0 x2=1 y2=1` — the SVG equivalent of CSS `135deg` — and the
+canonical AI gradient's three stops (`10% purple-500, 50% purple-400,
+100% purple-600`). It had been a 2-stop gradient missing purple-500 entirely.
+
+**A file every earlier sweep missed.** The standalone `Charlie animate graphic`
+at the repo root has **no file extension**, so every `grep --include="*.html"`
+skipped it. It still held the original off-ramp `#8b7ff0` / `#4f3fd6` and its
+own radial gradient long after the same values had been fixed in
+`index.html`. Now matching.
+
+*Lesson:* extension-scoped greps silently skip extensionless files. When an
+audit needs to be complete, search by content or walk the directory instead of
+filtering on `*.ext`.
+
+Both copies of the orbiting-sparkle animation called `requestAnimationFrame`
+unconditionally. Both now honour `prefers-reduced-motion: reduce` per
+`glass-ui-style.md` § 2, parking the sparkle at its start angle instead of
+orbiting. Flagging that as a behaviour change rather than a pure fix — revert if
+the motion is wanted unconditionally.
+
+Verified in-browser: `linearGradient`, stops `10% #7A5AF8 / 50% #9B8AFB /
+100% #6938EF`, and zero `radialGradient` anywhere in the rendered page.
+
+---
+
 ## 2026-09-09 — Color cross-check against the brand reference; gradients corrected
 
 **Source of truth:** a brand color reference (137 values across 13 ramps) plus the
@@ -56,14 +87,10 @@ mistake propagated.
 
 ### Still open
 
-1. **Series assignment conflicts with the accessibility re-step.** The brand
-   reference assigns the accent families to slots — teal = series 1, cyan = 2,
-   emerald = 3, indigo = 4, fuchsia = 5, orange = 6, at the 500 stop. That is
-   the palette re-stepped earlier today for failing CVD and normal-vision
-   checks. Re-tested keeping the reference's family order and varying only the
-   stops: **0 of 48 (4 families), 0 of 240 (5), 0 of 1200 (6) pass.** Not
-   fixable by re-stopping. Awaiting a decision — reference wins (ship the a11y
-   failure), accessibility wins (update reference + Figma), or split the roles.
+1. ~~Series assignment conflicts with the accessibility re-step.~~
+   **Resolved:** the brand reference wins. These are graphic-design colors,
+   held to no accessibility standard. The six-family mapping at the 500 stop
+   stands and the accessibility rules were removed — see the entry below.
 2. **Angle/stop-position variants.** A "Folio AI Gradient" from a different
    Figma frame uses `-18.86deg` at `33.1% / 62.1% / 98.4%`
    (`components/AddonTopNav.jsx`, `docs/cube-addon-design-spec.md`), and

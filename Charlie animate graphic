@@ -2,10 +2,11 @@
   <div style="position:relative;width:220px;height:220px;">
     <svg width="220" height="220" viewBox="0 0 220 220" style="position:absolute;top:0;left:0;">
       <defs>
-        <radialGradient id="cubeGrad" cx="35%" cy="30%" r="75%">
-          <stop offset="0%" stop-color="#8b7ff0"/>
-          <stop offset="100%" stop-color="#4f3fd6"/>
-        </radialGradient>
+        <linearGradient id="cubeGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="10%" stop-color="#7A5AF8"/>   <!-- purple-500 -->
+          <stop offset="50%" stop-color="#9B8AFB"/>   <!-- purple-400 -->
+          <stop offset="100%" stop-color="#6938EF"/>  <!-- purple-600 -->
+        </linearGradient>
       </defs>
       <g transform="translate(110,110) scale(1.3128) translate(-110,-110)">
         <path d="M99.64,56.06 Q110,50 120.36,56.06 L148.39,72.44 Q158.75,78.5 158.75,90.5 L158.75,129.5 Q158.75,141.5 148.39,147.56 L120.36,163.94 Q110,170 99.64,163.94 L71.61,147.56 Q61.25,141.5 61.25,129.5 L61.25,90.5 Q61.25,78.5 71.61,72.44 Z" fill="url(#cubeGrad)"/>
@@ -29,6 +30,14 @@
   var el = document.getElementById('sparkle');
   var radius = 58.5;
   var angle = 45;
+  // Respect prefers-reduced-motion (glass-ui-style.md 2): park the sparkle
+  // at its start position instead of orbiting.
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var r0 = angle * Math.PI / 180;
+    el.style.transform = 'translate(' + (Math.cos(r0) * radius).toFixed(1) + 'px, ' +
+                                        (Math.sin(r0) * radius).toFixed(1) + 'px)';
+    return;
+  }
   function tick() {
     angle = (angle + 0.4) % 360;
     var rad = angle * Math.PI / 180;
