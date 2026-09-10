@@ -72,13 +72,13 @@
   --color-yellow-100: #FEF0C7;
   --color-yellow-600: #DC6803;
 
-  /* Dataviz */
-  --color-dataviz-1: #14B8A6;
-  --color-dataviz-2: #06B6D4;
-  --color-dataviz-3: #10B981;
-  --color-dataviz-4: #6366F1;
-  --color-dataviz-5: #D946EF;
-  --color-dataviz-6: #F97316;
+  /* Dataviz — mirrors tokens/tokens.css */
+  --color-dataviz-1: #14B8A6;   /* teal-500 */
+  --color-dataviz-2: #06B6D4;   /* cyan-500 */
+  --color-dataviz-3: #10B981;   /* emerald-500 */
+  --color-dataviz-4: #6366F1;   /* indigo-500 */
+  --color-dataviz-5: #D946EF;   /* fuchsia-500 */
+  --color-dataviz-6: #F97316;   /* orange-500 */
 
   /* Type */
   --font-base: 'DM Sans', sans-serif;
@@ -298,7 +298,11 @@ button { font-family: inherit; cursor: pointer; }
 }
 .browser-bar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: var(--color-cobalt-900); }
 .browser-bar .dot { width: 9px; height: 9px; border-radius: 50%; }
-.dot.red { background: #FF5F57; } .dot.yellow { background: #FEBC2E; } .dot.green { background: #28C840; }
+/* Browser-chrome dots. Were the literal macOS traffic-light hexes
+   (#FF5F57 / #FEBC2E / #28C840) — off-ramp, so mapped to the nearest ramp
+   stops. Still reads as a window titlebar; revert only if exact macOS
+   fidelity matters more than staying on-ramp. */
+.dot.red { background: var(--color-red-500); } .dot.yellow { background: var(--color-yellow-600); } .dot.green { background: var(--color-green-500); }
 .browser-url {
   margin-left: 10px; font-size: var(--text-caption-1-size); color: rgba(255,255,255,0.45);
   background: rgba(255,255,255,0.05); border-radius: 5px; padding: 3px 10px;
@@ -1235,8 +1239,8 @@ button { font-family: inherit; cursor: pointer; }
         <svg width="220" height="220" viewBox="0 0 220 220" style="position:absolute;top:0;left:0;">
           <defs>
             <radialGradient id="cubeGrad" cx="35%" cy="30%" r="75%">
-              <stop offset="0%" stop-color="#8b7ff0"/>
-              <stop offset="100%" stop-color="#4f3fd6"/>
+              <stop offset="0%" stop-color="#9B8AFB"/>   <!-- purple-400 -->
+              <stop offset="100%" stop-color="#6938EF"/> <!-- purple-700 -->
             </radialGradient>
           </defs>
           <g transform="translate(110,110) scale(1.3128) translate(-110,-110)">

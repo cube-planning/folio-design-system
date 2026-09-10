@@ -1,25 +1,67 @@
 <!doctype html>
-<!-- @dsCard group="Brand" name="FP&Agents suite" subtitle="Four named agents with signature edge-pair gradients" viewport="700x200" -->
+<!-- @dsCard group="Brand" name="FP&Agents suite" subtitle="Four named agents, each with an IconBadge" viewport="700x200" -->
 <html><head><meta charset="utf-8"><title>FP&Agents suite</title>
 <link rel="stylesheet" href="_shared.css">
+<link rel="stylesheet" href="../vendor/fontawesome/css/all.min.css">
 <style>
   body { padding: 18px; }
   .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-  .a { background: #fff; border-radius: 12px; box-shadow: 0 2px 6px rgba(10,18,41,.06); padding: 14px; position: relative; overflow: hidden; }
-  .a::before { content:""; position:absolute; inset: 0 0 auto 0; height: 3px; }
-  .a.bp::before { background: linear-gradient(90deg, #12264D, #70CF98); }
-  .a.pl::before { background: linear-gradient(90deg, #0A1A39, #70CF98); }
-  .a.an::before { background: linear-gradient(90deg, #5547A5, #70CF98); }
-  .a.dm::before { background: linear-gradient(90deg, #173D82, #5547A5); }
-  .ico { width: 36px; height: 36px; border-radius: 8px; display:flex; align-items:center; justify-content:center; font-family: var(--font-display); font-weight: 700; color:#fff; font-size: 14px; }
-  .name { font-family: var(--font-display); font-weight: 700; font-size: 14px; color: var(--new-blue); margin-top: 10px; }
+
+  /* Card containers are 16px (--radius-2xl). No top-stroke accent — the
+     edge-pair treatment was retired 2026-09-09. */
+  .a { background: #fff; border-radius: var(--radius-2xl); box-shadow: 0 2px 6px rgba(10,18,41,.06); padding: 14px; }
+
+  /* IconBadge, size md (40px) — mirrors components/IconBadge.jsx exactly:
+     soft-tint circle (offset) -> rotated tinted chip -> white icon chip on
+     top. Geometry is the .jsx values scaled by s = 40/48. Hues come from the
+     shared accent families in colors_and_type.css; never purple (AI only). */
+  .ib   { position: relative; width: 40px; height: 40px; flex-shrink: 0; }
+  .ib i { font-size: 13.33px; color: var(--ib-600); }
+  .ib::before {
+    content: ""; position: absolute; top: -1.67px; left: -1.67px;
+    width: 40px; height: 40px; border-radius: 50%; background: var(--ib-50);
+  }
+  .ib .chip {
+    position: absolute; top: 10.83px; left: 7.5px; width: 21.67px; height: 21.67px;
+    border-radius: 3.33px; background: var(--ib-300); transform: rotate(-10deg);
+  }
+  .ib .face {
+    position: absolute; top: 10px; left: 10px; width: 20px; height: 20px;
+    border-radius: 3.33px; background: #fff;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .ib.teal   { --ib-50: var(--color-teal-50);   --ib-300: var(--color-teal-300);   --ib-600: var(--color-teal-600); }
+  .ib.indigo { --ib-50: var(--color-indigo-50); --ib-300: var(--color-indigo-300); --ib-600: var(--color-indigo-600); }
+  .ib.orange { --ib-50: var(--color-orange-50); --ib-300: var(--color-orange-300); --ib-600: var(--color-orange-600); }
+  .ib.cyan   { --ib-50: var(--color-cyan-50);   --ib-300: var(--color-cyan-300);   --ib-600: var(--color-cyan-600); }
+
+  .name { font-family: var(--font-display); font-weight: 700; font-size: 14px; color: var(--new-blue); margin-top: 14px; }
   .desc { font-family: var(--font-body); font-size: 12px; color: var(--gray-600); margin-top: 4px; line-height: 1.45; }
 </style>
 </head><body>
   <div class="grid">
-    <div class="a bp"><div class="ico" style="background: linear-gradient(135deg, #12264D, #70CF98)">B</div><div class="name">The Business Partner</div><div class="desc">Board decks, investor narratives, cross-functional collaboration.</div></div>
-    <div class="a pl"><div class="ico" style="background: linear-gradient(135deg, #0A1A39, #30886C)">P</div><div class="name">The Planner</div><div class="desc">Budgets, forecasts, rolling plans, variance tracking.</div></div>
-    <div class="a an"><div class="ico" style="background: linear-gradient(135deg, #5547A5, #70CF98)">A</div><div class="name">The Analyst</div><div class="desc">Ad-hoc analysis, trend detection, anomaly flagging.</div></div>
-    <div class="a dm"><div class="ico" style="background: linear-gradient(135deg, #173D82, #5547A5)">D</div><div class="name">The Data Manager</div><div class="desc">Governance, integrations, reconciliation, data quality.</div></div>
+    <!-- Icons are fa-regular only, each name verified against the vendored
+         Font Awesome 7.3.1 metadata/icons.json before use. -->
+    <div class="a">
+      <div class="ib indigo"><span class="chip"></span><span class="face"><i class="fa-regular fa-presentation-screen"></i></span></div>
+      <div class="name">The Business Partner</div>
+      <div class="desc">Board decks, investor narratives, cross-functional collaboration.</div>
+    </div>
+    <div class="a">
+      <div class="ib teal"><span class="chip"></span><span class="face"><i class="fa-regular fa-calendar-days"></i></span></div>
+      <div class="name">The Planner</div>
+      <div class="desc">Budgets, forecasts, rolling plans, variance tracking.</div>
+    </div>
+    <div class="a">
+      <div class="ib orange"><span class="chip"></span><span class="face"><i class="fa-regular fa-magnifying-glass-chart"></i></span></div>
+      <div class="name">The Analyst</div>
+      <div class="desc">Ad-hoc analysis, trend detection, anomaly flagging.</div>
+    </div>
+    <div class="a">
+      <div class="ib cyan"><span class="chip"></span><span class="face"><i class="fa-regular fa-database"></i></span></div>
+      <div class="name">The Data Manager</div>
+      <div class="desc">Governance, integrations, reconciliation, data quality.</div>
+    </div>
   </div>
 </body></html>

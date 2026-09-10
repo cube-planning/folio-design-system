@@ -1,0 +1,8 @@
+<!-- COPY — DO NOT EDIT HERE.
+     Canonical source: repo-root glass-ui-style.md.
+     This copy exists because the brand package uploads as a standalone
+     skill and cannot read repo-root files. Re-sync with:
+         npm run style-guide:sync      (copy root -> here)
+         npm run style-guide:check     (fail if they differ)
+-->
+

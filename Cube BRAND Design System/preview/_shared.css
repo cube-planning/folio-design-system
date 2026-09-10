@@ -12,19 +12,14 @@ body {
 
 .card {
   background: #fff;
-  border-radius: 12px;
+  /* Card containers are 16px (--radius-2xl); 12px (--radius-xl) is for nested
+     tiles. See docs/BRAND-FOUNDATION.md § "Spacing and radius". */
+  border-radius: var(--radius-2xl);
   box-shadow: var(--shadow-sm);
   padding: 20px;
   position: relative;
   overflow: hidden;
 }
-.card.edge-top::before {
-  content: "";
-  position: absolute; inset: 0 0 auto 0;
-  height: 3px;
-  background: var(--edge-navy-green);
-}
-
 .row { display: flex; gap: 12px; align-items: center; }
 .col { display: flex; flex-direction: column; gap: 12px; }
 .grid { display: grid; gap: 12px; }

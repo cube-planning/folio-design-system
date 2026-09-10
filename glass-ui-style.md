@@ -200,33 +200,23 @@ monochrome ramp loses its series separation entirely once it's behind blur and
 saturation shifts.
 
 Use `--color-dataviz-*` from `tokens/tokens.css`. For a three-series glass
-graphic, use slots **1, 4 and 6**:
+graphic, slots 1, 4 and 6 give the widest visual spread:
 
-| Token | Hex | Ramp |
+| Token | Ramp stop | Hex |
 |---|---|---|
-| `--color-dataviz-1` | `#14B8A6` | Teal 500 |
-| `--color-dataviz-4` | `#6366F1` | Indigo 500 |
-| `--color-dataviz-6` | `#F97316` | Orange 500 |
+| `--color-dataviz-1` | `teal-500` | `#14B8A6` |
+| `--color-dataviz-4` | `indigo-500` | `#6366F1` |
+| `--color-dataviz-6` | `orange-500` | `#F97316` |
 
 Skipping slots is fine; **reordering** them is not — slot order still ascends
-(1 → 4 → 6), per the "assign in fixed order, never cycled" rule.
-
-**Slot 2 (cyan) is excluded on purpose.** Teal ↔ cyan is the worst
-normal-vision pair in the palette (ΔE 7.1, against a floor of 15) and a glass
-panel's `saturate()` closes the gap further. Slots 1 / 4 / 6 pass every check:
-worst CVD pair ΔE 16.3, worst normal-vision pair ΔE 27.4. Two cools plus one
-warm accent is also a near-triadic split, so the three read as a set.
+(1 → 4 → 6). Teal and cyan are adjacent on the wheel and a glass panel's
+`saturate()` pushes them closer still, which is why slot 2 isn't in the
+three-series set.
 
 Space the series **geometrically** as well as by hue — at hero scale, two
 closely-tracking lines in adjacent hues read as one thick line no matter what
 the legend says.
 
-> **Open — the full 6-slot palette fails validation.** As a complete 6-series
-> categorical set the dataviz family FAILs CVD separation and the
-> normal-vision floor (teal/cyan/emerald crowd each other; indigo/fuchsia
-> collide under protanopia). Three series on 1 / 4 / 6 are safe; **a 4+ series
-> chart on any surface needs the palette re-stepped**, which is a brand
-> decision — don't fix it by inventing hexes inline.
 
 ### Marks
 
@@ -268,7 +258,7 @@ Purple is reserved for AI-related moments only, never decorative
 panel is the *only* purple in the frame.
 
 - **Fills** (icon, headline, pill) — `--color-gradient-ai`:
-  `linear-gradient(135deg, #7A5AF8 10%, #9B8AFB 50%, #5925DC 100%)`. For text,
+  `linear-gradient(135deg, #7A5AF8 10%, #9B8AFB 50%, #6938EF 100%)`. For text,
   apply via `background-clip: text` + `color: transparent`.
 - **Glow / box-shadow** — `#7A5AF8` (`--color-purple-500`), the only flat hex
   sanctioned for the AI accent, and only because `box-shadow` can't render a
@@ -285,7 +275,7 @@ Do **not** use:
   the lighter tint now, and `#8B7FD1` has no token behind it.
 - `IconBadge` for the AI icon — its `hue` axis has no purple by design
   ("never purple — purple is reserved for AI"). Render the AI icon as a plain
-  `fa-regular` glyph over the AI gradient instead. `IconBadge` is still the
+  `fa-solid fa-sparkles` glyph over the AI gradient instead. `IconBadge` is still the
   right choice for non-AI decorative icons, in teal/cyan/emerald/indigo/
   fuchsia/orange.
 
@@ -321,7 +311,7 @@ component from `index.js`:
 | Content | Use |
 |---|---|
 | Any text | `Text` (`variant` + `weight`) — never a raw styled `<span>` |
-| Panel header | `PageHeader` (`icon` must be `fa-regular`) |
+| Panel header | `PageHeader` — its icon-only `Button`s are the documented `fa-regular` exception (`CLAUDE.md` § 6) |
 | Stat tile / chart card / insight card | Compose per `components/Card.md`, with the nested-glass container from §1 |
 | Status pill | `Badge` (`color="ai"` for AI) |
 | Row status | `StatusDot` |
@@ -335,7 +325,9 @@ explorations named them, but there is no such export. Their equivalents are
 `AddonTopNav` / `PortalSideBarNav` (their respective shells).
 
 Font is DM Sans, everywhere, including numerics — Folio has one typeface. Icons
-are Font Awesome `fa-regular` only.
+are Font Awesome, `fa-solid` by default — see `docs/BRAND-FOUNDATION.md`
+§ Icons for the two weight exceptions (the AI sparkle stays solid; icon-only
+`Button`s are regular).
 
 ---
 
@@ -355,4 +347,4 @@ are Font Awesome `fa-regular` only.
 - [ ] No `#5547A5`, `#6938EF`, `#8B7FD1`, or `#335CFF`
 - [ ] Background is blurred blobs, not a hard gradient
 - [ ] Panel contents are real components, not hand-rolled markup
-- [ ] DM Sans only; `fa-regular` only
+- [ ] DM Sans only; Font Awesome only, `fa-solid` unless it's a documented exception

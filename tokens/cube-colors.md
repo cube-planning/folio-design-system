@@ -55,14 +55,14 @@ Use `500–600` for links, `700–800` for text and icons, `50–200` for badge 
 --cube-blue-25:  #F7FBFF;
 --cube-blue-50:  #EFF6FF;
 --cube-blue-100: #DBEAFE;
---cube-blue-200: #BFDBFE;
---cube-blue-300: #93C5FD;
---cube-blue-400: #60A5FA;
+--cube-blue-200: #9DC4F8;
+--cube-blue-300: #7EADFF;
+--cube-blue-400: #4E80EE;
 --cube-blue-500: #2667D8;
---cube-blue-600: #1D4ED8;
---cube-blue-700: #1D40AF;
---cube-blue-800: #1E3A8A;
---cube-blue-900: #1E2563;
+--cube-blue-600: #0C55C0;
+--cube-blue-700: #263FA9;
+--cube-blue-800: #163D83;
+--cube-blue-900: #1A2551;
 ```
 
 ---
@@ -93,17 +93,17 @@ Structural foundation of the UI — text hierarchy, borders, dividers, and neutr
 Use `900–700` for primary and secondary text, `400–600` for borders and icons, `50–200` for backgrounds and table surfaces.
 
 ```css
---cube-gray-25:  #FCFCFD;
---cube-gray-50:  #F9FAFB;
---cube-gray-100: #F2F4F7;
---cube-gray-200: #E4E7EC;
---cube-gray-300: #D0D5DD;
---cube-gray-400: #98A2B3;
---cube-gray-500: #667085;
---cube-gray-600: #475467;
---cube-gray-700: #344054;
---cube-gray-800: #1D2939;
---cube-gray-900: #101828;
+--cube-gray-25:  #FEFEFF;
+--cube-gray-50:  #FCFCFD;
+--cube-gray-100: #F8FAFC;
+--cube-gray-200: #F2F5F9;
+--cube-gray-300: #E3E8EF;
+--cube-gray-400: #CDD5E0;
+--cube-gray-500: #97A3B6;
+--cube-gray-600: #677489;
+--cube-gray-700: #4A5567;
+--cube-gray-800: #353F4F;
+--cube-gray-900: #222B3A;
 ```
 
 ### Red – Error
@@ -133,7 +133,7 @@ Use `500–600` for AI component accents, `100–200` for AI surface tints.
 ```css
 --cube-purple-50:  #F4F3FF;
 --cube-purple-100: #EBE9FE;
---cube-purple-200: #D9D6FE;
+--cube-purple-200: #DBD0FE;
 --cube-purple-300: #BDB4FE;
 --cube-purple-400: #9B8AFB;
 --cube-purple-500: #7A5AF8;
@@ -151,7 +151,7 @@ Use `700–800` for warning text and icons, `50–100` for warning banner backgr
 ```css
 --cube-yellow-50:  #FFFAEB;
 --cube-yellow-100: #FEF0C7;
---cube-yellow-200: #FEDF89;
+--cube-yellow-200: #FECF89;
 --cube-yellow-300: #FEC84B;
 --cube-yellow-400: #FDB022;
 --cube-yellow-500: #F79009;
@@ -166,8 +166,8 @@ Use `700–800` for warning text and icons, `50–100` for warning banner backgr
 Used for AI surfaces and UI Refresh contexts only. Not part of the standard semantic ramp system.
 
 ```css
---cube-gradient-ai:   linear-gradient(135deg, #7A5AF8 10%, #9B8AFB 50%, #5925DC 100%);
---cube-gradient-blue: linear-gradient(135deg, #2A4DD0 10%, #2667D8 50%, #163D83 100%);
+--cube-gradient-ai:   linear-gradient(135deg, #7A5AF8 10%, #9B8AFB 50%, #6938EF 100%);
+--cube-gradient-blue: linear-gradient(135deg, #2667D8 10%, #5024A7 50%, #4163B8 100%);
 ```
 
 ---

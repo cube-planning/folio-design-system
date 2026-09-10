@@ -99,7 +99,7 @@ export function AddonTopNav({
         aria-label="Cube AI assistant"
         style={{
           marginLeft: "auto", width: 28, height: 28, borderRadius: 9999, border: "none", cursor: "pointer",
-          background: "linear-gradient(-18.86deg, #7A5AF8 33.1%, #9B8AFB 62.1%, #5925DC 98.4%)", color: COLORS.white,
+          background: "linear-gradient(-18.86deg, #7A5AF8 33.1%, #9B8AFB 62.1%, #6938EF 98.4%)", color: COLORS.white,
           display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 13, flexShrink: 0,
         }}
       >

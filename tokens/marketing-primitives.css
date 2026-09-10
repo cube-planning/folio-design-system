@@ -21,10 +21,19 @@
      live here rather than in tokens.css.
      ============================================================ */
 
-  /* Dark hero section background — diagonal 3-stop gradient.
-     Close to but distinct from cobalt-700/800/900; do not
-     substitute a flat cobalt value. Source: Hero, node 56:45490. */
-  --primitive-gradient-hero-navy: linear-gradient(139deg, #0A1229 0%, #12264D 40%, #0A1A39 100%);
+  /* Dark hero section background — 3-stop gradient.
+     Stops are cobalt-900 / cobalt-600 / cobalt-800 (previously hardcoded as
+     the pre-alignment hexes #0A1229 / #12264D / #0A1A39, now stale — see
+     docs/BRAND-FOUNDATION.md § "Primitive color palette"). Referenced as
+     tokens so this can't drift from the ramp again.
+     Source: Hero, node 56:45490.
+
+     KNOWN DEVIATION — the 139deg angle violates the gradient-direction rule
+     (never radial, diagonal, or reversed). Logged in the brand README under
+     "Known deviations", which prescribes --gradient-cool-depth (the same
+     stops at 180deg) instead. Angle left as-is here because changing it
+     restyles the live hero; fix deliberately, not as a side effect. */
+  --primitive-gradient-hero-navy: linear-gradient(139deg, var(--color-cobalt-900) 0%, var(--color-cobalt-600) 40%, var(--color-cobalt-800) 100%);
 
   /* Decorative radial glow behind hero copy. Green-400 at 6% opacity,
      fading to 0 at 70%. Source: Hero, node 56:45491. */

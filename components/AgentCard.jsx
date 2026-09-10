@@ -38,7 +38,7 @@ const COLORS = {
 
 // AI gradient per docs/BRAND-FOUNDATION.md — the default way to render an
 // AI-purple fill. Not a flat purple: both #6938EF and #5547A5 are retired.
-const GRADIENT_AI = "linear-gradient(135deg, #7A5AF8 10%, #9B8AFB 50%, #5925DC 100%)";
+const GRADIENT_AI = "linear-gradient(135deg, #7A5AF8 10%, #9B8AFB 50%, #6938EF 100%)";
 
 // Status pill is a real Badge, per Card.md ("Do use Badge for status, not custom
 // colored text"). `running` uses the AI purple — an agent at work is an AI

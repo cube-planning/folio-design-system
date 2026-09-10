@@ -27,11 +27,60 @@ sizes, line heights, letter spacing, weights) is documented in `CLAUDE.md`
 section 4 — that scale applies here too, not just to Folio.
 
 ### Icons
-**Font Awesome, Regular weight only** (`fa-regular`). Never Lucide, never mix
-icon sets, never fall back to `fa-solid`/`fa-light`/`fa-duotone` as a default.
-If the right icon can't be found in the vendored Font Awesome package, don't
-guess or substitute a different set — ask the user to look up the exact icon
-name at fontawesome.com and provide it.
+**Font Awesome. Never Lucide, never mix icon sets.** This applies to **both
+personas** — product UI and marketing/graphic design — and to every surface:
+components, templates, specimen cards, and generated graphics.
+
+**`fa-solid` is the default style.** Use `fa-regular` (or `fa-light`) only
+where the design specifies it. Note that the library choice and the weight
+choice are two separate decisions: an icon needs a style class *and* a name
+class (`fa-solid fa-house`), and the same icon exists in solid / regular /
+light / thin / duotone off one glyph slot. "Use Font Awesome" does not by
+itself settle the weight.
+
+Documented weight exceptions:
+
+| Case | Style |
+|---|---|
+| **AI sparkle** | `fa-solid fa-sparkles` — solid. Verified consistent across `Banner`, `Toast`, `AnalyzePanel`, `BuildPanel`, `AddonTopNav`, `PortalSideBarNav` and `docs/cube-addon-design-spec.md` |
+| **Icon-only `Button`** | `fa-regular` at 14px (`large`) / 12px (`small`), per `CLAUDE.md` § 6 |
+| Everything else | `fa-solid` |
+
+> **Corrected 2026-09-09.** This section previously read "Font Awesome,
+> **Regular weight only** (`fa-regular`) … never fall back to `fa-solid` /
+> `fa-light` / `fa-duotone` as a default," which was wrong on the weight — and
+> the bug was in *this* file, not in the persona rules. `CLAUDE.md` § 7 had the
+> correct default (`fa-solid`) all along, and the codebase agrees: 92 `fa-solid`
+> usages across 37 components were compliant, not violations. Per this file's
+> own instruction, the fix was to update the Foundation rather than to "correct"
+> the persona rule against it. The library rule (Font Awesome, never Lucide) was
+> always right and is unchanged.
+
+**Verify every icon name locally before using it.** Font Awesome Pro 7.3.1 is
+vendored at `fontawesome-pro-7.3.1-web/`, and its `metadata/icons.json` is the
+authoritative list. Check that the name exists *and* that the style you need
+(`solid` by default) is among its styles:
+
+```bash
+python3 -c "import json;d=json.load(open('fontawesome-pro-7.3.1-web/metadata/icons.json'));n='calendar-days';s='solid';print(n in d and s in d[n]['styles'])"
+```
+
+Never guess a name from memory. If the icon genuinely isn't in the vendored
+package, don't substitute a different set — ask for the exact name.
+
+For any package that ships standalone (uploaded as its own skill, so it cannot
+read repo-root files), vendor the stylesheet and webfonts alongside it rather
+than relying on a CDN kit. `Cube BRAND Design System/vendor/fontawesome/` is
+the reference layout — that package is archived, but the layout it uses is the
+one to copy.
+
+> **Fixed 2026-09-09.** `Cube BRAND Design System/preview/icons-system.html`
+> — the card that *documents* the icon system — used to load Lucide from a
+> `unpkg.com` CDN and advertise "Lucide 1.5px outline" as its subtitle, so it
+> taught the wrong library and pulled a third-party script at render time. All
+> 16 icons were remapped to verified `fa-solid` names served from the vendored
+> package; the card now has no external script tags. There are no remaining
+> non-Font-Awesome icon sets anywhere in the repo.
 
 ### AI accent color
 **Purple is reserved for AI-related moments only** — never decorative, never a
@@ -52,7 +101,7 @@ gradient rather than reintroducing either retired hex).
 **`--color-gradient-ai` only**, in both design systems, and this is now the
 default way to render AI-purple anywhere a fill is used (text, surfaces, hero
 elements) — not just an option. Folio's existing
-`linear-gradient(135deg, #7A5AF8 10%, #9B8AFB 50%, #5925DC 100%)`. Cube
+`linear-gradient(135deg, #7A5AF8 10%, #9B8AFB 50%, #6938EF 100%)`. Cube
 Software drops its own `--gradient-ai-signal` and `--gradient-midnight-ai` in
 favor of this one.
 
@@ -91,32 +140,28 @@ functionally the same rule, worth stating once, consistently, here rather than
 twice with different wording.
 
 ### Chart series order
-**Corrected 2026-09-08.** The canonical categorical series order is the
-`--color-dataviz-*` family from `tokens/tokens.css`, same order, both personas:
+Per the brand color reference, each accent family maps to one series, all at the
+`500` stop. Same order, both personas:
 
-```js
-const CUBE_DATAVIZ = ['#14B8A6', '#06B6D4', '#10B981', '#6366F1', '#D946EF', '#F97316'];
-//                     teal       cyan       emerald    indigo     fuchsia    orange
-```
+| Slot | Ramp stop | Hex |
+|---|---|---|
+| `--color-dataviz-1` | `teal-500` | `#14B8A6` |
+| `--color-dataviz-2` | `cyan-500` | `#06B6D4` |
+| `--color-dataviz-3` | `emerald-500` | `#10B981` |
+| `--color-dataviz-4` | `indigo-500` | `#6366F1` |
+| `--color-dataviz-5` | `fuchsia-500` | `#D946EF` |
+| `--color-dataviz-6` | `orange-500` | `#F97316` |
 
-Assign in fixed slot order, never cycled. Skipping slots is allowed (a
-three-series chart may use 1 / 4 / 6); reordering them is not.
+Assign in fixed slot order, never cycled. Slots are `var()` references into the
+hue ramps in `tokens/tokens.css`, so a series value can't drift off the ramp.
 
-Supersedes the navy/green sequence this section previously declared FINAL —
-evidence and reasoning in `docs/DESIGN-DECISIONS.md` (2026-09-08).
+Beyond 6 series, group the tail into "Other" using `--color-gray-500`.
 
-> **Known open issue — the 6-slot palette does not pass validation.** As a
-> complete categorical set, the dataviz family FAILs the `dataviz` skill's CVD
-> separation and normal-vision-floor checks: teal/cyan/emerald crowd each
-> other (teal ↔ cyan ΔE 7.1 normal vision, against a hard floor of 15) and
-> indigo ↔ fuchsia are effectively identical under protanopia (ΔE 0.6).
-> Charts of **three** series are safe using slots 1 / 4 / 6 (worst CVD ΔE 16.3,
-> worst normal-vision ΔE 27.4, verified with
-> `scripts/validate_palette.js --pairs all`). **A 4+ series categorical chart
-> needs the palette re-stepped**, and that is a brand decision awaiting a
-> human — do not paper over it by inventing hexes at the point of use, and do
-> not treat the direct-labelling rule below as covering it (secondary encoding
-> does not excuse a normal-vision-floor failure).
+**These are graphic-design colors.** They are not held to an accessibility
+contrast or colorblind-separation standard, and no such rule is defined for
+them.
+
+Supersedes the navy/green sequence this section once declared FINAL.
 
 ### Chart data-point display — no value is hover-only
 **Every plotted value must be readable without interaction.** Tooltips,
@@ -172,9 +217,9 @@ If you can't tell which case you're in, you're in the first one. A decorative
 graphic that starts getting used as a reference for real figures has become a
 product chart and needs the labels.
 
-Reference implementation of the decorative treatment:
-`templates/chart-rules-mock/`. Glass-specific constraints:
-`glass-ui-style.md` § 4.
+Full per-mark detail: `docs/CHART-RULES.md`. Reference implementation of the
+decorative treatment: `templates/chart-rules-mock/`. Glass-specific
+constraints: `glass-ui-style.md` § 4.
 
 > **Reconciling with the `dataviz` skill.** That skill's non-negotiables say
 > "selective direct labels (never a number on every point)," aimed at dense
@@ -257,11 +302,19 @@ legacy Cube Design System (the separate, superseded Figma file referenced in
 cards. Don't reintroduce that sharp-corner look on either persona's work.
 
 ### Voice and tone
-Follow the **Cube BRAND Design System's** voice (its own `README.md`:
-confident, technical, direct, grounded, practitioner-first, provocative) —
-not the `cube-sa-brain:cube-brand` plugin's version (approachable, compelling,
-futuristic, bold, brave, energetic, human, leader, thoughtful). The plugin is
-out of date on this point, same as it was on typography.
+Confident, technical, direct, grounded, practitioner-first, provocative — the
+seasoned CFO who is also fluent in AI. Not the `cube-sa-brain:cube-brand`
+plugin's version (approachable, compelling, futuristic, bold, brave, energetic,
+human, leader, thoughtful); that plugin is out of date on this point, same as it
+was on typography.
+
+> **Source moved 2026-09-09.** This section used to say "follow the Cube BRAND
+> Design System's voice (its own `README.md`)". That package is now **archived**
+> as a legacy artifact of the old branding system, so it can no longer be cited
+> as authoritative. The pillars above are restated here directly. The fuller
+> voice material still sitting in that archived README (tone-by-audience,
+> signature phrases, always/never-say tables, sample copy) has **not** been
+> re-homed — see § "Marketing/brand source" below.
 
 ### Primitive color palette
 **One shared palette: Folio's.** Cube Software (marketing/branding) uses
@@ -323,6 +376,33 @@ GLOBAL TOKEN                SEMANTIC TOKENS              COMPONENT TOKENS       
 Same global value, three different semantic roles, each role reused across more than
 one component. This is also why the AI-purple hex decision mattered more than it looked
 like at first — get the global token wrong and every branch below it inherits the mistake.
+
+---
+
+### Marketing/brand source — currently undefined
+
+**Open question, needs a human decision.** `Cube BRAND Design System/` was
+archived on 2026-09-09 as a legacy artifact of the old branding system (it
+carries the retired "Cube AI" name, a superseded radius scale, retired colors,
+and its own retired Lucide/Source Sans 3 mandates). Nothing has replaced it as
+the marketing/brand persona's home.
+
+Rules that were living there and are now orphaned:
+
+| Content | Status |
+|---|---|
+| Chart rules | ✅ Rescued to `docs/CHART-RULES.md` |
+| Voice pillars | ✅ Restated in § "Voice and tone" above |
+| Tone by audience, signature phrases, always/never-say, sample copy | ⬜ Still only in the archived README |
+| Marketing website component & page-pattern rules | ⬜ `docs/MARKETING-DESIGN-SYSTEM.md` derives from the archived README |
+| The 11 components and 7 marketing templates in the remote design project | ⬜ Never mirrored locally; status unknown |
+
+Consequences to resolve when a new source is chosen:
+- `npm run style-guide:sync` copies `glass-ui-style.md` into the **archived**
+  package, so the "marketing graphics always use the style guide" guarantee
+  currently points into an archive.
+- The remote "Demo Cube BRAND Design System" project holds *older* values than
+  the archived local copy; it should not be treated as a recovery source.
 
 ---
 

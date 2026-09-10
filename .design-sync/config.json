@@ -6,46 +6,53 @@
   "buildCmd": "node build.mjs",
   "cssEntry": "tokens/tokens.css",
   "tokensGlob": "tokens/typography.css",
-  "runtimeFontPrefixes": ["DM Sans"],
+  "guidelinesGlob": [
+    "docs/*.md",
+    "tokens/*.md",
+    "glass-ui-style.md"
+  ],
+  "runtimeFontPrefixes": [
+    "DM Sans"
+  ],
   "extraFonts": "vendor/fonts/dm-sans/dm-sans.css",
   "componentSrcMap": {
-    "Text":         "components/Text.jsx",
-    "Avatar":       "components/Avatar.jsx",
-    "Button":       "components/Button.jsx",
-    "Input":        "components/Input.jsx",
-    "Textarea":     "components/Textarea.jsx",
-    "Select":       "components/Select.jsx",
-    "ListItem":     "components/ListItem.jsx",
-    "Radio":        "components/Radio.jsx",
-    "Checkbox":     "components/Checkbox.jsx",
-    "StatusDot":    "components/StatusDot.jsx",
-    "IconBadge":    "components/IconBadge.jsx",
-    "AgentCard":    "components/AgentCard.jsx",
-    "Tag":          "components/Tag.jsx",
-    "Tab":          "components/Tab.jsx",
-    "Filter":       "components/Filter.jsx",
-    "Badge":        "components/Badge.jsx",
-    "Banner":       "components/Banner.jsx",
-    "Drawer":       "components/Drawer.jsx",
-    "Modal":        "components/Modal.jsx",
+    "Text": "components/Text.jsx",
+    "Avatar": "components/Avatar.jsx",
+    "Button": "components/Button.jsx",
+    "Input": "components/Input.jsx",
+    "Textarea": "components/Textarea.jsx",
+    "Select": "components/Select.jsx",
+    "ListItem": "components/ListItem.jsx",
+    "Radio": "components/Radio.jsx",
+    "Checkbox": "components/Checkbox.jsx",
+    "StatusDot": "components/StatusDot.jsx",
+    "IconBadge": "components/IconBadge.jsx",
+    "AgentCard": "components/AgentCard.jsx",
+    "Tag": "components/Tag.jsx",
+    "Tab": "components/Tab.jsx",
+    "Filter": "components/Filter.jsx",
+    "Badge": "components/Badge.jsx",
+    "Banner": "components/Banner.jsx",
+    "Drawer": "components/Drawer.jsx",
+    "Modal": "components/Modal.jsx",
     "SegmentedButton": "components/SegmentedButton.jsx",
-    "Toggle":       "components/Toggle.jsx",
-    "Table":        "components/Table.jsx",
-    "SourceCard":   "components/SourceCard.jsx",
-    "Cell":         "components/TableCells.jsx",
+    "Toggle": "components/Toggle.jsx",
+    "Table": "components/Table.jsx",
+    "SourceCard": "components/SourceCard.jsx",
+    "Cell": "components/TableCells.jsx",
     "ImportDrawer": "components/ImportDrawer.jsx",
-    "Stepper":      "components/Stepper.jsx",
-    "TaskCard":     "components/TaskCard.jsx",
-    "PageHeader":   "components/PageHeader.jsx",
-    "AppIcon":      "components/AppIcon.jsx",
-    "Tooltip":      "components/Tooltip.jsx",
+    "Stepper": "components/Stepper.jsx",
+    "TaskCard": "components/TaskCard.jsx",
+    "PageHeader": "components/PageHeader.jsx",
+    "AppIcon": "components/AppIcon.jsx",
+    "Tooltip": "components/Tooltip.jsx",
     "AccordionSection": "components/AccordionSection.jsx",
-    "FilterField":  "components/FilterField.jsx",
+    "FilterField": "components/FilterField.jsx",
     "RangeSelectorTrigger": "components/RangeSelector.jsx",
     "RangeSelectorTree": "components/RangeSelector.jsx",
     "ExpandCollapseControl": "components/ExpandCollapseControl.jsx",
-    "AddonTopNav":  "components/AddonTopNav.jsx",
-    "BuildPanel":   "components/BuildPanel.jsx",
+    "AddonTopNav": "components/AddonTopNav.jsx",
+    "BuildPanel": "components/BuildPanel.jsx",
     "AnalyzePanel": "components/AnalyzePanel.jsx",
     "AddonSidebar": "components/AddonSidebar.jsx",
     "PublishCard": "components/PublishCard.jsx",
@@ -70,14 +77,35 @@
   },
   "readmeHeader": ".design-sync/conventions.md",
   "overrides": {
-    "Drawer": {"cardMode": "single", "primaryStory": "DrawerShell"},
-    "Modal": {"cardMode": "single", "primaryStory": "ModalShell"},
-    "ImportDrawer": {"cardMode": "single", "primaryStory": "JustworksImport"},
-    "SourceCard": {"cardMode": "column"},
-    "Stepper": {"cardMode": "column"},
-    "Table": {"cardMode": "column"},
-    "Tab": {"cardMode": "column"},
-    "PageHeader": {"cardMode": "column"},
-    "IconBadge": {"cardMode": "column"}
+    "Drawer": {
+      "cardMode": "single",
+      "primaryStory": "DrawerShell"
+    },
+    "Modal": {
+      "cardMode": "single",
+      "primaryStory": "ModalShell"
+    },
+    "ImportDrawer": {
+      "cardMode": "single",
+      "primaryStory": "JustworksImport"
+    },
+    "SourceCard": {
+      "cardMode": "column"
+    },
+    "Stepper": {
+      "cardMode": "column"
+    },
+    "Table": {
+      "cardMode": "column"
+    },
+    "Tab": {
+      "cardMode": "column"
+    },
+    "PageHeader": {
+      "cardMode": "column"
+    },
+    "IconBadge": {
+      "cardMode": "column"
+    }
   }
 }

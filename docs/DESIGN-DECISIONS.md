@@ -14,6 +14,191 @@
 
 ---
 
+## 2026-09-09 — Color cross-check against the brand reference; gradients corrected
+
+**Source of truth:** a brand color reference (137 values across 13 ramps) plus the
+Figma gradient spec, both supplied by the user. Confirmed: **`tokens/tokens.css`
+is the accurate file.**
+
+### Cross-check result
+
+| File | Result |
+|---|---|
+| `tokens/tokens.css` | 137/137 match, no missing stops |
+| `tokens/cube-colors.md` | Was **stale** — all 11 gray stops (Untitled UI ramp: `gray-900 #101828`, `gray-200 #E4E7EC`) and 7 blue stops (Tailwind ramp) wrong, plus `yellow-200`, `purple-200`. Realigned to `tokens.css`; now 0 mismatches |
+
+User confirmed directly: gray-900 is `#222B3A`, gray-200 is `#F2F5F9`.
+
+### Gradients — two corrections to earlier work in this session
+
+- **`--color-gradient-ai` third stop was wrong.** It read `#5925DC`
+  (purple-**700**); the Figma spec is `10% purple/500 → 50% purple/400 →
+  100% purple/600`, i.e. `#7A5AF8 → #9B8AFB → #6938EF`. Corrected in 11 files,
+  leaving the `--color-purple-700` ramp definitions untouched.
+- **`--color-gradient-blue` had been deleted in error.** Earlier this session it
+  was removed because its `#2A4DD0` stop was off-ramp and it had no consumers.
+  The gradient is real ("UI Refresh"): `#2667D8 → #5024A7 → #4163B8`. Restored.
+  Its 2nd and 3rd stops are **gradient-only values with no ramp stop of their
+  own** — correct as given, and commented as such so they aren't "fixed" to a
+  nearby ramp hex later.
+
+### Mislabelled gradients found and fixed
+
+Three gradients named for AI purple were actually built from off-ramp blues:
+
+- `templates/usage.html` `--color-gradient-ai` → was `#7A5AF8, #255AA4, #2A40D0`
+- `templates/homepage.html` (hero) → same values
+- `templates/usage.html` AI-plugin SVG icon → `#7A5AF8, #285AD4, #2A4DD0`
+
+All three now use the canonical gradient. Note `#2A4DD0` is the same bad hex
+that had been sitting in `--color-gradient-blue`, which suggests one original
+mistake propagated.
+
+### Still open
+
+1. **Series assignment conflicts with the accessibility re-step.** The brand
+   reference assigns the accent families to slots — teal = series 1, cyan = 2,
+   emerald = 3, indigo = 4, fuchsia = 5, orange = 6, at the 500 stop. That is
+   the palette re-stepped earlier today for failing CVD and normal-vision
+   checks. Re-tested keeping the reference's family order and varying only the
+   stops: **0 of 48 (4 families), 0 of 240 (5), 0 of 1200 (6) pass.** Not
+   fixable by re-stopping. Awaiting a decision — reference wins (ship the a11y
+   failure), accessibility wins (update reference + Figma), or split the roles.
+2. **Angle/stop-position variants.** A "Folio AI Gradient" from a different
+   Figma frame uses `-18.86deg` at `33.1% / 62.1% / 98.4%`
+   (`components/AddonTopNav.jsx`, `docs/cube-addon-design-spec.md`), and
+   `templates/homepage.html` uses `-19deg` at `33/62/98` plus one 2-stop variant
+   that drops purple-400 entirely. Colors are now right in all of them; the
+   angle and stop positions still differ from the canonical `135deg 10/50/100`,
+   which the gradient-direction rule arguably forbids. Normalising changes how
+   the add-on AI button and homepage render, so it needs a deliberate call.
+3. **Stale Folio hexes in `templates/usage.html` and `templates/homepage.html`**
+   — `#344054`, `#E4E7EC`, `#9AA5B4`, `#12264D` (old cobalt-600) and similar.
+   Distinct from the many third-party brand colors in those files (Google
+   `#0F9D58`, Excel `#107C41`, Teams `#5059C9`, Outlook `#ED6C47`…), which are
+   legitimately off-ramp and must not be recoloured.
+
+---
+
+## 2026-09-09 — Dataviz series: 6 slots, per the brand reference
+
+**Settled:** the six accent families each map to one series at the `500` stop —
+teal 1, cyan 2, emerald 3, indigo 4, fuchsia 5, orange 6 — as specified in the
+brand color reference. `tokens/tokens.css` defines the slots as `var()`
+references into the hue ramps so a series value cannot drift off the ramp.
+
+Earlier in the session this palette was re-stepped to five slots on
+accessibility grounds (colorblind separation and normal-vision contrast).
+**Reverted per user direction:** these are graphic-design colors, are not held
+to an accessibility standard, and no such rule is defined for them. The
+accessibility rules, thresholds and open issues that had been written into
+`docs/BRAND-FOUNDATION.md`, `docs/CHART-RULES.md` and `glass-ui-style.md` were
+removed rather than left as dormant constraints.
+
+Also removed in that revert: the ">5 series" cap, the 5-slice pie limit, and the
+"every prefix validates" nesting requirement. The rules are back to 6 series,
+max 6 pie slices, and ">6 → Other" in `--color-gray-500`.
+
+`glass-ui-style.md` keeps its own three-series guidance (slots 1 / 4 / 6) on
+straightforward visual grounds: teal and cyan are adjacent on the wheel and a
+glass panel's `saturate()` pushes them closer, so slot 2 is skipped there.
+
+---
+
+## 2026-09-09 — `Cube BRAND Design System/` archived as legacy
+
+**Archived, not deleted.** Per the user: this package was produced by the *old*
+branding design system and is not authoritative. Evidence:
+
+- `SKILL.md` declared `name: cube-ai-design`; `_ds_manifest.json` uses namespace
+  `CubeAIDesignSystem_484d47` — both carry the retired "Cube AI" brand name.
+- Its own "Known deviations" cite *"this system's Lucide mandate"* and *"this
+  system's Source Sans 3 body rule"* as its rules; both are retired.
+- Shipped a radius scale shifted one step from Folio's, the retired Deep Purple
+  `#5547A5`, and pre-alignment palette hexes.
+- `"source": "spa"` — generated by another tool, not this repo's build.
+- Entered in commit `19cd2b1` *alongside* BRAND-FOUNDATION, i.e. as the
+  pre-existing artifact the Foundation was written to reconcile.
+
+**Rescue before archive.** Earlier the same session, the chart rules had been
+migrated *into* this package's README from the retired
+`docs/CHATGPT-PROJECT-INSTRUCTIONS.md`. Archiving would have re-orphaned content
+that exists nowhere else, so it was extracted first to **`docs/CHART-RULES.md`**
+(which also lands in the Folio bundle via the `docs/*.md` guidelines glob). The
+README now carries a pointer, not the content. Voice pillars were likewise
+restated directly in BRAND-FOUNDATION § "Voice and tone", which had been citing
+the package README as authoritative.
+
+**Today's fixes kept, not reverted** (user's call): retired purple removed,
+palette and radius aligned to Folio, edge-pair treatment retired, Lucide card
+replaced. Nothing introduced new values — every edit moved it toward
+BRAND-FOUNDATION — so the snapshot is at least internally consistent.
+
+**Marked, so it can't be used by accident:** ARCHIVED banner at the top of
+`README.md`; `SKILL.md` description rewritten to "ARCHIVED / DO NOT USE" and
+`user-invocable` flipped to `false`.
+
+**Nothing was pushed.** The remote "Demo Cube BRAND Design System" project still
+holds *older* values than this local copy, so it is not a recovery source. An
+earlier recommendation in this session to reconcile ~70 files down from that
+remote was withdrawn — it would have imported more legacy, not less.
+
+**Left open:** the authoritative marketing/brand source is undefined. Tracked in
+BRAND-FOUNDATION § "Marketing/brand source", including the orphaned voice
+material, `docs/MARKETING-DESIGN-SYSTEM.md`'s dependency on the archived README,
+and the fact that `npm run style-guide:sync` currently copies `glass-ui-style.md`
+into an archived package.
+
+---
+
+## 2026-09-09 — Icon rules: `fa-solid` default confirmed, Lucide card replaced
+
+**Changed:** `docs/BRAND-FOUNDATION.md` § Icons, `CLAUDE.md` § 7,
+`Cube BRAND Design System/preview/icons-system.html`.
+
+Two separate axes were being conflated. "Font Awesome" is the *library* choice;
+`fa-solid`/`fa-regular` is the *weight* choice. An icon needs both a style class
+and a name class (`fa-solid fa-house`), and the same icon exists in solid /
+regular / light / thin / duotone off one glyph slot (`fa-house` → `f015` in all
+five), each backed by a different font file. So "use Font Awesome" does not
+settle the weight.
+
+**Weight — corrected in BRAND-FOUNDATION, which was the wrong one.** It had read
+"Font Awesome, **Regular weight only** … never fall back to `fa-solid`". Per the
+user: `fa-solid` is the correct default. `CLAUDE.md` § 7 had it right all along,
+and the codebase agreed — 92 `fa-solid` usages across 37 components were
+compliant. An earlier pass in this session had "fixed" CLAUDE.md *against* the
+Foundation and mis-reported those 92 as violations; both were reverted. Recorded
+exceptions: the AI sparkle is `fa-solid fa-sparkles` (verified consistent across
+`Banner`, `Toast`, `AnalyzePanel`, `BuildPanel`, `AddonTopNav`,
+`PortalSideBarNav` and `cube-addon-design-spec.md`), and icon-only `Button` is
+`fa-regular` per `CLAUDE.md` § 6.
+
+**Library — the one real violation, now fixed.** `preview/icons-system.html`
+loaded Lucide from `unpkg.com` and advertised "Lucide 1.5px outline". All 16
+icons remapped to `fa-solid` equivalents, each verified against the vendored
+`metadata/icons.json` for both existence and solid style:
+
+`home→house`, `layout-dashboard→table-columns`, `sparkles→sparkles`,
+`check-circle-2→circle-check`, `triangle-alert→triangle-exclamation`,
+`circle-x→circle-xmark`, `database→database`, `line-chart→chart-line`,
+`file-text→file-lines`, `git-branch→code-branch`, `users→users`,
+`settings→gear`, `search→magnifying-glass`, `bell→bell`, `plug→plug`,
+`calculator→calculator`.
+
+The card's CSS moved from Lucide's SVG `stroke-width` model to font-based
+`font-size`, hardcoded chrome colors became tokens, and the external script tag
+is gone. Verified in-browser: 16/16 glyphs resolve, Font Awesome loaded, zero
+external scripts, `window.lucide` undefined.
+
+**Enforcement added:** icon names must be verified against the vendored
+`fontawesome-pro-7.3.1-web/metadata/icons.json` rather than looked up from
+memory, and a package that ships standalone vendors the stylesheet + webfonts
+instead of relying on a CDN kit (`Cube BRAND Design System/vendor/fontawesome/`
+is the reference layout).
+
+---
+
 ## 2026-09-08 — Chart series order corrected to the dataviz family
 
 **Changed:** `docs/BRAND-FOUNDATION.md` § "Chart series order".

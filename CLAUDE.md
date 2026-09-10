@@ -383,11 +383,15 @@ Effect styles pushed to Figma — use these token names in code:
 
 ### Usage in HTML/JSX
 
+`fa-solid` is the default style. A style class is always required alongside the
+icon-name class — `fa-solid`/`fa-regular` selects the weight, `fa-house` selects
+the icon.
+
 ```tsx
 {/* Solid (default) */}
 <i className="fa-solid fa-house" />
 
-{/* Regular */}
+{/* Regular — when the design specifies it */}
 <i className="fa-regular fa-bell" />
 ```
 
@@ -405,8 +409,12 @@ Effect styles pushed to Figma — use these token names in code:
 ### Rules
 - Always use Font Awesome — do not use Lucide or other icon libraries
 - Use `fa-solid` as the default style; switch to `fa-regular` or `fa-light` only when the design specifies
-- Never guess icon names — verify at fontawesome.com/icons
+- **AI sparkle:** the AI moment uses `fa-solid fa-sparkles` — solid, consistently, across `Banner`, `Toast`, `AnalyzePanel`, `BuildPanel`, `AddonTopNav` and `PortalSideBarNav`
+- Never guess icon names — verify against the vendored `fontawesome-pro-7.3.1-web/metadata/icons.json`, checking that the name exists and that the style you want is among its styles
 - Apply color via Tailwind `text-*` classes on the `<i>` element
+
+> Icon-only `Button`s are the one documented Regular case — see the Button
+> section above (`fa-regular` at 14px/12px, matching the `iconSize` token).
 
 ---
 

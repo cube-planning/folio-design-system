@@ -16,14 +16,16 @@
 
 // Colors match the addon-specific gray ramp verified against Figma "Add-Ons"
 // (node 6399:17463) — Gray/900 #222B3A, Gray/600 #677489, Gray/400 #CDD5E0 —
-// which is distinct from the #101828/#98A2B3/#E4E7EC ramp used by Badge/
+// which is tokens/tokens.css, the authoritative ramp. The
+// #101828/#98A2B3/#E4E7EC values still found in some components are stale
+// (Untitled UI) and slated for conversion — formerly used by Badge/
 // ListItem/Checkbox elsewhere in Folio. Match this screen's own tokens
 // rather than the other ramp.
 const COLORS = {
   gray900: "#222B3A",
   gray600: "#677489",
   gray400: "#CDD5E0",
-  gray100: "#F2F5F9",
+  gray200: "#F2F5F9",
   white:   "#FFFFFF",
 };
 
@@ -42,7 +44,7 @@ export function FilterField({ icon, label, value, onClick, disabled = false }) {
         padding: "0 8px",
         borderRadius: 8,
         border: `1px solid ${COLORS.gray400}`,
-        background: disabled ? COLORS.gray100 : COLORS.white,
+        background: disabled ? COLORS.gray200 : COLORS.white,
         cursor: disabled ? "not-allowed" : "pointer",
         fontFamily: "'DM Sans', sans-serif",
         textAlign: "left",

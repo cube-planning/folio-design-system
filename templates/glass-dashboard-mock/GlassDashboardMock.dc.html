@@ -108,7 +108,7 @@
     }
 
     .ai-gradient-text {
-      background: linear-gradient(135deg, #7A5AF8 10%, #9B8AFB 50%, #5925DC 100%);
+      background: linear-gradient(135deg, #7A5AF8 10%, #9B8AFB 50%, #6938EF 100%);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
@@ -134,10 +134,9 @@
 //   middle — Revenue chart card,          clear mirror, translateZ 70px
 //   front  — AI insight callout,          clear mirror + AI glow, translateZ 160px
 
-// Dataviz series: slots 1 / 4 / 6 from --color-dataviz-*. Slot 2 (cyan) is
-// excluded on purpose — teal <-> cyan is the worst normal-vision pair in the
-// palette (dE 7.1) and a glass panel's saturate() closes the gap further.
-// See glass-ui-style.md §4; history in docs/DESIGN-DECISIONS.md.
+// Dataviz series: slots 1 / 4 / 6 from --color-dataviz-*. Slot 2 (cyan) sits
+// next to teal on the wheel, so the glass recipe skips it for three series.
+// See glass-ui-style.md §4.
 //
 // Actuals vs. forecast share a hue with the forecast dashed, per the form
 // rule — the hue is never switched for forecast. Budget is the one separate
@@ -146,10 +145,10 @@
 // The series are also spaced geometrically: at hero scale, over blur and a
 // saturation shift, hue alone doesn't separate closely-tracking lines.
 const SERIES = [
-  { label: 'Actuals',  color: '#14B8A6', points: '0,88 84,72 168,74 252,44 336,34 420,14' },      // dataviz-1 Teal
+  { label: 'Actuals',  color: '#14B8A6', points: '0,88 84,72 168,74 252,44 336,34 420,14' },      // dataviz-1 teal-500
   { label: 'Forecast', color: '#14B8A6', dashed: true,
-                                         points: '0,110 84,100 168,86 252,76 336,54 420,40' },   // dataviz-1 Teal, dashed
-  { label: 'Budget',   color: '#F97316', points: '0,132 84,128 168,120 252,114 336,104 420,92' }, // dataviz-6 Orange
+                                         points: '0,110 84,100 168,86 252,76 336,54 420,40' },   // dataviz-1, dashed
+  { label: 'Budget',   color: '#F97316', points: '0,132 84,128 168,120 252,114 336,104 420,92' }, // dataviz-6 orange-500
 ];
 
 const STATS = [
@@ -330,7 +329,7 @@ class Component extends DCLogic {
             React.createElement('span', {
               style: {
                 width: 40, height: 40, borderRadius: 9999,
-                background: 'linear-gradient(135deg, #7A5AF8 10%, #9B8AFB 50%, #5925DC 100%)',
+                background: 'linear-gradient(135deg, #7A5AF8 10%, #9B8AFB 50%, #6938EF 100%)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
               },
             }, React.createElement('i', { className: 'fa-regular fa-sparkles', style: { fontSize: 16, color: '#fff' } })),

@@ -14,7 +14,8 @@
 //
 // Colors/sizes verified against Figma "Add-Ons" (node 6399:17463): all
 // labels here are Caption 1 (12px), gray text is Gray/900 #222B3A (this
-// screen's own gray ramp, not the #101828 one used elsewhere in Folio), and
+// screen's own gray ramp; the #101828 ramp some components still use is stale
+// and slated for conversion — tokens/tokens.css is authoritative), and
 // "Validate" is Purple 900 #3E1C96, not cobalt.
 
 import { Button } from "./Button.jsx";

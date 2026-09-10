@@ -13,14 +13,17 @@
      imported. Never hand-edit a hex below: copy it from tokens.css.
      ============================================================ */
   :root {
-    /* Dataviz — canonical series order, docs/BRAND-FOUNDATION.md */
-    --color-dataviz-1: #14B8A6;   /* Teal 500    — series 1 */
-    --color-dataviz-2: #06B6D4;   /* Cyan 500    — series 2 (NOT used over glass) */
-    --color-dataviz-3: #10B981;   /* Emerald 500 — series 3 */
-    --color-dataviz-4: #6366F1;   /* Indigo 500  — series 4 */
-    --color-dataviz-5: #D946EF;   /* Fuchsia 500 — series 5 */
-    --color-dataviz-6: #F97316;   /* Orange 500  — series 6 */
-    --color-dataviz-1-subtle: #CCFBF1;
+    /* Dataviz — 6-slot series order (docs/BRAND-FOUNDATION.md).
+       Values are the ramp stops named; graphic-design colors. */
+    --color-dataviz-1: #14B8A6;   /* teal-500    — series 1 */
+    --color-dataviz-2: #06B6D4;   /* cyan-500    — series 2 */
+    --color-dataviz-3: #10B981;   /* emerald-500 — series 3 */
+    --color-dataviz-4: #6366F1;   /* indigo-500  — series 4 */
+    --color-dataviz-5: #D946EF;   /* fuchsia-500 — series 5 */
+    --color-dataviz-6: #F97316;   /* orange-500  — series 6 */
+
+    /* Area fills — the 100 stop of the same family */
+    --color-dataviz-1-subtle: #CCFBF1;   /* teal-100 */
 
     /* Gray ramp — chart chrome only, never a data mark */
     --color-gray-200: #F2F5F9;
@@ -34,8 +37,8 @@
 
     /* Variance — diverging pair, drawn from the dataviz palette rather
        than the red/green status ramp. See the note in § 2. */
-    --color-variance-fav:   #F97316;   /* = dataviz-6 Orange 500 — warm pole */
-    --color-variance-unfav: #6366F1;   /* = dataviz-4 Indigo 500 — cool pole */
+    --color-variance-fav:   #F97316;   /* orange-500 — warm pole (diverging, not a series slot) */
+    --color-variance-unfav: #6366F1;   /* indigo-500 — cool pole (diverging, not a series slot) */
     --color-green-500: #229E66;        /* retained for the ✓ ticks only, not a data mark */
 
     --radius-2xl: 16px;
@@ -144,7 +147,7 @@
       <svg id="chart-1" width="100%" viewBox="0 0 660 300" role="img"
            aria-label="Trend graphic: FY26 revenue by segment, three series rising from January to June. Decorative — exact values are not shown."></svg>
       <div class="notes">
-        <div class="note"><span class="tick">✓</span><span><b>Slots 1 / 4 / 6</b> — teal, indigo, orange. Cyan (slot 2) is skipped: teal ↔ cyan is ΔE 7.1 in normal vision, the worst pair in the palette.</span></div>
+        <div class="note"><span class="tick">✓</span><span><b>Slots 1 / 4 / 6</b> — teal, indigo, orange. Slot 2 (cyan) sits next to teal on the wheel, so the glass recipe skips it for a three-series graphic.</span></div>
         <div class="note"><span class="tick">✓</span><span><b>No per-point numbers</b> — a value beside every dot competes with the line it belongs to. The shape of the trend is the message here; the y-axis carries magnitude.</span></div>
         <div class="note"><span class="tick">✓</span><span><b>8px borderless bullets</b> (r=4) — the marker floor, and ~4× the stroke width. Past ~10px the dots start dominating the line they sit on.</span></div>
         <div class="note"><span class="tick">✓</span><span><b>2px stroke</b>, round caps, no area fill. Two cools + one warm accent — a near-triadic split, so the three read as a set rather than three unrelated hues.</span></div>

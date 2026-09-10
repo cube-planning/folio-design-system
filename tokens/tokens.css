@@ -263,8 +263,14 @@
      COLORS — GRADIENT (AI)
      ============================================================ */
 
-  --color-gradient-ai:   linear-gradient(135deg, #7A5AF8 10%, #9B8AFB 50%, #5925DC 100%);
-  --color-gradient-blue: linear-gradient(135deg, #2A4DD0 10%, #2667D8 50%, #163D83 100%);
+  --color-gradient-ai:   linear-gradient(135deg, #7A5AF8 10%, #9B8AFB 50%, #6938EF 100%);  /* purple-500 -> purple-400 -> purple-600 */
+  /* Gradient Blue — "UI Refresh". Authoritative stops per the brand reference
+     (2026-09-09): blue-500 -> #5024A7 -> #4163B8. The 2nd and 3rd stops are
+     gradient-only values with no ramp stop of their own; they are correct as
+     given and must not be "corrected" to a nearby ramp hex. This replaces an
+     earlier definition whose 10% stop #2A4DD0 was neither on-ramp nor
+     authoritative. */
+  --color-gradient-blue: linear-gradient(135deg, #2667D8 10%, #5024A7 50%, #4163B8 100%);
 
 
   /* ============================================================
@@ -309,25 +315,30 @@
 
   /* ============================================================
      COLORS — DATA VISUALIZATION
-     6-color series for charts, graphs, and data tables.
-     All use the 500 stop for consistent base hue.
-     Assign series in order: dataviz-1 first, dataviz-6 last.
+     6-color series, per the brand color reference. Each accent family
+     maps to one series: teal 1, cyan 2, emerald 3, indigo 4,
+     fuchsia 5, orange 6. All use the 500 stop (base hue).
+
+     Assign in order: dataviz-1 first, dataviz-6 last.
+
+     These are graphic-design colors. Slots are var() references into
+     the hue ramps so a series value can't drift off the ramp.
      ============================================================ */
 
-  --color-dataviz-1: #14B8A6;   /* Teal 500    — series 1 */
-  --color-dataviz-2: #06B6D4;   /* Cyan 500    — series 2 */
-  --color-dataviz-3: #10B981;   /* Emerald 500 — series 3 */
-  --color-dataviz-4: #6366F1;   /* Indigo 500  — series 4 */
-  --color-dataviz-5: #D946EF;   /* Fuchsia 500 — series 5 */
-  --color-dataviz-6: #F97316;   /* Orange 500  — series 6 */
+  --color-dataviz-1: var(--color-teal-500);      /* #14B8A6 — series 1 */
+  --color-dataviz-2: var(--color-cyan-500);      /* #06B6D4 — series 2 */
+  --color-dataviz-3: var(--color-emerald-500);   /* #10B981 — series 3 */
+  --color-dataviz-4: var(--color-indigo-500);    /* #6366F1 — series 4 */
+  --color-dataviz-5: var(--color-fuchsia-500);   /* #D946EF — series 5 */
+  --color-dataviz-6: var(--color-orange-500);    /* #F97316 — series 6 */
 
-  /* Extended stops for hover, muted, and tinted states */
-  --color-dataviz-1-subtle: #CCFBF1;   /* Teal 100    */
-  --color-dataviz-2-subtle: #CFFAFE;   /* Cyan 100    */
-  --color-dataviz-3-subtle: #D1FAE5;   /* Emerald 100 */
-  --color-dataviz-4-subtle: #E0E7FF;   /* Indigo 100  */
-  --color-dataviz-5-subtle: #FAE8FF;   /* Fuchsia 100 */
-  --color-dataviz-6-subtle: #FFEDD5;   /* Orange 100  */
+  /* Area fills and tinted states — the 100 stop of the same family */
+  --color-dataviz-1-subtle: var(--color-teal-100);      /* #CCFBF1 */
+  --color-dataviz-2-subtle: var(--color-cyan-100);      /* #CFFAFE */
+  --color-dataviz-3-subtle: var(--color-emerald-100);   /* #D1FAE5 */
+  --color-dataviz-4-subtle: var(--color-indigo-100);    /* #E0E7FF */
+  --color-dataviz-5-subtle: var(--color-fuchsia-100);   /* #FAE8FF */
+  --color-dataviz-6-subtle: var(--color-orange-100);    /* #FFEDD5 */
 
 
   /* ============================================================

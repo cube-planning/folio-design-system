@@ -6,46 +6,123 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400..800&display=swap');
 
 :root {
-  /* ---------- CORE — Foundation (Deep Blues) ----------
-     Sourced 1:1 from Folio's tokens/tokens.css cobalt ramp — one shared
-     primitive palette, per docs/BRAND-FOUNDATION.md. Names kept for backward
-     compatibility with existing marketing assets; values now equal Folio's. */
-  --darkest:      #081121;   /* = Folio cobalt-900 */
-  --navy:         #0B1932;   /* = Folio cobalt-800 */
-  --new-blue:     #122E64;   /* = Folio cobalt-600 */
-  --blue-og:      #173D82;   /* = Folio cobalt-500 (exact match, unchanged) */
+  /* ==================================================================
+     PRIMITIVE COLOR — canonical names, shared with Folio
+     ------------------------------------------------------------------
+     One palette, one naming convention. These are Folio's own
+     `--color-{hue}-{stop}` names and values from tokens/tokens.css,
+     per docs/BRAND-FOUNDATION.md § "Primitive color palette".
 
-  /* ---------- PRIMARY — Intelligence Spectrum (Greens) ---------- */
-  --green-og:     #229E66;   /* = Folio green-500 */
-  --new-green:    #067647;   /* = Folio green-700 */
-  --light-green:  #70CF98;   /* = Folio green-400 (exact match, unchanged) */
-  --mint:         #ECFDF3;   /* = Folio green-50 */
+     **Write new marketing work against these names.** The brand's
+     poetic names (--new-blue, --deep-purple, …) are kept below as
+     deprecated aliases so the existing preview cards and marketing
+     assets keep resolving; they are not the convention going forward.
+     ================================================================== */
+  --color-cobalt-900: #081121;
+  --color-cobalt-800: #0B1932;
+  --color-cobalt-600: #122E64;
+  --color-cobalt-500: #173D82;
+  --color-cobalt-25:  #F5F7FA;
 
-  /* ---------- ACCENT — Warmth + Energy ---------- */
-  --amber-mist:   #FFFAEB;   /* = Folio yellow-50 */
-  --burnt-amber:  #DC6803;   /* = Folio yellow-600 */
+  --color-green-700:  #067647;
+  --color-green-500:  #229E66;
+  --color-green-400:  #70CF98;
+  --color-green-50:   #ECFDF3;
+  --color-green-25:   #F2FDF6;
 
-  /* ---------- SECONDARY — Signal + Expression (AI accent — see
-     docs/BRAND-FOUNDATION.md "AI accent color": purple-500 is the anchor
-     stop of the shared AI gradient; the old Deep Purple #5547A5 is retired) ---------- */
-  --deep-purple:  #7A5AF8;   /* = Folio purple-500 */
-  --lavender:     #EBE9FE;   /* = Folio purple-100 */
-  --pink:         #FFE6E5;   /* = Folio red-100 (exact match, unchanged) */
+  --color-yellow-600: #DC6803;
+  --color-yellow-50:  #FFFAEB;
 
-  /* ---------- NEUTRALS — Surface + Type ---------- */
-  --warm-white:   #F2FDF6;   /* = Folio green-25 */
-  --cube-white:   #F5F7FA;   /* = Folio cobalt-25 */
-  --gray-200:     #F2F5F9;   /* = Folio gray-200 (exact match, unchanged) */
-  --gray-300:     #E3E8EF;   /* = Folio gray-300 (exact match, unchanged) */
-  --gray-400:     #CDD5E0;   /* = Folio gray-400 */
-  --gray-500:     #97A3B6;   /* = Folio gray-500 (exact match, unchanged) */
-  --gray-600:     #677489;   /* = Folio gray-600 (exact match, unchanged) */
-  --gray-800:     #353F4F;   /* = Folio gray-800 (exact match, unchanged) */
-  --white:        #FFFFFF;
-  --black:        #000000;
+  /* Purple is AI-only (docs/BRAND-FOUNDATION.md § "AI accent color").
+     purple-500 is the anchor stop of the shared AI gradient and the only
+     flat hex sanctioned, for box-shadow alone. Deep Purple #5547A5 is
+     retired — do not reintroduce it. */
+  --color-purple-500: #7A5AF8;
+  --color-purple-100: #EBE9FE;
 
-  /* ---------- SYSTEM (out-of-palette, documented) ---------- */
-  --error:        #D92D20;   /* = Folio red-500 */
+  --color-red-500:    #D92D20;
+  --color-red-100:    #FFE6E5;
+
+  --color-gray-800:   #353F4F;
+  --color-gray-600:   #677489;
+  --color-gray-500:   #97A3B6;
+  --color-gray-400:   #CDD5E0;
+  --color-gray-300:   #E3E8EF;
+  --color-gray-200:   #F2F5F9;
+
+  --color-white:      #FFFFFF;
+  --color-black:      #000000;
+
+  /* ==================================================================
+     ACCENT / DATA-VIZ FAMILIES — shared with Folio
+     ------------------------------------------------------------------
+     The hues IconBadge draws from (c50 tint / c300 chip / c600 icon),
+     and the source of the --color-dataviz-* series. Values pulled 1:1
+     from Folio's tokens/tokens.css per docs/BRAND-FOUNDATION.md
+     § "Primitive color palette" ("plus the accent/data-viz families").
+     Purple is NOT in this set — it is reserved for AI.
+     ================================================================== */
+  --color-teal-50:      #F0FDFA;
+  --color-teal-300:     #5EEAD4;
+  --color-teal-600:     #0D9488;
+
+  --color-cyan-50:      #ECFEFF;
+  --color-cyan-300:     #67E8F9;
+  --color-cyan-600:     #0891B2;
+
+  --color-emerald-50:   #ECFDF5;
+  --color-emerald-300:  #6EE7B7;
+  --color-emerald-600:  #059669;
+
+  --color-indigo-50:    #EEF2FF;
+  --color-indigo-300:   #A5B4FC;
+  --color-indigo-600:   #4F46E5;
+
+  --color-fuchsia-50:   #FDF4FF;
+  --color-fuchsia-300:  #F0ABFC;
+  --color-fuchsia-600:  #C026D3;
+
+  --color-orange-50:    #FFF7ED;
+  --color-orange-300:   #FDBA74;
+  --color-orange-600:   #EA580C;
+
+  /* ==================================================================
+     DEPRECATED ALIASES — brand-poetic names
+     ------------------------------------------------------------------
+     Retained so existing preview cards, marketing assets and README
+     references keep working. Every one is now a pointer, not a value,
+     so the two naming schemes can never drift to different colors.
+     Prefer the --color-* names above in new work.
+     ================================================================== */
+  --darkest:      var(--color-cobalt-900);
+  --navy:         var(--color-cobalt-800);
+  --new-blue:     var(--color-cobalt-600);
+  --blue-og:      var(--color-cobalt-500);
+  --cube-white:   var(--color-cobalt-25);
+
+  --green-og:     var(--color-green-500);
+  --new-green:    var(--color-green-700);
+  --light-green:  var(--color-green-400);
+  --mint:         var(--color-green-50);
+  --warm-white:   var(--color-green-25);
+
+  --amber-mist:   var(--color-yellow-50);
+  --burnt-amber:  var(--color-yellow-600);
+
+  --deep-purple:  var(--color-purple-500);
+  --lavender:     var(--color-purple-100);
+
+  --pink:         var(--color-red-100);
+  --error:        var(--color-red-500);
+
+  --gray-200:     var(--color-gray-200);
+  --gray-300:     var(--color-gray-300);
+  --gray-400:     var(--color-gray-400);
+  --gray-500:     var(--color-gray-500);
+  --gray-600:     var(--color-gray-600);
+  --gray-800:     var(--color-gray-800);
+  --white:        var(--color-white);
+  --black:        var(--color-black);
 
   /* ---------- SEMANTIC — Surfaces ---------- */
   --surface-default:   var(--white);
@@ -80,7 +157,7 @@
   /* ---------- GRADIENTS — AI (single shared token, per
      docs/BRAND-FOUNDATION.md — replaces the old gradient-ai-signal and
      gradient-midnight-ai, which are retired) ---------- */
-  --color-gradient-ai: linear-gradient(135deg, #7A5AF8 10%, #9B8AFB 50%, #5925DC 100%);
+  --color-gradient-ai: linear-gradient(135deg, #7A5AF8 10%, #9B8AFB 50%, #6938EF 100%);
 
   /* ---------- GRADIENTS — Primary (full-width) ---------- */
   --gradient-intelligence: linear-gradient(90deg, #122E64 0%, #067647 55%, #70CF98 100%);
@@ -94,13 +171,6 @@
   --wash-purple:  linear-gradient(180deg, #F5F7FA 0%, #EBE9FE 100%);
   --wash-surface: linear-gradient(180deg, #F2F5F9 0%, #F5F7FA 100%);
 
-  /* ---------- GRADIENTS — Edge pairs (thin borders) ---------- */
-  --edge-navy-green:    linear-gradient(90deg, #0B1932 0%, #70CF98 100%);
-  --edge-navy-purple:   linear-gradient(90deg, #0B1932 0%, #7A5AF8 100%);
-  --edge-blue-green:    linear-gradient(90deg, #122E64 0%, #70CF98 100%);
-  --edge-blueog-purple: linear-gradient(90deg, #173D82 0%, #7A5AF8 100%);
-  --edge-purple-green:  linear-gradient(90deg, #7A5AF8 0%, #70CF98 100%);
-  --edge-green-green:   linear-gradient(90deg, #067647 0%, #70CF98 100%);
 
   /* ---------- TYPOGRAPHY — Families ---------- */
   /* DM Sans only — inherited from Folio, the product design system */
