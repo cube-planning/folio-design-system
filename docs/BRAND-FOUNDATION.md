@@ -97,6 +97,24 @@ color. For that narrow case, use **`#7A5AF8`** (Folio's `purple-500` — the
 first/anchor stop of the AI gradient itself, so it stays visually tied to the
 gradient rather than reintroducing either retired hex).
 
+**Retired AI-purple hexes — do not use:**
+
+| Hex | Was | Why retired |
+|---|---|---|
+| `#6938EF` | Folio `purple-600`, "the" AI purple | Superseded by the gradient. Survives *only* as the gradient's own 100% stop, never as a flat fill |
+| `#5547A5` | Cube Software "Deep Purple" | Superseded by the gradient; `--shadow-ring-ai` re-keyed off it to `#7A5AF8` |
+| `#8B7FD1` | The lighter tint paired with `#5547A5` in old glass explorations | Has **no token behind it** — it was never in either ramp. The gradient's own `#9B8AFB` mid-stop is the lighter tint now |
+
+Applying the gradient to text is `background-clip: text` + `color: transparent`.
+
+**`IconBadge` is not the AI icon.** Its `hue` axis has no purple by design
+("never purple — purple is reserved for AI" — `components/IconBadge.jsx`), so
+there is no correct way to render an AI icon through it. Render the AI sparkle
+as a plain `fa-solid fa-sparkles` glyph over the AI gradient instead, the way
+`Banner`, `Toast`, `AnalyzePanel`, `BuildPanel`, `AddonTopNav` and
+`PortalSideBarNav` already do. `IconBadge` remains the right choice for
+non-AI decorative icons, in teal/cyan/emerald/indigo/fuchsia/orange.
+
 ### AI gradient
 **`--color-gradient-ai` only**, in both design systems, and this is now the
 default way to render AI-purple anywhere a fill is used (text, surfaces, hero
@@ -131,6 +149,13 @@ should be re-keyed to `#7A5AF8` too) — see "AI accent color" above.
 
 Purple is still the only color this applies to, per the AI accent color rule
 above — the glow doesn't loosen that.
+
+**Until `--glow-ai` lands**, write the glow literally and key it to `#7A5AF8`:
+
+```css
+box-shadow: 0 24px 64px -12px rgba(122,90,248,0.45),
+            0 0 40px rgba(122,90,248,0.25);
+```
 
 ### Gradient direction
 Gradients run in one consistent direction, never radial, never reversed.
@@ -217,9 +242,9 @@ If you can't tell which case you're in, you're in the first one. A decorative
 graphic that starts getting used as a reference for real figures has become a
 product chart and needs the labels.
 
-Full per-mark detail: `docs/CHART-RULES.md`. Reference implementation of the
-decorative treatment: `templates/chart-rules-mock/`. Glass-specific
-constraints: `glass-ui-style.md` § 4.
+Full per-mark detail: `docs/CHART-RULES.md`, including the glass-specific
+constraints in its § "Glass-surface charts". Reference implementation of the
+decorative treatment: `templates/chart-rules-mock/`.
 
 > **Reconciling with the `dataviz` skill.** That skill's non-negotiables say
 > "selective direct labels (never a number on every point)," aimed at dense
@@ -364,7 +389,7 @@ resolved:
 
 ```
 GLOBAL TOKEN                SEMANTIC TOKENS              COMPONENT TOKENS              UI
---color-purple-500    ┬──  color-icon-ai          ┬──  IconBadge.ai-sparkle      →  sparkle icon in AI badges
+--color-purple-500    ┬──  color-icon-ai          ┬──  Banner.ai-sparkle         →  sparkle glyph in the AI banner
    (#7A5AF8)           │                            └──  PortalSideBarNav.ai-icon →  "Cube AI Analyst" nav icon
                         │
                         ├──  color-glow-ai          ┬──  RecommendationCard.glow  →  AI card ambient glow

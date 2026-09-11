@@ -5,8 +5,14 @@
 >
 > The cross-persona facts (series order, the data-point display rule and its
 > decorative exemption) live in `docs/BRAND-FOUNDATION.md`; this file holds the
-> per-mark detail. Glass-surface constraints are in `glass-ui-style.md` § 4.
-> A live specimen of the decorative treatment is `templates/chart-rules-mock/`.
+> per-mark detail, including the glass-surface constraints (§ "Glass-surface
+> charts" below). A live specimen of the decorative treatment is
+> `templates/chart-rules-mock/`.
+>
+> **This file applies wherever charts appear** — product dashboards and
+> reports, decks, PDFs, one-pagers, marketing site sections, hero graphics, and
+> glass compositions. Only the "Glass-surface charts" section is scoped to a
+> single surface.
 >
 > **Provenance.** These rules were migrated out of the retired
 > `docs/CHATGPT-PROJECT-INSTRUCTIONS.md` (2026-09-08) into the Cube BRAND
@@ -146,8 +152,79 @@ Chart *structure* is gray — only the data marks carry the dataviz palette.
 - **More than 6 series:** group the tail into "Other" using `--color-gray-500`. Do not extend the palette.
 - Never apply gradients, transparency, textures, or glow to data marks.
 
-Glass-surface graphics have their own additional constraints (three-series limit, slot
-selection, line weight) — see `glass-ui-style.md` § 4.
+### Glass-surface charts
+
+Additional constraints for a chart sitting on a glass panel (`glass-ui-style.md`).
+Everything above still applies; these are the deltas.
+
+#### Series selection
+
+Always **three distinct hues**, never monochrome shades of one color — a
+monochrome ramp loses its series separation entirely once it's behind blur and
+saturation shifts.
+
+Use `--color-dataviz-*` from `tokens/tokens.css`. For a three-series glass
+graphic, slots 1, 4 and 6 give the widest visual spread:
+
+| Token | Ramp stop | Hex |
+|---|---|---|
+| `--color-dataviz-1` | `teal-500` | `#14B8A6` |
+| `--color-dataviz-4` | `indigo-500` | `#6366F1` |
+| `--color-dataviz-6` | `orange-500` | `#F97316` |
+
+Skipping slots is fine; **reordering** them is not — slot order still ascends
+(1 → 4 → 6). Teal and cyan are adjacent on the wheel and a glass panel's
+`saturate()` pushes them closer still, which is why slot 2 isn't in the
+three-series set.
+
+Space the series **geometrically** as well as by hue — at hero scale, two
+closely-tracking lines in adjacent hues read as one thick line no matter what
+the legend says.
+
+#### Marks over glass
+
+Line weight (`2px`, round caps), marker diameter (`8px` / `r=4`, ~4× the
+stroke) and marker density (below 12 points per series) are unchanged from
+"Chart form rules" above. Two things differ:
+
+| Property | Value |
+|---|---|
+| Area fills | None — an area fill over a translucent panel muddies both |
+| Marker border | None over glass — a white surface ring breaks the hue and reads as a separate bead |
+
+> **Open — marker border on a product chart behind glass.** "Chart form rules"
+> keeps the surface ring on a product chart because the marker is also a hover
+> target; the glass rule drops it unconditionally. The two only collide on a
+> real, interactive product chart rendered on a glass panel, which nothing in
+> the repo currently does. Not resolved here.
+
+#### Data point labels — decorative graphics omit them
+
+A glass graphic is almost always a **decorative** chart: a hero image, a
+section illustration, a deck cover, standing in for "we do finance analytics"
+rather than reporting a figure. In that case **omit the per-point numbers.** A
+value beside every dot competes with the line it belongs to, and nobody reads
+eighteen of them. The trend shape and the color relationships are the payload;
+the y-axis carries magnitude.
+
+This is a scoped exemption from `docs/BRAND-FOUNDATION.md` § "Chart data-point
+display", granted there explicitly — **not** a licence to drop labels from a
+chart someone reads figures off. The moment a glass panel carries a real
+reportable number (a dashboard behind glass, a report screenshot), the
+labelling rule applies in full and the constraints below govern how.
+
+**If you do label over glass:**
+
+| Concern | Rule |
+|---|---|
+| Chip | Solid `gray-900` fill with `gray-50` type reversed out, Regular weight. Fully opaque — a translucent chip lets the blur behind it bleed through the value |
+| Color | Text tokens only, never the series color. A teal number on a saturated glass panel is the worst case in the system |
+| Never | Bare text directly over a `backdrop-filter` region, where a blob passing behind it changes the contrast |
+
+> **Open — label weight.** The chip above specifies Regular; the general label
+> styling table earlier in this file specifies `caption-1` Medium or SemiBold.
+> Reversed-out type on a solid dark chip is the case for the lighter weight,
+> but the two tables disagree as written. Not resolved here.
 
 ### Named chart themes
 

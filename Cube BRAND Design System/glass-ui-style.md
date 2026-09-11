@@ -21,6 +21,14 @@ Read `docs/BRAND-FOUNDATION.md` first — this file inherits its rulings on the 
 accent, gradient direction, radius scale, and typography, and does not restate
 them.
 
+**Related:**
+
+- `docs/CHART-RULES.md` — all chart rules, including § "Glass-surface charts"
+  (series color slots, mark specs, data-point labelling for a chart inside a
+  glass composition). Not restated here.
+- `docs/BRAND-FOUNDATION.md` — the AI accent (gradient, glow, retired hexes),
+  gradient direction, radius scale, typography, icons.
+
 Working example: [`templates/glass-dashboard-mock/`](templates/glass-dashboard-mock/) —
 copy the folder and edit the `.dc.html`.
 
@@ -201,101 +209,23 @@ radial or reversed (`docs/BRAND-FOUNDATION.md`).
 
 ## 4. Color
 
-### Dataviz series
+### Dataviz, marks, and data point labels
 
-Always **three distinct hues**, never monochrome shades of one color — a
-monochrome ramp loses its series separation entirely once it's behind blur and
-saturation shifts.
-
-Use `--color-dataviz-*` from `tokens/tokens.css`. For a three-series glass
-graphic, slots 1, 4 and 6 give the widest visual spread:
-
-| Token | Ramp stop | Hex |
-|---|---|---|
-| `--color-dataviz-1` | `teal-500` | `#14B8A6` |
-| `--color-dataviz-4` | `indigo-500` | `#6366F1` |
-| `--color-dataviz-6` | `orange-500` | `#F97316` |
-
-Skipping slots is fine; **reordering** them is not — slot order still ascends
-(1 → 4 → 6). Teal and cyan are adjacent on the wheel and a glass panel's
-`saturate()` pushes them closer still, which is why slot 2 isn't in the
-three-series set.
-
-Space the series **geometrically** as well as by hue — at hero scale, two
-closely-tracking lines in adjacent hues read as one thick line no matter what
-the legend says.
-
-
-### Marks
-
-| Property | Value |
-|---|---|
-| Line weight | `2px`, `stroke-linecap: round` |
-| Area fills | None — an area fill over a translucent panel muddies both |
-| Marker diameter | `8px` (`r=4`) — the floor, and ~4× the stroke. Past ~10px the dots dominate the line they sit on |
-| Marker border | None over glass — a white surface ring breaks the hue and reads as a separate bead |
-| Marker density | Markers only below 12 points per series |
-
-### Data point labels — decorative graphics omit them
-
-A glass graphic is almost always a **decorative** chart: a hero image, a
-section illustration, a deck cover, standing in for "we do finance analytics"
-rather than reporting a figure. In that case **omit the per-point numbers.** A
-value beside every dot competes with the line it belongs to, and nobody reads
-eighteen of them. The trend shape and the color relationships are the payload;
-the y-axis carries magnitude.
-
-This is a scoped exemption from `docs/BRAND-FOUNDATION.md` § "Chart data-point
-display", granted there explicitly — **not** a licence to drop labels from a
-chart someone reads figures off. The moment a glass panel carries a real
-reportable number (a dashboard behind glass, a report screenshot), the
-labelling rule applies in full and the constraints below govern how.
-
-**If you do label over glass:**
-
-| Concern | Rule |
-|---|---|
-| Chip | Solid `gray-900` fill with `gray-50` type reversed out, Regular weight. Fully opaque — a translucent chip lets the blur behind it bleed through the value |
-| Color | Text tokens only, never the series color. A teal number on a saturated glass panel is the worst case in the system |
-| Never | Bare text directly over a `backdrop-filter` region, where a blob passing behind it changes the contrast |
+See `docs/CHART-RULES.md` § "Glass-surface charts" — series color slots
+(1 / 4 / 6), line weight, area fills, marker diameter/border/density, and the
+decorative-vs-real-figure labelling rule including the over-glass label
+constraints.
 
 ### AI accents
 
-Purple is reserved for AI-related moments only, never decorative
-(`docs/BRAND-FOUNDATION.md`). In a glass composition that means the AI insight
-panel is the *only* purple in the frame.
+See `docs/BRAND-FOUNDATION.md` §§ "AI accent color" / "AI gradient" / "AI glow"
+— the gradient, the `#7A5AF8` glow hex and its literal `box-shadow` fallback,
+the retired hexes, and the `IconBadge` exception all live there.
 
-- **Fills** (icon, headline, pill) — `--color-gradient-ai`:
-  `linear-gradient(135deg, #7A5AF8 10%, #9B8AFB 50%, #6938EF 100%)`. For text,
-  apply via `background-clip: text` + `color: transparent`.
-- **Glow / box-shadow** — `#7A5AF8` (`--color-purple-500`), the only flat hex
-  sanctioned for the AI accent, and only because `box-shadow` can't render a
-  gradient. A soft diffuse glow is the marketing-persona way to signal AI
-  without the gradient every time; the persona may use it liberally.
-- **Pill / badge** — use the real component: `<Badge color="ai" type="solid">`.
-  It already resolves to `#7A5AF8`.
-
-Do **not** use:
-
-- `#5547A5` ("Deep Purple") or `#6938EF` — both **retired** as the AI-purple
-  reference. Old glass explorations that specify `#5547A5` with a `#8B7FD1`
-  lighter tint predate that ruling; the gradient's own `#9B8AFB` mid-stop is
-  the lighter tint now, and `#8B7FD1` has no token behind it.
-- `IconBadge` for the AI icon — its `hue` axis has no purple by design
-  ("never purple — purple is reserved for AI"). Render the AI icon as a plain
-  `fa-solid fa-sparkles` glyph over the AI gradient instead. `IconBadge` is still the
-  right choice for non-AI decorative icons, in teal/cyan/emerald/indigo/
-  fuchsia/orange.
-
-There is no `--glow-ai` token yet — `docs/BRAND-FOUNDATION.md` calls for one and
-notes neither `--focus-ring-ai` (hard 4px, focus only) nor Cube Software's
-`--shadow-ring-ai` is diffuse enough. Until it lands, write the glow literally
-and key it to `#7A5AF8`:
-
-```css
-box-shadow: 0 24px 64px -12px rgba(122,90,248,0.45),
-            0 0 40px rgba(122,90,248,0.25);
-```
+The only glass-specific part: purple is reserved for AI-related moments and is
+never decorative, so in a glass composition the AI insight panel is the *only*
+purple in the frame. Use the real `<Badge color="ai" type="solid">` for the
+pill (§ 5).
 
 ### Background
 
@@ -348,11 +278,10 @@ are Font Awesome, `fa-solid` by default — see `docs/BRAND-FOUNDATION.md`
 - [ ] Small/simple panels have an internal diagonal skew cue
 - [ ] Nested cards use the lighter fill and cast no drop shadow
 - [ ] Exactly one drop shadow per panel, from the panel itself
-- [ ] Dataviz slots 1 / 4 / 6, no area fills, 2px strokes
-- [ ] Markers 8px (`r=4`), borderless, only below 12 points per series
-- [ ] No per-point value labels (decorative) — or, if it carries real figures, every value labelled on a solid `gray-900` chip
+- [ ] Series, marks and data-point labels follow `docs/CHART-RULES.md` § "Glass-surface charts"
 - [ ] Purple appears only on the AI element; no purple background blob
-- [ ] No `#5547A5`, `#6938EF`, `#8B7FD1`, or `#335CFF`
+- [ ] No retired AI-purple hex — see `docs/BRAND-FOUNDATION.md` § "AI accent color"
+- [ ] No `#335CFF` (not in the cobalt ramp)
 - [ ] Background is blurred blobs, not a hard gradient
 - [ ] Panel contents are real components, not hand-rolled markup
 - [ ] DM Sans only; Font Awesome only, `fa-solid` unless it's a documented exception

@@ -231,9 +231,9 @@ const T = {
   bad:       'var(--color-variance-unfav)',
 };
 
-/* Line weight. The form rule's canonical value is 2px; glass-ui-style.md § 4
-   currently asks for 2.5–3px over a blurred panel. Set to 2 here — see the
-   note under chart 1. Markers scale with it. */
+/* Line weight. 2px is canonical everywhere — CHART-RULES.md § "Chart form
+   rules", and its § "Glass-surface charts" leaves it unchanged over a blurred
+   panel. Markers scale with it. */
 const STROKE = 2;
 /* Marker radius. Floor is 8px diameter (r >= 4) and the diameter wants to
    stay near 4x the stroke width — at 2px stroke that lands exactly on r=4.
