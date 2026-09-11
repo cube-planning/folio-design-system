@@ -1,5 +1,5 @@
 > **SUPERSEDED.** This work has moved to the "Cube Software Design System" project
-> (`Cube BRAND Design System/README.md`, section "MARKETING WEBSITE — COMPONENTS & PAGE
+> (`archive/cube-brand-design-system/README.md`, section "MARKETING WEBSITE — COMPONENTS & PAGE
 > PATTERNS"), which is sourced from the official Brand Guidelines 2026 v1.0 PDF and takes priority
 > over what's documented below. Several things grounded here from the Figma landing page — the
 > diagonal/radial hero gradient, Font Awesome icons, DM Sans for body/UI text — turned out to
@@ -23,19 +23,19 @@
 Read before doing marketing-site work:
 
 ```
-- docs/MARKETING-DESIGN-SYSTEM.md   (this file)
+- archive/MARKETING-DESIGN-SYSTEM.md   (this file)
 - CLAUDE.md                          (Folio app rules — typography/icons/spacing inherited from here)
 - tokens/tokens.css                  (spacing scale + app color/font primitives, shared with the app)
-- tokens/marketing-primitives.css    (marketing-only raw values: gradients, glows, type-scale gaps)
-- tokens/marketing-semantic-tokens.css  (category/purpose/emphasis/state semantic layer — the actual rule to build against)
-- marketing-landing-page/index.html  (current reference build)
+- brand/tokens/marketing-primitives.css    (marketing-only raw values: gradients, glows, type-scale gaps)
+- brand/tokens/marketing-semantic-tokens.css  (category/purpose/emphasis/state semantic layer — the actual rule to build against)
+- brand/landing-page/index.html  (current reference build)
 ```
 
 ---
 
 ## 1. Stack
 
-Static HTML/CSS per template (matches the existing [`marketing-landing-page/index.html`](../marketing-landing-page/index.html)):
+Static HTML/CSS per template (matches the existing [`brand/landing-page/index.html`](../brand/landing-page/index.html)):
 DM Sans via Google Fonts, Font Awesome, inline `:root` tokens. **Not** the app's React/Tailwind
 stack — marketing pages are built and shipped independently of the product app.
 
@@ -55,10 +55,10 @@ Two-layer token architecture:
   `tokens/tokens.css` / `tokens/typography.css` ramps (marketing reuses these directly — no new
   color or spacing primitives needed; every spacing value seen in reference material, 4–96px,
   already exists at [`tokens/tokens.css:357-370`](../tokens/tokens.css)). Marketing-only additions
-  (gradients, glows, the type-scale gap sizes) live in `tokens/marketing-primitives.css`.
+  (gradients, glows, the type-scale gap sizes) live in `brand/tokens/marketing-primitives.css`.
 - **Semantic tokens** — `{category}/{purpose}/{emphasis}/{state}`, e.g. `background/brand/bold/default`.
   This is the layer components should actually be built against. Defined in
-  `tokens/marketing-semantic-tokens.css`, with every token traced to the specific Figma node it
+  `brand/tokens/marketing-semantic-tokens.css`, with every token traced to the specific Figma node it
   came from.
 
   **Light/dark mode**: the marketing site has light sections (Nav, Content Section, Blog Card,
@@ -202,13 +202,13 @@ future cleanup a real pattern to land on.
 
 ## 6. Imagery & Gradient Rules
 
-- **Hero gradient** (`--primitive-gradient-hero-navy`, `tokens/marketing-primitives.css`): diagonal
+- **Hero gradient** (`--primitive-gradient-hero-navy`, `brand/tokens/marketing-primitives.css`): diagonal
   dark-navy 3-stop gradient, ~139°. Close to but distinct from `cobalt-700/800/900` — treat as its
   own primitive, don't substitute a flat cobalt value.
 - **Ambient glow blobs** (`--primitive-glow-green-radial`): soft, large-radius radial gradients at
   very low opacity (6% seen in hero) behind hero copy — decorative only, never load-bearing for
   contrast/legibility.
-- **AI/CTA emphasis**: use `--primitive-glow-purple-40` (`tokens/marketing-primitives.css`) as an
+- **AI/CTA emphasis**: use `--primitive-glow-purple-40` (`brand/tokens/marketing-primitives.css`) as an
   ambient box-shadow on AI-forward CTAs (the hero email-capture pill's white container does this,
   independent of the green submit button inside it) — same purple hue as the app's
   `--focus-ring-ai`, but a different opacity and job, so it's a distinct primitive rather than a
@@ -224,7 +224,7 @@ future cleanup a real pattern to land on.
 Do not resolve these silently — confirm with the design lead before building:
 
 1. **Nav buttons**: switch from the old app Button to the dedicated marketing Button (`18:51`)?
-2. **Semantic-token extension** (`tokens/marketing-semantic-tokens.css`): added a 6th purpose,
+2. **Semantic-token extension** (`brand/tokens/marketing-semantic-tokens.css`): added a 6th purpose,
    `accent`, for the green CTA color, since it's neither the primary brand color nor "success"
    semantics — confirm or fold it into `brand`.
    *(Resolved: light/dark mode now uses a `[data-mode="dark"]` override block, per your direction —

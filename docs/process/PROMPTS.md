@@ -180,7 +180,7 @@ Push /components/[component name] to Figma as a component in the [Figma file nam
 ## 7. Marketing Design System — Moved
 
 The Marketing Design System (component specs, page recipes, tokens) no longer lives in this
-repo. It moved to the **Cube Software Design System** project (`Cube BRAND Design System/`),
+repo. It moved to the **Cube Software Design System** project (`archive/cube-brand-design-system/`),
 which is sourced from the official Brand Guidelines 2026 v1.0 PDF and takes priority over
 anything this repo previously derived from Figma alone — several things grounded here (the
 diagonal/radial hero gradient, Font Awesome icons, DM Sans for body/UI text) turned out to
@@ -188,7 +188,7 @@ conflict with that project's actual rules.
 
 The reusable "update the marketing design system" prompt now lives in that project's own
 `README.md`, under "MARKETING WEBSITE — COMPONENTS & PAGE PATTERNS," since it references that
-project's files (`README.md`, `colors_and_type.css`, `SKILL.md`), not this repo's. `docs/MARKETING-DESIGN-SYSTEM.md`
+project's files (`README.md`, `colors_and_type.css`, `SKILL.md`), not this repo's. `archive/MARKETING-DESIGN-SYSTEM.md`
 in this repo is kept only as historical/exploratory context — don't treat it as current.
 
 ---

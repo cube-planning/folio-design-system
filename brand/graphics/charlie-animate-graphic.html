@@ -30,7 +30,7 @@
   var el = document.getElementById('sparkle');
   var radius = 58.5;
   var angle = 45;
-  // Respect prefers-reduced-motion (glass-ui-style.md 2): park the sparkle
+  // Respect prefers-reduced-motion (brand/glass-ui-style.md 2): park the sparkle
   // at its start position instead of orbiting.
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     var r0 = angle * Math.PI / 180;

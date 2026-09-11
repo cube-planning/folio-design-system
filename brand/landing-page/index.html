@@ -1572,7 +1572,7 @@ button { font-family: inherit; cursor: pointer; }
       var el = document.getElementById('charlieSparkle');
       var radius = 58.5;
       var angle = 45;
-      // Respect prefers-reduced-motion (glass-ui-style.md § 2): park the
+      // Respect prefers-reduced-motion (brand/glass-ui-style.md § 2): park the
       // sparkle at its start position rather than orbiting continuously.
       if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         var r0 = angle * Math.PI / 180;

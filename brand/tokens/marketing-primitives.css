@@ -24,7 +24,7 @@
   /* Dark hero section background — 3-stop gradient.
      Stops are cobalt-900 / cobalt-600 / cobalt-800 (previously hardcoded as
      the pre-alignment hexes #0A1229 / #12264D / #0A1A39, now stale — see
-     docs/BRAND-FOUNDATION.md § "Primitive color palette"). Referenced as
+     docs/foundation/BRAND-FOUNDATION.md § "Primitive color palette"). Referenced as
      tokens so this can't drift from the ramp again.
      Source: Hero, node 56:45490.
 

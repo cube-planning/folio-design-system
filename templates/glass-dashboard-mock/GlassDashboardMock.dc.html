@@ -7,7 +7,7 @@
 </head>
 <body>
 <x-dc>
-<!-- @template name="Glass Dashboard Mock" description="Marketing hero graphic — three isometric glass panels (frosted, clear-mirror, AI callout) built from real Text, PageHeader, Badge, StatusDot, Table, and IconBadge components. Recipe: glass-ui-style.md." -->
+<!-- @template name="Glass Dashboard Mock" description="Marketing hero graphic — three isometric glass panels (frosted, clear-mirror, AI callout) built from real Text, PageHeader, Badge, StatusDot, Table, and IconBadge components. Recipe: brand/glass-ui-style.md." -->
 <helmet>
   <script src="./ds-base.js"></script>
   <link rel="stylesheet" href="../../ds-bundle/_ds_bundle.css">
@@ -19,7 +19,10 @@
     /* ---- Background: blurred blobs, never a hard-edged gradient.
        Cobalt / blue / teal / cyan only — no purple blob (purple is
        reserved for the one AI element in the frame). ------------- */
-    .bg { position:absolute; inset:0; background:#F5F7FA; overflow:hidden; }
+    /* Base is TRANSPARENT — the graphic composites onto whatever surface it
+       is placed on. The blobs still travel with it: they are what the glass
+       transmits. Do not reintroduce a flat fill here. */
+    .bg { position:absolute; inset:0; background:transparent; overflow:hidden; }
     .blob { position:absolute; border-radius:50%; }
     .blob-1 { width:640px; height:640px; left:-80px;  top:-140px; background:#4B7CD8; opacity:0.28; filter:blur(110px); }
     .blob-2 { width:560px; height:560px; right:-60px; top:-80px;  background:#06B6D4; opacity:0.22; filter:blur(100px); }
@@ -127,7 +130,7 @@
 
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1400px&quot;,&quot;height&quot;:&quot;820px&quot;}}">
-// Glass Dashboard Mock — see glass-ui-style.md for the recipe this implements.
+// Glass Dashboard Mock — see brand/glass-ui-style.md for the recipe this implements.
 //
 // Layer plan (§2 of the style guide):
 //   back   — Executive Overview dashboard, frosted matte, translateZ 0
@@ -136,7 +139,7 @@
 
 // Dataviz series: slots 1 / 4 / 6 from --color-dataviz-*. Slot 2 (cyan) sits
 // next to teal on the wheel, so the glass recipe skips it for three series.
-// See docs/CHART-RULES.md § "Glass-surface charts".
+// See docs/foundation/CHART-RULES.md § "Glass-surface charts".
 //
 // Actuals vs. forecast share a hue with the forecast dashed, per the form
 // rule — the hue is never switched for forecast. Budget is the one separate
@@ -288,7 +291,7 @@ class Component extends DCLogic {
       })),
       // Markers. 6 points per series is under the 12-point threshold, so each
       // point takes an 8px (r=4) dot — borderless over glass. See
-      // docs/CHART-RULES.md § "Glass-surface charts". This file had none until
+      // docs/foundation/CHART-RULES.md § "Glass-surface charts". This file had none until
       // 2026-09-11; a spec'd mark that is simply absent renders as a
       // perfectly clean chart, which is why nothing caught it.
       SERIES.map((s) => s.points.trim().split(/\s+/).map((pt, i) => {

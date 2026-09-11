@@ -1,7 +1,7 @@
 # Glass Dashboard Mock
 
 Marketing hero graphic — three isometric glass panels built from real Folio
-components. Implements the recipe in [`glass-ui-style.md`](../../glass-ui-style.md).
+components. Implements the recipe in [`brand/glass-ui-style.md`](../../glass-ui-style.md).
 
 ```
 GlassDashboardMock.dc.html   the template — this is the file you edit
@@ -27,7 +27,7 @@ varying the rotation per panel is what breaks the shared-plane illusion.
 Change content, not chrome. The `.glass-*`, `.streak`, `.skew-lines`,
 `.glow-ai`, and `.panel` rules are the documented recipe — edit `STATS`,
 `SERIES`, `ROWS`, and the panel copy instead. If you need a new panel variant,
-add it to `glass-ui-style.md` first.
+add it to `brand/glass-ui-style.md` first.
 
 ## Previewing locally
 

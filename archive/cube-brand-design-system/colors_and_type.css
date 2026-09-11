@@ -11,7 +11,7 @@
      ------------------------------------------------------------------
      One palette, one naming convention. These are Folio's own
      `--color-{hue}-{stop}` names and values from tokens/tokens.css,
-     per docs/BRAND-FOUNDATION.md § "Primitive color palette".
+     per docs/foundation/BRAND-FOUNDATION.md § "Primitive color palette".
 
      **Write new marketing work against these names.** The brand's
      poetic names (--new-blue, --deep-purple, …) are kept below as
@@ -33,7 +33,7 @@
   --color-yellow-600: #DC6803;
   --color-yellow-50:  #FFFAEB;
 
-  /* Purple is AI-only (docs/BRAND-FOUNDATION.md § "AI accent color").
+  /* Purple is AI-only (docs/foundation/BRAND-FOUNDATION.md § "AI accent color").
      purple-500 is the anchor stop of the shared AI gradient and the only
      flat hex sanctioned, for box-shadow alone. Deep Purple #5547A5 is
      retired — do not reintroduce it. */
@@ -58,7 +58,7 @@
      ------------------------------------------------------------------
      The hues IconBadge draws from (c50 tint / c300 chip / c600 icon),
      and the source of the --color-dataviz-* series. Values pulled 1:1
-     from Folio's tokens/tokens.css per docs/BRAND-FOUNDATION.md
+     from Folio's tokens/tokens.css per docs/foundation/BRAND-FOUNDATION.md
      § "Primitive color palette" ("plus the accent/data-viz families").
      Purple is NOT in this set — it is reserved for AI.
      ================================================================== */
@@ -155,7 +155,7 @@
   --border-strong:     var(--gray-600);
 
   /* ---------- GRADIENTS — AI (single shared token, per
-     docs/BRAND-FOUNDATION.md — replaces the old gradient-ai-signal and
+     docs/foundation/BRAND-FOUNDATION.md — replaces the old gradient-ai-signal and
      gradient-midnight-ai, which are retired) ---------- */
   --color-gradient-ai: linear-gradient(135deg, #7A5AF8 10%, #9B8AFB 50%, #6938EF 100%);
 
@@ -225,7 +225,7 @@
      name-for-name. This scale used to be shifted one step (md 8, lg 12,
      xl 16, 2xl 24), so "16px card" was --radius-xl here and --radius-2xl in
      Folio. Same names now mean the same values in both systems.
-     See docs/BRAND-FOUNDATION.md § "Spacing and radius". */
+     See docs/foundation/BRAND-FOUNDATION.md § "Spacing and radius". */
   --radius-none: 0px;
   --radius-xs:   2px;      /* brand-only extension: icon corners. Folio has no 2px stop */
   --radius-sm:   4px;

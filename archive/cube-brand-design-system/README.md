@@ -18,17 +18,17 @@
 >
 > | Topic | Current home |
 > |---|---|
-> | Chart rules | `docs/CHART-RULES.md` |
-> | Cross-persona facts (palette, type, icons, radius, chart series) | `docs/BRAND-FOUNDATION.md` |
-> | Glass / marketing graphic recipe | `glass-ui-style.md` |
-> | Why a rule changed | `docs/DESIGN-DECISIONS.md` |
+> | Chart rules | `docs/foundation/CHART-RULES.md` |
+> | Cross-persona facts (palette, type, icons, radius, chart series) | `docs/foundation/BRAND-FOUNDATION.md` |
+> | Glass / marketing graphic recipe | `brand/glass-ui-style.md` |
+> | Why a rule changed | `docs/process/DESIGN-DECISIONS.md` |
 >
 > Fixes applied on 2026-09-08/09 (retired purple removed, palette and radius
 > aligned, Lucide removed) were kept rather than reverted, so the snapshot is
 > internally consistent — but it is still **not** the source of truth.
 >
 > **Open:** the authoritative marketing/brand source is currently undefined.
-> See `docs/BRAND-FOUNDATION.md` § "Voice and tone" and § "Marketing/brand
+> See `docs/foundation/BRAND-FOUNDATION.md` § "Voice and tone" and § "Marketing/brand
 > source".
 
 ---
@@ -466,7 +466,7 @@ Colors: TBD
 ```
 
 ### Known deviations found in the current Figma / prototype build
-These exist in the live `marketing-landing-page/index.html` prototype and the Figma Landing Page
+These exist in the live `brand/landing-page/index.html` prototype and the Figma Landing Page
 Layout today. Don't copy them — they need to be corrected to match this system:
 
 1. **Hero background gradient is diagonal (139°).** Rule: never radial/diagonal/reversed. Its three
@@ -596,14 +596,14 @@ than being resolved silently.
 
 ## CHARTS & DATA DISPLAY
 
-**Moved.** These rules now live in **`docs/CHART-RULES.md`**, which is current and
+**Moved.** These rules now live in **`docs/foundation/CHART-RULES.md`**, which is current and
 maintained. They were relocated on 2026-09-09 when this package was archived — see
 the notice at the top of this file. Do not re-add chart rules here.
 
 ## Caveats & Gaps
 
 - **Marketing site product source reviewed (partial)** — the Figma Landing Page Layout and a live
-  `marketing-landing-page/index.html` prototype have now been reviewed (see "MARKETING WEBSITE —
+  `brand/landing-page/index.html` prototype have now been reviewed (see "MARKETING WEBSITE —
   COMPONENTS & PAGE PATTERNS" above). Several deviations from this system's Non-negotiables
   (SKILL.md) were found and listed there — treat that section, not the raw Figma/prototype,
   as the source of truth going forward. Most section types (CTA, Footer, Features, Metrics, Social

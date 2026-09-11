@@ -42,7 +42,7 @@ Documented weight exceptions:
 
 | Case | Style |
 |---|---|
-| **AI sparkle** | `fa-solid fa-sparkles` — solid. Verified consistent across `Banner`, `Toast`, `AnalyzePanel`, `BuildPanel`, `AddonTopNav`, `PortalSideBarNav` and `docs/cube-addon-design-spec.md` |
+| **AI sparkle** | `fa-solid fa-sparkles` — solid. Verified consistent across `Banner`, `Toast`, `AnalyzePanel`, `BuildPanel`, `AddonTopNav`, `PortalSideBarNav` and `docs/product/cube-addon-design-spec.md` |
 | **Icon-only `Button`** | `fa-regular` at 14px (`large`) / 12px (`small`), per `CLAUDE.md` § 6 |
 | Everything else | `fa-solid` |
 
@@ -70,11 +70,11 @@ package, don't substitute a different set — ask for the exact name.
 
 For any package that ships standalone (uploaded as its own skill, so it cannot
 read repo-root files), vendor the stylesheet and webfonts alongside it rather
-than relying on a CDN kit. `Cube BRAND Design System/vendor/fontawesome/` is
+than relying on a CDN kit. `archive/cube-brand-design-system/vendor/fontawesome/` is
 the reference layout — that package is archived, but the layout it uses is the
 one to copy.
 
-> **Fixed 2026-09-09.** `Cube BRAND Design System/preview/icons-system.html`
+> **Fixed 2026-09-09.** `archive/cube-brand-design-system/preview/icons-system.html`
 > — the card that *documents* the icon system — used to load Lucide from a
 > `unpkg.com` CDN and advertise "Lucide 1.5px outline" as its subtitle, so it
 > taught the wrong library and pulled a third-party script at render time. All
@@ -194,7 +194,7 @@ crosshairs and hover states are an enhancement layer, never the only path to a
 number.
 
 This is a persona rule, not a stylistic one. It is keyed to what all four
-personas in `docs/cube-personas.md` share rather than to any one of them:
+personas in `docs/foundation/cube-personas.md` share rather than to any one of them:
 
 - "Difficulty communicating insights" / "communicating financial insights to
   non-finance stakeholders" is a listed pain point for **every** persona —
@@ -242,7 +242,7 @@ If you can't tell which case you're in, you're in the first one. A decorative
 graphic that starts getting used as a reference for real figures has become a
 product chart and needs the labels.
 
-Full per-mark detail: `docs/CHART-RULES.md`, including the glass-specific
+Full per-mark detail: `docs/foundation/CHART-RULES.md`, including the glass-specific
 constraints in its § "Glass-surface charts". Reference implementation of the
 decorative treatment: `templates/chart-rules-mock/`.
 
@@ -254,7 +254,7 @@ decorative treatment: `templates/chart-rules-mock/`.
 > labelling *plus* a table view so nothing is hover-gated. If a case ever
 > genuinely forces a choice between the two, this file wins and the exception
 > gets recorded here — same handling as the glass/series-order conflict noted
-> in `glass-ui-style.md`.
+> in `brand/glass-ui-style.md`.
 
 ### Spacing and radius — "high-radius / pill" style
 **4px base grid** for all spacing (4, 8, 12, 16, 20, 24, 28, 32, 40, 48, 64...).
@@ -285,7 +285,7 @@ rule. Card containers are 16px — never 12px; see `components/Card.md`
 > shifted one step (`md` 8, `lg` 12, `xl` 16, `2xl` 24), so a 16px card was
 > `--radius-xl` there and `--radius-2xl` in Folio. The brand scale has now been
 > renamed to match Folio name-for-name; `--radius-pill` survives as a
-> deprecated alias of `--radius-full`. Details in `docs/DESIGN-DECISIONS.md`.
+> deprecated alias of `--radius-full`. Details in `docs/process/DESIGN-DECISIONS.md`.
 >
 > **Local only — not yet pushed.** The brand system is its own design project
 > (`_ds_manifest.json` namespace `CubeAIDesignSystem_484d47`) and is **not**
@@ -298,7 +298,7 @@ rule. Card containers are 16px — never 12px; see `components/Card.md`
 > Only `preview/spacing-radii.html` was converted to read from the tokens.
 >
 > **Not yet realigned — scope, verified 2026-09-08.** Smaller than it looks.
-> **Nothing in `Cube BRAND Design System/preview/` references the radius tokens
+> **Nothing in `archive/cube-brand-design-system/preview/` references the radius tokens
 > at all** — all 24 specimen cards hardcode px values — so renaming the tokens
 > breaks no rendered card. The real consumers are:
 >
@@ -348,7 +348,7 @@ green, purple, amber, plus the accent/data-viz families) as-is — no separate
 red/amber/purple values of its own. Folio's ramp is the master because it's
 the more complete structure (full 10-stop 25–900 ramps vs. Cube Software's
 narrower set), matching the precedent already set for typography, icons, and
-voice in this doc. `Cube BRAND Design System/colors_and_type.css`'s
+voice in this doc. `archive/cube-brand-design-system/colors_and_type.css`'s
 independently-defined red/amber/purple values are retired in favor of
 Folio's.
 
@@ -404,30 +404,42 @@ like at first — get the global token wrong and every branch below it inherits 
 
 ---
 
-### Marketing/brand source — currently undefined
+### Marketing/brand source — resolved 2026-09-11: `brand/BRAND.md`
 
-**Open question, needs a human decision.** `Cube BRAND Design System/` was
-archived on 2026-09-09 as a legacy artifact of the old branding system (it
-carries the retired "Cube AI" name, a superseded radius scale, retired colors,
-and its own retired Lucide/Source Sans 3 mandates). Nothing has replaced it as
-the marketing/brand persona's home.
+**Closed.** The marketing/brand persona's home is now [`brand/BRAND.md`](../../brand/BRAND.md),
+created in the 2026-09-11 reorg. `archive/cube-brand-design-system/` stays archived
+(legacy artifact of the old branding system: retired "Cube AI" name, superseded radius
+scale, retired colors, retired Lucide/Source Sans 3 mandates) and is **not** a recovery
+source. `brand/` is a top-level folder, a sibling of `tokens/` and `components/`, holding
+the marketing tokens, the reference landing page, brand graphics, and the coming slide
+template.
 
-Rules that were living there and are now orphaned:
+The split, so precedence is never ambiguous: this file holds facts shared by **every**
+surface and takes precedence on those; `CLAUDE.md` governs the product app;
+`brand/BRAND.md` governs marketing and brand deliverables and only adds genuinely
+marketing-specific rules on top of this file.
+
+Status of the rules that were orphaned when the old package was archived:
 
 | Content | Status |
 |---|---|
-| Chart rules | ✅ Rescued to `docs/CHART-RULES.md` |
+| Chart rules | ✅ Rescued to `docs/foundation/CHART-RULES.md` |
 | Voice pillars | ✅ Restated in § "Voice and tone" above |
-| Tone by audience, signature phrases, always/never-say, sample copy | ⬜ Still only in the archived README |
-| Marketing website component & page-pattern rules | ⬜ `docs/MARKETING-DESIGN-SYSTEM.md` derives from the archived README |
+| Glass/isometric graphic recipe | ✅ Now `brand/glass-ui-style.md` (was repo root) |
+| Marketing tokens (primitives + semantic layer) | ✅ Now `brand/tokens/` (was `tokens/marketing-*.css`) |
+| Tone by audience, signature phrases, always/never-say, sample copy | ⬜ **Still only in the archived README** — needs restating in `brand/BRAND.md` or here |
+| Marketing website component & page-pattern rules | ⬜ `archive/MARKETING-DESIGN-SYSTEM.md` derives from the archived README and is superseded; needs rebuilding in `brand/BRAND.md` |
 | The 11 components and 7 marketing templates in the remote design project | ⬜ Never mirrored locally; status unknown |
 
-Consequences to resolve when a new source is chosen:
-- `npm run style-guide:sync` copies `glass-ui-style.md` into the **archived**
-  package, so the "marketing graphics always use the style guide" guarantee
-  currently points into an archive.
-- The remote "Demo Cube BRAND Design System" project holds *older* values than
-  the archived local copy; it should not be treated as a recovery source.
+Still open after the reorg:
+- The three ⬜ rows above. `brand/BRAND.md` is the destination for all of them; the reorg
+  gave them a home but did not author the content.
+- `npm run style-guide:sync` still copies `brand/glass-ui-style.md` into the archived
+  package. Kept deliberately for now so the archived snapshot stays internally
+  consistent, but it is a mirror into an archive and should be retired once nothing
+  reads that copy.
+- The remote "Demo Cube BRAND Design System" project holds *older* values than the
+  archived local copy; it should not be treated as a recovery source.
 
 ---
 

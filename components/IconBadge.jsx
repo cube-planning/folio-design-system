@@ -1,11 +1,11 @@
 // IconBadge — Folio Design System
 // Decorative icon-with-background badge, shared visual style with the Cube
 // Software (marketing/branding) IconBadge component — same structure, hue
-// values, and size scale, kept in sync per docs/BRAND-FOUNDATION.md.
+// values, and size scale, kept in sync per docs/foundation/BRAND-FOUNDATION.md.
 //
 // Structure: soft-tint circle (offset) → rotated tinted chip (shadow) →
 // white icon chip on top. Decorative only — see Rules in
-// docs/BRAND-FOUNDATION.md for when to use this vs. a plain icon.
+// docs/foundation/BRAND-FOUNDATION.md for when to use this vs. a plain icon.
 //
 //   icon : Font Awesome class string, Regular weight only (e.g. "fa-regular fa-users")
 //   hue  : accent/data-viz family — teal | cyan | emerald | indigo | fuchsia | orange

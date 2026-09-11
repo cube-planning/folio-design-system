@@ -13,7 +13,7 @@ body {
 .card {
   background: #fff;
   /* Card containers are 16px (--radius-2xl); 12px (--radius-xl) is for nested
-     tiles. See docs/BRAND-FOUNDATION.md § "Spacing and radius". */
+     tiles. See docs/foundation/BRAND-FOUNDATION.md § "Spacing and radius". */
   border-radius: var(--radius-2xl);
   box-shadow: var(--shadow-sm);
   padding: 20px;

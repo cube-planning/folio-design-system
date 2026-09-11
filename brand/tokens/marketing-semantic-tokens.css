@@ -46,7 +46,7 @@
 
    Primitives referenced below live in tokens/tokens.css (app
    colors), tokens/typography.css (app fonts), and
-   tokens/marketing-primitives.css (marketing-only additions).
+   brand/tokens/marketing-primitives.css (marketing-only additions).
    ============================================================ */
 
 :root {

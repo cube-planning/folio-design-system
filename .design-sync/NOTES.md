@@ -212,7 +212,7 @@ scope question in the base skill's §2 step 5.
 ## Cube Add-on Sidebar built out fully, synced so it's editable in claude.ai/design (2026-08-27)
 
 **2026-08-27:** User asked for the full Cube Add-on sidebar (Build/Analyze/Publish/Tables,
-per `docs/cube-addon-design-spec.md` and a much more detailed follow-up spec) implemented
+per `docs/product/cube-addon-design-spec.md` and a much more detailed follow-up spec) implemented
 as real interactive components, then separately reported the page was "read only" in
 claude.ai/design — root cause: the new components existed in the repo but had never been
 synced, so the design agent had nothing editable to build the page with. Fixed by:
@@ -336,7 +336,7 @@ Prefer this over inlining for anything non-trivial. The real export is 38KB — 
 `IconBadge` needed `cfg.overrides.IconBadge = {"cardMode": "column"}` — its `Hues` and `Sizes` stories lay six badges out in a row and tripped `[GRID_OVERFLOW]` on the default card mode. Fixed with the targeted loop (`node .ds-sync/lib/preview-rebuild.mjs --node-modules ./node_modules --out ./ds-bundle --components IconBadge --config .design-sync/config.json`), then re-validated: overflow gone, grades carried. Note that script's flags are **not** optional — bare `--components X` errors out with a usage line; it needs `--node-modules`, `--out` and `--config` too.
 
 **The user's `AgentCard` spec carried values that don't exist in Folio, corrected on the way in** — worth recording because the same hexes will likely resurface from whatever generated it:
-- `#693BEF` (twice: status pill fg and the avatar gradient's first stop) is not a Folio color. It reads as a transposition of `#6938EF` = purple-600, which `docs/BRAND-FOUNDATION.md` **retires** as the AI reference. Resolved by routing the pill through the real `Badge` (`color="ai"` → `#7A5AF8`, the one sanctioned flat AI hex) and the avatar through `--color-gradient-ai`.
+- `#693BEF` (twice: status pill fg and the avatar gradient's first stop) is not a Folio color. It reads as a transposition of `#6938EF` = purple-600, which `docs/foundation/BRAND-FOUNDATION.md` **retires** as the AI reference. Resolved by routing the pill through the real `Badge` (`color="ai"` → `#7A5AF8`, the one sanctioned flat AI hex) and the avatar through `--color-gradient-ai`.
 - The `done` status paired `#ECFDF5` (emerald-50) with `#0D9488` (teal-600) — two different accent ramps, neither the system's success green. `Badge color="green"` replaced both.
 - Card radius 12 → 16 (`Card.md`: "never `rounded-xl`" for card containers), and off-grid `gap: 10` / `marginTop: 14` / `padding: 4px 9px` snapped to the 4px grid.
 
@@ -344,12 +344,12 @@ Prefer this over inlining for anything non-trivial. The real export is 38KB — 
 
 **Upload was scoped, deliberately excluding a new doc.** Uploaded the 8 component files, 2 `_preview/*.js`, bundle, `styles.css`, `README.md`, `fontawesome/**`, then `_ds_sync.json` last. Did **not** upload `guidelines/**`, because `docs/CHATGPT-PROJECT-INSTRUCTIONS.md` is a new local doc that doesn't exist remotely and publishing it wasn't part of the request — the rest of `guidelines/docs/` is unchanged from what's already there. If a future sync needs the aux tree pushed, decide about that file explicitly rather than letting a glob carry it.
 
-> **Resolved 2026-09-08 — this open question is now closed.** `docs/CHATGPT-PROJECT-INSTRUCTIONS.md` was deleted from the repo (the project is standardising on Claude, so a ChatGPT-targeted instruction wrapper has no audience). Its unique chart rules — banned-from-series colors, the variance exception, chart chrome, and the form specs — were migrated into `Cube BRAND Design System/README.md` § "Charts & data display" first; the named board themes already lived in `docs/boards_color_theme_project_summary.md`. Since it never existed remotely, **no remote deletion is required** — a future `guidelines/**` push is now safe to let a glob carry.
+> **Resolved 2026-09-08 — this open question is now closed.** `docs/CHATGPT-PROJECT-INSTRUCTIONS.md` was deleted from the repo (the project is standardising on Claude, so a ChatGPT-targeted instruction wrapper has no audience). Its unique chart rules — banned-from-series colors, the variance exception, chart chrome, and the form specs — were migrated into `archive/cube-brand-design-system/README.md` § "Charts & data display" first; the named board themes already lived in `docs/product/boards_color_theme_project_summary.md`. Since it never existed remotely, **no remote deletion is required** — a future `guidelines/**` push is now safe to let a glob carry.
 
 ## `guidelines/` holds 12 remote-only files — never use a `guidelines/**` delete glob (2026-09-11)
 
 **2026-09-11:** A docs-only re-sync (`upload: aux`) surfaced this. The build emits
-**17** files under `ds-bundle/guidelines/` (`docs/*.md` ×14, `glass-ui-style.md`,
+**17** files under `ds-bundle/guidelines/` (`docs/*.md` ×14, `brand/glass-ui-style.md`,
 `index.md`, `tokens/cube-colors.md`). The project holds **29**. The extra 12 are
 hand-authored in claude.ai/design and have no local source:
 

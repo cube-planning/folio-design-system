@@ -1,8 +1,8 @@
 <!-- COPY — DO NOT EDIT HERE.
-     Canonical source: repo-root glass-ui-style.md.
+     Canonical source: brand/glass-ui-style.md.
      This copy exists because the brand package uploads as a standalone
-     skill and cannot read repo-root files. Re-sync with:
-         npm run style-guide:sync      (copy root -> here)
+     skill and cannot read files elsewhere in the repo. Re-sync with:
+         npm run style-guide:sync      (copy brand/ -> here)
          npm run style-guide:check     (fail if they differ)
 -->
 
@@ -17,16 +17,16 @@ in-product UI chrome** — Folio product surfaces keep flat white/tinted cards p
 `components/Card.md`. The only in-product `backdrop-filter` use is the existing
 scrim pairing (`--color-overlay-blur` + `--blur-*`), which is a different job.
 
-Read `docs/BRAND-FOUNDATION.md` first — this file inherits its rulings on the AI
+Read `docs/foundation/BRAND-FOUNDATION.md` first — this file inherits its rulings on the AI
 accent, gradient direction, radius scale, and typography, and does not restate
 them.
 
 **Related:**
 
-- `docs/CHART-RULES.md` — all chart rules, including § "Glass-surface charts"
+- `docs/foundation/CHART-RULES.md` — all chart rules, including § "Glass-surface charts"
   (series color slots, mark specs, data-point labelling for a chart inside a
   glass composition). Not restated here.
-- `docs/BRAND-FOUNDATION.md` — the AI accent (gradient, glow, retired hexes),
+- `docs/foundation/BRAND-FOUNDATION.md` — the AI accent (gradient, glow, retired hexes),
   gradient direction, radius scale, typography, icons.
 
 Working example: [`templates/glass-dashboard-mock/`](templates/glass-dashboard-mock/) —
@@ -34,15 +34,39 @@ copy the folder and edit the `.dc.html`.
 
 ---
 
+## 0. Two composition modes — pick one before anything else
+
+Every glass graphic is one of two things, and the choice governs the panel
+variant, the background band, and whether real product UI appears at all.
+
+| | **Abstract** | **Framed product mock** |
+|---|---|---|
+| Shows | Suggested structure — planes, trends, a callout. No real screen | An actual product screen |
+| Panel content | Sits *on* the glass fill | Sits on an **opaque white surface**, wrapped in a glass frame |
+| Variants used | Frosted / clear mirror / cobalt-tinted (§1) | Glass frame + white product surface (§1, "Framed product mock") |
+| Reads as | "We do finance analytics" | "Here is the product" |
+| Use for | Hero images, section illustrations, deck covers | Feature launches, product tours, anything where the UI *is* the message |
+
+**Do not mix them.** A composition that puts real UI directly on a translucent
+fill gets the worst of both: the product looks unfinished because the
+background bleeds through its chrome, and the glass stops reading as glass
+because a dense screen leaves nothing to transmit. If you're showing the
+product, frame it.
+
+The two modes share the background treatment (§4) and the isometric layout
+(§2) unchanged.
+
+---
+
 ## 1. Panel variants
 
-All three sit on the same structure: a `--radius-2xl` (16px) container, a
+The first three sit on the same structure: a `--radius-2xl` (16px) container, a
 translucent gradient fill, a `backdrop-filter`, a bright hairline border, a deep
 ambient shadow, and an inset top highlight. Only the fill opacity, blur radius,
 and border brightness change between them.
 
 Radius is 16px on every glass panel regardless of size — it's a "large
-container" in the radius scale (`docs/BRAND-FOUNDATION.md`), never
+container" in the radius scale (`docs/foundation/BRAND-FOUNDATION.md`), never
 `--radius-full` and never the legacy 4px.
 
 ### Frosted matte — default, softest
@@ -107,7 +131,7 @@ brighter blue — a saturated `#335CFF`-style blue is not in Folio's cobalt ramp
 Everything else (blur, border, shadows) is unchanged from frosted. Text on a
 cobalt-tinted panel goes white/`--color-cobalt-50`, not `gray-900`.
 
-### Matted — a mirror frame around a dense content surface
+### Matted / framed product mock — a mirror frame around a dense surface
 
 The variant for **text over a loud background**. Two layers: the outer panel is
 an ordinary clear mirror and does the transmitting; an inner near-opaque
@@ -120,29 +144,44 @@ border rather than a layer:
 
 ```css
 /* Inner surface — sits inside the mirror panel */
-background: rgba(255,255,255,0.92);
+background: rgba(255,255,255,0.92);       /* see the fill table below */
 backdrop-filter: blur(12px) saturate(150%);
 border: 1px solid rgba(255,255,255,0.7);
 border-radius: var(--radius-xl);          /* 12px — a nested tile, not a card */
 ```
 
-Acceptable range on the fill: `0.88–0.95`. Below `0.88` the background starts
-coming through the copy again, which is the problem this variant exists to
-solve; at `1.0` it stops being glass and reads as a white box dropped on the
-composition.
+**The inner fill depends on which mode (§0) you're in:**
+
+| Mode | Inner surface | Why |
+|---|---|---|
+| **Abstract** — marketing copy over a loud background | `rgba(255,255,255,0.88–0.95)` | Still glass. Below `0.88` the background comes through the copy again, which is the problem this solves; at `1.0` it reads as a white box dropped on the composition |
+| **Framed product mock** — a real screen | **`#FFFFFF`, fully opaque** | Product UI has its own surface colour, borders and elevation, all designed against white. Any transparency here makes finished UI look unresolved — the chrome picks up whatever is behind it. The product does not become glass; the *frame* is the glass |
+
+Both use the same structure; only the fill and the padding change.
+
+**Frame padding.** `16–24px` for a matted copy panel. For a framed product mock
+go to the top of that range or past it — `24–32px`. The frame has to read as a
+distinct layer around the screenshot, and a product surface is visually heavier
+than a paragraph, so a thin frame collapses into looking like a border on the
+screenshot itself.
 
 Radius steps **down** inside the panel — 16px outer, 12px inner — per the
-radius scale (`docs/BRAND-FOUNDATION.md`): 12px is the nested-tile stop and is
-never correct for the container itself.
+radius scale (`docs/foundation/BRAND-FOUNDATION.md`): 12px is the nested-tile
+stop and is never correct for the container itself. A framed product mock may
+step 24px outer → 16px inner instead, since the product surface *is* a card in
+its own right; keep the outer larger than the inner either way.
 
 No drop shadow on the inner surface. Only the outer panel casts one, same rule
 as nested cards below.
 
-Use it for any panel carrying a sentence or more **over a 50–70% background**.
-Two cases don't need it: a panel with nothing but a short label (an eyebrow, a
-badge), where there's too little text for the background to interfere with; and
-any panel over a calm 15–30% background, where the contrast behind the glass is
-too low to fight the copy.
+**When the abstract mode needs a mat.** Any panel carrying a sentence or more
+**over a 50–70% background**. Two cases don't: a panel with nothing but a short
+label (an eyebrow, a badge), where there's too little text for the background
+to interfere with; and any panel over a calm 15–30% background, where the
+contrast behind the glass is too low to fight the copy.
+
+**A framed product mock always needs one** — that framing *is* the mode. It
+doesn't depend on the background band.
 
 ### Nested cards inside a panel
 
@@ -252,7 +291,7 @@ on frosted (its higher fill opacity already carries the effect).
 
 One direction per composition — `115deg`, matching the diagonal-highlight and
 fill gradients above. Gradients run one consistent direction and are never
-radial or reversed (`docs/BRAND-FOUNDATION.md`).
+radial or reversed (`docs/foundation/BRAND-FOUNDATION.md`).
 
 ---
 
@@ -260,14 +299,14 @@ radial or reversed (`docs/BRAND-FOUNDATION.md`).
 
 ### Dataviz, marks, and data point labels
 
-See `docs/CHART-RULES.md` § "Glass-surface charts" — series color slots
+See `docs/foundation/CHART-RULES.md` § "Glass-surface charts" — series color slots
 (1 / 4 / 6), line weight, area fills, marker diameter/border/density, and the
 decorative-vs-real-figure labelling rule including the over-glass label
 constraints.
 
 ### AI accents
 
-See `docs/BRAND-FOUNDATION.md` §§ "AI accent color" / "AI gradient" / "AI glow"
+See `docs/foundation/BRAND-FOUNDATION.md` §§ "AI accent color" / "AI gradient" / "AI glow"
 — the gradient, the `#7A5AF8` glow hex and its literal `box-shadow` fallback,
 the retired hexes, and the `IconBadge` exception all live there.
 
@@ -281,8 +320,35 @@ pill (§ 5).
 Soft multi-color blurred blobs behind the panels — never a hard-edged gradient,
 and never a flat color (glass with nothing behind it isn't glass).
 
-**Blob intensity is set by what sits in front of it**, over a light base
-(`--color-cobalt-25` / `--color-gray-100`):
+#### The base is transparent — the blobs are not
+
+Two different layers, and only one of them belongs to the graphic:
+
+| Layer | Ships with the graphic? |
+|---|---|
+| **Base fill** | **No.** `background: transparent`. A glass graphic is placed — a site section, a slide, a deck background — and the host surface is the base. Baking in a flat fill (`#F5F7FA` and the like) means the graphic carries a pale rectangle onto every surface it lands on |
+| **Blobs** | **Yes.** They are what the glass transmits. Strip them and the panels have nothing to read through, which is the milky-glass failure all over again |
+
+So a glass graphic has no background of its own and still satisfies "glass with
+nothing behind it isn't glass" — the blobs are the something.
+
+**The consequence is real: the graphic looks different depending on where you
+put it.** Panel fills are white at low alpha, so a dark host darkens them.
+Tested 2026-09-11 on warm (`#FDF6EC`), light and dark (`#0E1420`) hosts:
+
+| Element | Survives a dark host? |
+|---|---|
+| Matted surfaces (`0.88–0.95` white) | ✅ Near-opaque, so the copy on them is unaffected |
+| White text on a cobalt-tinted panel | ✅ Reverses correctly |
+| Data marks (dataviz `500` stops) | ✅ Saturated enough to hold |
+| **Gray label directly on a frosted or mirror fill** | ❌ **Fails.** `gray-700` `#4A5567` on a frosted panel over `#0E1420` loses almost all contrast — the panel darkens, the text doesn't |
+
+So the matted variant is also what makes a graphic host-agnostic. A label sitting
+directly on a glass fill inherits the host's luminance and only works on a light
+one. Check the graphic on its actual destination surface, not the preview's own
+canvas; on a dark host, move loose labels onto a mat or reverse them to white.
+
+**Blob intensity is set by what sits in front of it**:
 
 | Panel in front | Blobs | Blur | Why |
 |---|---|---|---|
@@ -291,7 +357,7 @@ and never a flat color (glass with nothing behind it isn't glass).
 
 The 50–70% band was added 2026-09-11 — the whole background used to be capped
 at 15–30%, which is why clear-mirror panels never looked transparent. The fill
-values were never the problem. See `docs/DESIGN-DECISIONS.md`.
+values were never the problem. See `docs/process/DESIGN-DECISIONS.md`.
 
 - A matted panel (§1) is what lets copy survive the louder band: the mirror
   frame transmits, the inner surface carries the words.
@@ -327,7 +393,7 @@ explorations named them, but there is no such export. Their equivalents are
 `AddonTopNav` / `PortalSideBarNav` (their respective shells).
 
 Font is DM Sans, everywhere, including numerics — Folio has one typeface. Icons
-are Font Awesome, `fa-solid` by default — see `docs/BRAND-FOUNDATION.md`
+are Font Awesome, `fa-solid` by default — see `docs/foundation/BRAND-FOUNDATION.md`
 § Icons for the two weight exceptions (the AI sparkle stays solid; icon-only
 `Button`s are regular).
 
@@ -341,12 +407,15 @@ are Font Awesome, `fa-solid` by default — see `docs/BRAND-FOUNDATION.md`
 - [ ] Clear-mirror panels have a specular streak
 - [ ] Over a 50–70% background, any panel carrying body copy uses the matted variant
 - [ ] Blob intensity matches the panel in front — 50–70% behind mirror/matted, 15–30% behind a content-dense frosted panel
+- [ ] Base is `transparent` — no flat fill baked in; verified on the destination surface, not just the preview canvas
+- [ ] Mode picked deliberately (§0) — abstract, or framed product mock; not a mix
+- [ ] If it's a product mock: the screen sits on opaque `#FFFFFF` inside the glass frame, never directly on a translucent fill
 - [ ] Small/simple panels have an internal diagonal skew cue
 - [ ] Nested cards use the lighter fill and cast no drop shadow
 - [ ] Exactly one drop shadow per panel, from the panel itself
-- [ ] Series, marks and data-point labels follow `docs/CHART-RULES.md` § "Glass-surface charts"
+- [ ] Series, marks and data-point labels follow `docs/foundation/CHART-RULES.md` § "Glass-surface charts"
 - [ ] Purple appears only on the AI element; no purple background blob
-- [ ] No retired AI-purple hex — see `docs/BRAND-FOUNDATION.md` § "AI accent color"
+- [ ] No retired AI-purple hex — see `docs/foundation/BRAND-FOUNDATION.md` § "AI accent color"
 - [ ] No `#335CFF` (not in the cobalt ramp)
 - [ ] Background is blurred blobs, not a hard gradient
 - [ ] Panel contents are real components, not hand-rolled markup

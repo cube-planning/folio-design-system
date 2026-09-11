@@ -6,7 +6,7 @@
 > surface.
 >
 > The cross-persona facts (series order, the data-point display rule and its
-> decorative exemption) live in `docs/BRAND-FOUNDATION.md`; this file holds the
+> decorative exemption) live in `docs/foundation/BRAND-FOUNDATION.md`; this file holds the
 > per-mark detail. A live specimen of the decorative treatment is
 > `templates/chart-rules-mock/`.
 >
@@ -21,8 +21,8 @@
 ### Chart component rule — no value is hover-only
 
 > **Provenance note.** This section alone is *not* grounded in two independent
-> Figma instances. It derives from `docs/cube-personas.md` and is promoted as a
-> shared fact in `docs/BRAND-FOUNDATION.md` § "Chart data-point display". Treat
+> Figma instances. It derives from `docs/foundation/cube-personas.md` and is promoted as a
+> shared fact in `docs/foundation/BRAND-FOUNDATION.md` § "Chart data-point display". Treat
 > it as a rule, not an observation awaiting a second instance — but don't cite
 > Figma for it.
 
@@ -53,7 +53,7 @@ Label styling, so the rule doesn't fight the rest of the system:
 | Number format | Currency symbol + thousands/millions abbreviation, consistent within one chart |
 | Legend | Always present at ≥ 2 series (a single series is named by the title instead) — identity is never carried by color alone |
 
-Series order is governed by `docs/BRAND-FOUNDATION.md` § "Chart series order" (the
+Series order is governed by `docs/foundation/BRAND-FOUNDATION.md` § "Chart series order" (the
 `--color-dataviz-*` family, assigned in fixed slot order). The rules below cover
 everything else.
 
@@ -101,7 +101,7 @@ diverging pair with categorical series in the same chart, and never use it to
 distinguish two products, regions, or departments.
 
 > **Tradeoff on record.** Red/green for variance is a strong FP&A convention that
-> `docs/cube-personas.md` readers will expect, Chris (non-finance) most of all. The
+> `docs/foundation/cube-personas.md` readers will expect, Chris (non-finance) most of all. The
 > positional encoding above is what makes dropping it safe. If a specific
 > customer-facing deliverable needs the convention, that's a per-deliverable
 > exception — not a reason to revert this section.
@@ -146,7 +146,7 @@ Chart *structure* is gray — only the data marks carry the dataviz palette.
 
 ### Glass-surface charts
 
-Additional constraints for a chart sitting on a glass panel (`glass-ui-style.md`).
+Additional constraints for a chart sitting on a glass panel (`brand/glass-ui-style.md`).
 Everything above still applies; these are the deltas.
 
 #### Series selection
@@ -199,7 +199,7 @@ value beside every dot competes with the line it belongs to, and nobody reads
 eighteen of them. The trend shape and the color relationships are the payload;
 the y-axis carries magnitude.
 
-This is a scoped exemption from `docs/BRAND-FOUNDATION.md` § "Chart data-point
+This is a scoped exemption from `docs/foundation/BRAND-FOUNDATION.md` § "Chart data-point
 display", granted there explicitly — **not** a licence to drop labels from a
 chart someone reads figures off. The moment a glass panel carries a real
 reportable number (a dashboard behind glass, a report screenshot), the
@@ -222,7 +222,7 @@ labelling rule applies in full and the constraints below govern how.
 
 The four board presets — **Board Room**, **Fiscal**, **Growth**, **Forecast** — are
 documented in full, with 7 slots each and their intended use, in
-`docs/boards_color_theme_project_summary.md`. Use a preset whole; never mix slots
+`docs/product/boards_color_theme_project_summary.md`. Use a preset whole; never mix slots
 between themes.
 
 ---

@@ -15,7 +15,7 @@ Read the following before doing anything:
 - tokens/tokens.css
 - tokens/cube-colors.md
 - tokens/typography.css
-- docs/cube-personas.md
+- docs/foundation/cube-personas.md
 - templates/shell.html
 
 Confirm you have loaded the Folio design system context.
@@ -29,13 +29,42 @@ Confirm you have loaded the Folio design system context.
 | `tokens/tokens.css` | Spacing, radius, shadows, focus rings, z-index, semantic color aliases |
 | `tokens/cube-colors.md` | Full color palette with all ramps and Tailwind registration |
 | `tokens/typography.css` | Type scale tokens and utility classes |
-| `docs/cube-personas.md` | User personas — Max, Ava, Tobias, Chris |
+| `docs/foundation/cube-personas.md` | User personas — Max, Ava, Tobias, Chris |
 | `templates/shell.html` | Base app layout — sidebar, nav, shell structure |
-| `docs/DESIGN-PLAYBOOK.md` | How to structure prompts and run design sessions |
-| `docs/DESIGN-DECISIONS.md` | Dated log of *why* a rule changed — evidence and what it replaced. Explains the specs; never overrides them |
-| `docs/BRAND-FOUNDATION.md` | Facts shared by every persona (type, icons, chart series, radius, voice) — read before persona-specific rules |
-| `glass-ui-style.md` | Glass/isometric marketing graphic recipe — panels, layout, background. Charts over glass live in `docs/CHART-RULES.md` § "Glass-surface charts" |
+| `docs/process/DESIGN-PLAYBOOK.md` | How to structure prompts and run design sessions |
+| `docs/process/DESIGN-DECISIONS.md` | Dated log of *why* a rule changed — evidence and what it replaced. Explains the specs; never overrides them |
+| `docs/foundation/BRAND-FOUNDATION.md` | Facts shared by every persona (type, icons, chart series, radius, voice) — read before persona-specific rules |
+| `brand/glass-ui-style.md` | Glass/isometric marketing graphic recipe — panels, layout, background. Charts over glass live in `docs/foundation/CHART-RULES.md` § "Glass-surface charts" |
 | `templates/chart-rules-mock/` | Live specimen — decorative chart treatment, dependency-free |
+
+### Repo layout — which folder governs what
+
+Reorganized 2026-09-11 by *audience* rather than by file type, so that brand and
+marketing work has a home of its own. Full rationale in `docs/process/DESIGN-DECISIONS.md`.
+
+| Folder | Audience | Index |
+|---|---|---|
+| `tokens/`, `components/` | Shared foundations + the Folio app's React components | — |
+| `docs/` | Rules and process, grouped `foundation/` · `product/` · `process/` | `docs/README.md` |
+| `brand/` | **Marketing & brand** — site, graphics, slides, marketing tokens | `brand/BRAND.md` |
+| `templates/` | App page shells **and** uploaded design-project specimens (two kinds — read the index first) | `templates/README.md` |
+| `prototypes/` | One-off component prototypes, local only | — |
+| `archive/` | Superseded and legacy material — **never** a source of current rules | — |
+
+> **Building marketing, brand, or slide material?** Read `brand/BRAND.md`, not this file.
+> This file governs the product app. `docs/foundation/BRAND-FOUNDATION.md` holds what
+> both share, and takes precedence over surface-specific rules on shared facts.
+
+> **Never take a rule from `archive/`.** It holds `MARKETING-DESIGN-SYSTEM.md` (a
+> superseded marketing draft) and `cube-brand-design-system/` (a legacy artifact of the
+> retired "Cube AI" branding system, carrying retired colors, a shifted radius scale, and
+> retired Lucide/Source Sans 3 mandates). Both are kept as history only.
+
+**Do not move these paths** — they are hardcoded in `.design-sync/config.json` and moving
+them breaks the build or the sync: `components/**` (58 entries in `componentSrcMap`),
+`tokens/tokens.css` (`cssEntry`), `tokens/typography.css` (`tokensGlob`),
+`vendor/fonts/dm-sans/dm-sans.css` (`extraFonts`), and every `templates/*/` specimen dir
+(their `ds-base.js` encodes the remote path).
 
 ---
 
@@ -118,7 +147,7 @@ The full color palette lives in `tokens/cube-colors.md`. Below is a quick-refere
 **Usage:** `bg-cube-cobalt-500`, `text-cube-gray-900`, `border-cube-gray-300`, etc.
 
 #### Token usage flow — a worked example
-Same fan-out pattern documented in `docs/BRAND-FOUNDATION.md`'s "Token usage flow"
+Same fan-out pattern documented in `docs/foundation/BRAND-FOUNDATION.md`'s "Token usage flow"
 section, worked here with a Folio-only case (this one doesn't apply to Cube Software):
 
 ```
