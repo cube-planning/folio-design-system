@@ -39,7 +39,7 @@ If the user invokes this skill without any other guidance, ask them what they wa
   are banned from categorical series. Variance uses the warm/cool diverging pair (orange/indigo),
   **not** red/green. Marks: 2px strokes, 8px borderless markers, no area fill over glass.
   Decorative/hero graphics omit per-point value labels; anything a reader takes a figure from
-  labels every value. Full rules: `README.md` § "Charts & data display" and `glass-ui-style.md` § 4.
+  labels every value. Full rules: `docs/CHART-RULES.md`, incl. § "Glass-surface charts".
 - No emoji. Ever.
 - Icons: Font Awesome, matching Folio (the product design system). Never mix icon sets; never apply gradients or shadows to icons.
 - Typography: DM Sans only — display and body/UI — matching Folio. All on Google Fonts, imported in `colors_and_type.css`.

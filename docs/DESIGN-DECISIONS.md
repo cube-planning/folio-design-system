@@ -14,6 +14,73 @@
 
 ---
 
+## 2026-09-11 — Chart rules consolidated; AI accent moved to the Foundation
+
+**Changed:** `glass-ui-style.md` (−117 lines), `docs/CHART-RULES.md`,
+`docs/BRAND-FOUNDATION.md`, `templates/chart-rules-mock/index.html`.
+
+`glass-ui-style.md` § 4 had accumulated two sets of rules that were not
+glass-specific, so the one file a marketing graphic reads had become the only
+home for rules that apply to every chart and to every AI surface.
+
+**Charts.** Series slots 1 / 4 / 6, the marks table, and the data-point
+labelling rules moved to `docs/CHART-RULES.md` as a new § "Glass-surface
+charts". They were briefly written to a new repo-root `charting-rules.md`;
+that file was deleted before commit, because `docs/CHART-RULES.md` already
+existed for exactly this and a root file with a near-identical name would have
+been the more confusing outcome. Three rules turned out to be **exact
+duplicates** of "Chart form rules" already in that file — `2px` round-cap
+stroke, `8px` (`r=4`) markers, markers below 12 points per series — and are
+now stated once.
+
+Two genuine conflicts surfaced in the merge and are recorded as open notes in
+the spec rather than resolved here:
+
+| Conflict | Positions |
+|---|---|
+| Marker border | Form rules keep the surface ring on a product chart (the marker is a hover target); the glass rule drops it unconditionally. Only collides on an interactive product chart behind glass, which nothing in the repo does |
+| Label weight | Glass label chip says Regular; the general label styling table says `caption-1` Medium/SemiBold |
+
+**AI accent.** The § 4 subsection was deleted, but it was pointing at
+`docs/BRAND-FOUNDATION.md` for rules that were **not actually there**. Four
+things were moved across before the deletion, having been checked against the
+whole repo first:
+
+- the **retired-hex table**, including **`#8B7FD1`** — which existed nowhere
+  in the repo except `glass-ui-style.md` and its archived mirror. Deleting the
+  section as-written would have silently un-retired it. It never had a token
+  behind it; the gradient's own `#9B8AFB` mid-stop is the lighter tint now.
+- `background-clip: text` + `color: transparent` for gradient text fills
+- the `IconBadge` exception for the AI icon
+- the literal `--glow-ai` `box-shadow` fallback
+
+`#335CFF` stayed in the glass checklist — it is the cobalt-ramp rule, not an
+AI rule, and folding it into the Foundation pointer would have lost it.
+
+**Bug found while verifying:** the Foundation's own token-flow diagram claimed
+`IconBadge.ai-sparkle → sparkle icon in AI badges`, which directly contradicts
+the `IconBadge` exception being added six sections above it. Checked against
+the code rather than assumed: `IconBadge`'s `HUE` map is teal/cyan/emerald/
+indigo/fuchsia/orange with no purple, and `grep` for `sparkle` across
+`components/` shows it rendered in `Banner`, `Toast`, `AnalyzePanel`,
+`BuildPanel`, `AddonTopNav` and `PortalSideBarNav` — never through
+`IconBadge`. The row now reads `Banner.ai-sparkle`, true against
+`Banner.jsx:48`.
+
+**Second stale reference:** `templates/chart-rules-mock/index.html` carried a
+comment citing a `2.5–3px` glass stroke that `glass-ui-style.md` had already
+stopped specifying. `STROKE` was already `2`, so nothing rendered had been
+wrong — only the comment. Fixed, along with three pointers elsewhere that
+named `glass-ui-style.md` § 4 as the home of chart rules. Those were the
+dangerous kind of stale: § 4 still exists as "Color", so they resolved to a
+pointer stub instead of failing loudly.
+
+*Deliberately not touched:* the `glass-ui-style.md` § 4 references in the
+dated entries below. Those are history and were accurate when written; this
+file separates the log from the live spec on purpose.
+
+---
+
 ## 2026-09-09 — Stale hexes in usage.html / homepage.html replaced from the ramp
 
 **Changed:** `templates/usage.html`, `templates/homepage.html`, plus a broken

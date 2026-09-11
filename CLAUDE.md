@@ -34,7 +34,7 @@ Confirm you have loaded the Folio design system context.
 | `docs/DESIGN-PLAYBOOK.md` | How to structure prompts and run design sessions |
 | `docs/DESIGN-DECISIONS.md` | Dated log of *why* a rule changed — evidence and what it replaced. Explains the specs; never overrides them |
 | `docs/BRAND-FOUNDATION.md` | Facts shared by every persona (type, icons, chart series, radius, voice) — read before persona-specific rules |
-| `glass-ui-style.md` | Glass/isometric marketing graphic recipe, incl. chart marks over glass |
+| `glass-ui-style.md` | Glass/isometric marketing graphic recipe — panels, layout, background. Charts over glass live in `docs/CHART-RULES.md` § "Glass-surface charts" |
 | `templates/chart-rules-mock/` | Live specimen — decorative chart treatment, dependency-free |
 
 ---
