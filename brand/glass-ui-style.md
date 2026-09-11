@@ -21,7 +21,7 @@ them.
 - `docs/foundation/BRAND-FOUNDATION.md` — the AI accent (gradient, glow, retired hexes),
   gradient direction, radius scale, typography, icons.
 
-Working example: [`templates/glass-dashboard-mock/`](templates/glass-dashboard-mock/) —
+Working example: [`templates/glass-dashboard-mock/`](../templates/glass-dashboard-mock/) —
 copy the folder and edit the `.dc.html`.
 
 ---

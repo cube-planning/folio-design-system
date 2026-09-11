@@ -1,7 +1,7 @@
 # Glass Dashboard Mock
 
 Marketing hero graphic — three isometric glass panels built from real Folio
-components. Implements the recipe in [`brand/glass-ui-style.md`](../../glass-ui-style.md).
+components. Implements the recipe in [`brand/glass-ui-style.md`](../../brand/glass-ui-style.md).
 
 ```
 GlassDashboardMock.dc.html   the template — this is the file you edit

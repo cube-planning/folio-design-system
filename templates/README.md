@@ -14,9 +14,19 @@ sidebar, header, or shell structure.
 ## 2. Design-project specimens — `<Name>.dc.html` + `ds-base.js` + `support.js`
 
 `audit-trail-demo/`, `chart-rules-mock/`, `cube-abstract-graphic/`, `cube-addon-demo/`,
-`glass-dashboard-mock/`, `page-header-demo/`
+`cube-product-frame/`, `glass-dashboard-mock/`, `page-header-demo/`
 
 These run **uploaded**, inside the claude.ai/design project, not locally.
+
+The glass ones are the worked examples of the two composition modes in
+[`brand/glass-ui-style.md`](../brand/glass-ui-style.md) § 0 — start from whichever
+matches what you're building:
+
+| Template | Mode |
+|---|---|
+| `cube-abstract-graphic/` | Abstract — planes and a trend, no real UI |
+| `cube-product-frame/` | Framed product mock — a real screen on opaque white inside a glass frame |
+| `glass-dashboard-mock/` | Abstract, over a calm background — the case where copy can sit directly on a mirror fill |
 
 > **Do not move or rename these directories.** Every `ds-base.js` hardcodes
 > `const base = '../..'`, which is authored for the *deployed* layout — `templates/<name>/`
