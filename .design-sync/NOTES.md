@@ -346,6 +346,43 @@ Prefer this over inlining for anything non-trivial. The real export is 38KB — 
 
 > **Resolved 2026-09-08 — this open question is now closed.** `docs/CHATGPT-PROJECT-INSTRUCTIONS.md` was deleted from the repo (the project is standardising on Claude, so a ChatGPT-targeted instruction wrapper has no audience). Its unique chart rules — banned-from-series colors, the variance exception, chart chrome, and the form specs — were migrated into `archive/cube-brand-design-system/README.md` § "Charts & data display" first; the named board themes already lived in `docs/product/boards_color_theme_project_summary.md`. Since it never existed remotely, **no remote deletion is required** — a future `guidelines/**` push is now safe to let a glob carry.
 
+## Reorg publish — 18 written, 15 deleted by exact path (2026-09-11)
+
+**2026-09-11:** Published the repo reorg's aux tree (commit `91192b0`). This is the
+first sync where the **delete list was non-empty while the diff's own
+`upload.deletePaths` was empty**, so it is worth recording how that was resolved.
+
+The reorg moved `docs/*.md` into `docs/foundation|product|process/`, moved
+`glass-ui-style.md` to `brand/`, added `brand/BRAND.md` + `docs/README.md`, and
+archived `MARKETING-DESIGN-SYSTEM.md`. The anchor-based diff tracks *components*, not
+guideline paths, so it reported `deletePaths: []` — but 15 remote guideline paths were
+genuinely orphaned by the move. Left alone they would have sat alongside the new ones as
+stale duplicates, which is exactly the "design project serves a superseded rule" failure
+the reorg existed to fix.
+
+**Resolution: enumerate all 15 exact paths in `finalize_plan`'s `deletes`, never a glob.**
+That honors the rule in the section below (whose point is "only those exact paths, never
+a directory glob") while still removing real orphans. Deleted:
+`guidelines/glass-ui-style.md` plus the 14 flat `guidelines/docs/*.md`
+(including `MARKETING-DESIGN-SYSTEM.md`, the superseded doc).
+
+Wrote 18: `guidelines/index.md`, `brand/BRAND.md`, `brand/glass-ui-style.md`,
+`docs/README.md`, `docs/foundation/` ×3, `docs/process/` ×7, `docs/product/` ×3,
+`tokens/cube-colors.md`. Then `_ds_sync.json` last, as always.
+
+**Verified after the fact via `list_files`:** all **12** remote-only hand-authored files
+survived (the whole point of the rule below), remote `guidelines/` now holds 30 files
+(12 hand-authored + 18 generated), and no flat `guidelines/docs/*.md` remains. A
+follow-up `npm run design-sync` reported `upload: nothing (no-change re-sync)`,
+confirming the anchor and the remote agree.
+
+`guidelines/index.md` was safe to overwrite: the remote copy listed only the 17
+generated files, never the 12 hand-authored ones, so nothing was lost from it.
+
+`fontawesome/**` was included in the plan's `writes` per the standing rule below but not
+re-uploaded — the bundle and styling were unchanged (`bundle: false`, `styling: false`)
+and the remote copy was already correct.
+
 ## `guidelines/` holds 12 remote-only files — never use a `guidelines/**` delete glob (2026-09-11)
 
 **2026-09-11:** A docs-only re-sync (`upload: aux`) surfaced this. The build emits
