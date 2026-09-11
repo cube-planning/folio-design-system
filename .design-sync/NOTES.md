@@ -60,7 +60,71 @@ Components are in `components/` (JSX, no TypeScript). The dist entry (`dist/inde
 
 ## No TypeScript / no .d.ts files
 
-The package is plain JSX — no `.d.ts` files are generated. The `[DTS_REACT]` warning on each build is expected and harmless (no `.d.ts` files to parse, so `@types/react` is irrelevant for this sync). Props bodies are synthesized from the JSX source by the converter.
+The package is plain JSX — no `.d.ts` files are generated. The `[DTS_REACT]` warning on each build is expected and harmless (no `.d.ts` files to parse, so `@types/react` is irrelevant for this sync).
+
+> **Corrected 2026-09-11.** This section used to end "Props bodies are synthesized from the
+> JSX source by the converter." **That is not what happens.** Measured on the 2026-09-11
+> re-sync: **42 of the 58** emitted `<Name>.d.ts` files carry an empty prop bag —
+> `export interface <Name>Props { [key: string]: unknown; }` — and nothing more. The
+> **16** with real prop bodies are exactly the 16 components that have a *hand-written*
+> `components/<Name>.d.ts` in this repo (`AiPromptBar`, `AppsIcon`, `Breadcrumbs`,
+> `ButtonGroup`, `CompanySwitcher`, `Favicon`, `FeedbackButton`, `FilterDropdown`,
+> `HelpMenu`, `Logo`, `PortalSideBarNav`, `SearchAndFilter`, `SidenavIcon`, `TabGroup`,
+> `Toast`, `UserDropdown`). The converter passes those through; for everything else it
+> emits the empty bag. There is no JSX-source synthesis.
+>
+> **Why this matters more than a warning count.** Per the design-sync skill, `<Name>.d.ts`
+> (`<Name>Props`) is *"the API contract the design agent codes against."* So for 42 of 58
+> components — including `Button`, `Input`, `Table`, `Modal`, `Drawer`, `Text` — the design
+> agent gets **no prop contract at all** and has to infer the API from the
+> `.prompt.md` and the preview card. That is very likely why `conventions.md` has
+> accumulated hand-written prop documentation (the Button `variant` enum, the Text variant
+> enum, the icon-only `icon`/`aria-label` rule): the header is currently compensating for
+> the missing `.d.ts` contracts.
+>
+> **The fix, when someone wants it:** `cfg.dtsPropsFor.<Name>` takes a hand-written props
+> body per component (documented in the skill's config table), or add real
+> `components/<Name>.d.ts` files the way those 16 already do. Either closes the gap
+> durably, in a place the design agent actually reads, rather than in the header. Not done
+> on 2026-09-11 — it is 42 components of prop authoring and was out of scope for a
+> reorg-driven re-sync.
+
+## Conventions header validated against the build (2026-09-11)
+
+The skill's conventions step runs on every re-sync: validate every name in
+`.design-sync/conventions.md` against the freshly built artifacts, never re-author. Full
+pass this run, after the repo reorg moved a lot of paths:
+
+- **Clean:** the header references only *bundle-relative* paths
+  (`components/general/<Name>/<Name>.prompt.md`, `styles.css`, `_ds_bundle.css`,
+  `fontawesome/css/all.min.css`), so the reorg could not and did not break it. Worth
+  keeping that way — a repo-relative path in this file would rot on every reorg.
+- **18/18 tokens verify** with the exact documented values (cobalt/gray/red colors,
+  `--spacing-1` 4px … `--spacing-10` 40px, the full radius scale incl. `--radius-lg` 8px /
+  `--radius-2xl` 16px / `--radius-full` 9999px, 4 shadows, `--font-base`).
+- **11/11 named components** exist as `components/general/<Name>/`.
+- **Text variant enum: 10/10 exact**, no extras either side.
+- **Button variant enum: one omission, now fixed.** `subtle-gray` is a real variant in
+  `components/Button.jsx`'s `VARIANTS` map but was missing from the header's list, so the
+  design agent would never have used it. Added. Nothing in the list was *wrong* — the
+  other 14 all verify.
+- **Button icon-only claims verify exactly:** the `icon` prop (`Button.jsx:208`), the
+  `aria-label` throw (`Button.jsx:232`), and the 32×32 / 28×28 `iconOnly` sizes
+  (`Button.jsx:154-155`).
+- **Font Awesome claim verifies transitively:** `styles.css` → `_ds_bundle.css:20` →
+  `fontawesome/css/all.min.css`. `styles.css` does *not* import FA directly, so anyone
+  checking only `styles.css` will wrongly conclude it's unwired — the second hop is the
+  proof, and it's the one that counts since rendered designs receive the `styles.css`
+  import closure.
+- **`window.FolioDS`** confirmed in the bundle header (`"namespace":"FolioDS"`).
+- **"No provider needed"** still true — no `cfg.provider` is set and previews render.
+
+**Method note for the next run:** validating an enum against `_ds_bundle.js` with a
+*string* grep gives false negatives. esbuild keeps identifier-safe object keys unquoted,
+so `destructive` reads as `destructive:` in the bundle while `"destructive-secondary"`
+stays quoted. `destructive` looked missing for that reason alone. Check enums against the
+component **source**'s map (bounded to the map's line range — `SIZE`'s `large`/`small`
+keys otherwise leak in), not the minified bundle.
 
 ## Font Awesome icons
 
@@ -448,3 +512,5 @@ writes for this repo** — it's not covered by the generic skill list.
 - **`build.mjs` now has an `.svg` loader** (`dataurl`) — added 2026-08-27 because `Logo`/`Favicon`/`AppsIcon` import real brand SVGs. If a future component needs a different asset handling strategy (e.g. `.png`, or SVGs too large to inline as data URIs), extend the `loader` map rather than reverting this one.
 - **`IconBadge` depends on `cfg.overrides.IconBadge.cardMode: "column"`** (2026-09-08) — its stories are horizontal rows of six badges and re-flag `[GRID_OVERFLOW]` immediately if that override is lost the way the `Button`/`Drawer` ones were in the 2026-08-13 reorg.
 - **`AppIcon` vs `AppsIcon`** are two different, confirmed-intentional components (data-source tiles vs productivity/AI-tool brand icons) that happen to have very similar names — don't merge them or "fix" the near-duplicate name without re-reading both files' header comments first.
+- **`conventions.md` hand-enumerates two prop enums that nothing keeps in sync.** Its "Where to look" section lists every `Button` `variant` and every `Text` `variant` by hand. Those lists live in `components/Button.jsx`'s `VARIANTS` map and `components/Text.jsx`'s `VARIANTS` map, and **no build step cross-checks them** — the 2026-09-11 re-sync found `subtle-gray` had been missing from the Button list (added then). **Add a variant to either component and you must update `conventions.md` in the same commit**, or the design agent silently never uses the new variant. The enum check is part of the conventions validation pass every re-sync runs; the root fix is `cfg.dtsPropsFor` (see "No TypeScript / no `.d.ts` files" above) so the enums live in the `.d.ts` contract the agent actually reads, instead of being restated in prose.
+- **Conventions-header paths must stay bundle-relative.** `conventions.md` survived the 2026-09-11 repo reorg untouched *only* because every path it names is bundle-relative (`components/general/<Name>/…`, `styles.css`, `fontawesome/css/all.min.css`). A repo-relative path in that file (`docs/…`, `tokens/…`) would rot on the next reorg and would ship the rot to the design agent. Keep it that way.
