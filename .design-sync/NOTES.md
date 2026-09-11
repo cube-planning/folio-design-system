@@ -346,6 +346,37 @@ Prefer this over inlining for anything non-trivial. The real export is 38KB — 
 
 > **Resolved 2026-09-08 — this open question is now closed.** `docs/CHATGPT-PROJECT-INSTRUCTIONS.md` was deleted from the repo (the project is standardising on Claude, so a ChatGPT-targeted instruction wrapper has no audience). Its unique chart rules — banned-from-series colors, the variance exception, chart chrome, and the form specs — were migrated into `Cube BRAND Design System/README.md` § "Charts & data display" first; the named board themes already lived in `docs/boards_color_theme_project_summary.md`. Since it never existed remotely, **no remote deletion is required** — a future `guidelines/**` push is now safe to let a glob carry.
 
+## `guidelines/` holds 12 remote-only files — never use a `guidelines/**` delete glob (2026-09-11)
+
+**2026-09-11:** A docs-only re-sync (`upload: aux`) surfaced this. The build emits
+**17** files under `ds-bundle/guidelines/` (`docs/*.md` ×14, `glass-ui-style.md`,
+`index.md`, `tokens/cube-colors.md`). The project holds **29**. The extra 12 are
+hand-authored in claude.ai/design and have no local source:
+
+```
+guidelines/Colors.html          guidelines/button-spec-handoff.md
+guidelines/Effects.html         guidelines/documenting-interactive-components.md
+guidelines/FocusRings.html      guidelines/icons.md
+guidelines/Radii.html           guidelines/prompt-template-interactive-component.md
+guidelines/Shadows.html         guidelines/table-cells.md
+guidelines/Spacing.html
+guidelines/colors.html
+```
+
+The base skill's incremental close-out puts `guidelines/**` in the plan's
+**deletes** and then deletes every remote path the local `ds-bundle/` doesn't
+contain. On this repo that would destroy all 12. They are the same class of
+hazard as the server-provisioned `fonts/DMSans-*.ttf` already documented above,
+but unlike the fonts they are *authored content*, not regenerable.
+
+**Rule: on this repo, pass `deletes: []` to `finalize_plan` unless the diff's own
+`upload.deletePaths` is non-empty** — and then pass only those exact paths, never
+a directory glob. The anchor-based diff already computes real deletions
+(component renames land there, as `PublishPanel`/`TablesPanel` did on
+2026-08-27); the glob adds nothing except the ability to delete things nobody
+asked to delete. Note `finalize_plan` **requires** the `deletes` key — omitting
+it errors; pass an explicit empty array.
+
 ## Known render warns
 
 - **`AppsIcon` is a canary for a skipped Font Awesome copy.** Verified 2026-09-03: pre-copy, validate flags `[RENDER_BLANK]` on *both* `AppsIcon` and `SidenavIcon`; post-copy, only `SidenavIcon` remains (55/56 clean). `AppsIcon` renders nothing but its icon glyph, so it drops under the 5KB floor exactly when `fontawesome/` is absent. If you ever see `AppsIcon` in this list, the Font Awesome copy did not run — don't whitelist it, fix the pipeline.
