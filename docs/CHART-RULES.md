@@ -1,18 +1,14 @@
 # Chart Rules
 
-> Detailed chart specification for **both personas** — product/report charts and
-> marketing/graphic-design charts.
+> **Applies wherever charts appear**, for both personas — product dashboards
+> and reports, decks, PDFs, one-pagers, marketing site sections, hero graphics
+> and glass compositions. Only § "Glass-surface charts" is scoped to a single
+> surface.
 >
 > The cross-persona facts (series order, the data-point display rule and its
 > decorative exemption) live in `docs/BRAND-FOUNDATION.md`; this file holds the
-> per-mark detail, including the glass-surface constraints (§ "Glass-surface
-> charts" below). A live specimen of the decorative treatment is
+> per-mark detail. A live specimen of the decorative treatment is
 > `templates/chart-rules-mock/`.
->
-> **This file applies wherever charts appear** — product dashboards and
-> reports, decks, PDFs, one-pagers, marketing site sections, hero graphics, and
-> glass compositions. Only the "Glass-surface charts" section is scoped to a
-> single surface.
 >
 > **Provenance.** These rules were migrated out of the retired
 > `docs/CHATGPT-PROJECT-INSTRUCTIONS.md` (2026-09-08) into the Cube BRAND
@@ -22,15 +18,13 @@
 
 ---
 
-Charts are a deliverable for both personas — product dashboards and reports, and
-decks, PDFs, one-pagers, hero graphics and marketing site sections.
-
-**Provenance note.** Unlike the rules above, this section is *not* grounded in two
-independent Figma instances. It is derived from `docs/cube-personas.md` and is promoted
-as a shared fact in `docs/BRAND-FOUNDATION.md` § "Chart data-point display". Treat it as
-a rule, not as an observation awaiting a second instance — but don't cite Figma for it.
-
 ### Chart component rule — no value is hover-only
+
+> **Provenance note.** This section alone is *not* grounded in two independent
+> Figma instances. It derives from `docs/cube-personas.md` and is promoted as a
+> shared fact in `docs/BRAND-FOUNDATION.md` § "Chart data-point display". Treat
+> it as a rule, not an observation awaiting a second instance — but don't cite
+> Figma for it.
 
 **Every plotted value must be readable without interaction.** Tooltips, crosshairs and
 hover states are an enhancement layer, never the only path to a number.
@@ -100,8 +94,6 @@ than categorical slots, because diverging is a different encoding job:
   so the split survives.
 - Warm/cool is the conventional diverging axis — it reads as one scale with two
   poles, where a stoplight reads as two unrelated categories.
-- At high saturation and matched value they also vibrate, producing edge shimmer on a
-  dense variance chart.
 
 Encode the sign **positionally as well** — a column's side of the zero line, or an
 explicit `+`/`−` on the label — so direction never rests on hue alone. Never mix a
@@ -218,7 +210,7 @@ labelling rule applies in full and the constraints below govern how.
 | Concern | Rule |
 |---|---|
 | Chip | Solid `gray-900` fill with `gray-50` type reversed out, Regular weight. Fully opaque — a translucent chip lets the blur behind it bleed through the value |
-| Color | Text tokens only, never the series color. A teal number on a saturated glass panel is the worst case in the system |
+| Color | Per the general label styling above (text tokens, never the series color) — glass is simply where it bites hardest: a teal number on a saturated panel is the worst case in the system |
 | Never | Bare text directly over a `backdrop-filter` region, where a blob passing behind it changes the contrast |
 
 > **Open — label weight.** The chip above specifies Regular; the general label
