@@ -29,7 +29,7 @@ them.
 - `docs/foundation/BRAND-FOUNDATION.md` — the AI accent (gradient, glow, retired hexes),
   gradient direction, radius scale, typography, icons.
 
-Working example: [`templates/glass-dashboard-mock/`](templates/glass-dashboard-mock/) —
+Working example: [`brand/graphics/glass-dashboard-mock/`](graphics/glass-dashboard-mock/) —
 copy the folder and edit the `.dc.html`.
 
 ---
@@ -55,6 +55,17 @@ product, frame it.
 
 The two modes share the background treatment (§4) and the isometric layout
 (§2) unchanged.
+
+**Worked examples — copy the folder and edit the `.dc.html`:**
+
+| Template | Mode |
+|---|---|
+| [`graphics/cube-abstract-graphic/`](graphics/cube-abstract-graphic/) | Abstract — four planes, a decorative trend, one AI moment, over a loud background |
+| [`graphics/cube-product-frame/`](graphics/cube-product-frame/) | Framed product mock — a real screen on opaque white inside a glass frame |
+| [`graphics/glass-dashboard-mock/`](graphics/glass-dashboard-mock/) | Abstract over a *calm* background — the case where copy may sit directly on a mirror fill |
+
+All three live in `brand/graphics/`, not `templates/`: glass graphics are
+brand-only and are never uploaded to the Folio design project.
 
 ---
 
@@ -111,7 +122,7 @@ fill** — at these fill values the background reads straight through the text.
 Give the copy a matted surface (below): the mirror carries the transparency,
 the mat carries the words. Over a calm 15–30% background there is not enough
 contrast behind the panel to interfere, and copy directly on the fill is fine
-— `templates/glass-dashboard-mock/` is the worked example of that case.
+— `brand/graphics/glass-dashboard-mock/` is the worked example of that case.
 
 This is the trade the two background bands actually encode. A mirror panel
 cannot both transmit a loud background *and* hold unaided body copy; pick

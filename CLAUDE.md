@@ -66,6 +66,11 @@ them breaks the build or the sync: `components/**` (58 entries in `componentSrcM
 `vendor/fonts/dm-sans/dm-sans.css` (`extraFonts`), and every `templates/*/` specimen dir
 (their `ds-base.js` encodes the remote path).
 
+> The glass graphics in `brand/graphics/` are the **exception** — they are brand-only
+> and never uploaded to the Folio design project, so no remote path depends on where
+> they sit. That is why they could move out of `templates/` on 2026-09-11 when the
+> other specimen dirs could not.
+
 ---
 
 ## 1. Project Stack

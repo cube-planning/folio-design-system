@@ -10,14 +10,14 @@
 #
 #   ./preview-local.sh
 #   # then serve the repo root and open:
-#   # http://localhost:<port>/templates/cube-abstract-graphic/_verify.local.html
+#   # http://localhost:<port>/brand/graphics/glass-dashboard-mock/_verify.local.html
 #
 # _verify.local.html is disposable — delete it whenever, and never commit it.
 
 set -euo pipefail
 cd "$(dirname "$0")"
 
-sed 's|<script src="./support.js"></script>|<script src="../../ds-bundle/_vendor/react.js"></script>\n&|' \
-  CubeAbstractGraphic.dc.html > _verify.local.html
+sed 's|<script src="./support.js"></script>|<script src="../../../ds-bundle/_vendor/react.js"></script>\n&|' \
+  GlassDashboardMock.dc.html > _verify.local.html
 
-echo "wrote _verify.local.html — open it at /templates/cube-abstract-graphic/_verify.local.html"
+echo "wrote _verify.local.html — open it at /brand/graphics/glass-dashboard-mock/_verify.local.html"

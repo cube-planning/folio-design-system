@@ -1,7 +1,7 @@
 # Glass Dashboard Mock
 
 Marketing hero graphic — three isometric glass panels built from real Folio
-components. Implements the recipe in [`brand/glass-ui-style.md`](../../brand/glass-ui-style.md).
+components. Implements the recipe in [`brand/glass-ui-style.md`](../../glass-ui-style.md).
 
 ```
 GlassDashboardMock.dc.html   the template — this is the file you edit
@@ -40,12 +40,12 @@ render empty.
 
 Run `./preview-local.sh` to write a throwaway copy with the vendored React
 inserted ahead of `support.js`, then serve the repo root and open
-`/templates/glass-dashboard-mock/_verify.local.html`. Don't add the React
+`/brand/graphics/glass-dashboard-mock/_verify.local.html`. Don't add the React
 script tag to the committed template — the host page would end up with two
 React copies and hooks would break. `_verify.local.html` is gitignored here.
 
 ```bash
-./preview-local.sh && npx serve -l 3458 ../..
+./preview-local.sh && npx serve -l 3458 ../../..
 ```
 
 The `ds-base.js` 404s in the console are expected and not worth fixing. Its
