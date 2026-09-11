@@ -286,6 +286,17 @@ class Component extends DCLogic {
         stroke: s.color, strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round',
         strokeDasharray: s.dashed ? '4 4' : undefined,
       })),
+      // Markers. 6 points per series is under the 12-point threshold, so each
+      // point takes an 8px (r=4) dot — borderless over glass. See
+      // docs/CHART-RULES.md § "Glass-surface charts". This file had none until
+      // 2026-09-11; a spec'd mark that is simply absent renders as a
+      // perfectly clean chart, which is why nothing caught it.
+      SERIES.map((s) => s.points.trim().split(/\s+/).map((pt, i) => {
+        const [cx, cy] = pt.split(',');
+        return React.createElement('circle', {
+          key: s.label + '-m' + i, cx, cy, r: 4, fill: s.color,
+        });
+      })),
     );
 
     const axisEl = React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between' } },

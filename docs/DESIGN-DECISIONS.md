@@ -14,6 +14,72 @@
 
 ---
 
+## 2026-09-11 — Background raised to 50–70%; new "matted" panel variant
+
+**Changed:** `glass-ui-style.md` § 1 (new variant, clear-mirror note), § 4
+(background), § 6 (checklist). New `templates/cube-abstract-graphic/`.
+
+**The complaint:** a reference marketing graphic (Glean) read as far more
+transparent than ours, and the assumption was that its glass used a lower fill.
+It doesn't. Its Plan card is an ordinary frosted card over a near-full-
+saturation abstract render — **the transparency reads because the background is
+loud**, not because the glass is thin.
+
+Tested both levers on the same composition:
+
+| Lever | Was | Tried | Effect |
+|---|---|---|---|
+| Clear-mirror fill | `0.20 → 0.08` | `0.16 → 0.04` (bottom of the allowed range) | Barely perceptible |
+| Background blobs | 15–30% @ 95–115px | 55–70% @ 60–70px | **The entire difference** |
+
+So the fill ranges were never the problem, and § 4's 15–30% ceiling was the
+actual constraint. A clear-mirror panel over a 15–30% background has nothing to
+transmit and reads milky — the variant's whole point was unreachable.
+
+**The ceiling is now conditional on what sits in front of it**, which a flat
+raise got wrong:
+
+| Panel in front | Blobs |
+|---|---|
+| Clear mirror, or matted | 50–70% @ 60–80px |
+| Frosted matte carrying dense content — chart marks, table rows, body copy | 15–30% @ 60–120px (unchanged) |
+
+The first draft raised the band globally. That would have put loud colour
+directly behind the chart marks in `templates/chart-rules-mock/` — the file
+that exists to demonstrate the chart rules. Frosted is the content-dense
+variant; calm behind it was always correct.
+
+**New variant: matted.** A loud background costs legibility, which is what § 1
+previously prevented by telling you to keep the background calm — i.e. by
+forbidding the look. The matted variant buys both: outer panel is the
+clear-mirror recipe verbatim and does the transmitting; an inner near-opaque
+surface (`rgba(255,255,255,0.88–0.95)`, `--radius-xl` 12px, no shadow) holds
+the copy. Radius steps down 16px → 12px per the radius scale. This is
+structurally what the reference does.
+
+**Corrected mid-change:** "Body copy does not go directly on a mirror panel"
+was first written unconditionally, which would have made
+`templates/glass-dashboard-mock/` non-compliant by fiat — its AI callout puts
+body copy straight on a mirror fill and reads fine, because its background is
+calm. The rule is now scoped to the 50–70% band, and the mock is cited as the
+worked example of the other case. A mirror panel cannot both transmit a loud
+background and hold unaided body copy; the two bands encode that trade.
+
+**Separate bug fixed in the same pass.** `glass-dashboard-mock` drew **no
+markers** on a 6-point series, breaking the under-12-points rule in the very
+file its README calls the working example — and the file this session's new
+template was copied from, which is how the omission propagated. Now 18
+markers at `r=4`, borderless. Worth noting why nothing caught it: a spec'd
+mark that is simply absent renders as a perfectly clean chart, so neither the
+render check nor a screenshot review can see it.
+
+> **Open.** Actuals and Forecast share a hue with the forecast dashed, and
+> both now carry markers. Dots on a projected line arguably imply measured
+> points. The form rule says markers below 12 points with no exception for
+> dashed series; not resolved here.
+
+---
+
 ## 2026-09-11 — Chart rules consolidated; AI accent moved to the Foundation
 
 **Changed:** `glass-ui-style.md` (−117 lines), `docs/CHART-RULES.md`,
