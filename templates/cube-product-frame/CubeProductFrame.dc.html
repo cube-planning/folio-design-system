@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<!-- @template name="Cube Product Frame" description="Framed product mock — a real product surface on opaque white, wrapped in a glass frame, over a saturated background. The second of the two composition modes in brand/glass-ui-style.md § 0; use this one whenever the UI is the message. Built from real AiPromptBar, AppsIcon, Text and Badge components." -->
+<helmet>
+  <script src="./ds-base.js"></script>
+  <link rel="stylesheet" href="../../ds-bundle/_ds_bundle.css">
+  <script src="../../ds-bundle/_ds_bundle.js"></script>
+  <style>
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:'DM Sans',sans-serif; min-height:100vh; overflow:hidden;
+           display:flex; align-items:center; justify-content:center; }
+
+    /* Base transparent — the graphic composites onto its host surface (§4).
+       The blobs travel with it; the flat fill does not. */
+    .bg   { position:absolute; inset:0; background:transparent; overflow:hidden; }
+    .blob { position:absolute; border-radius:50%; }
+    /* 50–70% @ 60–80px — the loud band, because the frame around the product
+       is a clear-mirror surface and has to have something to transmit. */
+    .blob-1 { width:720px; height:720px; left:-160px; top:-200px;    background:#173D82; opacity:0.66; filter:blur(70px); }
+    .blob-2 { width:560px; height:560px; right:-80px; top:-120px;    background:#06B6D4; opacity:0.60; filter:blur(65px); }
+    .blob-3 { width:640px; height:640px; left:34%;    bottom:-260px; background:#14B8A6; opacity:0.58; filter:blur(70px); }
+    .blob-4 { width:520px; height:520px; right:60px;  bottom:-180px; background:#4B7CD8; opacity:0.64; filter:blur(60px); }
+
+    .stage { position:relative; width:1180px; perspective:1800px; }
+
+    /* ---- The glass FRAME. Clear-mirror recipe verbatim (§1). This is the
+       only glass in the composition — the product inside it is not glass. */
+    .frame {
+      position:relative;
+      border-radius:24px;
+      padding:28px;                       /* 24–32px for a product mock (§1) */
+      background: linear-gradient(135deg, rgba(255,255,255,0.20), rgba(255,255,255,0.08));
+      backdrop-filter: blur(4px) saturate(210%) contrast(105%);
+      -webkit-backdrop-filter: blur(4px) saturate(210%) contrast(105%);
+      border: 1px solid rgba(255,255,255,0.88);
+      box-shadow: 0 40px 80px -20px rgba(40,50,90,0.30),
+                  inset 0 2px 0 rgba(255,255,255,0.92);
+      transform: rotateX(8deg) rotateY(-14deg) rotateZ(1.5deg);
+      transform-style:preserve-3d;
+    }
+
+    /* Specular streak — required on a clear-mirror surface, 115deg. */
+    .streak {
+      position:absolute; top:0; left:0; bottom:0; width:55%;
+      border-radius:24px; pointer-events:none;
+      background: linear-gradient(115deg,
+        rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.05) 40%, transparent 60%);
+    }
+
+    /* ---- The PRODUCT surface. Fully opaque #FFFFFF — product UI is designed
+       against white and any transparency here makes finished UI look
+       unresolved (§1, fill table). Radius steps down 24 → 16. No shadow:
+       only the frame casts one. */
+    .product {
+      position:relative;
+      background:#FFFFFF;
+      border-radius:16px;
+      padding:40px 36px;
+    }
+
+    .chips { display:flex; flex-wrap:wrap; gap:10px; margin-top:20px; }
+    .chip {
+      display:inline-flex; align-items:center; gap:8px;
+      height:36px; padding:0 14px;
+      border-radius:9999px;                /* pill, per the radius scale */
+      background:#F2F5F9;                  /* gray-200 */
+    }
+    .chip-more {
+      width:36px; height:36px; border-radius:9999px;
+      display:inline-flex; align-items:center; justify-content:center;
+      color:#6B7684;
+    }
+  </style>
+</helmet>
+
+<div class="bg">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="blob blob-4"></div>
+</div>
+
+<div class="stage">{{ frameEl }}</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1180px&quot;,&quot;height&quot;:&quot;460px&quot;}}">
+// Cube Product Frame — mode 2 of brand/glass-ui-style.md § 0.
+//
+// The distinction this template exists to hold: the FRAME is glass, the
+// PRODUCT is not. A real screen goes on opaque #FFFFFF inside the frame.
+// Putting product UI straight onto a translucent fill gets the worst of
+// both — the screen looks unfinished because the background bleeds through
+// its chrome, and the glass stops reading as glass because a dense screen
+// leaves nothing to transmit.
+//
+// Single panel, so no shared-plane concern, but the rotation triple is still
+// the canonical one — a second panel added later must reuse it verbatim.
+
+const SOURCES = [
+  { label: 'Excel',         type: 'Excel' },
+  { label: 'Google Sheets', type: 'Google Sheets' },
+  { label: 'Slack',         type: 'Slack' },
+  { label: 'Teams',         type: 'Teams' },
+  { label: 'PowerPoint',    type: 'PowerPoint' },
+  { label: 'Claude',        type: 'Claude' },
+];
+
+class Component extends DCLogic {
+  componentDidMount() {
+    if (!window.FolioDS) {
+      this._dsWait = setInterval(() => {
+        if (window.FolioDS) { clearInterval(this._dsWait); this.forceUpdate(); }
+      }, 60);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this._dsWait) clearInterval(this._dsWait);
+  }
+
+  renderVals() {
+    const F = window.FolioDS;
+    if (!F) return {};
+
+    const frameEl = React.createElement('div', { className: 'frame' },
+      React.createElement('div', { className: 'streak' }),
+      React.createElement('div', { className: 'product' },
+
+        // Real product surface: the AI prompt bar, as shipped.
+        // showHelperText is off: the AI disclaimer is correct in-product but
+        // is chrome a marketing mock doesn't need, and it competes with the
+        // source pills for the same attention.
+        React.createElement(F.AiPromptBar, {
+          size: 'large',
+          value: 'Which renewal is slipping this quarter',
+          placeholder: 'Ask Cube anything',
+          showHelperText: false,
+        }),
+
+        // Connected sources, as pills per the radius scale.
+        React.createElement('div', { className: 'chips' },
+          SOURCES.map(s => React.createElement('div', { className: 'chip', key: s.label },
+            React.createElement(F.AppsIcon, { type: s.type, size: 20 }),
+            React.createElement(F.Text, {
+              variant: 'body', weight: 'medium', style: { color: '#1B2434' },
+            }, s.label),
+          )),
+          React.createElement('div', { className: 'chip-more', key: '_more' },
+            React.createElement('i', { className: 'fa-solid fa-ellipsis-vertical' })),
+        ),
+      ),
+    );
+
+    return { frameEl };
+  }
+}
+</script>
+</body>
+</html>
