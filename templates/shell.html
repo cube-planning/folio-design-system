@@ -250,7 +250,10 @@
 
     /* Sub-nav items (e.g. Library → Reports, Files) */
     .ni-sub-wrap {
-      padding-left: 42px;
+      /* 62px matches every deployed page template in the design project, which
+         indents sub-items one step past the parent label (.ni is 29px padding +
+         22px icon + 8px gap). This file was the lone outlier at 42px. */
+      padding-left: 62px;
       display: flex;
       flex-direction: column;
     }
@@ -267,7 +270,7 @@
       white-space: nowrap;
       text-decoration: none;
     }
-    .ni-sub:hover { background: #E8F0FE; }
+    .ni-sub:hover { background: #EFF6FF; }
     .ni-sub.active { color: #2667D8; font-weight: 600; border-left-color: #2667D8; }
     .sb.col .ni-sub-wrap { display: none; }
 
