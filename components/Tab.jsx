@@ -32,7 +32,7 @@ function IconWrapper({ children }) {
   );
 }
 
-export function Tab({ children, type = "primary", active = false, icon, onClick }) {
+export function Tab({ children, type = "primary", active = false, first = false, icon, onClick }) {
   const textColor = active ? COLORS.cobalt500 : COLORS.gray600;
   const fontWeight = active ? 600 : 400;
 
@@ -41,7 +41,15 @@ export function Tab({ children, type = "primary", active = false, icon, onClick 
     alignItems: "center",
     gap: 8,
     height: 40,
-    paddingInline: 16,
+    // Tabs carry a symmetric 16px inset so each label has an even hit area on
+    // both sides. The FIRST tab in a strip is the exception: it drops its left
+    // inset so the strip starts flush with the page content edge — i.e. lined
+    // up with the page title directly above it, rather than sitting 16px in.
+    //
+    // TabGroup passes `first` for index 0 automatically. If you render a bare
+    // Tab outside a TabGroup and it leads a strip, pass `first` yourself.
+    paddingLeft: first ? 0 : 16,
+    paddingRight: 16,
     fontFamily: "'DM Sans', sans-serif",
     fontSize: 14,
     fontWeight,

@@ -514,3 +514,32 @@ writes for this repo** — it's not covered by the generic skill list.
 - **`AppIcon` vs `AppsIcon`** are two different, confirmed-intentional components (data-source tiles vs productivity/AI-tool brand icons) that happen to have very similar names — don't merge them or "fix" the near-duplicate name without re-reading both files' header comments first.
 - **`conventions.md` hand-enumerates two prop enums that nothing keeps in sync.** Its "Where to look" section lists every `Button` `variant` and every `Text` `variant` by hand. Those lists live in `components/Button.jsx`'s `VARIANTS` map and `components/Text.jsx`'s `VARIANTS` map, and **no build step cross-checks them** — the 2026-09-11 re-sync found `subtle-gray` had been missing from the Button list (added then). **Add a variant to either component and you must update `conventions.md` in the same commit**, or the design agent silently never uses the new variant. The enum check is part of the conventions validation pass every re-sync runs; the root fix is `cfg.dtsPropsFor` (see "No TypeScript / no `.d.ts` files" above) so the enums live in the `.d.ts` contract the agent actually reads, instead of being restated in prose.
 - **Conventions-header paths must stay bundle-relative.** `conventions.md` survived the 2026-09-11 repo reorg untouched *only* because every path it names is bundle-relative (`components/general/<Name>/…`, `styles.css`, `fontawesome/css/all.min.css`). A repo-relative path in that file (`docs/…`, `tokens/…`) would rot on the next reorg and would ship the rot to the design agent. Keep it that way.
+
+## A component *implementation* change never shows up in the diff's `changed` list (2026-09-15)
+
+Editing `components/Tab.jsx` produced `changed: []` with `bundle: true, styling: true`
+and an unchanged `Tab` `sourceKey`/`renderHash`. That is **not** a missed change — it's
+how the package shape works, and it's worth knowing before you go hunting:
+
+`ds-bundle/components/general/<Name>/<Name>.jsx` is a **161-byte re-export stub**:
+
+```js
+// Re-export of folio-design-system@1.0.0 Tab. Implementation is in the root _ds_bundle.js (window.FolioDS).
+Object.assign(window, { Tab: window.FolioDS.Tab });
+```
+
+`sourceHashes`/`sourceKeys` hash those stubs, and a stub only changes when a component is
+added, removed or renamed. The actual implementation ships in `_ds_bundle.js`, so a props
+or styling change moves `bundleSha12` (and usually `styleSha`) and nothing else.
+
+**Consequences:**
+- `upload: bundle | styling` *is* the complete plan for a component implementation change —
+  there is no per-component file to push, because the stub didn't change.
+- Don't read `changed: []` as "my edit didn't land". Verify with
+  `grep '<your new code>' ds-bundle/_ds_bundle.js` instead.
+- The `changed` list is only meaningful for structural moves (add/remove/rename), which is
+  also why `capture` reports "no component sources moved" on these runs.
+
+Corollary for the anchor: after uploading, refresh the cache with
+`cp ds-bundle/_ds_sync.json .design-sync/.cache/remote-sync.json` — otherwise the next run
+re-reports the same `aux`/`bundle` deltas against a stale anchor.
