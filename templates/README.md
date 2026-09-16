@@ -13,12 +13,23 @@ sidebar, header, or shell structure.
 
 ## 2. Design-project specimens — `<Name>.dc.html` + `ds-base.js` + `support.js`
 
-`audit-trail-demo/`, `boards-prototype/`, `chart-rules-mock/`, `cube-addon-demo/`, `page-header-demo/`
+`audit-trail-demo/`, `board-mvp-single-add/`, `chart-rules-mock/`, `cube-addon-demo/`,
+`page-header-demo/`
 
-`boards-prototype/` is the Interactive Boards canvas flow — edit mode, the Add Widget
-drawer, the Preview widget editor and widget insertion. Built from Figma
-"Interactive Boards (Canvas)" (`laazPiD6J57Wc91WJ4uRMM`, section `3397:34692`). Distinct
-from the remote-only `boards-page` template, which is the Boards *list* screen.
+`board-mvp-single-add/` — design-project name **"Board MVP: single add"** — is the
+Interactive Boards canvas flow: edit mode and read-only view, the Add Widget drawer,
+the Preview widget editor, and single-widget insertion. Built from Figma "Interactive
+Boards (Canvas)" (`laazPiD6J57Wc91WJ4uRMM`, section `3397:34692`), whose annotation
+reads *"MVP: single add (multi-select bulk add to come V2)"*. Distinct from the
+remote-only `boards-page` template, which is the Boards *list* screen.
+
+> **Uploading a template directory does not register it.** `npm run design-sync` has
+> no template glob — it covers components, styling and guidelines only. The design
+> project's `_ds_manifest.json` is compiled app-side and needs a `name`,
+> `description`, `folder`, `entryPath` and a captured `.thumbnail` per template, so a
+> freshly uploaded directory sits there unlisted until the app's self-check indexes
+> it. That is why `audit-trail-demo/` and `cube-addon-demo/` are not in the design
+> project at all. Verified 2026-09-16.
 
 These run **uploaded**, inside the claude.ai/design project, not locally.
 
