@@ -52,6 +52,26 @@ All three local templates (`cube-addon-demo`, `audit-trail-demo`, `page-header-d
 
 Ordering footnote: the FA copy lands *after* the diff, so the `styleSha`/`auxSha` in `_ds_sync.json` are computed pre-copy. That is self-consistent — every run's diff compares a pre-copy build against a pre-copy anchor — and post-copy `package-validate` confirms "anchor matches the bundle". Don't "fix" this by moving the copy earlier; it would fork the sidecar hashes from every previously uploaded anchor.
 
+## `npm run build` does not refresh `ds-bundle/` (2026-09-16)
+
+`build.mjs` writes **`dist/`** only — `dist/index.js` + `dist/index.cjs`. `ds-bundle/`
+is produced by `.ds-sync/package-build.mjs`, which runs *inside* `npm run design-sync`.
+
+So after editing a component, `node build.mjs` alone leaves `ds-bundle/_ds_bundle.js`
+stale. Verifying a component change against a locally staged template at that point
+reads the **previous** implementation and looks like the edit silently did nothing.
+Cost a debugging detour on 2026-09-16 (the `IconBadge` dynamic-hue change).
+
+Check you're looking at fresh output before concluding anything:
+
+```sh
+grep -c "<something only the new code has>" dist/_ds_bundle.js   # wrong path — dist has no bundle
+grep -c "<something only the new code has>" ds-bundle/_ds_bundle.js
+```
+
+If `dist/` has the change and `ds-bundle/` doesn't, you need `npm run design-sync`, not
+`npm run build`.
+
 ## Component discovery
 
 Components are in `components/` (JSX, no TypeScript). The dist entry (`dist/index.js`) doesn't expose PascalCase exports in a way ts-morph can detect, so all 11 components are mapped explicitly via `cfg.componentSrcMap`. Add new components there when they're added to the package.

@@ -22,6 +22,8 @@
   --color-cobalt-800: #0B1932;
   --color-cobalt-600: #122E64;
   --color-cobalt-500: #173D82;
+  --color-cobalt-200: #8EA8E1;
+  --color-cobalt-50:  #E6EBF4;
   --color-cobalt-25:  #F5F7FA;
 
   --color-green-700:  #067647;
@@ -56,11 +58,18 @@
   /* ==================================================================
      ACCENT / DATA-VIZ FAMILIES — shared with Folio
      ------------------------------------------------------------------
-     The hues IconBadge draws from (c50 tint / c300 chip / c600 icon),
-     and the source of the --color-dataviz-* series. Values pulled 1:1
-     from Folio's tokens/tokens.css per docs/foundation/BRAND-FOUNDATION.md
+     The accent hues IconBadge draws from, and the source of the
+     --color-dataviz-* series. Values pulled 1:1 from Folio's
+     tokens/tokens.css per docs/foundation/BRAND-FOUNDATION.md
      § "Primitive color palette" ("plus the accent/data-viz families").
      Purple is NOT in this set — it is reserved for AI.
+
+     IconBadge's three slots are tint / chip / glyph, and which ramp stop
+     fills each slot is per-ramp, not universal (2026-09-16). Accent ramps
+     peak mid-scale, so they use 50/300/600 — the stops below. The brand
+     ramps run darker at the same index, so cobalt uses 50/200/500 (its
+     -50 and -200 stops are defined in the cobalt block above for exactly
+     this reason). Do not assume the slot name matches a stop number.
      ================================================================== */
   --color-teal-50:      #F0FDFA;
   --color-teal-300:     #5EEAD4;

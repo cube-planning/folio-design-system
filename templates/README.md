@@ -13,7 +13,12 @@ sidebar, header, or shell structure.
 
 ## 2. Design-project specimens — `<Name>.dc.html` + `ds-base.js` + `support.js`
 
-`audit-trail-demo/`, `chart-rules-mock/`, `cube-addon-demo/`, `page-header-demo/`
+`audit-trail-demo/`, `boards-prototype/`, `chart-rules-mock/`, `cube-addon-demo/`, `page-header-demo/`
+
+`boards-prototype/` is the Interactive Boards canvas flow — edit mode, the Add Widget
+drawer, the Preview widget editor and widget insertion. Built from Figma
+"Interactive Boards (Canvas)" (`laazPiD6J57Wc91WJ4uRMM`, section `3397:34692`). Distinct
+from the remote-only `boards-page` template, which is the Boards *list* screen.
 
 These run **uploaded**, inside the claude.ai/design project, not locally.
 

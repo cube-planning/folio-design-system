@@ -107,13 +107,53 @@ gradient rather than reintroducing either retired hex).
 
 Applying the gradient to text is `background-clip: text` + `color: transparent`.
 
-**`IconBadge` is not the AI icon.** Its `hue` axis has no purple by design
-("never purple — purple is reserved for AI" — `components/IconBadge.jsx`), so
-there is no correct way to render an AI icon through it. Render the AI sparkle
-as a plain `fa-solid fa-sparkles` glyph over the AI gradient instead, the way
-`Banner`, `Toast`, `AnalyzePanel`, `BuildPanel`, `AddonTopNav` and
-`PortalSideBarNav` already do. `IconBadge` remains the right choice for
-non-AI decorative icons, in teal/cyan/emerald/indigo/fuchsia/orange.
+**`IconBadge` is not the AI icon.** Passing `hue="purple"` **throws** — purple
+is reserved for AI, so there is no correct way to render an AI icon through it.
+Render the AI sparkle as a plain `fa-solid fa-sparkles` glyph over the AI
+gradient instead, the way `Banner`, `Toast`, `AnalyzePanel`, `BuildPanel`,
+`AddonTopNav` and `PortalSideBarNav` already do.
+
+`IconBadge` remains the right choice for non-AI decorative icons. **Its `hue`
+axis takes any Folio ramp** — the accent/data-viz families (teal, cyan,
+emerald, indigo, fuchsia, orange), the brand ramps (cobalt, blue) and the
+system ramps (green, red, yellow, gray).
+
+> **Changed 2026-09-16.** The hue axis used to be a hardcoded six-entry hex
+> table, and any other ramp silently fell back to teal. The three slots now
+> resolve to `var(--color-<hue>-<stop>)`, so every ramp in `tokens.css` works
+> and no value can drift off-ramp. All six original hues resolve to their exact
+> previous hexes — verified stop by stop — so nothing that already used the
+> component changed. The purple guard moved from "absent from the map" to an
+> explicit throw, which is why the rule above is now enforced rather than
+> implied.
+>
+> Slot stops are per-ramp, not universal. Accent ramps peak mid-scale, so
+> `50 / 300 / 600` gives the circle → chip → glyph a readable contrast climb.
+> The brand ramps run much darker at the same index (`cobalt-600` is `#122E64`,
+> near-black), so they step one stop lighter: cobalt is `50 / 200 / 500`, blue
+> `50 / 200 / 600`, gray `50 / 300 / 700`. Cobalt's stops are not a judgment
+> call — they are what the Boards chart-type picker binds in Figma
+> (`laazPiD6J57Wc91WJ4uRMM` node `3455:116865`). A `stops` prop overrides them
+> per instance; prefer the defaults.
+>
+> **Cube Software's mirrored `IconBadge` was aligned in the same pass.** That
+> copy is a CSS mirror, not a React component — `.ib` in
+> `archive/cube-brand-design-system/preview/brand-agents.html`, fed by the accent
+> ramps in that package's `colors_and_type.css`. Its three custom properties were
+> named `--ib-50 / --ib-300 / --ib-600`, which baked the accent-ramp stop numbers
+> into the variable names and made cobalt inexpressible. They are now
+> `--ib-tint / --ib-chip / --ib-glyph`, with a `.ib.cobalt` class on the brand
+> ramp's 50/200/500, and `--color-cobalt-50` / `-200` were added to that package
+> so it can resolve. Geometry was always identical and did not change. The four
+> accent hues the card renders resolve to exactly their previous values.
+>
+> **Still open — the remote brand project.** `archive/` is the local snapshot;
+> the live cards also exist in the separate "Demo Cube BRAND Design System"
+> project (`_ds_manifest.json` namespace `CubeAIDesignSystem_484d47`), which
+> `npm run design-sync` does **not** cover. Propagating this needs a
+> `DesignSync get_file` → patch → upload pass against that project, and its
+> local and remote copies have drifted before — see
+> `docs/process/DESIGN-DECISIONS.md`.
 
 ### AI gradient
 **`--color-gradient-ai` only**, in both design systems, and this is now the

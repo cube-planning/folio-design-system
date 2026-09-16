@@ -14,6 +14,59 @@
 
 ---
 
+## 2026-09-16 — `IconBadge` hues became dynamic; purple now throws
+
+**Changed:** `IconBadge`'s three colour slots were a hardcoded six-entry hex table
+(teal, cyan, emerald, indigo, fuchsia, orange). They now resolve to
+`var(--color-<hue>-<stop>)`, so the `hue` axis accepts any ramp in `tokens.css`.
+Passing `hue="purple"` throws instead of silently falling back.
+
+**Evidence:** the Boards chart-type picker (Figma `laazPiD6J57Wc91WJ4uRMM` node
+`3455:116865`) uses this badge's exact structure — 56px circle, 32.5px rotated chip,
+icon on top — bound to `--color-cobalt-50 / -200 / -500`. Cobalt is not an accent
+family, so there was no legal way to build it: the nearest permitted hue, indigo,
+reads purple-leaning against the design.
+
+**What it replaced:** the first attempt simply added a seventh hardcoded entry,
+`cobalt`. That was rejected as treating the symptom — the table would need a new
+literal for every ramp anyone reached for, and each one is another chance to drift
+off-ramp. Resolving through the token vars removes the component's private copy of
+the palette entirely, which also satisfies CLAUDE.md's "never use arbitrary hex".
+
+**Checked:** all six original hues resolve to their exact previous hexes, compared
+stop by stop against `tokens.css` — no existing usage changes appearance. Every
+`IconBadge` call site across `components/`, `templates/` and `.design-sync/previews/`
+was swept: none passes purple, so the new throw is unreachable by current callers.
+The live value was confirmed to be a real CSS variable, not a baked hex, by
+retinting `--color-cobalt-200` at runtime and watching the chip follow.
+
+**Stops are per-ramp, not universal.** Accent ramps peak mid-scale, so `50/300/600`
+gives a readable contrast climb. Brand ramps run much darker at the same index
+(`cobalt-600` is `#122E64`, near-black), so they step one stop lighter — cobalt
+`50/200/500`, blue `50/200/600`, gray `50/300/700`. Cobalt's are taken from the
+Figma binding above, not chosen.
+
+**Cube Software's mirror was aligned in the same pass.** That copy is CSS, not React
+— `.ib` in `archive/cube-brand-design-system/preview/brand-agents.html`. Its slot
+variables were named for accent stop numbers (`--ib-50/300/600`), which is precisely
+the assumption the per-ramp model breaks: cobalt could not be expressed through a
+variable called `--ib-300`. Renamed to `--ib-tint/chip/glyph`, added a `.ib.cobalt`
+class on 50/200/500, and added `--color-cobalt-50`/`-200` to that package's
+`colors_and_type.css`. Geometry was already exact (the `.jsx` values scaled by
+`s = 40/48`) and is untouched; the four accent hues the card renders resolve to
+their previous values.
+
+Editing a file under `archive/` is deliberate here and not a violation of
+CLAUDE.md's "never take a rule from `archive/`" — that rule is about *reading*
+authority, and the existing `npm run style-guide:sync` sets the precedent that the
+archived snapshot is kept internally consistent rather than left to rot.
+
+**Still open:** the same cards live in the separate "Demo Cube BRAND Design System"
+project (namespace `CubeAIDesignSystem_484d47`), which `npm run design-sync` does not
+cover. That needs its own `DesignSync get_file` → patch → upload pass.
+
+---
+
 ## 2026-09-11 — Repo reorganized by audience; `brand/` created as the marketing/brand home
 
 **Changed:** New top-level `brand/` and `archive/`. `docs/` split into `foundation/` ·
