@@ -82,6 +82,38 @@ one to copy.
 > package; the card now has no external script tags. There are no remaining
 > non-Font-Awesome icon sets anywhere in the repo.
 
+### Logo and favicon
+**Always use the committed logo artwork. Never redraw, regenerate, or
+approximate it.** The wordmark and the cube mark are real brand artwork exported
+from Figma ("Folio Design System Beta" › Logo & Favicon page) and committed to the
+repo precisely because Figma asset URLs expire in ~7 days. An SVG you author from
+memory — a cube drawn from paths, a text node set in DM Sans, an AI-generated
+mark — is not the Cube logo, however close it looks.
+
+| Asset | Path | Use |
+|---|---|---|
+| Logo, dark background | `components/assets/logo-dark.svg` | White wordmark on the cobalt tile |
+| Logo, light background | `components/assets/logo-light.svg` | Full-color wordmark on white |
+| Favicon, dark background | `components/assets/favicon-dark.svg` | 32px cube mark on the cobalt tile |
+| Favicon, light background | `components/assets/favicon-light.svg` | 32px full-color cube mark on white |
+| Marketing logo, white | `brand/landing-page/assets/cube-logo-gradient-white.svg` | Gradient wordmark for dark marketing surfaces (e.g. the footer) |
+| Marketing logo, on white | `brand/landing-page/assets/cube-logo-gradient-on-white.png` | Gradient wordmark for light marketing surfaces (e.g. the nav) |
+
+**In the product app**, don't reference the files directly — use the `Logo` and
+`Favicon` components (`components/Logo.jsx`, `components/Favicon.jsx`), which own
+the tile fill (`--color-blue-800` / `#163D83`) and the sizing (82×32 and 32×32).
+The `background` prop picks the variant: `"Dark"` (default) or `"Light"`.
+
+**In marketing and brand work**, reference the `brand/landing-page/assets/` files
+by `<img>` with `alt="Cube"`, as `brand/landing-page/index.html` does. Scale by
+height, keep the aspect ratio, and never recolor, rotate, outline, or place the
+wordmark on a busy background.
+
+If a surface needs a variant that isn't in the table above — a different lockup,
+a monochrome version, a horizontal/stacked alternate — **ask for the export.**
+Don't fabricate one, and don't substitute a Font Awesome cube glyph
+(`fa-cube`) for the brand mark.
+
 ### AI accent color
 **Purple is reserved for AI-related moments only** — never decorative, never a
 generic accent, never primary-adjacent. **Resolved:** wherever AI-purple is a

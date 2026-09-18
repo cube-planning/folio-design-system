@@ -52,6 +52,10 @@ Brand work **reuses** the shared foundations rather than forking them. Per
   no separate brand red/amber/purple values.
 - **Typeface** — DM Sans.
 - **Icons** — Font Awesome (`fa-solid` default). Never Lucide.
+- **Logo** — the committed artwork only, never redrawn or regenerated. Marketing
+  surfaces use `brand/landing-page/assets/cube-logo-gradient-white.svg` (dark
+  backgrounds) and `cube-logo-gradient-on-white.png` (light backgrounds). Need a
+  lockup that isn't there? Ask for the export.
 - **Charts** — `docs/foundation/CHART-RULES.md` governs every chart, including charts
   over glass surfaces.
 

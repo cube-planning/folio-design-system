@@ -452,7 +452,35 @@ the icon.
 
 ---
 
-## 8. Rules for Claude
+## 8. Logo & Favicon
+
+**Always use the committed logo artwork — never redraw, regenerate, or approximate it.** The wordmark and cube mark are real brand exports from Figma, committed to the repo because Figma asset URLs expire in ~7 days. An SVG you author from memory (a cube built from paths, a DM Sans text node, a generated mark) is not the Cube logo, however close it looks.
+
+Use the components — they own the tile fill (`--color-blue-800` / `#163D83`) and the sizing:
+
+```tsx
+import { Logo } from "components/Logo";
+import { Favicon } from "components/Favicon";
+
+<Logo />                        {/* 82×32, cobalt tile, white wordmark */}
+<Logo background="Light" />     {/* 82×32, white tile, full-color wordmark */}
+<Favicon background="Light" />  {/* 32×32 cube mark */}
+```
+
+| Asset | Path |
+|---|---|
+| Logo, dark background | `components/assets/logo-dark.svg` |
+| Logo, light background | `components/assets/logo-light.svg` |
+| Favicon, dark background | `components/assets/favicon-dark.svg` |
+| Favicon, light background | `components/assets/favicon-light.svg` |
+
+Never recolor, rotate, outline, stretch, or substitute the mark — `fa-cube` is not the brand mark. If a surface needs a lockup that doesn't exist here (monochrome, stacked, alternate), **ask for the export** rather than making one.
+
+> Marketing and brand surfaces use their own gradient wordmark files — see `brand/BRAND.md`. The shared rule lives in `docs/foundation/BRAND-FOUNDATION.md` § "Logo and favicon".
+
+---
+
+## 9. Rules for Claude
 
 ### DO
 - Always use Tailwind utility classes with Cube tokens (`bg-cube-cobalt-500`, not `bg-[#2667D8]`)
@@ -464,6 +492,7 @@ the icon.
 - Keep components in `components/cube/` — no prefix, PascalCase only
 - Match Figma measurements exactly: 32px input height, 48px row height, 400px drawer width
 - Use DM Sans for all UI text — it is the only typeface in Folio
+- Use the committed logo artwork via `Logo` / `Favicon` — never draw or generate a Cube logo
 - Collapsible sections default to collapsed when data exists, expanded when empty
 - Reference `cube-personas.md` when a feature targets a specific user — use persona context to inform UX decisions
 - Use `templates/shell.html` as the base layout for all new screens — only add content inside `<main>`
@@ -473,6 +502,7 @@ the icon.
 - Never use inline `style={{}}` attributes
 - Never use arbitrary hex values — always use token classes
 - Never use Lato or Montserrat — DM Sans only
+- Never hand-draw, regenerate, recolor, or substitute the Cube logo (including `fa-cube`) — use the committed asset, or ask for the export
 - Never reference Blue 500 as primary — Cobalt is primary (`cobalt-500` resting/interactive, `cobalt-600` hover)
 - Never use red borders for errors — use soft `bg-cube-red-100` banners
 - Never put lifecycle rules in the create-new-scenario drawer
@@ -488,7 +518,7 @@ the icon.
 
 ---
 
-## 9. Figma Reference
+## 10. Figma Reference
 
 | Resource | Link / ID |
 |---|---|
@@ -502,7 +532,7 @@ To pull variables: `Figma:get_variable_defs(fileKey, nodeId)`
 
 ---
 
-## 10. Design Sync
+## 11. Design Sync
 
 To push this package to the claude.ai/design project, run:
 

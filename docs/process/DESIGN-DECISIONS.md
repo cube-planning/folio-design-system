@@ -14,6 +14,39 @@
 
 ---
 
+## 2026-09-18 — The Cube logo is an asset, not something to draw
+
+**Changed:** added a "Logo and favicon" fact to `docs/foundation/BRAND-FOUNDATION.md`,
+a matching `## 8. Logo & Favicon` section to `CLAUDE.md` (later sections renumbered
+9–11), a bullet to `brand/BRAND.md` § 2, and a DO / DO NOT pair to `CLAUDE.md`'s
+rules list. The rule: use the committed artwork, never redraw, regenerate, or
+approximate it; if the needed lockup doesn't exist, ask for the export rather than
+making one.
+
+**What it replaced:** nothing — this was a gap. The artwork has been committed since
+August (`components/assets/logo-*.svg`, `favicon-*.svg`, and the marketing gradient
+wordmarks in `brand/landing-page/assets/`), and `Logo.jsx` / `Favicon.jsx` carry
+header comments explaining that the SVG bytes were downloaded because Figma asset
+URLs expire in ~7 days. But none of the rule files said so. A `grep -i logo` across
+`CLAUDE.md`, `brand/BRAND.md` and `docs/` returned only an unrelated folder-tree line
+in `RESEARCH.md` — so an agent building a nav bar or a slide had no instruction
+pointing it at the files, and drawing a plausible cube from paths was the path of
+least resistance.
+
+**Where it lives:** the Foundation, because it is true for both personas — the
+product app and marketing use *different* files (flat exports via the components
+vs. the gradient wordmarks by `<img>`), but "the logo is an asset you reference, not
+one you author" is the shared fact. Each persona file then names its own paths.
+
+**Checked:** all six referenced files exist on disk. The product paths match what
+`Logo.jsx` and `Favicon.jsx` actually import; the marketing paths match the two
+`<img src>` references in `brand/landing-page/index.html` (nav, line 866; footer
+line 1384). No file outside `archive/` cited a `CLAUDE.md` section number above 7,
+so the renumber breaks no cross-reference — `BRAND-FOUNDATION.md`'s citations of
+§ 4, § 6 and § 7 are all below the insertion point and unaffected.
+
+---
+
 ## 2026-09-16 — `IconBadge` hues became dynamic; purple now throws
 
 **Changed:** `IconBadge`'s three colour slots were a hardcoded six-entry hex table
