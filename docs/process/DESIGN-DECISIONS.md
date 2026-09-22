@@ -14,6 +14,39 @@
 
 ---
 
+## 2026-09-22 — The screen background is cobalt-25, not gray-200
+
+**Changed:** added `--color-bg-canvas: var(--color-cobalt-25)` to `tokens/tokens.css`,
+a "Screen background" subsection to `CLAUDE.md` § 3, and repointed the canvas surfaces
+(`body`, `.topnav`, `.page-content`) in `templates/shell.html`, `templates/homepage.html`,
+`templates/library.html`, `templates/usage.html`, and `components/_topnav.html`.
+
+**Replaced:** a hardcoded `#F2F5F9` on each of those surfaces. Nan confirmed the canvas
+should be cobalt-25 (`#F5F7FA`). Note the old value was `gray-200`, not `gray-100` — the
+two are one step apart on the ramp and easy to conflate, which is part of why the wrong
+one persisted.
+
+**Why a semantic token rather than `var(--color-cobalt-25)` directly:** the role had five
+consumers across four files and was about to get more. `--color-bg-sidebar` already pointed
+at cobalt-25, so the canvas was the second unnamed use of the same stop; naming it makes the
+shell's "one continuous tinted surface" intent legible and gives a single place to retune.
+
+**What was checked:** every `#F2F5F9` in the repo was enumerated with its owning selector
+before editing. Most occurrences are *correct* gray-200 — table header rows and rules,
+`subtle-gray` button fills, segmented-control tracks, chips, `.app-circ`, avatar
+placeholders — and were deliberately left alone. A blanket find-and-replace would have
+broken all of them. Computed `background-color` was then confirmed as `rgb(245, 247, 250)`
+on all five pages in the browser.
+
+**Two things left as-is, deliberately:**
+- `templates/library.html` `.page-content` is `gray-50` (`#FCFCFD`), an inner surface rather
+  than the canvas. Pre-existing and intentional.
+- `components/_topnav.html` links `../tokens.css`, which does not exist (stale path from the
+  2026-09-11 reorg — the file now lives at `tokens/tokens.css`). Its two `var()` calls do not
+  resolve, so the canvas there is the literal `#F5F7FA` until the link is fixed.
+
+---
+
 ## 2026-09-18 — The Cube logo is an asset, not something to draw
 
 **Changed:** added a "Logo and favicon" fact to `docs/foundation/BRAND-FOUNDATION.md`,

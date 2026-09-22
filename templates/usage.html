@@ -132,6 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
      ============================================================ */
 
   --color-cobalt-25:  #F5F7FA;
+  --color-bg-canvas:  var(--color-cobalt-25);  /* Screen background */
   --color-cobalt-50:  #E6EBF4;
   --color-cobalt-100: #C6D3EC;
   --color-cobalt-200: #8EA8E1;
@@ -594,7 +595,7 @@ document.addEventListener('DOMContentLoaded', function () {
 </style>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'DM Sans', sans-serif; background: #F2F5F9; height: 100vh; overflow: hidden; color: #222B3A; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--color-bg-canvas); height: 100vh; overflow: hidden; color: #222B3A; }
     a { text-decoration: none; color: inherit; }
     .app-shell { display: flex; height: 100vh; }
 
@@ -650,7 +651,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /* ── TOP NAV ── */
     .main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
-    .topnav { height: 80px; background: #F2F5F9; border-bottom: 1px solid #E3E8EF; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; flex-shrink: 0; }
+    .topnav { height: 80px; background: var(--color-bg-canvas); border-bottom: 1px solid #E3E8EF; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; flex-shrink: 0; }
     .tn-company { display: flex; align-items: center; gap: 4px; height: 32px; padding: 0 12px; background: #FFFFFF; border-radius: 16px; box-shadow: 0px 2px 2px #E3E8EF; cursor: pointer; white-space: nowrap; }
     .tn-company:hover { box-shadow: 0px 2px 4px #CDD5E0; }
     .tn-company-ic { width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; color: #173D82; }
@@ -665,7 +666,7 @@ document.addEventListener('DOMContentLoaded', function () {
     .tn-user:hover { box-shadow: 0px 2px 4px #CDD5E0; }
     .tn-avatar { width: 24px; height: 24px; border-radius: 12px; background: #2667D8; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: #fff; flex-shrink: 0; }
     .tn-user-name { font-size: 12px; font-weight: 400; color: #677489; }
-    .page-content { flex: 1; overflow-y: auto; background: #F2F5F9; padding: 32px; }
+    .page-content { flex: 1; overflow-y: auto; background: var(--color-bg-canvas); padding: 32px; }
 
     /* ══════════════════════════════════════
        USAGE PAGE — REDESIGNED

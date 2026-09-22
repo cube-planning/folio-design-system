@@ -142,6 +142,23 @@ The full color palette lives in `tokens/cube-colors.md`. Below is a quick-refere
 | `50–200` | Surfaces & backgrounds — badge fills, banner backgrounds, tinted chips |
 | `25–50` | Chip & page backgrounds — lightest tints for subtle surface differentiation |
 
+#### Screen background
+
+The app canvas — `body`, the top nav, and `.page-content` — is **cobalt-25** (`#F5F7FA`),
+not a gray. Use the semantic alias rather than the ramp stop or the hex:
+
+```css
+background: var(--color-bg-canvas);   /* → --color-cobalt-25 → #F5F7FA */
+```
+
+The sidebar (`--color-bg-sidebar`) resolves to the same cobalt-25, so the shell reads as one
+continuous tinted surface with the white `.sb-card` and content cards floating on it.
+
+> Gray-200 (`#F2F5F9`) is close enough to be mistaken for this and was the old canvas value.
+> It is **not** the screen background — it remains correct for table header rows, table rules,
+> `subtle-gray` button fills, segmented-control tracks, chips, and avatar placeholders.
+> Do not blanket-replace `#F2F5F9`; only the canvas surfaces change.
+
 #### Cobalt vs Blue
 
 | Token | Use for |
