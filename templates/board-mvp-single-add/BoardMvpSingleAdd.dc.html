@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<!-- @template name="Board MVP: single add" description="Boards canvas in edit mode — Add Widget drawer, Preview widget editor, and single-widget insert." -->
+<!--
+  Description above is kept to one short sentence on purpose: the design
+  project's _ds_manifest.json truncates it at 200 characters, and every other
+  template's reads as one line. Fuller detail:
+
+  Interactive Boards canvas — edit mode and read-only view, the Add Widget
+  drawer (New/Existing, empty + seeded library), the Preview widget editor
+  (chart-type picker, Format Widget controls, live preview) and single-widget
+  insertion with a success toast. Built from real Folio components:
+  PageHeader, Button, Drawer, Modal, Tab, TabGroup, Table, Input, Checkbox,
+  SegmentedButton, IconBadge, Toast.
+
+  Source: Figma "Interactive Boards (Canvas)" laazPiD6J57Wc91WJ4uRMM, section
+  3397:34692 "Existing", whose annotation reads "MVP: single add (multi-select
+  bulk add to come V2)" — hence the name.
+-->
+<helmet>
+  <script src="./ds-base.js"></script>
+  <style>
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:'DM Sans',sans-serif; background:#FFFFFF; min-height:100vh; }
+
+    /* ── Canvas drop-cell grid ────────────────────────────────
+       12 columns of 101px with a 16px gutter = 1392px, which is the
+       1440px frame less the 24px page inset on each side. Matches the
+       cell rhythm in the Figma frames. */
+    .bp-grid {
+      display:grid;
+      grid-template-columns:repeat(12, 101px);
+      grid-auto-rows:101px;
+      gap:16px;
+    }
+    .bp-cell { border:1px solid #E3E8EF; border-radius:4px; }
+
+    /* Board title — inline-editable, reads as text until hovered/focused */
+    .bp-title {
+      font-family:'DM Sans',sans-serif;
+      font-size:24px; font-weight:700; line-height:32px; color:#222B3A;
+      border:1px solid transparent; border-radius:8px;
+      padding:0 8px; margin-left:-8px;
+      background:transparent; outline:none; width:320px;
+    }
+    .bp-title:hover { border-color:#CDD5E0; }
+    .bp-title:focus { border-color:#173D82; box-shadow:0 0 0 4px rgba(23,61,130,.24); }
+
+    /* The DS Drawer hardcodes a 2px cobalt-500 rule under its header
+       (CLAUDE.md § Side Drawer). The Figma Add Widget drawer has no rule
+       there — the header flows straight into the New/Existing tabs — so it
+       is suppressed here. Drawer exposes no prop for this, hence the
+       scoped override rather than a component change. Drawer sets the rule
+       as an inline style, so !important is required to beat it. */
+    div[role="dialog"][aria-label="Add Widget"] > div:first-child { border-bottom:none !important; }
+
+    /* Drawer list rows */
+    .bp-row {
+      display:flex; align-items:center; gap:8px;
+      width:100%; min-height:48px; padding:0 4px;
+      border:none; border-bottom:1px solid #F2F5F9;
+      background:transparent; cursor:pointer; text-align:left;
+      font-family:'DM Sans',sans-serif;
+    }
+    .bp-row:hover { background:#F8FAFC; }
+    .bp-row-actions { display:flex; align-items:center; gap:2px; margin-left:auto; opacity:0; flex-shrink:0; }
+    .bp-row:hover .bp-row-actions, .bp-row:focus-within .bp-row-actions { opacity:1; }
+    .bp-truncate { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0; }
+
+    /* Chart-type tile grid */
+    .bp-charts { display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; }
+    /* Tile box matches the Figma "Card 2" frame: 117.33 x 110, gray-300
+       border, 56px IconBadge with the label 4px under it. Selected fills
+       cobalt-25 — the fourth cobalt stop the Figma node binds. */
+    .bp-chart-tile {
+      display:flex; flex-direction:column; align-items:center; gap:4px;
+      height:110px; padding:16px 8px;
+      border:1px solid #E3E8EF; border-radius:12px;
+      background:#FFFFFF; cursor:pointer; font-family:'DM Sans',sans-serif;
+    }
+    .bp-chart-tile:hover { border-color:#CDD5E0; background:#FCFCFD; }
+    .bp-chart-tile[aria-pressed="true"] { border-color:#173D82; background:#F5F7FA; }
+
+    /* Format Widget swatches */
+    .bp-swatch {
+      width:24px; height:24px; border-radius:9999px;
+      border:1px solid #CDD5E0; cursor:pointer; padding:0;
+    }
+    .bp-swatch:focus-visible { outline:none; box-shadow:0 0 0 4px rgba(23,61,130,.24); }
+
+    /* Widget card on the canvas */
+    .bp-widget {
+      background:#FFFFFF; border:1px solid #E3E8EF; border-radius:16px;
+      padding:16px; display:flex; flex-direction:column; gap:12px;
+      box-shadow:0px 1px 2px rgba(16,24,40,0.05);
+    }
+    .bp-widget[data-selected="true"] {
+      border-color:#173D82; box-shadow:0 0 0 1px #173D82, 0px 4px 8px rgba(16,24,40,0.08);
+    }
+    .bp-widget-actions { display:flex; align-items:center; gap:2px; opacity:0; }
+    .bp-widget:hover .bp-widget-actions,
+    .bp-widget[data-selected="true"] .bp-widget-actions { opacity:1; }
+
+    /* Table strip-down inside a widget card — the card already supplies the
+       border, radius and padding, so the Table must not draw its own. */
+    .bp-table > div:first-child,
+    .bp-table { width:100%; }
+
+    /* Live Format Widget preview. Scoped to the preview wrapper so the real
+       Table component renders unforked and only its cell chrome is themed. */
+    .bp-fmt thead th { background:var(--bp-ch-bg) !important; color:var(--bp-ch-fg) !important; }
+    .bp-fmt tbody td:first-child { background:var(--bp-rh-bg); color:var(--bp-rh-fg); }
+    .bp-fmt tbody td:not(:first-child) { background:var(--bp-dc-bg); color:var(--bp-dc-fg); }
+  </style>
+</helmet>
+
+<div>{{ appEl }}</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1440px&quot;,&quot;height&quot;:&quot;1024px&quot;}}">
+/* ============================================================
+   Boards Prototype
+   Figma: "Interactive Boards (Canvas)" laazPiD6J57Wc91WJ4uRMM
+          section 3397:34692 "Existing"
+   Canvas annotation: "MVP: single add (multi-select bulk add to come V2)"
+          — so every add path here inserts exactly one widget.
+
+   Deliberate departures from the Figma frames, all Folio canon:
+   - The Add Widget drawer uses the DS Drawer: 400px wide with the
+     cobalt-500 header rule (CLAUDE.md § Side Drawer). The Figma frames
+     draw it ~365px with a plain header.
+   - Two Figma frames label the drawer tab "Exising"; shipped as "Existing".
+   - The canvas widget and the modal preview share one Table config. The
+     Figma has them diverge (one uppercase + sort glyphs, one not); the
+     later duplicates agree on the DS Table treatment, so that won.
+   ============================================================ */
+
+const ROWS = [
+  { id: 1, account: '401000 – Support Revenue',        actuals: '2,574,348',  budgets: '3,294,331' },
+  { id: 2, account: '402000 – Platform Revenue',       actuals: '21,683,795', budgets: '28,442,802' },
+  { id: 3, account: '403000 – Implementation Revenue', actuals: '2,351,533',  budgets: '5,413,355' },
+  { id: 4, account: '409000 – Intercompany Revenue',   actuals: '',           budgets: '' },
+  { id: 5, account: '410000 – Discount',               actuals: '–2,103,454', budgets: '–2,799,117' },
+  { id: 6, account: 'Revenue',                         actuals: '24,506,222', budgets: '34,351,371' },
+];
+
+// Chart-type icons, stored as bare glyph names.
+//
+// The picker tiles render them through IconBadge, which documents Regular
+// weight only — and Regular is what the Figma tiles draw.
+//
+// The drawer's 14px list rows default to fa-solid per CLAUDE.md's default
+// style for functional icons. `listStyle` overrides that per glyph: pie is
+// Regular in both places, because the solid chart-pie disc reads as a heavy
+// filled blob at 14px next to the other, lighter chart glyphs.
+//
+//   table → fa-table (header row + body), not fa-table-cells (uniform grid)
+const CHART_TYPES = [
+  { value: 'table',     label: 'Table',     icon: 'fa-table' },
+  { value: 'bar',       label: 'Bar',       icon: 'fa-chart-column' },
+  { value: 'line',      label: 'Line',      icon: 'fa-chart-line' },
+  { value: 'pie',       label: 'Pie',       icon: 'fa-chart-pie', listStyle: 'fa-regular' },
+  { value: 'row',       label: 'Row',       icon: 'fa-chart-bar' },
+  { value: 'combo',     label: 'Combo',     icon: 'fa-chart-mixed' },
+  { value: 'trend',     label: 'Trend',     icon: 'fa-arrow-trend-up' },
+  { value: 'metric',    label: 'Metric',    icon: 'fa-hashtag' },
+  { value: 'waterfall', label: 'Waterfall', icon: 'fa-chart-waterfall' },
+];
+
+// Full class string for the drawer list rows, style included.
+const CHART_ICON = CHART_TYPES.reduce((m, c) => {
+  m[c.value] = (c.listStyle ?? 'fa-solid') + ' ' + c.icon;
+  return m;
+}, {});
+
+// Seeded library — the board groups and widget names from frame 3457:10108.
+const SEEDED_BOARDS = [
+  { id: 'b1', name: '2025 Strategic Plan', widgets: [
+      { id: 'w1', name: 'Revenue 2025_Copy', chart: 'table' },
+      { id: 'w2', name: 'Revenue 2025', chart: 'table' },
+      { id: 'w3', name: 'Untitled Widget/Visual 1 really long name here', chart: 'bar' },
+      { id: 'w4', name: 'Untitled Widget/Visual 2', chart: 'line' },
+      { id: 'w5', name: 'Untitled Widget/Visual 3', chart: 'pie' },
+  ] },
+  { id: 'b2', name: 'Q3 Budget vs Actual Performance Review', widgets: [
+      { id: 'w6', name: 'Q3 Variance by Department', chart: 'waterfall' },
+      { id: 'w7', name: 'Budget Attainment', chart: 'metric' },
+  ] },
+  { id: 'b3', name: 'Cash Flow Health', widgets: [
+      { id: 'w8', name: 'Operating Cash Trend', chart: 'trend' },
+  ] },
+  { id: 'b4', name: 'Board X', widgets: [] },
+  { id: 'b5', name: 'Board Name Example Longer One Here', widgets: [] },
+  { id: 'b6', name: 'Board Y', widgets: [] },
+  { id: 'b7', name: 'Board Z', widgets: [] },
+];
+
+const SEEDED_REPORTS = [
+  { id: 'r1', name: '2025 Strategic Something', reports: [
+      { id: 'rp1', name: 'Revenue 2025' },
+      { id: 'rp2', name: 'Report with really long title example here' },
+      { id: 'rp3', name: 'Some report 1' },
+      { id: 'rp4', name: 'Some report 2' },
+  ] },
+];
+
+const ALIGN_OPTIONS = [
+  { value: 'left',   icon: 'fa-align-left',   'aria-label': 'Align left' },
+  { value: 'center', icon: 'fa-align-center', 'aria-label': 'Align center' },
+  { value: 'right',  icon: 'fa-align-right',  'aria-label': 'Align right' },
+];
+
+// Background / font swatch cycles — Folio ramp stops only, no off-token hexes.
+const BG_CYCLE = ['#F2F5F9', '#E6EBF4', '#ECFDF3', '#FFFAEB', '#FFFFFF'];
+const FG_CYCLE = ['#222B3A', '#173D82', '#4A5567', '#067647', '#FFFFFF'];
+
+// Change Color Theme sets all six swatches at once.
+const THEMES = [
+  { name: 'Default', chBg: '#F2F5F9', chFg: '#222B3A', rhBg: '#FFFFFF', rhFg: '#222B3A', dcBg: '#FFFFFF', dcFg: '#222B3A' },
+  { name: 'Cobalt',  chBg: '#173D82', chFg: '#FFFFFF', rhBg: '#F5F7FA', rhFg: '#0E2349', dcBg: '#FFFFFF', dcFg: '#222B3A' },
+  { name: 'Mint',    chBg: '#ECFDF3', chFg: '#067647', rhBg: '#FFFFFF', rhFg: '#222B3A', dcBg: '#FFFFFF', dcFg: '#085D3A' },
+  { name: 'Slate',   chBg: '#353F4F', chFg: '#FFFFFF', rhBg: '#FCFCFD', rhFg: '#353F4F', dcBg: '#FFFFFF', dcFg: '#4A5567' },
+];
+
+const GRID_CELLS = 12 * 7;
+
+function stamp() {
+  const d = new Date();
+  const month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];
+  let h = d.getHours();
+  const ampm = h < 12 ? 'am' : 'pm';
+  h = h % 12 || 12;
+  const m = String(d.getMinutes()).padStart(2, '0');
+  return `${month} ${d.getDate()}, ${d.getFullYear()} @ ${h}:${m} ${ampm}`;
+}
+
+let uid = 100;
+const nextId = () => 'n' + (++uid);
+
+class Component extends DCLogic {
+  state = {
+    // Board
+    editing: true,           // false = read-only board view
+    boardTitle: 'Untitled Board',
+    savedTitle: 'Untitled Board',
+    tabs: ['Tab 1'],
+    activeTab: 0,
+    placed: [],              // widgets on the canvas
+    savedPlaced: [],         // last-saved snapshot, restored by Cancel
+    selectedId: null,
+
+    // Library
+    boards: SEEDED_BOARDS,
+    reports: SEEDED_REPORTS,
+    libraryEmpty: false,
+    openGroups: { b1: true, r1: true },
+
+    // Drawer
+    drawerOpen: false,
+    drawerTab: 1,            // 0 = New, 1 = Existing (Figma shows Existing active)
+
+    // Preview modal
+    modalOpen: false,
+    modalTab: 0,
+    draft: null,             // { id, name, chart, sourceGroupId, isNew }
+    hideName: false,
+    align: { ch: 'left', rh: 'left', dc: 'left' },
+    fmt: { ...THEMES[0] },
+    themeIndex: 0,
+    bgIndex: { ch: 0, rh: 4, dc: 4 },
+    fgIndex: { ch: 0, rh: 0, dc: 0 },
+
+    toast: null,
+  };
+
+  componentDidMount() {
+    if (!window.FolioDS) {
+      this._dsWait = setInterval(() => {
+        if (window.FolioDS) { clearInterval(this._dsWait); this.forceUpdate(); }
+      }, 60);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this._dsWait) clearInterval(this._dsWait);
+    if (this._toastTimer) clearTimeout(this._toastTimer);
+  }
+
+  // ── helpers ────────────────────────────────────────────────
+  fireToast(title) {
+    if (this._toastTimer) clearTimeout(this._toastTimer);
+    this.setState({ toast: title });
+    this._toastTimer = setTimeout(() => this.setState({ toast: null }), 6000);
+  }
+
+  // Edit mode is a round trip. Entering snapshots the board; Cancel restores
+  // that snapshot and drops back to the read-only view, Save promotes the
+  // current state to the new snapshot. Cancel must not leave the user still
+  // in edit mode — that was the bug this replaces.
+  enterEdit() {
+    this.setState((s) => ({
+      editing: true,
+      savedPlaced: s.placed,
+      savedTitle: s.boardTitle,
+    }));
+  }
+
+  cancelEdit() {
+    this.setState((s) => ({
+      editing: false,
+      placed: s.savedPlaced,
+      boardTitle: s.savedTitle,
+      selectedId: null,
+      drawerOpen: false,
+      modalOpen: false,
+      draft: null,
+    }));
+  }
+
+  saveEdit() {
+    this.setState((s) => ({
+      editing: false,
+      savedPlaced: s.placed,
+      savedTitle: s.boardTitle,
+      selectedId: null,
+      drawerOpen: false,
+      modalOpen: false,
+      draft: null,
+    }));
+    this.fireToast('Board saved');
+  }
+
+  toggleGroup(id) {
+    this.setState((s) => ({ openGroups: { ...s.openGroups, [id]: !s.openGroups[id] } }));
+  }
+
+  openEditor(widget, groupId, isNew) {
+    this.setState({
+      modalOpen: true,
+      modalTab: 0,
+      draft: { id: widget.id, name: widget.name, chart: widget.chart, sourceGroupId: groupId, isNew: !!isNew },
+    });
+  }
+
+  newWidget() {
+    this.openEditor({ id: nextId(), name: 'Untitled Widget', chart: 'table' }, 'b1', true);
+  }
+
+  duplicateWidget(groupId, widget) {
+    const copy = { id: nextId(), name: widget.name + '_Copy', chart: widget.chart };
+    this.setState((s) => ({
+      boards: s.boards.map((b) => b.id === groupId ? { ...b, widgets: [copy, ...b.widgets] } : b),
+      openGroups: { ...s.openGroups, [groupId]: true },
+    }));
+    this.fireToast('Widget duplicated');
+  }
+
+  insertWidget() {
+    const d = this.state.draft;
+    if (!d) return;
+    const placedWidget = {
+      key: nextId(),
+      id: d.id,
+      name: d.name,
+      chart: d.chart,
+      hideName: this.state.hideName,
+      align: { ...this.state.align },
+      fmt: { ...this.state.fmt },
+      refreshed: stamp(),
+    };
+    this.setState((s) => {
+      const boards = d.isNew
+        ? s.boards.map((b) => b.id === d.sourceGroupId
+            ? { ...b, widgets: [{ id: d.id, name: d.name, chart: d.chart }, ...b.widgets] }
+            : b)
+        : s.boards.map((b) => ({
+            ...b,
+            widgets: b.widgets.map((w) => w.id === d.id ? { ...w, name: d.name, chart: d.chart } : w),
+          }));
+      return {
+        boards,
+        libraryEmpty: false,
+        placed: [...s.placed.filter((p) => p.id !== d.id), placedWidget],
+        selectedId: placedWidget.key,
+        modalOpen: false,
+        drawerOpen: false,
+        draft: null,
+      };
+    });
+    this.fireToast('Widget added');
+  }
+
+  cycleBg(slot) {
+    const map = { ch: 'chBg', rh: 'rhBg', dc: 'dcBg' };
+    this.setState((s) => {
+      const i = (s.bgIndex[slot] + 1) % BG_CYCLE.length;
+      return {
+        bgIndex: { ...s.bgIndex, [slot]: i },
+        fmt: { ...s.fmt, [map[slot]]: BG_CYCLE[i] },
+      };
+    });
+  }
+
+  cycleFg(slot) {
+    const map = { ch: 'chFg', rh: 'rhFg', dc: 'dcFg' };
+    this.setState((s) => {
+      const i = (s.fgIndex[slot] + 1) % FG_CYCLE.length;
+      return {
+        fgIndex: { ...s.fgIndex, [slot]: i },
+        fmt: { ...s.fmt, [map[slot]]: FG_CYCLE[i] },
+      };
+    });
+  }
+
+  cycleTheme() {
+    this.setState((s) => {
+      const i = (s.themeIndex + 1) % THEMES.length;
+      const t = THEMES[i];
+      return {
+        themeIndex: i,
+        fmt: { ...t },
+        bgIndex: { ch: Math.max(0, BG_CYCLE.indexOf(t.chBg)), rh: Math.max(0, BG_CYCLE.indexOf(t.rhBg)), dc: Math.max(0, BG_CYCLE.indexOf(t.dcBg)) },
+        fgIndex: { ch: Math.max(0, FG_CYCLE.indexOf(t.chFg)), rh: Math.max(0, FG_CYCLE.indexOf(t.rhFg)), dc: Math.max(0, FG_CYCLE.indexOf(t.dcFg)) },
+      };
+    });
+  }
+
+  // ── table config ───────────────────────────────────────────
+  // The DS Table applies one `align` to both the header cell and the body
+  // cell of a column. Format Widget aligns those independently, so the
+  // header takes `align` and each body cell re-aligns inside `render`.
+  tableColumns(F, align) {
+    const body = (a) => (value) => React.createElement('div', {
+      style: { textAlign: a, width: '100%' },
+    }, value);
+
+    return [
+      {
+        key: 'menu', label: React.createElement('i', { className: 'fa-solid fa-ellipsis-vertical', 'aria-hidden': 'true' }),
+        sortable: false,
+        render: () => React.createElement('i', {
+          className: 'fa-solid fa-ellipsis-vertical',
+          style: { color: '#97A3B6', fontSize: 14 },
+          'aria-hidden': 'true',
+        }),
+      },
+      { key: 'account', label: '', sortable: false, align: align.ch, render: body(align.rh) },
+      { key: 'actuals', label: 'Actuals', align: align.ch, render: body(align.dc) },
+      { key: 'budgets', label: 'Budgets', align: align.ch, render: body(align.dc) },
+      {
+        key: 'add', label: React.createElement('i', { className: 'fa-solid fa-plus', 'aria-hidden': 'true' }),
+        sortable: false, align: 'right',
+        render: () => null,
+      },
+    ];
+  }
+
+  fmtVars(fmt) {
+    return {
+      '--bp-ch-bg': fmt.chBg, '--bp-ch-fg': fmt.chFg,
+      '--bp-rh-bg': fmt.rhBg, '--bp-rh-fg': fmt.rhFg,
+      '--bp-dc-bg': fmt.dcBg, '--bp-dc-fg': fmt.dcFg,
+    };
+  }
+
+  // ── render ─────────────────────────────────────────────────
+  renderVals() {
+    const F = window.FolioDS;
+    if (!F) return {};
+    const { PageHeader, Button, Drawer, Modal, Tab, TabGroup, Table, Input, Checkbox, SegmentedButton, Toast, IconBadge } = F;
+
+    const S = this.state;
+
+    /* ── Edit mode bar ──────────────────────────────────────
+       No header × on this bar, so per CLAUDE.md's Cancel rule its
+       Cancel is `secondary`, not ghost-gray. */
+    const editBarEl = S.editing && React.createElement('div', {
+      style: {
+        height: 64, flexShrink: 0, background: '#EFF6FF',
+        borderBottom: '1px solid #E3E8EF',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '0 24px',
+      },
+    },
+      React.createElement('span', {
+        style: { fontSize: 18, fontWeight: 600, lineHeight: '28px', color: '#222B3A' },
+      }, 'Edit Mode'),
+      React.createElement('div', { style: { display: 'flex', gap: 8 } },
+        React.createElement(Button, {
+          variant: 'secondary',
+          onClick: () => this.cancelEdit(),
+        }, 'Cancel'),
+        React.createElement(Button, {
+          variant: 'primary',
+          onClick: () => this.saveEdit(),
+        }, 'Save'),
+      ),
+    );
+
+    /* ── Page header ────────────────────────────────────────
+       PageHeader's bottom rule is suppressed here: the tab strip
+       immediately below owns the rule under the header. */
+    // The title is only editable in edit mode; the read-only view renders it
+    // as plain text so there is no input affordance on a board you can't edit.
+    const titleEl = S.editing
+      ? React.createElement('input', {
+          className: 'bp-title',
+          value: S.boardTitle,
+          'aria-label': 'Board name',
+          onChange: (e) => this.setState({ boardTitle: e.target.value }),
+        })
+      : S.boardTitle;
+
+    const refreshAction = React.createElement(Button, {
+      key: 'refresh', variant: 'ghost-gray', size: 'large',
+      icon: React.createElement('i', { className: 'fa-regular fa-arrows-rotate' }),
+      'aria-label': 'Refresh board data',
+      onClick: () => {
+        this.setState((s) => ({ placed: s.placed.map((p) => ({ ...p, refreshed: stamp() })) }));
+        this.fireToast('Board refreshed');
+      },
+    });
+
+    const filtersAction = React.createElement(Button, {
+      key: 'filters', variant: 'secondary',
+      leadingIcon: React.createElement('i', { className: 'fa-regular fa-filter' }),
+      onClick: () => {},
+    }, 'Filters');
+
+    const editActions = [
+      refreshAction,
+      React.createElement(Button, {
+        key: 'text', variant: 'ghost-gray', size: 'large',
+        icon: React.createElement('i', { className: 'fa-regular fa-t' }),
+        'aria-label': 'Add text',
+        onClick: () => {},
+      }),
+      filtersAction,
+      React.createElement(Button, {
+        key: 'widget', variant: 'secondary',
+        leadingIcon: React.createElement('i', { className: 'fa-solid fa-plus' }),
+        onClick: () => this.setState({ drawerOpen: true, drawerTab: 1 }),
+      }, 'Widget/Asset'),
+    ];
+
+    // View mode keeps the read-only actions and swaps the authoring controls
+    // for the way back in.
+    const viewActions = [
+      refreshAction,
+      filtersAction,
+      React.createElement(Button, {
+        key: 'edit', variant: 'primary',
+        leadingIcon: React.createElement('i', { className: 'fa-regular fa-pen' }),
+        onClick: () => this.enterEdit(),
+      }, 'Edit'),
+    ];
+
+    const headerEl = React.createElement(PageHeader, {
+      title: titleEl,
+      style: { borderBottom: 'none', paddingBottom: 0 },
+      actions: S.editing ? editActions : viewActions,
+    });
+
+    /* ── Tab strip ──────────────────────────────────────────
+       Tab is rendered directly rather than through TabGroup because each
+       board tab carries a trailing caret inside its label; TabGroup keys
+       items off a string label, so a node label can't go through it. */
+    const tabStripEl = React.createElement('div', {
+      style: { display: 'flex', alignItems: 'flex-end', gap: 8, borderBottom: '1px solid #E3E8EF', marginBottom: 24 },
+    },
+      ...S.tabs.map((label, i) => React.createElement(Tab, {
+        key: label + i,
+        type: 'secondary',
+        active: i === S.activeTab,
+        first: i === 0,
+        onClick: () => this.setState({ activeTab: i }),
+      },
+        React.createElement('span', { style: { display: 'inline-flex', alignItems: 'center', gap: 6 } },
+          label,
+          React.createElement('i', { className: 'fa-solid fa-caret-down', style: { fontSize: 12 }, 'aria-hidden': 'true' }),
+        ),
+      )),
+      S.editing && React.createElement(Button, {
+        variant: 'ghost-gray', size: 'small',
+        icon: React.createElement('i', { className: 'fa-regular fa-plus' }),
+        'aria-label': 'Add tab',
+        style: { marginBottom: 6 },
+        onClick: () => this.setState((s) => ({ tabs: [...s.tabs, 'Tab ' + (s.tabs.length + 1)], activeTab: s.tabs.length })),
+      }),
+    );
+
+    /* ── Widget card on the canvas ─────────────────────────── */
+    const widgetCardEl = (w) => React.createElement('div', {
+      key: w.key,
+      className: 'bp-widget',
+      'data-selected': S.editing && S.selectedId === w.key ? 'true' : 'false',
+      style: {
+        position: S.editing ? 'absolute' : 'static',
+        top: 0, left: 0, width: 803,
+        ...this.fmtVars(w.fmt),
+      },
+      onClick: () => { if (S.editing) this.setState({ selectedId: w.key }); },
+    },
+      React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 8 } },
+        React.createElement('span', {
+          style: { fontSize: 16, fontWeight: 600, lineHeight: '24px', color: '#222B3A', flex: 1, minWidth: 0 },
+          className: 'bp-truncate',
+        }, w.hideName ? '' : w.name),
+        S.editing && React.createElement('div', { className: 'bp-widget-actions' },
+          React.createElement(Button, {
+            variant: 'ghost-gray', size: 'small',
+            icon: React.createElement('i', { className: 'fa-regular fa-arrows-rotate' }),
+            'aria-label': 'Refresh widget',
+            onClick: (e) => {
+              e.stopPropagation();
+              this.setState((s) => ({ placed: s.placed.map((p) => p.key === w.key ? { ...p, refreshed: stamp() } : p) }));
+            },
+          }),
+          React.createElement(Button, {
+            variant: 'ghost-gray', size: 'small',
+            icon: React.createElement('i', { className: 'fa-regular fa-pen' }),
+            'aria-label': 'Edit widget',
+            onClick: (e) => {
+              e.stopPropagation();
+              this.setState({ hideName: w.hideName, align: { ...w.align }, fmt: { ...w.fmt } });
+              this.openEditor({ id: w.id, name: w.name, chart: w.chart }, 'b1', false);
+            },
+          }),
+          React.createElement(Button, {
+            variant: 'ghost-gray', size: 'small',
+            icon: React.createElement('i', { className: 'fa-regular fa-ellipsis-vertical' }),
+            'aria-label': 'Widget options',
+            onClick: (e) => e.stopPropagation(),
+          }),
+        ),
+      ),
+
+      React.createElement('div', { className: 'bp-fmt' },
+        React.createElement(Table, {
+          columns: this.tableColumns(F, w.align),
+          rows: ROWS,
+          style: { border: 'none', borderRadius: 0, padding: 0 },
+        }),
+      ),
+
+      React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 8 } },
+        React.createElement('span', {
+          style: { display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, lineHeight: '18px', color: '#97A3B6' },
+        },
+          React.createElement('i', { className: 'fa-solid fa-arrows-rotate', style: { fontSize: 11 }, 'aria-hidden': 'true' }),
+          'Last refreshed ' + w.refreshed,
+        ),
+        React.createElement('a', {
+          href: '#',
+          onClick: (e) => e.preventDefault(),
+          style: {
+            display: 'inline-flex', alignItems: 'center', gap: 6, alignSelf: 'flex-start',
+            fontSize: 14, fontWeight: 600, lineHeight: '20px',
+            color: '#2667D8', textDecoration: 'underline',
+          },
+        },
+          React.createElement('i', { className: 'fa-regular fa-file-lines', 'aria-hidden': 'true' }),
+          'Quarterly Sales 2024',
+        ),
+      ),
+    );
+
+    /* ── Canvas ─────────────────────────────────────────────── */
+    // The drop-cell grid is an authoring affordance — it only exists while
+    // editing. In view mode the board is just its widgets on the page.
+    const canvasEl = React.createElement('div', { style: { position: 'relative', minHeight: 320 } },
+      S.editing && React.createElement('div', { className: 'bp-grid', 'aria-hidden': 'true' },
+        ...Array.from({ length: GRID_CELLS }, (_, i) => React.createElement('div', { key: i, className: 'bp-cell' })),
+      ),
+      ...S.placed.map(widgetCardEl),
+      !S.editing && S.placed.length === 0 && React.createElement('p', {
+        style: { margin: 0, fontSize: 14, lineHeight: '20px', color: '#677489' },
+      }, 'This board is empty. Choose Edit to add a widget.'),
+    );
+
+    /* ── Add Widget drawer ──────────────────────────────────── */
+    const groupRowEl = (id, name, count) => React.createElement('button', {
+      key: 'g' + id, className: 'bp-row', onClick: () => this.toggleGroup(id),
+      'aria-expanded': !!S.openGroups[id],
+    },
+      React.createElement('i', {
+        className: 'fa-solid ' + (S.openGroups[id] ? 'fa-caret-down' : 'fa-caret-right'),
+        style: { fontSize: 12, color: '#4A5567', width: 12, flexShrink: 0 },
+        'aria-hidden': 'true',
+      }),
+      React.createElement('span', {
+        className: 'bp-truncate',
+        style: { fontSize: 14, fontWeight: 500, color: '#222B3A', flex: 1 },
+      }, name),
+      count != null && React.createElement('span', {
+        style: { fontSize: 12, color: '#97A3B6', flexShrink: 0 },
+      }, count),
+    );
+
+    const widgetRowEl = (groupId, w) => React.createElement('div', {
+      key: w.id, className: 'bp-row', style: { paddingLeft: 24 },
+      role: 'button', tabIndex: 0,
+      onClick: () => this.openEditor(w, groupId, false),
+    },
+      React.createElement('i', {
+        className: CHART_ICON[w.chart],
+        style: { fontSize: 14, color: '#2667D8', width: 16, flexShrink: 0 },
+        'aria-hidden': 'true',
+      }),
+      React.createElement('span', {
+        className: 'bp-truncate',
+        style: { fontSize: 14, color: '#2667D8', textDecoration: 'underline', flex: 1 },
+      }, w.name),
+      React.createElement('span', { className: 'bp-row-actions' },
+        React.createElement(Button, {
+          variant: 'ghost-gray', size: 'small',
+          icon: React.createElement('i', { className: 'fa-regular fa-pen' }),
+          'aria-label': 'Edit ' + w.name,
+          onClick: (e) => { e.stopPropagation(); this.openEditor(w, groupId, false); },
+        }),
+        React.createElement(Button, {
+          variant: 'ghost-gray', size: 'small',
+          icon: React.createElement('i', { className: 'fa-regular fa-copy' }),
+          'aria-label': 'Duplicate ' + w.name,
+          onClick: (e) => { e.stopPropagation(); this.duplicateWidget(groupId, w); },
+        }),
+      ),
+    );
+
+    const reportRowEl = (r) => React.createElement('div', {
+      key: r.id, className: 'bp-row', style: { paddingLeft: 24 },
+      role: 'button', tabIndex: 0,
+      onClick: () => this.openEditor({ id: r.id, name: r.name, chart: 'table' }, 'b1', true),
+    },
+      React.createElement('i', {
+        className: 'fa-regular fa-file',
+        style: { fontSize: 14, color: '#2667D8', width: 16, flexShrink: 0 },
+        'aria-hidden': 'true',
+      }),
+      React.createElement('span', {
+        className: 'bp-truncate',
+        style: { fontSize: 14, color: '#2667D8', textDecoration: 'underline', flex: 1 },
+      }, r.name),
+    );
+
+    const sectionTitle = (text) => React.createElement('h3', {
+      style: { margin: 0, fontSize: 16, fontWeight: 700, lineHeight: '24px', color: '#222B3A' },
+    }, text);
+
+    const boardsSectionEl = S.libraryEmpty
+      ? React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 16 } },
+          sectionTitle('Boards'),
+          React.createElement('p', {
+            style: { margin: 0, fontSize: 14, lineHeight: '20px', color: '#4A5567' },
+          }, 'No widgets yet! Widgets you create and save in Boards will appear here — ready for you to use when you need them.'),
+          React.createElement('div', null,
+            React.createElement(Button, {
+              variant: 'primary',
+              leadingIcon: React.createElement('i', { className: 'fa-solid fa-plus' }),
+              onClick: () => this.newWidget(),
+            }, 'Widget'),
+          ),
+        )
+      : React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 8 } },
+          sectionTitle('Boards'),
+          React.createElement('div', null,
+            ...S.boards.flatMap((b) => [
+              groupRowEl(b.id, b.name, b.widgets.length || null),
+              ...(S.openGroups[b.id] ? b.widgets.map((w) => widgetRowEl(b.id, w)) : []),
+            ]),
+          ),
+        );
+
+    const reportsSectionEl = S.libraryEmpty
+      ? React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 12 } },
+          sectionTitle('Reports'),
+          React.createElement('p', {
+            style: { margin: 0, fontSize: 14, fontStyle: 'italic', lineHeight: '20px', color: '#4A5567' },
+          }, 'Coming soon'),
+        )
+      : React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 8 } },
+          sectionTitle('Reports'),
+          React.createElement('div', null,
+            ...S.reports.flatMap((g) => [
+              groupRowEl(g.id, g.name, g.reports.length),
+              ...(S.openGroups[g.id] ? g.reports.map(reportRowEl) : []),
+            ]),
+          ),
+        );
+
+    // "New" tab — not drawn in the Figma section. Kept to the one action the
+    // Existing-empty-state already establishes: start a widget from scratch.
+    const newTabEl = React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 16 } },
+      sectionTitle('New widget'),
+      React.createElement('p', {
+        style: { margin: 0, fontSize: 14, lineHeight: '20px', color: '#4A5567' },
+      }, 'Build a widget from scratch — pick a chart type and shape the data in the preview.'),
+      React.createElement('div', null,
+        React.createElement(Button, {
+          variant: 'primary',
+          leadingIcon: React.createElement('i', { className: 'fa-solid fa-plus' }),
+          onClick: () => this.newWidget(),
+        }, 'Widget'),
+      ),
+    );
+
+    const drawerEl = S.drawerOpen && React.createElement(Drawer, {
+      open: true,
+      title: 'Add Widget',
+      onClose: () => this.setState({ drawerOpen: false }),
+    },
+      React.createElement(TabGroup, {
+        tabs: [{ label: 'New' }, { label: 'Existing' }],
+        activeIndex: S.drawerTab,
+        onChange: (i) => this.setState({ drawerTab: i }),
+        type: 'secondary',
+      }),
+      S.drawerTab === 0
+        ? newTabEl
+        : React.createElement(React.Fragment, null,
+            boardsSectionEl,
+            React.createElement('div', { style: { height: 1, background: '#E3E8EF' } }),
+            reportsSectionEl,
+          ),
+    );
+
+    /* ── Preview modal ──────────────────────────────────────── */
+    const chartPickerEl = React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 12 } },
+      sectionTitle('Chart Type'),
+      React.createElement('div', { className: 'bp-charts' },
+        ...CHART_TYPES.map((c) => React.createElement('button', {
+          key: c.value, type: 'button', className: 'bp-chart-tile',
+          'aria-pressed': S.draft && S.draft.chart === c.value,
+          onClick: () => this.setState((s) => ({ draft: { ...s.draft, chart: c.value } })),
+        },
+          // IconBadge at xl (56px) — the Figma tile's badge is a 56px circle
+          // with a 32.5px rotated chip, which is exactly this component at
+          // that size, bound to the cobalt hue.
+          React.createElement(IconBadge, {
+            icon: 'fa-regular ' + c.icon,
+            hue: 'cobalt',
+            size: 'xl',
+          }),
+          React.createElement('span', {
+            style: { fontSize: 14, fontWeight: 500, color: '#173D82' },
+          }, c.label),
+        )),
+      ),
+    );
+
+    const swatchRow = (label, slot) => React.createElement('div', {
+      key: slot,
+      style: { display: 'flex', alignItems: 'flex-end', gap: 24 },
+    },
+      React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 6 } },
+        React.createElement('span', { style: { fontSize: 12, fontWeight: 500, color: '#677489' } }, 'Background'),
+        React.createElement('button', {
+          type: 'button', className: 'bp-swatch',
+          style: { background: S.fmt[slot + 'Bg'] },
+          'aria-label': label + ' background color',
+          onClick: () => this.cycleBg(slot),
+        }),
+      ),
+      React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 6 } },
+        React.createElement('span', { style: { fontSize: 12, fontWeight: 500, color: '#677489' } }, 'Font'),
+        React.createElement('button', {
+          type: 'button', className: 'bp-swatch',
+          style: { background: S.fmt[slot + 'Fg'] },
+          'aria-label': label + ' font color',
+          onClick: () => this.cycleFg(slot),
+        }),
+      ),
+      React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 6 } },
+        React.createElement('span', { style: { fontSize: 12, fontWeight: 500, color: '#677489' } }, 'Alignment'),
+        React.createElement(SegmentedButton, {
+          options: ALIGN_OPTIONS.map((o) => ({
+            value: o.value,
+            icon: React.createElement('i', { className: 'fa-solid ' + o.icon }),
+            'aria-label': label + ' ' + o['aria-label'],
+          })),
+          value: S.align[slot],
+          onChange: (v) => this.setState((s) => ({ align: { ...s.align, [slot]: v } })),
+          size: 'small',
+        }),
+      ),
+    );
+
+    const formatWidgetEl = React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 16 } },
+      sectionTitle('Format Widget'),
+      React.createElement(Input, {
+        label: 'Widget Name',
+        value: S.draft ? S.draft.name : '',
+        onChange: (e) => this.setState((s) => ({ draft: { ...s.draft, name: e.target.value } })),
+      }),
+      React.createElement(Checkbox, {
+        id: 'bp-hide-name',
+        checked: S.hideName ? 'checked' : 'unchecked',
+        onChange: () => this.setState((s) => ({ hideName: !s.hideName })),
+        label: 'Hide Name on Widget',
+      }),
+      ...[
+        ['Column Header', 'ch'],
+        ['Row Header', 'rh'],
+        ['Data Cell', 'dc'],
+      ].map(([label, slot]) => React.createElement('div', {
+        key: slot,
+        style: { display: 'flex', flexDirection: 'column', gap: 12, paddingTop: 16, borderTop: '1px solid #F2F5F9' },
+      },
+        React.createElement('span', {
+          style: { fontSize: 16, fontWeight: 600, lineHeight: '24px', color: '#222B3A' },
+        }, label),
+        swatchRow(label, slot),
+      )),
+    );
+
+    const previewPaneEl = React.createElement('div', {
+      style: {
+        flex: 1, minWidth: 0, background: '#F8FAFC', borderRadius: 16, padding: 24,
+        display: 'flex', flexDirection: 'column', gap: 16,
+      },
+    },
+      React.createElement('h3', {
+        style: { margin: 0, fontSize: 20, fontWeight: 600, lineHeight: '28px', color: '#222B3A' },
+      }, 'Edit Widget Preview'),
+
+      React.createElement('div', {
+        className: 'bp-fmt',
+        style: {
+          background: '#FFFFFF', border: '1px solid #E3E8EF', borderRadius: 16, padding: 16,
+          display: 'flex', flexDirection: 'column', gap: 12,
+          ...this.fmtVars(S.fmt),
+        },
+      },
+        !S.hideName && React.createElement('span', {
+          style: { fontSize: 16, fontWeight: 600, lineHeight: '24px', color: '#222B3A' },
+        }, S.draft ? S.draft.name : ''),
+        React.createElement(Table, {
+          columns: this.tableColumns(F, S.align),
+          rows: ROWS,
+          style: { border: 'none', borderRadius: 0, padding: 0 },
+        }),
+      ),
+
+      React.createElement('div', { style: { display: 'flex', justifyContent: 'flex-end' } },
+        React.createElement(Button, {
+          variant: 'primary',
+          onClick: () => this.insertWidget(),
+        }, 'Save & Insert Widget'),
+      ),
+    );
+
+    const modalEl = S.modalOpen && React.createElement(Modal, {
+      open: true,
+      size: 'large',
+      title: 'Preview',
+      onClose: () => this.setState({ modalOpen: false, draft: null }),
+      style: { width: 1170, maxWidth: 'calc(100vw - 64px)', height: 1080, maxHeight: 'calc(100vh - 64px)' },
+    },
+      React.createElement('div', {
+        style: { display: 'flex', gap: 16, flex: 1, minHeight: 0 },
+      },
+        // Left rail — scrolling body with a pinned Change Color Theme footer
+        React.createElement('div', {
+          style: {
+            width: 400, flexShrink: 0, display: 'flex', flexDirection: 'column',
+            borderRight: '1px solid #E3E8EF', paddingRight: 16, minHeight: 0,
+          },
+        },
+          React.createElement(TabGroup, {
+            tabs: [{ label: 'Style Widget' }, { label: 'Edit Data' }, { label: 'Format Data' }],
+            activeIndex: S.modalTab,
+            onChange: (i) => this.setState({ modalTab: i }),
+            type: 'secondary',
+          }),
+          React.createElement('div', {
+            style: { flex: 1, minHeight: 0, overflowY: 'auto', paddingTop: 16, display: 'flex', flexDirection: 'column', gap: 24 },
+          },
+            S.modalTab === 0
+              ? React.createElement(React.Fragment, null, chartPickerEl, formatWidgetEl)
+              : React.createElement('p', {
+                  style: { margin: 0, fontSize: 14, lineHeight: '20px', color: '#4A5567' },
+                }, S.modalTab === 1
+                  ? 'Edit Data is not drawn in this Figma section — it sits outside the add-widget flow.'
+                  : 'Format Data is not drawn in this Figma section — it sits outside the add-widget flow.'),
+          ),
+          React.createElement('div', {
+            style: { paddingTop: 16, borderTop: '1px solid #E3E8EF', flexShrink: 0 },
+          },
+            React.createElement(Button, {
+              variant: 'secondary',
+              leadingIcon: React.createElement('i', { className: 'fa-solid fa-palette' }),
+              onClick: () => this.cycleTheme(),
+            }, 'Change Color Theme'),
+          ),
+        ),
+        previewPaneEl,
+      ),
+    );
+
+    /* ── Toast ──────────────────────────────────────────────── */
+    const toastEl = S.toast && React.createElement('div', {
+      style: { position: 'fixed', bottom: 24, right: 24, zIndex: 500 },
+    },
+      React.createElement(Toast, {
+        type: 'success',
+        title: S.toast,
+        button: false,
+        onDismiss: () => this.setState({ toast: null }),
+      }),
+    );
+
+    /* ── Prototype-only library switcher ───────────────────────
+       Both library states ship in the Figma (frames 3455:117843 empty,
+       3457:10108 seeded) and a live board only reaches the empty one
+       before its first save — so this pins both within reach. Not part
+       of the product surface. */
+    const demoSwitcherEl = React.createElement('div', {
+      style: {
+        position: 'fixed', bottom: 24, left: 24, zIndex: 300,
+        display: 'flex', alignItems: 'center', gap: 8,
+        background: '#FFFFFF', border: '1px solid #E3E8EF', borderRadius: 9999,
+        padding: '6px 12px', boxShadow: '0px 4px 8px rgba(16,24,40,0.08)',
+      },
+    },
+      React.createElement('span', { style: { fontSize: 12, fontWeight: 500, color: '#677489' } }, 'Library'),
+      React.createElement(SegmentedButton, {
+        options: [{ value: 'seeded', label: 'Seeded' }, { value: 'empty', label: 'Empty' }],
+        value: S.libraryEmpty ? 'empty' : 'seeded',
+        onChange: (v) => this.setState({ libraryEmpty: v === 'empty' }),
+        size: 'small',
+      }),
+    );
+
+    /* ── App frame ──────────────────────────────────────────── */
+    const appEl = React.createElement('div', {
+      style: { display: 'flex', flexDirection: 'column', minHeight: '100vh', background: '#FFFFFF' },
+    },
+      editBarEl,
+      React.createElement('div', { style: { flex: 1, padding: 24, overflow: 'auto' } },
+        headerEl,
+        tabStripEl,
+        canvasEl,
+      ),
+      drawerEl,
+      modalEl,
+      toastEl,
+      demoSwitcherEl,
+    );
+
+    return { appEl };
+  }
+}
+</script>
+</body>
+</html>

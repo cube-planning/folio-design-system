@@ -11,7 +11,7 @@
 //             When set, an IconBadge replaces the initial-letter avatar entirely.
 //   hue     : IconBadge hue — teal | cyan | emerald | indigo | fuchsia | orange
 //             (default "indigo"; never purple — purple is reserved for AI,
-//             see docs/BRAND-FOUNDATION.md). Ignored unless `icon` is set.
+//             see docs/foundation/BRAND-FOUNDATION.md). Ignored unless `icon` is set.
 //   name    : agent name
 //   role    : short descriptor under the name
 //   status  : "running" | "done"
@@ -36,7 +36,7 @@ const COLORS = {
   cobalt600: "#122E64",
 };
 
-// AI gradient per docs/BRAND-FOUNDATION.md — the default way to render an
+// AI gradient per docs/foundation/BRAND-FOUNDATION.md — the default way to render an
 // AI-purple fill. Not a flat purple: both #6938EF and #5547A5 are retired.
 const GRADIENT_AI = "linear-gradient(135deg, #7A5AF8 10%, #9B8AFB 50%, #6938EF 100%)";
 

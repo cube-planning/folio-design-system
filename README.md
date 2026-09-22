@@ -44,20 +44,48 @@ Designers adjust and refine in Figma
 
 ## Folder Structure
 
+Organized by *audience*, not by file type (reorganized 2026-09-11).
+
 ```
-~/folio/
-├── README.md              ← you are here
-├── CLAUDE.md              ← Claude Code rules for this project
-├── RESEARCH.md            ← tool decisions, comparisons, open questions
-├── LEARNING.md            ← improvement log + pattern observations
-├── PROMPTS.md             ← approved prompt library
-├── PATTERNS.md            ← UX patterns (fills as screens are built)
-├── tokens.css             ← full design token system
-├── components/            ← reusable UI components
-├── templates/             ← full screen/layout shells
-└── briefs/
-    └── _brief-template.md ← copy this for each new feature brief
+Folio-Design-System/
+├── README.md                ← you are here
+├── CLAUDE.md                ← Folio APP design system rules
+│
+├── tokens/                  ← shared foundations
+│   ├── tokens.css              spacing, radius, shadows, focus rings, color aliases
+│   ├── typography.css          type scale
+│   └── cube-colors.md          full palette + Tailwind registration
+├── components/              ← the app's React components (58, no prefix, PascalCase)
+│
+├── brand/                   ← MARKETING & BRAND  →  start at brand/BRAND.md
+│   ├── BRAND.md                authoritative brand/marketing rules
+│   ├── glass-ui-style.md       glass/isometric graphic recipe
+│   ├── tokens/                 marketing-only primitives + semantic layer
+│   ├── landing-page/           reference marketing site build
+│   ├── graphics/               standalone marketing graphics
+│   └── slides/                 company slide template
+│
+├── docs/                    ← rules & process  →  start at docs/README.md
+│   ├── foundation/             applies to EVERY surface (brand facts, charts, personas)
+│   ├── product/                Folio app specifics (patterns, add-on spec, board themes)
+│   └── process/               how we work + why rules changed (playbook, decisions log)
+│
+├── templates/               ← two kinds  →  read templates/README.md first
+│   ├── shell.html              app page shells
+│   └── *-demo/ *-mock/         specimens that run UPLOADED (don't move these)
+├── prototypes/              ← one-off component prototypes, local only
+├── briefs/
+│   └── _brief-template.md      copy this for each new feature brief
+└── archive/                 ← superseded & legacy — never a source of current rules
 ```
+
+**Which file governs?**
+
+| Building… | Read |
+|---|---|
+| Product app UI | `CLAUDE.md` |
+| Marketing site, brand graphics, slides | `brand/BRAND.md` |
+| Anything — shared facts (type, icons, charts, radius, voice, palette) | `docs/foundation/BRAND-FOUNDATION.md` |
 
 ---
 

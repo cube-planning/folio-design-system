@@ -13,7 +13,7 @@
   <!-- ── SHELL STYLES (copied from shell.html) ─────────────── -->
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'DM Sans', sans-serif; background: #F2F5F9; height: 100vh; overflow: hidden; color: #222B3A; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--color-bg-canvas); height: 100vh; overflow: hidden; color: #222B3A; }
     a { text-decoration: none; color: inherit; }
     .app-shell { display: flex; height: 100vh; }
 
@@ -78,7 +78,7 @@
 
     /* Top nav */
     .main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
-    .topnav { height: 80px; background: #F2F5F9; border-bottom: 1px solid #E3E8EF; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; flex-shrink: 0; }
+    .topnav { height: 80px; background: var(--color-bg-canvas); border-bottom: 1px solid #E3E8EF; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; flex-shrink: 0; }
     .tn-company { display: flex; align-items: center; gap: 4px; height: 32px; padding: 0 12px; background: #FFFFFF; border-radius: 16px; box-shadow: 0px 2px 2px #E3E8EF; cursor: pointer; white-space: nowrap; }
     .tn-company-ic { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: #173D82; flex-shrink: 0; }
     .tn-company-name { font-size: 12px; color: #677489; }
@@ -115,7 +115,7 @@
     .tn-user-name { font-size: 12px; color: #677489; }
 
     /* Page content — no padding, sections manage their own */
-    .page-content { flex: 1; overflow-y: auto; background: #F2F5F9; padding: 0; }
+    .page-content { flex: 1; overflow-y: auto; background: var(--color-bg-canvas); padding: 0; }
 
     /* ── PAGE-SPECIFIC STYLES ─────────────────────────────── */
 

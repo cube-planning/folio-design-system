@@ -33,6 +33,7 @@ export function TabGroup({ tabs = [], activeIndex = 0, onChange, type = "primary
           key={tab.label ?? i}
           type={type}
           active={i === activeIndex}
+          first={i === 0}
           icon={tab.icon}
           onClick={() => onChange?.(i)}
         >

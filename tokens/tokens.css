@@ -293,6 +293,7 @@
 
   /* Background */
   --color-bg-page:          var(--color-white);
+  --color-bg-canvas:        var(--color-cobalt-25);
   --color-bg-subtle:        var(--color-gray-50);
   --color-bg-muted:         var(--color-gray-100);
   --color-bg-sidebar:       var(--color-cobalt-25);

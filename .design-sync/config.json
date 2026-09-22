@@ -7,9 +7,9 @@
   "cssEntry": "tokens/tokens.css",
   "tokensGlob": "tokens/typography.css",
   "guidelinesGlob": [
-    "docs/*.md",
+    "docs/**/*.md",
     "tokens/*.md",
-    "glass-ui-style.md"
+    "brand/*.md"
   ],
   "runtimeFontPrefixes": [
     "DM Sans"

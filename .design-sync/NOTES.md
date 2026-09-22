@@ -52,6 +52,26 @@ All three local templates (`cube-addon-demo`, `audit-trail-demo`, `page-header-d
 
 Ordering footnote: the FA copy lands *after* the diff, so the `styleSha`/`auxSha` in `_ds_sync.json` are computed pre-copy. That is self-consistent — every run's diff compares a pre-copy build against a pre-copy anchor — and post-copy `package-validate` confirms "anchor matches the bundle". Don't "fix" this by moving the copy earlier; it would fork the sidecar hashes from every previously uploaded anchor.
 
+## `npm run build` does not refresh `ds-bundle/` (2026-09-16)
+
+`build.mjs` writes **`dist/`** only — `dist/index.js` + `dist/index.cjs`. `ds-bundle/`
+is produced by `.ds-sync/package-build.mjs`, which runs *inside* `npm run design-sync`.
+
+So after editing a component, `node build.mjs` alone leaves `ds-bundle/_ds_bundle.js`
+stale. Verifying a component change against a locally staged template at that point
+reads the **previous** implementation and looks like the edit silently did nothing.
+Cost a debugging detour on 2026-09-16 (the `IconBadge` dynamic-hue change).
+
+Check you're looking at fresh output before concluding anything:
+
+```sh
+grep -c "<something only the new code has>" dist/_ds_bundle.js   # wrong path — dist has no bundle
+grep -c "<something only the new code has>" ds-bundle/_ds_bundle.js
+```
+
+If `dist/` has the change and `ds-bundle/` doesn't, you need `npm run design-sync`, not
+`npm run build`.
+
 ## Component discovery
 
 Components are in `components/` (JSX, no TypeScript). The dist entry (`dist/index.js`) doesn't expose PascalCase exports in a way ts-morph can detect, so all 11 components are mapped explicitly via `cfg.componentSrcMap`. Add new components there when they're added to the package.
@@ -60,7 +80,71 @@ Components are in `components/` (JSX, no TypeScript). The dist entry (`dist/inde
 
 ## No TypeScript / no .d.ts files
 
-The package is plain JSX — no `.d.ts` files are generated. The `[DTS_REACT]` warning on each build is expected and harmless (no `.d.ts` files to parse, so `@types/react` is irrelevant for this sync). Props bodies are synthesized from the JSX source by the converter.
+The package is plain JSX — no `.d.ts` files are generated. The `[DTS_REACT]` warning on each build is expected and harmless (no `.d.ts` files to parse, so `@types/react` is irrelevant for this sync).
+
+> **Corrected 2026-09-11.** This section used to end "Props bodies are synthesized from the
+> JSX source by the converter." **That is not what happens.** Measured on the 2026-09-11
+> re-sync: **42 of the 58** emitted `<Name>.d.ts` files carry an empty prop bag —
+> `export interface <Name>Props { [key: string]: unknown; }` — and nothing more. The
+> **16** with real prop bodies are exactly the 16 components that have a *hand-written*
+> `components/<Name>.d.ts` in this repo (`AiPromptBar`, `AppsIcon`, `Breadcrumbs`,
+> `ButtonGroup`, `CompanySwitcher`, `Favicon`, `FeedbackButton`, `FilterDropdown`,
+> `HelpMenu`, `Logo`, `PortalSideBarNav`, `SearchAndFilter`, `SidenavIcon`, `TabGroup`,
+> `Toast`, `UserDropdown`). The converter passes those through; for everything else it
+> emits the empty bag. There is no JSX-source synthesis.
+>
+> **Why this matters more than a warning count.** Per the design-sync skill, `<Name>.d.ts`
+> (`<Name>Props`) is *"the API contract the design agent codes against."* So for 42 of 58
+> components — including `Button`, `Input`, `Table`, `Modal`, `Drawer`, `Text` — the design
+> agent gets **no prop contract at all** and has to infer the API from the
+> `.prompt.md` and the preview card. That is very likely why `conventions.md` has
+> accumulated hand-written prop documentation (the Button `variant` enum, the Text variant
+> enum, the icon-only `icon`/`aria-label` rule): the header is currently compensating for
+> the missing `.d.ts` contracts.
+>
+> **The fix, when someone wants it:** `cfg.dtsPropsFor.<Name>` takes a hand-written props
+> body per component (documented in the skill's config table), or add real
+> `components/<Name>.d.ts` files the way those 16 already do. Either closes the gap
+> durably, in a place the design agent actually reads, rather than in the header. Not done
+> on 2026-09-11 — it is 42 components of prop authoring and was out of scope for a
+> reorg-driven re-sync.
+
+## Conventions header validated against the build (2026-09-11)
+
+The skill's conventions step runs on every re-sync: validate every name in
+`.design-sync/conventions.md` against the freshly built artifacts, never re-author. Full
+pass this run, after the repo reorg moved a lot of paths:
+
+- **Clean:** the header references only *bundle-relative* paths
+  (`components/general/<Name>/<Name>.prompt.md`, `styles.css`, `_ds_bundle.css`,
+  `fontawesome/css/all.min.css`), so the reorg could not and did not break it. Worth
+  keeping that way — a repo-relative path in this file would rot on every reorg.
+- **18/18 tokens verify** with the exact documented values (cobalt/gray/red colors,
+  `--spacing-1` 4px … `--spacing-10` 40px, the full radius scale incl. `--radius-lg` 8px /
+  `--radius-2xl` 16px / `--radius-full` 9999px, 4 shadows, `--font-base`).
+- **11/11 named components** exist as `components/general/<Name>/`.
+- **Text variant enum: 10/10 exact**, no extras either side.
+- **Button variant enum: one omission, now fixed.** `subtle-gray` is a real variant in
+  `components/Button.jsx`'s `VARIANTS` map but was missing from the header's list, so the
+  design agent would never have used it. Added. Nothing in the list was *wrong* — the
+  other 14 all verify.
+- **Button icon-only claims verify exactly:** the `icon` prop (`Button.jsx:208`), the
+  `aria-label` throw (`Button.jsx:232`), and the 32×32 / 28×28 `iconOnly` sizes
+  (`Button.jsx:154-155`).
+- **Font Awesome claim verifies transitively:** `styles.css` → `_ds_bundle.css:20` →
+  `fontawesome/css/all.min.css`. `styles.css` does *not* import FA directly, so anyone
+  checking only `styles.css` will wrongly conclude it's unwired — the second hop is the
+  proof, and it's the one that counts since rendered designs receive the `styles.css`
+  import closure.
+- **`window.FolioDS`** confirmed in the bundle header (`"namespace":"FolioDS"`).
+- **"No provider needed"** still true — no `cfg.provider` is set and previews render.
+
+**Method note for the next run:** validating an enum against `_ds_bundle.js` with a
+*string* grep gives false negatives. esbuild keeps identifier-safe object keys unquoted,
+so `destructive` reads as `destructive:` in the bundle while `"destructive-secondary"`
+stays quoted. `destructive` looked missing for that reason alone. Check enums against the
+component **source**'s map (bounded to the map's line range — `SIZE`'s `large`/`small`
+keys otherwise leak in), not the minified bundle.
 
 ## Font Awesome icons
 
@@ -212,7 +296,7 @@ scope question in the base skill's §2 step 5.
 ## Cube Add-on Sidebar built out fully, synced so it's editable in claude.ai/design (2026-08-27)
 
 **2026-08-27:** User asked for the full Cube Add-on sidebar (Build/Analyze/Publish/Tables,
-per `docs/cube-addon-design-spec.md` and a much more detailed follow-up spec) implemented
+per `docs/product/cube-addon-design-spec.md` and a much more detailed follow-up spec) implemented
 as real interactive components, then separately reported the page was "read only" in
 claude.ai/design — root cause: the new components existed in the repo but had never been
 synced, so the design agent had nothing editable to build the page with. Fixed by:
@@ -336,7 +420,7 @@ Prefer this over inlining for anything non-trivial. The real export is 38KB — 
 `IconBadge` needed `cfg.overrides.IconBadge = {"cardMode": "column"}` — its `Hues` and `Sizes` stories lay six badges out in a row and tripped `[GRID_OVERFLOW]` on the default card mode. Fixed with the targeted loop (`node .ds-sync/lib/preview-rebuild.mjs --node-modules ./node_modules --out ./ds-bundle --components IconBadge --config .design-sync/config.json`), then re-validated: overflow gone, grades carried. Note that script's flags are **not** optional — bare `--components X` errors out with a usage line; it needs `--node-modules`, `--out` and `--config` too.
 
 **The user's `AgentCard` spec carried values that don't exist in Folio, corrected on the way in** — worth recording because the same hexes will likely resurface from whatever generated it:
-- `#693BEF` (twice: status pill fg and the avatar gradient's first stop) is not a Folio color. It reads as a transposition of `#6938EF` = purple-600, which `docs/BRAND-FOUNDATION.md` **retires** as the AI reference. Resolved by routing the pill through the real `Badge` (`color="ai"` → `#7A5AF8`, the one sanctioned flat AI hex) and the avatar through `--color-gradient-ai`.
+- `#693BEF` (twice: status pill fg and the avatar gradient's first stop) is not a Folio color. It reads as a transposition of `#6938EF` = purple-600, which `docs/foundation/BRAND-FOUNDATION.md` **retires** as the AI reference. Resolved by routing the pill through the real `Badge` (`color="ai"` → `#7A5AF8`, the one sanctioned flat AI hex) and the avatar through `--color-gradient-ai`.
 - The `done` status paired `#ECFDF5` (emerald-50) with `#0D9488` (teal-600) — two different accent ramps, neither the system's success green. `Badge color="green"` replaced both.
 - Card radius 12 → 16 (`Card.md`: "never `rounded-xl`" for card containers), and off-grid `gap: 10` / `marginTop: 14` / `padding: 4px 9px` snapped to the 4px grid.
 
@@ -344,12 +428,49 @@ Prefer this over inlining for anything non-trivial. The real export is 38KB — 
 
 **Upload was scoped, deliberately excluding a new doc.** Uploaded the 8 component files, 2 `_preview/*.js`, bundle, `styles.css`, `README.md`, `fontawesome/**`, then `_ds_sync.json` last. Did **not** upload `guidelines/**`, because `docs/CHATGPT-PROJECT-INSTRUCTIONS.md` is a new local doc that doesn't exist remotely and publishing it wasn't part of the request — the rest of `guidelines/docs/` is unchanged from what's already there. If a future sync needs the aux tree pushed, decide about that file explicitly rather than letting a glob carry it.
 
-> **Resolved 2026-09-08 — this open question is now closed.** `docs/CHATGPT-PROJECT-INSTRUCTIONS.md` was deleted from the repo (the project is standardising on Claude, so a ChatGPT-targeted instruction wrapper has no audience). Its unique chart rules — banned-from-series colors, the variance exception, chart chrome, and the form specs — were migrated into `Cube BRAND Design System/README.md` § "Charts & data display" first; the named board themes already lived in `docs/boards_color_theme_project_summary.md`. Since it never existed remotely, **no remote deletion is required** — a future `guidelines/**` push is now safe to let a glob carry.
+> **Resolved 2026-09-08 — this open question is now closed.** `docs/CHATGPT-PROJECT-INSTRUCTIONS.md` was deleted from the repo (the project is standardising on Claude, so a ChatGPT-targeted instruction wrapper has no audience). Its unique chart rules — banned-from-series colors, the variance exception, chart chrome, and the form specs — were migrated into `archive/cube-brand-design-system/README.md` § "Charts & data display" first; the named board themes already lived in `docs/product/boards_color_theme_project_summary.md`. Since it never existed remotely, **no remote deletion is required** — a future `guidelines/**` push is now safe to let a glob carry.
+
+## Reorg publish — 18 written, 15 deleted by exact path (2026-09-11)
+
+**2026-09-11:** Published the repo reorg's aux tree (commit `91192b0`). This is the
+first sync where the **delete list was non-empty while the diff's own
+`upload.deletePaths` was empty**, so it is worth recording how that was resolved.
+
+The reorg moved `docs/*.md` into `docs/foundation|product|process/`, moved
+`glass-ui-style.md` to `brand/`, added `brand/BRAND.md` + `docs/README.md`, and
+archived `MARKETING-DESIGN-SYSTEM.md`. The anchor-based diff tracks *components*, not
+guideline paths, so it reported `deletePaths: []` — but 15 remote guideline paths were
+genuinely orphaned by the move. Left alone they would have sat alongside the new ones as
+stale duplicates, which is exactly the "design project serves a superseded rule" failure
+the reorg existed to fix.
+
+**Resolution: enumerate all 15 exact paths in `finalize_plan`'s `deletes`, never a glob.**
+That honors the rule in the section below (whose point is "only those exact paths, never
+a directory glob") while still removing real orphans. Deleted:
+`guidelines/glass-ui-style.md` plus the 14 flat `guidelines/docs/*.md`
+(including `MARKETING-DESIGN-SYSTEM.md`, the superseded doc).
+
+Wrote 18: `guidelines/index.md`, `brand/BRAND.md`, `brand/glass-ui-style.md`,
+`docs/README.md`, `docs/foundation/` ×3, `docs/process/` ×7, `docs/product/` ×3,
+`tokens/cube-colors.md`. Then `_ds_sync.json` last, as always.
+
+**Verified after the fact via `list_files`:** all **12** remote-only hand-authored files
+survived (the whole point of the rule below), remote `guidelines/` now holds 30 files
+(12 hand-authored + 18 generated), and no flat `guidelines/docs/*.md` remains. A
+follow-up `npm run design-sync` reported `upload: nothing (no-change re-sync)`,
+confirming the anchor and the remote agree.
+
+`guidelines/index.md` was safe to overwrite: the remote copy listed only the 17
+generated files, never the 12 hand-authored ones, so nothing was lost from it.
+
+`fontawesome/**` was included in the plan's `writes` per the standing rule below but not
+re-uploaded — the bundle and styling were unchanged (`bundle: false`, `styling: false`)
+and the remote copy was already correct.
 
 ## `guidelines/` holds 12 remote-only files — never use a `guidelines/**` delete glob (2026-09-11)
 
 **2026-09-11:** A docs-only re-sync (`upload: aux`) surfaced this. The build emits
-**17** files under `ds-bundle/guidelines/` (`docs/*.md` ×14, `glass-ui-style.md`,
+**17** files under `ds-bundle/guidelines/` (`docs/*.md` ×14, `brand/glass-ui-style.md`,
 `index.md`, `tokens/cube-colors.md`). The project holds **29**. The extra 12 are
 hand-authored in claude.ai/design and have no local source:
 
@@ -411,3 +532,34 @@ writes for this repo** — it's not covered by the generic skill list.
 - **`build.mjs` now has an `.svg` loader** (`dataurl`) — added 2026-08-27 because `Logo`/`Favicon`/`AppsIcon` import real brand SVGs. If a future component needs a different asset handling strategy (e.g. `.png`, or SVGs too large to inline as data URIs), extend the `loader` map rather than reverting this one.
 - **`IconBadge` depends on `cfg.overrides.IconBadge.cardMode: "column"`** (2026-09-08) — its stories are horizontal rows of six badges and re-flag `[GRID_OVERFLOW]` immediately if that override is lost the way the `Button`/`Drawer` ones were in the 2026-08-13 reorg.
 - **`AppIcon` vs `AppsIcon`** are two different, confirmed-intentional components (data-source tiles vs productivity/AI-tool brand icons) that happen to have very similar names — don't merge them or "fix" the near-duplicate name without re-reading both files' header comments first.
+- **`conventions.md` hand-enumerates two prop enums that nothing keeps in sync.** Its "Where to look" section lists every `Button` `variant` and every `Text` `variant` by hand. Those lists live in `components/Button.jsx`'s `VARIANTS` map and `components/Text.jsx`'s `VARIANTS` map, and **no build step cross-checks them** — the 2026-09-11 re-sync found `subtle-gray` had been missing from the Button list (added then). **Add a variant to either component and you must update `conventions.md` in the same commit**, or the design agent silently never uses the new variant. The enum check is part of the conventions validation pass every re-sync runs; the root fix is `cfg.dtsPropsFor` (see "No TypeScript / no `.d.ts` files" above) so the enums live in the `.d.ts` contract the agent actually reads, instead of being restated in prose.
+- **Conventions-header paths must stay bundle-relative.** `conventions.md` survived the 2026-09-11 repo reorg untouched *only* because every path it names is bundle-relative (`components/general/<Name>/…`, `styles.css`, `fontawesome/css/all.min.css`). A repo-relative path in that file (`docs/…`, `tokens/…`) would rot on the next reorg and would ship the rot to the design agent. Keep it that way.
+
+## A component *implementation* change never shows up in the diff's `changed` list (2026-09-15)
+
+Editing `components/Tab.jsx` produced `changed: []` with `bundle: true, styling: true`
+and an unchanged `Tab` `sourceKey`/`renderHash`. That is **not** a missed change — it's
+how the package shape works, and it's worth knowing before you go hunting:
+
+`ds-bundle/components/general/<Name>/<Name>.jsx` is a **161-byte re-export stub**:
+
+```js
+// Re-export of folio-design-system@1.0.0 Tab. Implementation is in the root _ds_bundle.js (window.FolioDS).
+Object.assign(window, { Tab: window.FolioDS.Tab });
+```
+
+`sourceHashes`/`sourceKeys` hash those stubs, and a stub only changes when a component is
+added, removed or renamed. The actual implementation ships in `_ds_bundle.js`, so a props
+or styling change moves `bundleSha12` (and usually `styleSha`) and nothing else.
+
+**Consequences:**
+- `upload: bundle | styling` *is* the complete plan for a component implementation change —
+  there is no per-component file to push, because the stub didn't change.
+- Don't read `changed: []` as "my edit didn't land". Verify with
+  `grep '<your new code>' ds-bundle/_ds_bundle.js` instead.
+- The `changed` list is only meaningful for structural moves (add/remove/rename), which is
+  also why `capture` reports "no component sources moved" on these runs.
+
+Corollary for the anchor: after uploading, refresh the cache with
+`cp ds-bundle/_ds_sync.json .design-sync/.cache/remote-sync.json` — otherwise the next run
+re-reports the same `aux`/`bundle` deltas against a stale anchor.

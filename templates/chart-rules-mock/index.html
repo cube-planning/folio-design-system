@@ -8,12 +8,12 @@
 <style>
   /* ============================================================
      Tokens — mirrored from tokens/tokens.css. This is a standalone
-     specimen page (same class as Cube BRAND Design System/preview/*.html),
+     specimen page (same class as archive/cube-brand-design-system/preview/*.html),
      so the ramp is restated here as custom properties rather than
      imported. Never hand-edit a hex below: copy it from tokens.css.
      ============================================================ */
   :root {
-    /* Dataviz — 6-slot series order (docs/BRAND-FOUNDATION.md).
+    /* Dataviz — 6-slot series order (docs/foundation/BRAND-FOUNDATION.md).
        Values are the ramp stops named; graphic-design colors. */
     --color-dataviz-1: #14B8A6;   /* teal-500    — series 1 */
     --color-dataviz-2: #06B6D4;   /* cyan-500    — series 2 */
@@ -69,7 +69,7 @@
   .page-sub   { font-size: 14px; line-height: 20px; color: var(--color-gray-700); margin-top: 4px; }
   .page-sub code { font-size: 13px; background: rgba(255,255,255,.6); padding: 1px 5px; border-radius: 4px; }
 
-  /* ---- Glass panel: frosted matte, glass-ui-style.md § 1 -------- */
+  /* ---- Glass panel: frosted matte, brand/glass-ui-style.md § 1 -------- */
   .panel {
     background: linear-gradient(135deg, rgba(255,255,255,0.55), rgba(255,255,255,0.28));
     backdrop-filter: blur(22px) saturate(170%);
@@ -83,7 +83,7 @@
   }
 
   /* ---- Nested chart card: half the fill, half the blur, NO outer
-     shadow — only the panel casts one. glass-ui-style.md § 1 ----- */
+     shadow — only the panel casts one. brand/glass-ui-style.md § 1 ----- */
   .chart-card {
     background: linear-gradient(135deg, rgba(255,255,255,0.34), rgba(255,255,255,0.16));
     backdrop-filter: blur(10px) saturate(150%);
@@ -129,7 +129,7 @@
   <h1 class="page-title">Chart form — graphic treatment</h1>
   <p class="page-sub">
     Marketing / graphic-design treatment: shape and color carry the story, not
-    the numbers. Specimen for <code>docs/CHART-RULES.md</code> — the form rules
+    the numbers. Specimen for <code>docs/foundation/CHART-RULES.md</code> — the form rules
     and § "Glass-surface charts".
     <strong>Not</strong> the product/report treatment &mdash; see the note at the foot of the page.
   </p>
@@ -200,7 +200,7 @@
     images, section illustrations, deck covers, anywhere a chart is standing in
     for "we do finance analytics" rather than reporting a figure.</p>
     <p><b>Product and report charts are the opposite case</b> and are governed by
-    <code>docs/BRAND-FOUNDATION.md</code> § "Chart data-point display": every
+    <code>docs/foundation/BRAND-FOUNDATION.md</code> § "Chart data-point display": every
     plotted value must be readable without interaction, because the reader is
     there for the number and will screenshot it into a board deck where hover
     does not exist. Do not copy this page's treatment into a dashboard, a report,

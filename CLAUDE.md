@@ -15,7 +15,7 @@ Read the following before doing anything:
 - tokens/tokens.css
 - tokens/cube-colors.md
 - tokens/typography.css
-- docs/cube-personas.md
+- docs/foundation/cube-personas.md
 - templates/shell.html
 
 Confirm you have loaded the Folio design system context.
@@ -29,13 +29,47 @@ Confirm you have loaded the Folio design system context.
 | `tokens/tokens.css` | Spacing, radius, shadows, focus rings, z-index, semantic color aliases |
 | `tokens/cube-colors.md` | Full color palette with all ramps and Tailwind registration |
 | `tokens/typography.css` | Type scale tokens and utility classes |
-| `docs/cube-personas.md` | User personas — Max, Ava, Tobias, Chris |
+| `docs/foundation/cube-personas.md` | User personas — Max, Ava, Tobias, Chris |
 | `templates/shell.html` | Base app layout — sidebar, nav, shell structure |
-| `docs/DESIGN-PLAYBOOK.md` | How to structure prompts and run design sessions |
-| `docs/DESIGN-DECISIONS.md` | Dated log of *why* a rule changed — evidence and what it replaced. Explains the specs; never overrides them |
-| `docs/BRAND-FOUNDATION.md` | Facts shared by every persona (type, icons, chart series, radius, voice) — read before persona-specific rules |
-| `glass-ui-style.md` | Glass/isometric marketing graphic recipe — panels, layout, background. Charts over glass live in `docs/CHART-RULES.md` § "Glass-surface charts" |
+| `docs/process/DESIGN-PLAYBOOK.md` | How to structure prompts and run design sessions |
+| `docs/process/DESIGN-DECISIONS.md` | Dated log of *why* a rule changed — evidence and what it replaced. Explains the specs; never overrides them |
+| `docs/foundation/BRAND-FOUNDATION.md` | Facts shared by every persona (type, icons, chart series, radius, voice) — read before persona-specific rules |
+| `brand/glass-ui-style.md` | Glass/isometric marketing graphic recipe — panels, layout, background. Charts over glass live in `docs/foundation/CHART-RULES.md` § "Glass-surface charts" |
 | `templates/chart-rules-mock/` | Live specimen — decorative chart treatment, dependency-free |
+
+### Repo layout — which folder governs what
+
+Reorganized 2026-09-11 by *audience* rather than by file type, so that brand and
+marketing work has a home of its own. Full rationale in `docs/process/DESIGN-DECISIONS.md`.
+
+| Folder | Audience | Index |
+|---|---|---|
+| `tokens/`, `components/` | Shared foundations + the Folio app's React components | — |
+| `docs/` | Rules and process, grouped `foundation/` · `product/` · `process/` | `docs/README.md` |
+| `brand/` | **Marketing & brand** — site, graphics, slides, marketing tokens | `brand/BRAND.md` |
+| `templates/` | App page shells **and** uploaded design-project specimens (two kinds — read the index first) | `templates/README.md` |
+| `prototypes/` | One-off component prototypes, local only | — |
+| `archive/` | Superseded and legacy material — **never** a source of current rules | — |
+
+> **Building marketing, brand, or slide material?** Read `brand/BRAND.md`, not this file.
+> This file governs the product app. `docs/foundation/BRAND-FOUNDATION.md` holds what
+> both share, and takes precedence over surface-specific rules on shared facts.
+
+> **Never take a rule from `archive/`.** It holds `MARKETING-DESIGN-SYSTEM.md` (a
+> superseded marketing draft) and `cube-brand-design-system/` (a legacy artifact of the
+> retired "Cube AI" branding system, carrying retired colors, a shifted radius scale, and
+> retired Lucide/Source Sans 3 mandates). Both are kept as history only.
+
+**Do not move these paths** — they are hardcoded in `.design-sync/config.json` and moving
+them breaks the build or the sync: `components/**` (58 entries in `componentSrcMap`),
+`tokens/tokens.css` (`cssEntry`), `tokens/typography.css` (`tokensGlob`),
+`vendor/fonts/dm-sans/dm-sans.css` (`extraFonts`), and every `templates/*/` specimen dir
+(their `ds-base.js` encodes the remote path).
+
+> The glass graphics in `brand/graphics/` are the **exception** — they are brand-only
+> and never uploaded to the Folio design project, so no remote path depends on where
+> they sit. That is why they could move out of `templates/` on 2026-09-11 when the
+> other specimen dirs could not.
 
 ---
 
@@ -108,6 +142,23 @@ The full color palette lives in `tokens/cube-colors.md`. Below is a quick-refere
 | `50–200` | Surfaces & backgrounds — badge fills, banner backgrounds, tinted chips |
 | `25–50` | Chip & page backgrounds — lightest tints for subtle surface differentiation |
 
+#### Screen background
+
+The app canvas — `body`, the top nav, and `.page-content` — is **cobalt-25** (`#F5F7FA`),
+not a gray. Use the semantic alias rather than the ramp stop or the hex:
+
+```css
+background: var(--color-bg-canvas);   /* → --color-cobalt-25 → #F5F7FA */
+```
+
+The sidebar (`--color-bg-sidebar`) resolves to the same cobalt-25, so the shell reads as one
+continuous tinted surface with the white `.sb-card` and content cards floating on it.
+
+> Gray-200 (`#F2F5F9`) is close enough to be mistaken for this and was the old canvas value.
+> It is **not** the screen background — it remains correct for table header rows, table rules,
+> `subtle-gray` button fills, segmented-control tracks, chips, and avatar placeholders.
+> Do not blanket-replace `#F2F5F9`; only the canvas surfaces change.
+
 #### Cobalt vs Blue
 
 | Token | Use for |
@@ -118,7 +169,7 @@ The full color palette lives in `tokens/cube-colors.md`. Below is a quick-refere
 **Usage:** `bg-cube-cobalt-500`, `text-cube-gray-900`, `border-cube-gray-300`, etc.
 
 #### Token usage flow — a worked example
-Same fan-out pattern documented in `docs/BRAND-FOUNDATION.md`'s "Token usage flow"
+Same fan-out pattern documented in `docs/foundation/BRAND-FOUNDATION.md`'s "Token usage flow"
 section, worked here with a Folio-only case (this one doesn't apply to Cube Software):
 
 ```
@@ -418,7 +469,35 @@ the icon.
 
 ---
 
-## 8. Rules for Claude
+## 8. Logo & Favicon
+
+**Always use the committed logo artwork — never redraw, regenerate, or approximate it.** The wordmark and cube mark are real brand exports from Figma, committed to the repo because Figma asset URLs expire in ~7 days. An SVG you author from memory (a cube built from paths, a DM Sans text node, a generated mark) is not the Cube logo, however close it looks.
+
+Use the components — they own the tile fill (`--color-blue-800` / `#163D83`) and the sizing:
+
+```tsx
+import { Logo } from "components/Logo";
+import { Favicon } from "components/Favicon";
+
+<Logo />                        {/* 82×32, cobalt tile, white wordmark */}
+<Logo background="Light" />     {/* 82×32, white tile, full-color wordmark */}
+<Favicon background="Light" />  {/* 32×32 cube mark */}
+```
+
+| Asset | Path |
+|---|---|
+| Logo, dark background | `components/assets/logo-dark.svg` |
+| Logo, light background | `components/assets/logo-light.svg` |
+| Favicon, dark background | `components/assets/favicon-dark.svg` |
+| Favicon, light background | `components/assets/favicon-light.svg` |
+
+Never recolor, rotate, outline, stretch, or substitute the mark — `fa-cube` is not the brand mark. If a surface needs a lockup that doesn't exist here (monochrome, stacked, alternate), **ask for the export** rather than making one.
+
+> Marketing and brand surfaces use their own gradient wordmark files — see `brand/BRAND.md`. The shared rule lives in `docs/foundation/BRAND-FOUNDATION.md` § "Logo and favicon".
+
+---
+
+## 9. Rules for Claude
 
 ### DO
 - Always use Tailwind utility classes with Cube tokens (`bg-cube-cobalt-500`, not `bg-[#2667D8]`)
@@ -430,6 +509,7 @@ the icon.
 - Keep components in `components/cube/` — no prefix, PascalCase only
 - Match Figma measurements exactly: 32px input height, 48px row height, 400px drawer width
 - Use DM Sans for all UI text — it is the only typeface in Folio
+- Use the committed logo artwork via `Logo` / `Favicon` — never draw or generate a Cube logo
 - Collapsible sections default to collapsed when data exists, expanded when empty
 - Reference `cube-personas.md` when a feature targets a specific user — use persona context to inform UX decisions
 - Use `templates/shell.html` as the base layout for all new screens — only add content inside `<main>`
@@ -439,6 +519,7 @@ the icon.
 - Never use inline `style={{}}` attributes
 - Never use arbitrary hex values — always use token classes
 - Never use Lato or Montserrat — DM Sans only
+- Never hand-draw, regenerate, recolor, or substitute the Cube logo (including `fa-cube`) — use the committed asset, or ask for the export
 - Never reference Blue 500 as primary — Cobalt is primary (`cobalt-500` resting/interactive, `cobalt-600` hover)
 - Never use red borders for errors — use soft `bg-cube-red-100` banners
 - Never put lifecycle rules in the create-new-scenario drawer
@@ -454,7 +535,7 @@ the icon.
 
 ---
 
-## 9. Figma Reference
+## 10. Figma Reference
 
 | Resource | Link / ID |
 |---|---|
@@ -468,7 +549,7 @@ To pull variables: `Figma:get_variable_defs(fileKey, nodeId)`
 
 ---
 
-## 10. Design Sync
+## 11. Design Sync
 
 To push this package to the claude.ai/design project, run:
 

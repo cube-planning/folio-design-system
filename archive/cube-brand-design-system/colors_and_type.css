@@ -1,0 +1,312 @@
+/* =====================================================================
+   Cube Software — Colors & Type Tokens
+   Source: Brand Guidelines 2026 v1.0
+   ===================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400..800&display=swap');
+
+:root {
+  /* ==================================================================
+     PRIMITIVE COLOR — canonical names, shared with Folio
+     ------------------------------------------------------------------
+     One palette, one naming convention. These are Folio's own
+     `--color-{hue}-{stop}` names and values from tokens/tokens.css,
+     per docs/foundation/BRAND-FOUNDATION.md § "Primitive color palette".
+
+     **Write new marketing work against these names.** The brand's
+     poetic names (--new-blue, --deep-purple, …) are kept below as
+     deprecated aliases so the existing preview cards and marketing
+     assets keep resolving; they are not the convention going forward.
+     ================================================================== */
+  --color-cobalt-900: #081121;
+  --color-cobalt-800: #0B1932;
+  --color-cobalt-600: #122E64;
+  --color-cobalt-500: #173D82;
+  --color-cobalt-200: #8EA8E1;
+  --color-cobalt-50:  #E6EBF4;
+  --color-cobalt-25:  #F5F7FA;
+
+  --color-green-700:  #067647;
+  --color-green-500:  #229E66;
+  --color-green-400:  #70CF98;
+  --color-green-50:   #ECFDF3;
+  --color-green-25:   #F2FDF6;
+
+  --color-yellow-600: #DC6803;
+  --color-yellow-50:  #FFFAEB;
+
+  /* Purple is AI-only (docs/foundation/BRAND-FOUNDATION.md § "AI accent color").
+     purple-500 is the anchor stop of the shared AI gradient and the only
+     flat hex sanctioned, for box-shadow alone. Deep Purple #5547A5 is
+     retired — do not reintroduce it. */
+  --color-purple-500: #7A5AF8;
+  --color-purple-100: #EBE9FE;
+
+  --color-red-500:    #D92D20;
+  --color-red-100:    #FFE6E5;
+
+  --color-gray-800:   #353F4F;
+  --color-gray-600:   #677489;
+  --color-gray-500:   #97A3B6;
+  --color-gray-400:   #CDD5E0;
+  --color-gray-300:   #E3E8EF;
+  --color-gray-200:   #F2F5F9;
+
+  --color-white:      #FFFFFF;
+  --color-black:      #000000;
+
+  /* ==================================================================
+     ACCENT / DATA-VIZ FAMILIES — shared with Folio
+     ------------------------------------------------------------------
+     The accent hues IconBadge draws from, and the source of the
+     --color-dataviz-* series. Values pulled 1:1 from Folio's
+     tokens/tokens.css per docs/foundation/BRAND-FOUNDATION.md
+     § "Primitive color palette" ("plus the accent/data-viz families").
+     Purple is NOT in this set — it is reserved for AI.
+
+     IconBadge's three slots are tint / chip / glyph, and which ramp stop
+     fills each slot is per-ramp, not universal (2026-09-16). Accent ramps
+     peak mid-scale, so they use 50/300/600 — the stops below. The brand
+     ramps run darker at the same index, so cobalt uses 50/200/500 (its
+     -50 and -200 stops are defined in the cobalt block above for exactly
+     this reason). Do not assume the slot name matches a stop number.
+     ================================================================== */
+  --color-teal-50:      #F0FDFA;
+  --color-teal-300:     #5EEAD4;
+  --color-teal-600:     #0D9488;
+
+  --color-cyan-50:      #ECFEFF;
+  --color-cyan-300:     #67E8F9;
+  --color-cyan-600:     #0891B2;
+
+  --color-emerald-50:   #ECFDF5;
+  --color-emerald-300:  #6EE7B7;
+  --color-emerald-600:  #059669;
+
+  --color-indigo-50:    #EEF2FF;
+  --color-indigo-300:   #A5B4FC;
+  --color-indigo-600:   #4F46E5;
+
+  --color-fuchsia-50:   #FDF4FF;
+  --color-fuchsia-300:  #F0ABFC;
+  --color-fuchsia-600:  #C026D3;
+
+  --color-orange-50:    #FFF7ED;
+  --color-orange-300:   #FDBA74;
+  --color-orange-600:   #EA580C;
+
+  /* ==================================================================
+     DEPRECATED ALIASES — brand-poetic names
+     ------------------------------------------------------------------
+     Retained so existing preview cards, marketing assets and README
+     references keep working. Every one is now a pointer, not a value,
+     so the two naming schemes can never drift to different colors.
+     Prefer the --color-* names above in new work.
+     ================================================================== */
+  --darkest:      var(--color-cobalt-900);
+  --navy:         var(--color-cobalt-800);
+  --new-blue:     var(--color-cobalt-600);
+  --blue-og:      var(--color-cobalt-500);
+  --cube-white:   var(--color-cobalt-25);
+
+  --green-og:     var(--color-green-500);
+  --new-green:    var(--color-green-700);
+  --light-green:  var(--color-green-400);
+  --mint:         var(--color-green-50);
+  --warm-white:   var(--color-green-25);
+
+  --amber-mist:   var(--color-yellow-50);
+  --burnt-amber:  var(--color-yellow-600);
+
+  --deep-purple:  var(--color-purple-500);
+  --lavender:     var(--color-purple-100);
+
+  --pink:         var(--color-red-100);
+  --error:        var(--color-red-500);
+
+  --gray-200:     var(--color-gray-200);
+  --gray-300:     var(--color-gray-300);
+  --gray-400:     var(--color-gray-400);
+  --gray-500:     var(--color-gray-500);
+  --gray-600:     var(--color-gray-600);
+  --gray-800:     var(--color-gray-800);
+  --white:        var(--color-white);
+  --black:        var(--color-black);
+
+  /* ---------- SEMANTIC — Surfaces ---------- */
+  --surface-default:   var(--white);
+  --surface-subtle:    var(--cube-white);
+  --surface-muted:     var(--gray-200);
+  --surface-warm:      var(--warm-white);
+  --surface-inverse:   var(--darkest);
+
+  /* ---------- SEMANTIC — Foreground ---------- */
+  --fg-heading:        var(--new-blue);      /* headings */
+  --fg-body:           var(--gray-800);      /* default body */
+  --fg-secondary:      var(--gray-600);      /* secondary text */
+  --fg-caption:        var(--gray-500);      /* captions / labels */
+  --fg-on-dark:        #FFFFFF;              /* text on dark bg */
+  --fg-on-dark-accent: var(--light-green);   /* accent on dark bg */
+  --fg-link:           var(--blue-og);
+
+  /* ---------- SEMANTIC — Status ---------- */
+  --status-success-fg: var(--green-og);
+  --status-success-bg: var(--mint);
+  --status-warn-fg:    var(--burnt-amber);
+  --status-warn-bg:    var(--amber-mist);
+  --status-ai-fg:      var(--deep-purple);
+  --status-ai-bg:      var(--lavender);
+  --status-error-fg:   var(--error);
+
+  /* ---------- SEMANTIC — Borders ---------- */
+  --border-subtle:     var(--gray-300);
+  --border-default:    var(--gray-400);
+  --border-strong:     var(--gray-600);
+
+  /* ---------- GRADIENTS — AI (single shared token, per
+     docs/foundation/BRAND-FOUNDATION.md — replaces the old gradient-ai-signal and
+     gradient-midnight-ai, which are retired) ---------- */
+  --color-gradient-ai: linear-gradient(135deg, #7A5AF8 10%, #9B8AFB 50%, #6938EF 100%);
+
+  /* ---------- GRADIENTS — Primary (full-width) ---------- */
+  --gradient-intelligence: linear-gradient(90deg, #122E64 0%, #067647 55%, #70CF98 100%);
+  --gradient-cta:          linear-gradient(90deg, #7A5AF8 0%, #0B1932 100%);
+  --gradient-cool-depth:   linear-gradient(180deg, #081121 0%, #0B1932 50%, #122E64 100%);
+  --gradient-growth:       linear-gradient(90deg, #067647 0%, #70CF98 55%, #ECFDF3 100%);
+  --gradient-full-journey: linear-gradient(90deg, #0B1932 0%, #067647 55%, #70CF98 100%);
+
+  /* ---------- GRADIENTS — Subtle washes ---------- */
+  --wash-mint:    linear-gradient(180deg, #F5F7FA 0%, #ECFDF3 100%);
+  --wash-purple:  linear-gradient(180deg, #F5F7FA 0%, #EBE9FE 100%);
+  --wash-surface: linear-gradient(180deg, #F2F5F9 0%, #F5F7FA 100%);
+
+
+  /* ---------- TYPOGRAPHY — Families ---------- */
+  /* DM Sans only — inherited from Folio, the product design system */
+  --font-display: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-body:    "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+
+  /* ---------- TYPOGRAPHY — Weights ---------- */
+  --fw-light:     300;
+  --fw-regular:   400;
+  --fw-medium:    500;
+  --fw-semibold:  600;
+  --fw-bold:      700;
+  --fw-extrabold: 800;
+
+  /* ---------- TYPOGRAPHY — Scale (display / body) ---------- */
+  --fs-display:   clamp(36px, 4.2vw, 48px);
+  --fs-h1:        clamp(28px, 2.6vw, 32px);
+  --fs-h2:        clamp(22px, 2.0vw, 24px);
+  --fs-h3:        clamp(18px, 1.6vw, 20px);
+  --fs-body-lg:   16px;
+  --fs-body:      15px;
+  --fs-body-sm:   14px;
+  --fs-caption:   12px;
+  --fs-data:      12px;
+
+  --lh-tight:     1.1;
+  --lh-heading:   1.2;
+  --lh-snug:      1.35;
+  --lh-body:      1.55;
+  --lh-loose:     1.7;
+
+  --tracking-tight: -0.02em;
+  --tracking-snug:  -0.01em;
+  --tracking-wide:   0.04em;
+
+  /* ---------- SPACING (4px base) ---------- */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* ---------- RADII ---------- */
+  /* Radius scale — realigned 2026-09-08 to match Folio's tokens/tokens.css
+     name-for-name. This scale used to be shifted one step (md 8, lg 12,
+     xl 16, 2xl 24), so "16px card" was --radius-xl here and --radius-2xl in
+     Folio. Same names now mean the same values in both systems.
+     See docs/foundation/BRAND-FOUNDATION.md § "Spacing and radius". */
+  --radius-none: 0px;
+  --radius-xs:   2px;      /* brand-only extension: icon corners. Folio has no 2px stop */
+  --radius-sm:   4px;
+  --radius-md:   6px;
+  --radius-lg:   8px;      /* Inputs, selects, textareas */
+  --radius-xl:   12px;     /* Nested tiles inside a card — NOT card containers */
+  --radius-2xl:  16px;     /* Cards, large containers, modals, drawers */
+  --radius-full: 9999px;   /* Buttons, chips, badges, toggles, avatars */
+
+  /* Deprecated alias — was 999px, now points at the shared token. Prefer
+     --radius-full in new work. */
+  --radius-pill: var(--radius-full);
+
+  /* ---------- SHADOWS (airy, glass-panel) ---------- */
+  --shadow-xs: 0 1px 2px rgba(10, 18, 41, 0.04);
+  --shadow-sm: 0 2px 6px rgba(10, 18, 41, 0.06), 0 1px 2px rgba(10, 18, 41, 0.04);
+  --shadow-md: 0 6px 16px rgba(10, 18, 41, 0.07), 0 2px 4px rgba(10, 18, 41, 0.04);
+  --shadow-lg: 0 14px 32px rgba(10, 18, 41, 0.09), 0 4px 8px rgba(10, 18, 41, 0.05);
+  --shadow-xl: 0 24px 48px rgba(10, 18, 41, 0.12), 0 8px 16px rgba(10, 18, 41, 0.06);
+  --shadow-ring-ai: 0 0 0 1px rgba(122, 90, 248, 0.25), 0 8px 24px rgba(122, 90, 248, 0.15); /* keyed to Folio purple-500 #7A5AF8, not the retired #5547A5 */
+
+  /* ---------- MOTION ---------- */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);      /* default */
+  --ease-out:      cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:       cubic-bezier(0.4, 0, 1, 1);
+  --duration-fast:   120ms;
+  --duration-base:   200ms;
+  --duration-slow:   320ms;
+  --duration-slower: 480ms;
+}
+
+/* =====================================================================
+   Semantic element styles — opt-in via class or scope under .cube-prose
+   ===================================================================== */
+
+html, body { background: var(--surface-default); color: var(--fg-body); }
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.cube-display, .cube-h1, .cube-h2, .cube-h3 {
+  font-family: var(--font-display);
+  color: var(--fg-heading);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--lh-heading);
+  margin: 0;
+}
+
+.cube-display { font-size: var(--fs-display); font-weight: var(--fw-extrabold); line-height: var(--lh-tight); }
+.cube-h1      { font-size: var(--fs-h1);      font-weight: var(--fw-bold); }
+.cube-h2      { font-size: var(--fs-h2);      font-weight: var(--fw-medium); letter-spacing: var(--tracking-snug); }
+.cube-h3      { font-size: var(--fs-h3);      font-weight: var(--fw-medium); letter-spacing: var(--tracking-snug); }
+
+.cube-body      { font-family: var(--font-body); font-size: var(--fs-body);    line-height: var(--lh-body); color: var(--fg-body); }
+.cube-body-lg   { font-family: var(--font-body); font-size: var(--fs-body-lg); line-height: var(--lh-body); color: var(--fg-body); }
+.cube-secondary { font-family: var(--font-body); font-size: var(--fs-body-sm); line-height: var(--lh-body); color: var(--fg-secondary); }
+.cube-caption   { font-family: var(--font-body); font-size: var(--fs-caption); line-height: var(--lh-snug); color: var(--fg-caption); }
+.cube-eyebrow   { font-family: var(--font-body); font-size: var(--fs-caption); font-weight: var(--fw-semibold); letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--fg-secondary); }
+
+.cube-data  { font-family: var(--font-body); font-size: var(--fs-data); font-variant-numeric: tabular-nums; color: var(--fg-body); }
+.cube-code  { font-family: var(--font-body); font-size: var(--fs-body-sm); color: var(--fg-body); background: var(--gray-200); padding: 2px 6px; border-radius: var(--radius-xs); }
+
+/* On dark surfaces */
+.on-dark { color: var(--fg-on-dark); }
+.on-dark .cube-display,
+.on-dark .cube-h1,
+.on-dark .cube-h2,
+.on-dark .cube-h3 { color: var(--fg-on-dark); }
+.on-dark .cube-secondary,
+.on-dark .cube-caption { color: rgba(255,255,255,0.72); }
