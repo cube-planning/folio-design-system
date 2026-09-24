@@ -386,6 +386,48 @@
       flex: 1;
       overflow-y: auto;
       background: var(--color-bg-canvas);
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Cube Staff page header — matches PageHeader component output */
+    .cs-page-hdr {
+      padding: 24px 32px 16px;
+      border-bottom: 1px solid #E4E7EC;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .cs-page-hdr-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .cs-page-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: #101828;
+      line-height: 32px;
+    }
+
+    /* Sub-page tab strip */
+    .cs-tabs-strip {
+      padding: 8px 16px 0;
+      border-bottom: 1px solid #E3E8EF;
+      display: flex;
+      overflow-x: auto;
+      flex-shrink: 0;
+    }
+    .cs-tabs-strip::-webkit-scrollbar { display: none; }
+
+    /* Content below tabs */
+    .cs-body {
+      flex: 1;
+      overflow-y: auto;
       padding: 32px;
     }
 
@@ -927,11 +969,11 @@
 
       <div class="dv" style="margin:0"></div>
 
-      <!-- Cube Staff footer row -->
-      <div class="staff-row">
+      <!-- Cube Staff footer row — active on this page -->
+      <div class="staff-row" style="background:#EFF6FF;border-top:2px solid #2667D8">
         <div class="staff-row-left">
-          <div class="ni-ic" style="color:#4A5567"><i class="fa-regular fa-users"></i></div>
-          <span class="staff-label">Cube Staff</span>
+          <div class="ni-ic" style="color:#2667D8"><i class="fa-regular fa-users"></i></div>
+          <span class="staff-label" style="color:#2667D8;font-weight:600">Cube Staff</span>
         </div>
         <button class="staff-more-btn" aria-label="More options">
           <i class="fa-solid fa-ellipsis-vertical"></i>
@@ -976,6 +1018,29 @@
     </header>
 
     <main class="page-content">
+
+      <!-- Page header — matches PageHeader component (24px/600/gray-900) -->
+      <div class="cs-page-hdr">
+        <div class="cs-page-hdr-row">
+          <h1 class="cs-page-title">Cube Staff</h1>
+        </div>
+      </div>
+
+      <!-- Sub-page tab strip -->
+      <div class="cs-tabs-strip">
+        <button class="vtab">New Company</button>
+        <button class="vtab">New Hands On Cube</button>
+        <button class="vtab">Company</button>
+        <button class="vtab active">Connections</button>
+        <button class="vtab">Multi-currency</button>
+        <button class="vtab">Authentication</button>
+        <button class="vtab">Dimensions</button>
+        <button class="vtab">Boomi</button>
+        <button class="vtab">Analytics Exports</button>
+        <button class="vtab">Cube Access</button>
+      </div>
+
+      <div class="cs-body">
 
       <!-- Info Banner -->
       <div class="info-banner">
@@ -1453,6 +1518,7 @@
         </div>
       </div>
 
+      </div><!-- .cs-body -->
     </main>
   </div>
 </div>

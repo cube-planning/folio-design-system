@@ -7,6 +7,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../vendor/fontawesome/css/all.min.css">
   <script src="../components/_sidebar-icons.js"></script>
   <link rel="stylesheet" href="../tokens/tokens.css">
 
@@ -18,7 +19,7 @@
     .app-shell { display: flex; height: 100vh; }
 
     /* Sidebar */
-    .sb { width: 240px; min-width: 240px; padding: 8px; display: flex; flex-direction: column; height: 100vh; transition: width 0.2s ease, min-width 0.2s ease; overflow: hidden; }
+    .sb { width: 255px; min-width: 255px; padding: 8px; display: flex; flex-direction: column; height: 100vh; transition: width 0.2s ease, min-width 0.2s ease; overflow: hidden; }
     .sb.col { width: 64px; min-width: 64px; }
     .sb-card { background: #fff; border-radius: 8px; box-shadow: 0px 4px 8px rgba(0,0,0,0.08), 0px 1px 2px rgba(0,0,0,0.06); flex: 1; display: flex; flex-direction: column; overflow: hidden; }
     .sb-hdr { height: 48px; padding: 16px 12px 0 16px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; white-space: nowrap; }
@@ -45,18 +46,19 @@
     .dv { height: 1px; background: #E3E8EF; margin: 8px 0; }
     .nav-section { display: flex; flex-direction: column; gap: 4px; padding: 8px; }
     .sb.col .nav-section { padding: 0; align-items: center; }
-    .sec { display: flex; align-items: center; gap: 4px; height: 20px; padding: 0 8px; font-size: 12px; font-weight: 500; color: #677489; white-space: nowrap; }
+    .sec { display: flex; align-items: center; gap: 4px; height: 20px; padding: 0 8px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 400; color: #4A5567; white-space: nowrap; }
+    .sb.col .sec { justify-content: center; padding: 0; }
     .sb.col .sec-lbl, .sb.col .sec-crt { display: none; }
     .ni { height: 32px; padding: 0 16px; display: flex; align-items: center; gap: 8px; border-radius: 4px; cursor: pointer; position: relative; white-space: nowrap; text-decoration: none; color: inherit; width: 100%; }
     .ni.home { padding: 0 24px; border-radius: 0; }
-    .nav-section .ni:hover { background: #E6EBF4; border-radius: 0; margin-left: -8px; margin-right: -8px; width: calc(100% + 16px); padding-left: 24px; padding-right: 24px; }
-    .ni.home:hover { background: #E6EBF4; border-radius: 0; }
+    .nav-section .ni:hover { background: #E8F0FE; border-radius: 0; margin-left: -8px; margin-right: -8px; width: calc(100% + 16px); padding-left: 24px; padding-right: 24px; }
+    .ni.home:hover { background: #E8F0FE; border-radius: 0; }
     .nav-section .ni.active { background: #EFF6FF; border-left: 3px solid #2667D8; border-radius: 0; padding-left: 21px; padding-right: 24px; margin-left: -8px; margin-right: -8px; width: calc(100% + 16px); }
     .ni.home.active { background: #EFF6FF; border-left: 3px solid #2667D8; padding-left: 21px; border-radius: 0; }
     .ni.active .ni-lbl { color: #2667D8; font-weight: 600; }
     .ni.active .ni-ic { color: #2667D8; }
-    .ni-ic { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #4A5567; }
-    .ni-lbl { font-size: 14px; font-weight: 500; color: #4A5567; }
+    .ni-ic { width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #4A5567; }
+    .ni-lbl { font-size: 14px; font-weight: 400; color: #222B3A; }
     .ni.active .ni-lbl { color: #2667D8; }
     .sb.col .ni { padding: 0; width: 36px; justify-content: center; border-radius: 4px; }
     .sb.col .ni.home { padding: 0; border-radius: 4px; }
@@ -75,6 +77,16 @@
     .app-lbl { font-size: 10px; font-weight: 500; color: #353F4F; text-align: center; line-height: 1.2; }
     .sb.col .app-lbl { display: none; }
     .sb.col .app-tile:hover::after { content: attr(data-label); position: absolute; left: calc(100% + 8px); top: 50%; transform: translateY(-50%); background: #222B3A; color: #fff; font-size: 12px; padding: 4px 10px; border-radius: 4px; white-space: nowrap; z-index: 300; pointer-events: none; }
+    .sb.col .ni-sub-wrap { display: none; }
+    .apps-grid .app-tile:nth-child(8) { grid-column: 1; }
+    .staff-row { display: flex; align-items: center; justify-content: space-between; padding: 0 12px 0 24px; height: 40px; flex-shrink: 0; }
+    .staff-row-left { display: flex; align-items: center; gap: 8px; }
+    .staff-label { font-size: 14px; font-weight: 400; color: #222B3A; }
+    .staff-more-btn { width: 28px; height: 28px; border: none; background: transparent; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #677489; font-size: 14px; }
+    .staff-more-btn:hover { background: #F2F5F9; }
+    .sb.col .staff-row { padding: 0; justify-content: center; }
+    .sb.col .staff-label { display: none; }
+    .sb.col .staff-more-btn { display: none; }
 
     /* Top nav */
     .main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
