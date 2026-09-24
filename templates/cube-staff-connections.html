@@ -546,8 +546,14 @@
       text-decoration: none;
     }
     .cs-bc-sep {
-      font-size: 10px;
-      color: #98A2B3;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      font-size: 16px;
+      color: #475467;
+      flex-shrink: 0;
     }
     .cs-bc-cur { color: #101828; }
     .cs-pg-title {
@@ -1185,7 +1191,7 @@
         <div class="cs-breadcrumb">
           <span class="cs-bc-icon"><i class="fa-regular fa-users"></i></span>
           <a class="cs-bc-link">Cube Staff</a>
-          <i class="fa-regular fa-chevron-right cs-bc-sep"></i>
+          <span class="cs-bc-sep"><i class="fa-regular fa-chevron-right"></i></span>
           <span class="cs-bc-cur">Connections</span>
         </div>
         <h1 class="cs-pg-title">Connections</h1>
