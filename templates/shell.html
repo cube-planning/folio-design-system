@@ -130,16 +130,17 @@
     }
     .sb.col .nav-section { padding: 0; align-items: center; }
 
-    /* Section header — DM Sans Medium 12px, gray/700 per Figma spec */
+    /* Section header — DM Sans Regular 12px (caption-1), gray/700 per Figma spec */
     .sec {
       display: flex;
       align-items: center;
       gap: 4px;
       height: 20px;
-      padding: 0 8px;
+      padding: 0 8px 0 8px;
+      margin-bottom: 6px; /* 4px nav-section gap + 6px = 10px gap before first item (Figma spec) */
       font-family: 'DM Sans', sans-serif;
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 400;
       color: #4A5567;
       white-space: nowrap;
     }
@@ -147,7 +148,19 @@
     .sb.col .sec-lbl { display: none; }
     .sb.col .sec-crt { display: none; }
 
-    /* Nav items — content at 32px from card edge per Figma spec */
+    /* Section caret — 16×16 wrapper matching Figma's IconWrapper size */
+    .sec-crt {
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #677489;
+      font-size: 10px;
+    }
+
+    /* Nav items */
     .ni {
       height: 32px;
       padding: 0 32px;
@@ -162,13 +175,16 @@
       color: inherit;
       width: 100%;
     }
-    /* Home — full width, no radius */
+    /* Home — full width, no radius, icon at x=40 (8sb + 32pl) */
     .ni.home {
-      padding: 0 32px;
+      padding: 0 28px 0 32px;
       border-radius: 0;
     }
 
-    /* Hover inside nav-section — break out to full card width */
+    /* Items inside nav-section: icon at x=40 (8sb + 8nav-sec + 24pl) */
+    .nav-section .ni { padding-left: 24px; }
+
+    /* Hover inside nav-section — break out to full card width, icon stays at x=40 (8sb + 32pl) */
     .nav-section .ni:hover {
       background: #E8F0FE;
       border-radius: 0;
@@ -185,23 +201,23 @@
       border-radius: 0;
     }
 
-    /* Active inside nav-section — break out to full card width */
+    /* Active inside nav-section — break out to full card width, icon at x=40 (8sb + 3border + 29pl) */
     .nav-section .ni.active {
       background: #EFF6FF;
       border-left: 3px solid #2667D8;
       border-radius: 0;
-      padding-left: 29px;  /* 32px − 3px border = same visual alignment */
+      padding-left: 29px;
       padding-right: 24px;
       margin-left: -8px;
       margin-right: -8px;
       width: calc(100% + 16px);
     }
 
-    /* Home active — already full width */
+    /* Home active — already full width, icon at x=40 (8sb + 3border + 29pl) */
     .ni.home.active {
       background: #EFF6FF;
       border-left: 3px solid #2667D8;
-      padding-left: 29px;  /* 32px − 3px border = same visual alignment */
+      padding-left: 29px;
       border-radius: 0;
     }
 
@@ -250,10 +266,9 @@
 
     /* Sub-nav items (e.g. Library → Reports, Files) */
     .ni-sub-wrap {
-      /* 62px matches every deployed page template in the design project, which
-         indents sub-items one step past the parent label (.ni is 29px padding +
-         22px icon + 8px gap). This file was the lone outlier at 42px. */
-      padding-left: 62px;
+      /* 34px: inside nav-section (8px padding), border line lands at x=50 (8sb+8nav-sec+34)
+         matching Figma's pl-42px from the section body (8sb+42=50). */
+      padding-left: 34px;
       display: flex;
       flex-direction: column;
     }
@@ -261,7 +276,7 @@
       display: flex;
       align-items: center;
       height: 32px;
-      padding: 4px 16px 4px 18px;
+      padding: 4px 16px 4px 16px;
       border-left: 2px solid #E3E8EF;
       font-size: 14px;
       font-weight: 400;
@@ -278,15 +293,52 @@
     .apps-wrap { padding: 0 8px 16px; }
     .sb.col .apps-wrap { padding: 0 0 8px; }
 
+    /* Cube Staff footer — icon at x=32 (8sb + 24pl) per Figma spec */
+    .staff-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px 0 24px;
+      height: 40px;
+      flex-shrink: 0;
+    }
+    .staff-row-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .staff-label {
+      font-size: 14px;
+      font-weight: 400;
+      color: #222B3A;
+    }
+    .staff-more-btn {
+      width: 28px;
+      height: 28px;
+      border: none;
+      background: transparent;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #677489;
+      font-size: 14px;
+    }
+    .staff-more-btn:hover { background: #F2F5F9; }
+    .sb.col .staff-row { padding: 0; justify-content: center; }
+    .sb.col .staff-label { display: none; }
+    .sb.col .staff-more-btn { display: none; }
+
     /* Apps section header — same DM Sans/color treatment as .sec */
     .apps-sec {
       display: flex;
       align-items: center;
       gap: 4px;
-      padding: 8px 8px 4px;
+      padding: 8px 8px 4px 8px;
       font-family: 'DM Sans', sans-serif;
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 400;
       color: #4A5567;
     }
     .sb.col .apps-sec { justify-content: center; padding: 8px 0 4px; }
@@ -511,17 +563,28 @@
 
         <div class="dv"></div>
 
+        <!-- AI -->
+        <div class="nav-section">
+          <div class="sec">
+            <span class="sec-crt"><i class="fa-solid fa-caret-down"></i></span>
+            <span class="sec-lbl">AI</span>
+          </div>
+          <div class="ni" data-label="AI Hub"><div class="ni-ic" data-icon="aiAnalyst"></div><span class="ni-lbl">AI Hub</span></div>
+          <div class="ni" data-label="Planner"><div class="ni-ic"><i class="fa-regular fa-book-sparkles"></i></div><span class="ni-lbl">Planner</span></div>
+          <div class="ni" data-label="Smart Variance"><div class="ni-ic" data-icon="smartVariance"></div><span class="ni-lbl">Smart Variance</span></div>
+        </div>
+
+        <div class="dv"></div>
+
         <!-- Reporting & Analytics -->
         <div class="nav-section">
           <div class="sec">
-            <svg class="sec-crt" width="8" height="5" viewBox="0 0 10 6" fill="none"><path d="M4.29 5.71C4.68 6.1 5.32 6.1 5.71 5.71L9.71 1.71C10 1.42 10.08.99 9.92.62 9.77.24 9.4 0 9 0H1C.6 0 .23.25.08.62c-.16.38-.07.81.21 1.1L4.29 5.71z" fill="#677489"/></svg>
+            <span class="sec-crt"><i class="fa-solid fa-caret-down"></i></span>
             <span class="sec-lbl">Reporting &amp; Analytics</span>
           </div>
+          <div class="ni" data-label="Boards"><div class="ni-ic"><i class="fa-regular fa-chart-user"></i></div><span class="ni-lbl">Boards</span></div>
           <div class="ni" data-label="Cube BI"><div class="ni-ic" data-icon="cubeBI"></div><span class="ni-lbl">Cube BI</span></div>
           <div class="ni" data-label="Builder"><div class="ni-ic"><i class="fa-regular fa-hammer"></i></div><span class="ni-lbl">Builder</span></div>
-          <div class="ni" data-label="Boards"><div class="ni-ic" data-icon="boards"></div><span class="ni-lbl">Boards</span></div>
-          <div class="ni" data-label="Smart Variance"><div class="ni-ic" data-icon="smartVariance"></div><span class="ni-lbl">Smart Variance</span></div>
-          <div class="ni" data-label="Cube AI"><div class="ni-ic" data-icon="aiAnalyst"></div><span class="ni-lbl">Cube AI</span></div>
           <div class="ni" data-label="Library"><div class="ni-ic" data-icon="library"></div><span class="ni-lbl">Library</span></div>
           <div class="ni-sub-wrap">
             <a class="ni-sub" data-label="Reports"><span>Reports</span></a>
@@ -534,12 +597,12 @@
         <!-- Planning -->
         <div class="nav-section">
           <div class="sec">
-            <svg class="sec-crt" width="8" height="5" viewBox="0 0 10 6" fill="none"><path d="M4.29 5.71C4.68 6.1 5.32 6.1 5.71 5.71L9.71 1.71C10 1.42 10.08.99 9.92.62 9.77.24 9.4 0 9 0H1C.6 0 .23.25.08.62c-.16.38-.07.81.21 1.1L4.29 5.71z" fill="#677489"/></svg>
+            <span class="sec-crt"><i class="fa-solid fa-caret-down"></i></span>
             <span class="sec-lbl">Planning</span>
           </div>
-          <div class="ni" data-label="Planners"><div class="ni-ic" data-icon="planners"></div><span class="ni-lbl">Planners</span></div>
           <div class="ni" data-label="Scenarios"><div class="ni-ic" data-icon="scenarios"></div><span class="ni-lbl">Scenarios</span></div>
-          <div class="ni" data-label="Workflows"><div class="ni-ic" data-icon="workflows"></div><span class="ni-lbl">Workflows</span></div>
+          <div class="ni" data-label="Workflows"><div class="ni-ic"><i class="fa-regular fa-layer-group"></i></div><span class="ni-lbl">Workflows</span></div>
+          <div class="ni" data-label="Tables"><div class="ni-ic"><i class="fa-regular fa-table"></i></div><span class="ni-lbl">Tables</span></div>
         </div>
 
         <div class="dv"></div>
@@ -547,7 +610,7 @@
         <!-- Modeling -->
         <div class="nav-section">
           <div class="sec">
-            <svg class="sec-crt" width="8" height="5" viewBox="0 0 10 6" fill="none"><path d="M4.29 5.71C4.68 6.1 5.32 6.1 5.71 5.71L9.71 1.71C10 1.42 10.08.99 9.92.62 9.77.24 9.4 0 9 0H1C.6 0 .23.25.08.62c-.16.38-.07.81.21 1.1L4.29 5.71z" fill="#677489"/></svg>
+            <span class="sec-crt"><i class="fa-solid fa-caret-down"></i></span>
             <span class="sec-lbl">Modeling</span>
           </div>
           <div class="ni" data-label="Dimensions"><div class="ni-ic" data-icon="dimensions"></div><span class="ni-lbl">Dimensions</span></div>
@@ -560,7 +623,7 @@
         <!-- Data -->
         <div class="nav-section">
           <div class="sec">
-            <svg class="sec-crt" width="8" height="5" viewBox="0 0 10 6" fill="none"><path d="M4.29 5.71C4.68 6.1 5.32 6.1 5.71 5.71L9.71 1.71C10 1.42 10.08.99 9.92.62 9.77.24 9.4 0 9 0H1C.6 0 .23.25.08.62c-.16.38-.07.81.21 1.1L4.29 5.71z" fill="#677489"/></svg>
+            <span class="sec-crt"><i class="fa-solid fa-caret-down"></i></span>
             <span class="sec-lbl">Data</span>
           </div>
           <div class="ni" data-label="Integrations"><div class="ni-ic" data-icon="integrations"></div><span class="ni-lbl">Integrations</span></div>
@@ -572,14 +635,13 @@
         <!-- Admin -->
         <div class="nav-section">
           <div class="sec">
-            <svg class="sec-crt" width="8" height="5" viewBox="0 0 10 6" fill="none"><path d="M4.29 5.71C4.68 6.1 5.32 6.1 5.71 5.71L9.71 1.71C10 1.42 10.08.99 9.92.62 9.77.24 9.4 0 9 0H1C.6 0 .23.25.08.62c-.16.38-.07.81.21 1.1L4.29 5.71z" fill="#677489"/></svg>
+            <span class="sec-crt"><i class="fa-solid fa-caret-down"></i></span>
             <span class="sec-lbl">Admin</span>
           </div>
           <div class="ni" data-label="Users"><div class="ni-ic" data-icon="users"></div><span class="ni-lbl">Users</span></div>
           <div class="ni" data-label="Currencies"><div class="ni-ic" data-icon="currencies"></div><span class="ni-lbl">Currencies</span></div>
           <div class="ni" data-label="Audit Trail"><div class="ni-ic" data-icon="auditTrail"></div><span class="ni-lbl">Audit Trail</span></div>
-          <!-- data-icon="usages" requires gauge icon added to _sidebar-icons.js -->
-          <div class="ni" data-label="Usages"><div class="ni-ic" data-icon="usages"></div><span class="ni-lbl">Usages</span></div>
+          <div class="ni" data-label="Usages"><div class="ni-ic"><i class="fa-regular fa-gauge-simple-high"></i></div><span class="ni-lbl">Usages</span></div>
         </div>
 
         <div class="dv"></div>
@@ -587,7 +649,7 @@
         <!-- Apps — order matches Figma 4/3/2 grid (nth-child(8) forces Slides to col 1) -->
         <div class="apps-wrap">
           <div class="apps-sec">
-            <svg class="sec-crt" width="8" height="5" viewBox="0 0 10 6" fill="none"><path d="M4.29 5.71C4.68 6.1 5.32 6.1 5.71 5.71L9.71 1.71C10 1.42 10.08.99 9.92.62 9.77.24 9.4 0 9 0H1C.6 0 .23.25.08.62c-.16.38-.07.81.21 1.1L4.29 5.71z" fill="#677489"/></svg>
+            <span class="sec-crt"><i class="fa-solid fa-caret-down"></i></span>
             <span class="sec-lbl">Apps</span>
           </div>
           <div class="apps-grid">
@@ -604,6 +666,20 @@
         </div>
 
       </div><!-- .sb-nav -->
+
+      <div style="height:1px;background:#E3E8EF;margin:0"></div>
+
+      <!-- Cube Staff footer row -->
+      <div class="staff-row">
+        <div class="staff-row-left">
+          <div class="ni-ic" style="color:#4A5567"><i class="fa-regular fa-users"></i></div>
+          <span class="staff-label">Cube Staff</span>
+        </div>
+        <button class="staff-more-btn" aria-label="More options">
+          <i class="fa-solid fa-ellipsis-vertical"></i>
+        </button>
+      </div>
+
     </div><!-- .sb-card -->
   </aside>
 

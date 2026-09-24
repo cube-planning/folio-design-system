@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Folio — Cube Staff · Connections</title>
+
+  <link rel="stylesheet" href="../vendor/fonts/dm-sans/dm-sans.css">
+  <link rel="stylesheet" href="../vendor/fontawesome/css/all.min.css">
+
+  <script src="../components/_sidebar-icons.js"></script>
+
+  <link rel="stylesheet" href="../tokens/tokens.css">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--color-bg-canvas);
+      height: 100vh;
+      overflow: hidden;
+      color: #222B3A;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* ── SHELL LAYOUT ─────────────────────────────────── */
+    .app-shell { display: flex; height: 100vh; }
+
+    /* ── SIDEBAR ──────────────────────────────────────── */
+    .sb {
+      width: 255px;
+      min-width: 255px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .sb-card {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.08), 0px 1px 2px rgba(0,0,0,0.06);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .sb-hdr {
+      height: 48px;
+      padding: 16px 12px 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .logo-wm {
+      display: flex;
+      align-items: center;
+      width: 78.7px;
+      height: 30.71px;
+      flex-shrink: 0;
+    }
+    .logo-wm svg { width: 78.7px; height: 30.71px; display: block; }
+
+    .col-btn {
+      width: 28px;
+      height: 28px;
+      border: none;
+      border-radius: 4px;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .sb-nav {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 24px 0;
+    }
+    .sb-nav::-webkit-scrollbar { width: 4px; }
+    .sb-nav::-webkit-scrollbar-thumb { background: #CDD5E0; border-radius: 2px; }
+
+    .dv { height: 1px; background: #E3E8EF; margin: 8px 0; }
+
+    .nav-section {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 8px;
+    }
+
+    .sec {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      height: 20px;
+      padding: 0 8px 0 8px;
+      margin-bottom: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      color: #4A5567;
+      white-space: nowrap;
+    }
+
+    .sec-crt {
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #677489;
+      font-size: 10px;
+    }
+
+    .ni {
+      height: 32px;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      position: relative;
+      white-space: nowrap;
+      text-decoration: none;
+      color: inherit;
+      width: 100%;
+    }
+
+    .ni.home { padding: 0 28px 0 32px; border-radius: 0; }
+
+    .nav-section .ni { padding-left: 24px; }
+
+    .nav-section .ni:hover {
+      background: #E8F0FE;
+      border-radius: 0;
+      margin-left: -8px;
+      margin-right: -8px;
+      width: calc(100% + 16px);
+      padding-left: 32px;
+      padding-right: 24px;
+    }
+
+    .ni.home:hover { background: #E8F0FE; border-radius: 0; }
+
+    .nav-section .ni.active {
+      background: #EFF6FF;
+      border-left: 3px solid #2667D8;
+      border-radius: 0;
+      padding-left: 29px;
+      padding-right: 24px;
+      margin-left: -8px;
+      margin-right: -8px;
+      width: calc(100% + 16px);
+    }
+
+    .ni.home.active {
+      background: #EFF6FF;
+      border-left: 3px solid #2667D8;
+      padding-left: 29px;
+      border-radius: 0;
+    }
+
+    .ni.active .ni-lbl { color: #2667D8; font-weight: 600; }
+    .ni.active .ni-ic { color: #2667D8; }
+
+    .ni-ic {
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #4A5567;
+      font-size: 14px;
+    }
+
+    .ni-lbl { font-size: 14px; font-weight: 400; color: #222B3A; }
+    .ni.active .ni-lbl { color: #2667D8; }
+
+    .ni-sub-wrap {
+      padding-left: 34px;
+      display: flex;
+      flex-direction: column;
+    }
+    .ni-sub {
+      display: flex;
+      align-items: center;
+      height: 32px;
+      padding: 4px 16px 4px 16px;
+      border-left: 2px solid #E3E8EF;
+      font-size: 14px;
+      font-weight: 400;
+      color: #222B3A;
+      cursor: pointer;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+    .ni-sub:hover { background: #EFF6FF; }
+    .ni-sub.active { color: #2667D8; font-weight: 600; border-left-color: #2667D8; }
+
+    /* Cube Staff footer */
+    .staff-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px 0 24px;
+      height: 40px;
+      flex-shrink: 0;
+    }
+    .staff-row-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .staff-label {
+      font-size: 14px;
+      font-weight: 400;
+      color: #222B3A;
+    }
+    .staff-more-btn {
+      width: 28px;
+      height: 28px;
+      border: none;
+      background: transparent;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #677489;
+      font-size: 14px;
+    }
+    .staff-more-btn:hover { background: #F2F5F9; }
+
+    /* Apps section */
+    .apps-wrap { padding: 0 8px 16px; }
+    .apps-sec {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 8px 4px 8px;
+      font-size: 12px;
+      font-weight: 400;
+      color: #4A5567;
+    }
+    .apps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+      padding: 4px 0;
+    }
+    .apps-grid .app-tile:nth-child(8) { grid-column: 1; }
+    .app-tile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 0;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .app-tile:hover { background: #E8F0FE; }
+    .app-circ {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #EEF0F4;
+      border: 1.5px solid #DDE1E8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .app-lbl { font-size: 10px; font-weight: 500; color: #353F4F; text-align: center; }
+
+    /* ── MAIN ─────────────────────────────────────────── */
+    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+
+    /* ── TOP NAV ─────────────────────────────────────── */
+    .topnav {
+      height: 80px;
+      background: var(--color-bg-canvas);
+      border-bottom: 1px solid #E3E8EF;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      flex-shrink: 0;
+    }
+
+    .tn-company {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      height: 32px;
+      padding: 0 12px;
+      background: #FFFFFF;
+      border-radius: 16px;
+      box-shadow: 0px 2px 2px #E3E8EF;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .tn-company:hover { box-shadow: 0px 2px 4px #CDD5E0; }
+
+    .tn-company-ic {
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #173D82;
+      font-size: 14px;
+    }
+
+    .tn-company-name { font-size: 12px; font-weight: 400; color: #677489; }
+
+    .tn-chevron {
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #353F4F;
+    }
+
+    .tn-right { display: flex; align-items: center; gap: 8px; }
+
+    .tn-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      border: none;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+    }
+    .tn-btn:hover { background: #F8FAFC; }
+
+    .tn-user {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 32px;
+      padding: 0 8px;
+      background: #FFFFFF;
+      border-radius: 20px;
+      box-shadow: 0px 2px 2px #E3E8EF;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .tn-user:hover { box-shadow: 0px 2px 4px #CDD5E0; }
+
+    .tn-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 12px;
+      background: #E3E8EF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: #4A5567;
+      flex-shrink: 0;
+    }
+
+    .tn-user-name { font-size: 12px; font-weight: 400; color: #677489; }
+
+    /* ── PAGE CONTENT ─────────────────────────────────── */
+    .page-content {
+      flex: 1;
+      overflow-y: auto;
+      background: var(--color-bg-canvas);
+      padding: 32px;
+    }
+
+    /* Page header */
+    .pg-hdr {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .pg-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 24px;
+      font-weight: 700;
+      color: #222B3A;
+      line-height: 32px;
+    }
+
+    .pg-sub {
+      font-size: 14px;
+      font-weight: 400;
+      color: #677489;
+      margin-top: 4px;
+    }
+
+    .pg-sub a {
+      color: #2667D8;
+      text-decoration: none;
+    }
+
+    .pg-actions { display: flex; align-items: center; gap: 8px; }
+
+    /* Tabs */
+    .view-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid #E3E8EF;
+      margin-bottom: 24px;
+    }
+
+    .vtab {
+      height: 36px;
+      padding: 0 16px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #677489;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .vtab:hover { color: #222B3A; }
+    .vtab.active {
+      color: #2667D8;
+      border-bottom-color: #2667D8;
+      font-weight: 600;
+    }
+
+    /* Info banner */
+    .info-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 16px;
+      background: #EFF6FF;
+      border: 1px solid #DBEAFE;
+      border-radius: 12px;
+      margin-bottom: 24px;
+    }
+
+    .info-banner-body {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .info-banner-body i {
+      font-size: 14px;
+      color: #2667D8;
+      flex-shrink: 0;
+    }
+
+    .info-banner-text {
+      font-size: 14px;
+      color: #353F4F;
+      line-height: 20px;
+    }
+
+    /* Buttons */
+    .btn-primary {
+      height: 32px;
+      padding: 0 16px;
+      border-radius: 9999px;
+      background: #173D82;
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .btn-primary:hover { background: #122E64; }
+
+    .btn-secondary {
+      height: 32px;
+      padding: 0 16px;
+      border-radius: 9999px;
+      background: #fff;
+      color: #173D82;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      border: 1px solid #173D82;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .btn-secondary:hover { background: #E6EBF4; }
+
+    .btn-ghost {
+      height: 32px;
+      padding: 0 12px;
+      border-radius: 9999px;
+      background: transparent;
+      color: #4A5567;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .btn-ghost:hover { background: #F2F5F9; }
+
+    .btn-danger {
+      height: 32px;
+      padding: 0 16px;
+      border-radius: 9999px;
+      background: #D92D20;
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .btn-danger:hover { background: #B42318; }
+
+    .btn-view-docs {
+      height: 28px;
+      padding: 0 12px;
+      border-radius: 9999px;
+      background: #fff;
+      color: #173D82;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      border: 1px solid #C6D3EC;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .btn-view-docs:hover { background: #E6EBF4; }
+
+    /* Supported connections card */
+    .connections-card {
+      background: #fff;
+      border: 1px solid #E3E8EF;
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+    }
+
+    .connections-card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #222B3A;
+      margin-bottom: 16px;
+    }
+
+    .connections-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 32px;
+      margin-bottom: 20px;
+    }
+
+    .conn-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: #222B3A;
+      padding: 2px 0;
+    }
+
+    .conn-item.disabled { color: #97A3B6; }
+
+    .conn-item input[type="checkbox"] {
+      width: 14px;
+      height: 14px;
+      accent-color: #173D82;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .conn-note {
+      font-size: 12px;
+      color: #97A3B6;
+      margin-left: 22px;
+    }
+
+    .conn-row {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .connections-save-row {
+      display: flex;
+      justify-content: flex-end;
+      padding-top: 16px;
+      border-top: 1px solid #F2F5F9;
+    }
+
+    /* Connection settings card */
+    .settings-card {
+      background: #fff;
+      border: 1px solid #E3E8EF;
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+    }
+
+    .settings-card-hdr {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      gap: 16px;
+    }
+
+    .settings-card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #222B3A;
+      line-height: 24px;
+    }
+
+    .settings-card-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-top: 4px;
+    }
+
+    .settings-card-id {
+      font-size: 11px;
+      color: #97A3B6;
+      font-family: monospace;
+    }
+
+    .settings-divider { height: 1px; background: #F2F5F9; margin: 16px 0; }
+
+    .settings-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      padding: 10px 0;
+    }
+
+    .settings-label {
+      width: 220px;
+      flex-shrink: 0;
+      font-size: 14px;
+      font-weight: 500;
+      color: #353F4F;
+      padding-top: 2px;
+    }
+
+    .settings-control {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .settings-row-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    /* Checkbox in settings */
+    .settings-check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 14px;
+      color: #353F4F;
+    }
+    .settings-check-row input[type="checkbox"] {
+      margin-top: 2px;
+      width: 14px;
+      height: 14px;
+      accent-color: #173D82;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    /* Warning banner */
+    .warn-banner {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+      background: #FFFAEB;
+      border: 1px solid #FECF89;
+      border-radius: 10px;
+      font-size: 13px;
+      color: #B54708;
+      line-height: 18px;
+    }
+    .warn-banner i { font-size: 14px; color: #F79009; flex-shrink: 0; margin-top: 1px; }
+
+    /* Select dropdown */
+    .settings-select {
+      width: 100%;
+      height: 32px;
+      border: 1px solid #CDD5E0;
+      border-radius: 8px;
+      padding: 0 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: #222B3A;
+      background: #fff;
+      cursor: pointer;
+      appearance: auto;
+    }
+    .settings-select:focus { outline: none; border-color: #173D82; box-shadow: 0px 0px 0px 4px rgba(23,61,130,0.24); }
+
+    /* Textarea */
+    .settings-textarea {
+      width: 100%;
+      height: 64px;
+      border: 1px solid #CDD5E0;
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: #222B3A;
+      resize: vertical;
+      background: #FCFCFD;
+    }
+    .settings-textarea:focus { outline: none; border-color: #173D82; box-shadow: 0px 0px 0px 4px rgba(23,61,130,0.24); }
+
+    .settings-helper { font-size: 12px; color: #97A3B6; }
+
+    /* Save row in card */
+    .card-save-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid #F2F5F9;
+    }
+
+    /* Imported transactions */
+    .imported-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 16px;
+      border-top: 1px solid #F2F5F9;
+      margin-top: 16px;
+    }
+
+    .imported-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #353F4F;
+      flex-shrink: 0;
+    }
+
+    .imported-actions { display: flex; align-items: center; gap: 8px; }
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ══════════ SIDEBAR ══════════ -->
+  <aside id="sb" class="sb">
+    <div class="sb-card">
+
+      <div class="sb-hdr">
+        <div class="logo-wm" data-icon="wordmark"></div>
+        <button class="col-btn" onclick="toggleSB()" aria-label="Toggle sidebar">
+          <span id="cicon" data-icon="collapseLeft"></span>
+        </button>
+      </div>
+
+      <div class="sb-nav">
+
+        <!-- Home -->
+        <div class="ni home" data-label="Home">
+          <div class="ni-ic" data-icon="home"></div>
+          <span class="ni-lbl">Home</span>
+        </div>
+
+        <div class="dv"></div>
+
+        <!-- AI -->
+        <div class="nav-section">
+          <div class="sec">
+            <span class="sec-crt"><i class="fa-solid fa-caret-down"></i></span>
+            <span class="sec-lbl">AI</span>
+          </div>
+          <div class="ni" data-label="AI Hub"><div class="ni-ic" data-icon="aiAnalyst"></div><span class="ni-lbl">AI Hub</span></div>
+          <div class="ni" data-label="Planner"><div class="ni-ic"><i class="fa-regular fa-book-sparkles"></i></div><span class="ni-lbl">Planner</span></div>
+          <div class="ni" data-label="Smart Variance"><div class="ni-ic" data-icon="smartVariance"></div><span class="ni-lbl">Smart Variance</span></div>
+        </div>
+
+        <div class="dv"></div>
+
+        <!-- Reporting & Analytics -->
+        <div class="nav-section">
+          <div class="sec">
+            <span class="sec-crt"><i class="fa-solid fa-caret-down"></i></span>
+            <span class="sec-lbl">Reporting &amp; Analytics</span>
+          </div>
+          <div class="ni" data-label="Boards"><div class="ni-ic"><i class="fa-regular fa-chart-user"></i></div><span class="ni-lbl">Boards</span></div>
+          <div class="ni" data-label="Cube BI"><div class="ni-ic" data-icon="cubeBI"></div><span class="ni-lbl">Cube BI</span></div>
+          <div class="ni" data-label="Builder"><div class="ni-ic"><i class="fa-regular fa-hammer"></i></div><span class="ni-lbl">Builder</span></div>
+          <div class="ni" data-label="Library"><div class="ni-ic" data-icon="library"></div><span class="ni-lbl">Library</span></div>
+          <div class="ni-sub-wrap">
+            <a class="ni-sub" data-label="Reports"><span>Reports</span></a>
+            <a class="ni-sub" data-label="Files"><span>Files</span></a>
+          </div>
+        </div>
+
+        <div class="dv"></div>
+
+        <!-- Planning -->
+        <div class="nav-section">
+          <div class="sec">
+            <span class="sec-crt"><i class="fa-solid fa-caret-down"></i></span>
+            <span class="sec-lbl">Planning</span>
+          </div>
+          <div class="ni" data-label="Scenarios"><div class="ni-ic" data-icon="scenarios"></div><span class="ni-lbl">Scenarios</span></div>
+          <div class="ni" data-label="Workflows"><div class="ni-ic"><i class="fa-regular fa-layer-group"></i></div><span class="ni-lbl">Workflows</span></div>
+          <div class="ni" data-label="Tables"><div class="ni-ic"><i class="fa-regular fa-table"></i></div><span class="ni-lbl">Tables</span></div>
+        </div>
+
+        <div class="dv"></div>
+
+        <!-- Modeling -->
+        <div class="nav-section">
+          <div class="sec">
+            <span class="sec-crt"><i class="fa-solid fa-caret-down"></i></span>
+            <span class="sec-lbl">Modeling</span>
+          </div>
+          <div class="ni" data-label="Dimensions"><div class="ni-ic" data-icon="dimensions"></div><span class="ni-lbl">Dimensions</span></div>
+          <div class="ni" data-label="Formulas"><div class="ni-ic" data-icon="formulas"></div><span class="ni-lbl">Formulas</span></div>
+          <div class="ni" data-label="Tags"><div class="ni-ic" data-icon="tags"></div><span class="ni-lbl">Tags</span></div>
+        </div>
+
+        <div class="dv"></div>
+
+        <!-- Data -->
+        <div class="nav-section">
+          <div class="sec">
+            <span class="sec-crt"><i class="fa-solid fa-caret-down"></i></span>
+            <span class="sec-lbl">Data</span>
+          </div>
+          <div class="ni" data-label="Integrations"><div class="ni-ic" data-icon="integrations"></div><span class="ni-lbl">Integrations</span></div>
+          <div class="ni" data-label="Data Export"><div class="ni-ic" data-icon="dataExport"></div><span class="ni-lbl">Data Export</span></div>
+        </div>
+
+        <div class="dv"></div>
+
+        <!-- Admin -->
+        <div class="nav-section">
+          <div class="sec">
+            <span class="sec-crt"><i class="fa-solid fa-caret-down"></i></span>
+            <span class="sec-lbl">Admin</span>
+          </div>
+          <div class="ni" data-label="Users"><div class="ni-ic" data-icon="users"></div><span class="ni-lbl">Users</span></div>
+          <div class="ni" data-label="Currencies"><div class="ni-ic" data-icon="currencies"></div><span class="ni-lbl">Currencies</span></div>
+          <div class="ni" data-label="Audit Trail"><div class="ni-ic" data-icon="auditTrail"></div><span class="ni-lbl">Audit Trail</span></div>
+        </div>
+
+        <div class="dv"></div>
+
+        <!-- Apps -->
+        <div class="apps-wrap">
+          <div class="apps-sec">
+            <span class="sec-crt"><i class="fa-solid fa-caret-down"></i></span>
+            <span class="sec-lbl">Apps</span>
+          </div>
+          <div class="apps-grid">
+            <div class="app-tile" data-label="AI Plugin"><div class="app-circ" data-icon="aiPlugin"></div><span class="app-lbl">AI Plugin</span></div>
+            <div class="app-tile" data-label="Sheets"><div class="app-circ" data-icon="sheets"></div><span class="app-lbl">Sheets</span></div>
+            <div class="app-tile" data-label="PowerPoint"><div class="app-circ" data-icon="powerpoint"></div><span class="app-lbl">PowerPoint</span></div>
+          </div>
+        </div>
+
+      </div><!-- .sb-nav -->
+
+      <div class="dv" style="margin:0"></div>
+
+      <!-- Cube Staff footer row -->
+      <div class="staff-row">
+        <div class="staff-row-left">
+          <div class="ni-ic" style="color:#4A5567"><i class="fa-regular fa-users"></i></div>
+          <span class="staff-label">Cube Staff</span>
+        </div>
+        <button class="staff-more-btn" aria-label="More options">
+          <i class="fa-solid fa-ellipsis-vertical"></i>
+        </button>
+      </div>
+    </div><!-- .sb-card -->
+  </aside>
+
+  <!-- ══════════ MAIN ══════════ -->
+  <div class="main">
+
+    <header class="topnav">
+
+      <div class="tn-company">
+        <div class="tn-company-ic">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M1 14.5V3.5C1 2.948 1.448 2.5 2 2.5H7C7.552 2.5 8 2.948 8 3.5V5.5H14C14.552 5.5 15 5.948 15 6.5V14.5H10V11.5H6V14.5H1ZM3 11.5H5V9.5H3V11.5ZM3 7.5H5V5.5H3V7.5ZM10 11.5H12V9.5H10V11.5ZM10 7.5H12V5.5H10V7.5ZM6 7.5H8V5.5H6V7.5Z" fill="currentColor"/></svg>
+        </div>
+        <span class="tn-company-name">Accuplanner Inc</span>
+        <div class="tn-chevron">
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#353F4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+
+      <div class="tn-right">
+        <button class="tn-btn" title="Background tasks">
+          <i class="fa-regular fa-arrows-rotate" style="color:#4A5567;font-size:16px"></i>
+        </button>
+        <button class="tn-btn" title="Help">
+          <i class="fa-regular fa-circle-question" style="color:#4A5567;font-size:16px"></i>
+        </button>
+        <button class="tn-btn" title="AI Analyst">
+          <i class="fa-solid fa-sparkles" style="color:#7A5AF8;font-size:16px"></i>
+        </button>
+        <div class="tn-user">
+          <div class="tn-avatar">NO</div>
+          <span class="tn-user-name">Nan O.</span>
+          <div class="tn-chevron">
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#353F4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+
+      <!-- Info Banner -->
+      <div class="info-banner">
+        <div class="info-banner-body">
+          <i class="fa-solid fa-circle-info"></i>
+          <span class="info-banner-text">This page is used to manage various settings for connections. The settings differ based on the source system.</span>
+        </div>
+        <button class="btn-view-docs">View docs</button>
+      </div>
+
+      <!-- Supported Connections -->
+      <div class="connections-card">
+        <div class="connections-card-title">Supported Connections</div>
+
+        <div class="connections-grid">
+
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" checked id="conn-qb"> <label for="conn-qb">QuickBooks</label>
+            </div>
+          </div>
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-deltek"> <label for="conn-deltek">Deltek <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" checked id="conn-xero"> <label for="conn-xero">Xero</label>
+            </div>
+          </div>
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-bamboo"> <label for="conn-bamboo">BambooHR <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" checked id="conn-ns"> <label for="conn-ns">NetSuite</label>
+            </div>
+          </div>
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-zenefits"> <label for="conn-zenefits">Zenefits <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" checked id="conn-sf"> <label for="conn-sf">Salesforce</label>
+            </div>
+          </div>
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-paylocity"> <label for="conn-paylocity">Paylocity <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" checked id="conn-sage"> <label for="conn-sage">Sage Intacct</label>
+            </div>
+          </div>
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-hubspot"> <label for="conn-hubspot">HubSpot <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-charttop"> <label for="conn-charttop">Charttop</label>
+            </div>
+          </div>
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-bob"> <label for="conn-bob">Bob <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-qbd"> <label for="conn-qbd">QuickBooks Desktop <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-workday"> <label for="conn-workday">Workday Financials <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-tableau"> <label for="conn-tableau">Tableau <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" checked id="conn-sftp"> <label for="conn-sftp">Externally-Hosted File Management (SFTP) <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-ns-custom"> <label for="conn-ns-custom">NetSuite - Custom <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-aws"> <label for="conn-aws">Externally-Hosted File Management (AWS S3) <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-sf-custom"> <label for="conn-sf-custom">Salesforce - Custom <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-azure-blob"> <label for="conn-azure-blob">Azure Blob Storage <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-jde"> <label for="conn-jde">Azure JD Edwards <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-certinia"> <label for="conn-certinia">Certinia (Salesforce Object) <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-dw"> <label for="conn-dw">Data Warehouse <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-msgp"> <label for="conn-msgp">Microsoft Dynamics Great Plains <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-jobboss"> <label for="conn-jobboss">JobBOSS <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-acumatica"> <label for="conn-acumatica">Acumatica <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-accounting-seed"> <label for="conn-accounting-seed">Accounting Seed <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-sage-custom"> <label for="conn-sage-custom">Sage Intacct - Custom <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-azure-dl"> <label for="conn-azure-dl">Azure Data Lake Storage <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-nscab"> <label for="conn-nscab">NetSuite File Cabinet <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-monday"> <label for="conn-monday">Monday.com <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-msbc"> <label for="conn-msbc">Microsoft Dynamics Business Central <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-ms365"> <label for="conn-ms365">Microsoft Dynamics (H365) <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" checked id="conn-rillet"> <label for="conn-rillet">Rillet</label>
+            </div>
+          </div>
+
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-cube-hosted"> <label for="conn-cube-hosted">Cube-Hosted File Management <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Boomi)</span></label>
+            </div>
+          </div>
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" checked id="conn-cube-uc"> <label for="conn-cube-uc">Cube Universal Connect <span style="color:#97A3B6;font-size:12px;font-style:italic"> (built via Merge)</span></label>
+            </div>
+          </div>
+
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-campfire"> <label for="conn-campfire">Campfire</label>
+            </div>
+          </div>
+          <div class="conn-row">
+            <div class="conn-item">
+              <input type="checkbox" id="conn-rippling"> <label for="conn-rippling">Rippling</label>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="connections-save-row">
+          <button class="btn-primary">Save</button>
+        </div>
+      </div>
+
+      <!-- Connection Card 1: SFTP -->
+      <div class="settings-card">
+        <div class="settings-card-hdr">
+          <div>
+            <div class="settings-card-title">Accuplanner Inc (Externally-Hosted File Management (SFTP))</div>
+            <div class="settings-card-meta">
+              <div class="settings-card-id">Connection ID: 4ba3690a79c0cd832d8fa7cc9e867fa22d</div>
+              <div class="settings-card-id">Data Table ID: ea0d4b0ee40c4d543883fa48a9d9ea2f6e</div>
+            </div>
+          </div>
+          <button class="btn-secondary">Re-sync TLDs and Dimensions</button>
+        </div>
+
+        <div class="settings-divider"></div>
+
+        <!-- Remote Process Configuration -->
+        <div class="settings-row">
+          <div class="settings-label">Remote Process Configuration</div>
+          <div class="settings-control">
+            <div class="settings-row-top">
+              <div class="settings-check-row">
+                <input type="checkbox" id="sftp-boomi">
+                <label for="sftp-boomi">Trigger Boomi workflow when importing</label>
+              </div>
+              <button class="btn-ghost">Show Configuration Parameters</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Default Transaction Upload Type -->
+        <div class="settings-row">
+          <div class="settings-label">Default Transaction Upload Type</div>
+          <div class="settings-control">
+            <select class="settings-select">
+              <option>Remove and replace existing records between the time periods specified in this uploaded data</option>
+              <option>Append to existing records</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Dimension Settings -->
+        <div class="settings-row">
+          <div class="settings-label">Dimension Settings</div>
+          <div class="settings-control">
+            <div class="warn-banner">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              No dimensions found, please resync dimensions for this connection. You may need to turn on background dimension syncs.
+            </div>
+          </div>
+        </div>
+
+        <!-- Connection Specific Settings -->
+        <div class="settings-row">
+          <div class="settings-label">Connection Specific Settings</div>
+          <div class="settings-control" style="gap:10px">
+            <div class="settings-check-row">
+              <input type="checkbox" id="sftp-cross" checked>
+              <label for="sftp-cross">Write 0s to mapped cross-sections? <a href="#" style="color:#2667D8">Click here</a> for more information.</label>
+            </div>
+            <div class="settings-check-row">
+              <input type="checkbox" id="sftp-balance" checked>
+              <label for="sftp-balance">Use values in Cube Opening Balance time dimension for beginning balance calculations when importing.</label>
+            </div>
+            <div class="settings-check-row">
+              <input type="checkbox" id="sftp-rollup">
+              <label for="sftp-rollup">Use Dimension Member Rollup Type for Opening Balances</label>
+            </div>
+            <div class="settings-check-row">
+              <input type="checkbox" id="sftp-retained">
+              <label for="sftp-retained">Include values from Retained Earnings accounts?</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Values can be modified -->
+        <div class="settings-row">
+          <div class="settings-label">Values can be modified</div>
+          <div class="settings-control">
+            <div class="settings-check-row">
+              <input type="checkbox" id="sftp-overwrite">
+              <label for="sftp-overwrite">This will allow imports from other connections to overwrite data for this connection. This should typically always be disabled to avoid systems from overwriting data from each other.</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Description / Notes -->
+        <div class="settings-row">
+          <div class="settings-label">Description / Notes</div>
+          <div class="settings-control">
+            <textarea class="settings-textarea" placeholder="Add notes about this connection..."></textarea>
+          </div>
+        </div>
+
+        <!-- Active -->
+        <div class="settings-row">
+          <div class="settings-label">Active</div>
+          <div class="settings-control">
+            <div class="settings-check-row">
+              <input type="checkbox" id="sftp-active" checked>
+              <label for="sftp-active">This will remove this connection from the UI. No data tied to this connection will be affected.</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transaction Field Mapping -->
+        <div class="settings-row">
+          <div class="settings-label">Transaction Field Mapping</div>
+          <div class="settings-control">
+            <textarea class="settings-textarea" style="font-family:monospace;font-size:12px">{}</textarea>
+            <div class="settings-helper">Helpful for engineering, CS can ignore</div>
+          </div>
+        </div>
+
+        <div class="card-save-row">
+          <button class="btn-primary">Save Settings</button>
+        </div>
+
+        <!-- Imported Transactions -->
+        <div class="imported-row">
+          <div class="imported-label">Imported Transactions</div>
+          <div class="imported-actions">
+            <button class="btn-danger">Delete All Imported Transactions</button>
+            <button class="btn-secondary">Export All Imported Transactions</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Connection Card 2: Cube-Hosted File Management -->
+      <div class="settings-card">
+        <div class="settings-card-hdr">
+          <div>
+            <div class="settings-card-title">Accuplanner Inc (Cube-Hosted File Management)</div>
+            <div class="settings-card-meta">
+              <div class="settings-card-id">Connection ID: 9dea56e34875d443b06f9956e420f9be8</div>
+              <div class="settings-card-id">Data Table ID: f18701e9fc48fb0ce4d4f9bea6df9beb3d1</div>
+            </div>
+          </div>
+          <button class="btn-secondary">Re-sync TLDs and Dimensions</button>
+        </div>
+
+        <div class="settings-divider"></div>
+
+        <div class="settings-row">
+          <div class="settings-label">Remote Process Configuration</div>
+          <div class="settings-control">
+            <div class="settings-row-top">
+              <div class="settings-check-row">
+                <input type="checkbox" id="chfm-boomi">
+                <label for="chfm-boomi">Trigger Boomi workflow when importing</label>
+              </div>
+              <button class="btn-ghost">Show Configuration Parameters</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-label">Default Transaction Upload Type</div>
+          <div class="settings-control">
+            <select class="settings-select">
+              <option>Remove and replace existing records between the time periods specified in this uploaded data</option>
+              <option>Append to existing records</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-label">Dimension Settings</div>
+          <div class="settings-control">
+            <div class="warn-banner">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              No dimensions found, please resync dimensions for this connection. You may need to turn on background dimension syncs.
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-label">Connection Specific Settings</div>
+          <div class="settings-control" style="gap:10px">
+            <div class="settings-check-row">
+              <input type="checkbox" id="chfm-cross" checked>
+              <label for="chfm-cross">Write 0s to mapped cross-sections? <a href="#" style="color:#2667D8">Click here</a> for more information.</label>
+            </div>
+            <div class="settings-check-row">
+              <input type="checkbox" id="chfm-balance" checked>
+              <label for="chfm-balance">Use values in Cube Opening Balance time dimension for beginning balance calculations when importing.</label>
+            </div>
+            <div class="settings-check-row">
+              <input type="checkbox" id="chfm-rollup">
+              <label for="chfm-rollup">Use Dimension Member Rollup Type for Opening Balances</label>
+            </div>
+            <div class="settings-check-row">
+              <input type="checkbox" id="chfm-retained">
+              <label for="chfm-retained">Include values from Retained Earnings accounts?</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-label">Values can be modified</div>
+          <div class="settings-control">
+            <div class="settings-check-row">
+              <input type="checkbox" id="chfm-overwrite">
+              <label for="chfm-overwrite">This will allow imports from other connections to overwrite data for this connection. This should typically always be disabled to avoid systems from overwriting data from each other.</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-label">Description / Notes</div>
+          <div class="settings-control">
+            <textarea class="settings-textarea" placeholder="Add notes about this connection..."></textarea>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-label">Active</div>
+          <div class="settings-control">
+            <div class="settings-check-row">
+              <input type="checkbox" id="chfm-active" checked>
+              <label for="chfm-active">This will remove this connection from the UI. No data tied to this connection will be affected.</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-label">Transaction Field Mapping</div>
+          <div class="settings-control">
+            <textarea class="settings-textarea" style="font-family:monospace;font-size:12px">{}</textarea>
+            <div class="settings-helper">Helpful for engineering, CS can ignore</div>
+          </div>
+        </div>
+
+        <div class="card-save-row">
+          <button class="btn-primary">Save Settings</button>
+        </div>
+
+        <div class="imported-row">
+          <div class="imported-label">Imported Transactions</div>
+          <div class="imported-actions">
+            <button class="btn-danger">Delete All Imported Transactions</button>
+            <button class="btn-secondary">Export All Imported Transactions</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+  function toggleSB() {
+    var s = document.getElementById('sb');
+    s.classList.toggle('col');
+  }
+
+  document.querySelectorAll('.ni').forEach(function(item) {
+    item.addEventListener('click', function() {
+      document.querySelectorAll('.ni').forEach(function(i) { i.classList.remove('active'); });
+      item.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
