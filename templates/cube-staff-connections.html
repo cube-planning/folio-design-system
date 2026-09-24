@@ -417,6 +417,101 @@
       flex-direction: column;
     }
 
+    /* ── TAB PANELS ──────────────────────────────────────── */
+    .tab-panel { display: block; }
+
+    /* ── DIMENSIONS TAB ──────────────────────────────────── */
+    .dim-card {
+      background: #fff;
+      border: 1px solid #E3E8EF;
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .dim-card-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #101828;
+      line-height: 28px;
+    }
+    .dim-card-desc { font-size: 14px; color: #4A5567; line-height: 20px; }
+    .dim-card-meta { font-size: 14px; color: #677489; }
+    .dim-code-example {
+      font-family: ui-monospace, monospace;
+      font-size: 13px;
+      color: #173D82;
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      border-radius: 8px;
+      padding: 10px 14px;
+      line-height: 1.6;
+      white-space: pre;
+    }
+    .dim-upload-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .dim-file-input {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: #4A5567;
+    }
+    .dim-field { display: flex; flex-direction: column; gap: 6px; }
+    .dim-label { font-size: 12px; font-weight: 600; color: #4A5567; }
+    .dim-input {
+      height: 32px;
+      border: 1px solid #CDD5E0;
+      border-radius: 8px;
+      padding: 0 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: #101828;
+      width: 100%;
+      outline: none;
+    }
+    .dim-input:focus { border-color: #173D82; box-shadow: 0 0 0 3px rgba(23,61,130,.12); }
+    .dim-select {
+      height: 32px;
+      border: 1px solid #CDD5E0;
+      border-radius: 8px;
+      padding: 0 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: #101828;
+      width: 100%;
+      background: #fff;
+      outline: none;
+      cursor: pointer;
+    }
+    .dim-banner-warn {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: #FFFAEB;
+      border: 1px solid #FDE68A;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #92400E;
+      line-height: 20px;
+    }
+    .dim-banner-warn i { color: #F59E0B; flex-shrink: 0; margin-top: 2px; }
+    .dim-banner-error {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: #FEF2F2;
+      border: 1px solid #FECACA;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #991B1B;
+      line-height: 20px;
+    }
+    .dim-banner-error i { color: #EF4444; flex-shrink: 0; margin-top: 2px; }
+
     /* Cube Staff page header — matches PageHeader component output */
     .cs-page-hdr {
       padding: 24px 32px 16px;
@@ -1055,19 +1150,20 @@
 
       <!-- Sub-page tab strip -->
       <div class="cs-tabs-strip">
-        <button class="vtab">New Company</button>
-        <button class="vtab">New Hands On Cube</button>
-        <button class="vtab">Company</button>
-        <button class="vtab active">Connections</button>
-        <button class="vtab">Multi-currency</button>
-        <button class="vtab">Authentication</button>
-        <button class="vtab">Dimensions</button>
-        <button class="vtab">Boomi</button>
-        <button class="vtab">Analytics Exports</button>
-        <button class="vtab">Cube Access</button>
+        <button class="vtab" data-tab="new-company">New Company</button>
+        <button class="vtab" data-tab="new-hoc">New Hands On Cube</button>
+        <button class="vtab" data-tab="company">Company</button>
+        <button class="vtab active" data-tab="connections">Connections</button>
+        <button class="vtab" data-tab="multi-currency">Multi-currency</button>
+        <button class="vtab" data-tab="authentication">Authentication</button>
+        <button class="vtab" data-tab="dimensions">Dimensions</button>
+        <button class="vtab" data-tab="boomi">Boomi</button>
+        <button class="vtab" data-tab="analytics-exports">Analytics Exports</button>
+        <button class="vtab" data-tab="cube-access">Cube Access</button>
       </div>
 
       <div class="cs-body">
+      <div id="tab-connections" class="tab-panel">
 
       <!-- Info Banner -->
       <div class="info-banner">
@@ -1545,6 +1641,76 @@
         </div>
       </div>
 
+      </div><!-- #tab-connections -->
+
+      <!-- ══ DIMENSIONS TAB ══════════════════════════════════════ -->
+      <div id="tab-dimensions" class="tab-panel" style="display:none">
+
+        <!-- Import Dimensions -->
+        <div class="dim-card">
+          <h2 class="dim-card-title">Import Dimensions</h2>
+          <p class="dim-card-desc">Upload dimensions for a company. The uploaded file is expected to be in a format like:</p>
+          <pre class="dim-code-example">Parent 1:Child 1:Child 2
+Parent 1:Child 1:Child 3
+Parent 2:Child 4</pre>
+          <div class="dim-upload-row">
+            <input type="file" class="dim-file-input">
+            <button class="btn-primary">Upload Dimensions</button>
+          </div>
+        </div>
+
+        <!-- Add New Top Level Dimension -->
+        <div class="dim-card">
+          <h2 class="dim-card-title">Add New Top Level Dimension</h2>
+          <div class="dim-banner-warn">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>WARNING &ndash; Please only create one TLD at a time</span>
+          </div>
+          <p class="dim-card-desc">Each Cube is limited to 16 top level dimensions. Account, Department, Scenario, Time plus 12 additional</p>
+          <p class="dim-card-meta">Current number of TLDs: 7</p>
+          <div class="dim-field">
+            <label class="dim-label" for="tld-name">Name</label>
+            <input type="text" id="tld-name" class="dim-input" style="max-width:400px">
+          </div>
+          <button class="btn-primary" style="margin-top:16px">Add New TLD</button>
+        </div>
+
+        <!-- Clear Top Level Dimension and Cube Values -->
+        <div class="dim-card">
+          <h2 class="dim-card-title">Clear Top Level Dimension and Cube Values</h2>
+          <div class="dim-banner-error">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>WARNING &ndash; THIS IS EXTREMELY DESTRUCTIVE. DO NOT DO THIS IF YOU DO NOT UNDERSTAND WHAT IT DOES.</span>
+          </div>
+          <div class="dim-field" style="margin-top:16px">
+            <label class="dim-label" for="tld-clear">Name</label>
+            <select id="tld-clear" class="dim-select" style="max-width:400px">
+              <option value="">-- None --</option>
+              <option>Account</option>
+              <option>Department</option>
+              <option>Location</option>
+              <option>Product</option>
+            </select>
+          </div>
+          <button class="btn-danger" style="margin-top:16px">Clear TLD and Values</button>
+        </div>
+
+        <!-- Set Entity Top Level Dimension -->
+        <div class="dim-card">
+          <h2 class="dim-card-title">Set Entity Top Level Dimension</h2>
+          <div class="dim-field">
+            <label class="dim-label" for="entity-tld">Entity tld</label>
+            <select id="entity-tld" class="dim-select" style="max-width:400px">
+              <option value="">-- None --</option>
+              <option>Entity</option>
+              <option>Location</option>
+            </select>
+          </div>
+          <button class="btn-primary" style="margin-top:16px">Set Entity TLD</button>
+        </div>
+
+      </div><!-- #tab-dimensions -->
+
       </div><!-- .cs-body -->
     </main>
   </div>
@@ -1562,6 +1728,18 @@
     item.addEventListener('click', function() {
       document.querySelectorAll('.ni').forEach(function(i) { i.classList.remove('active'); });
       item.classList.add('active');
+    });
+  });
+
+  // Tab strip switching
+  document.querySelectorAll('.vtab[data-tab]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var tab = btn.getAttribute('data-tab');
+      document.querySelectorAll('.vtab').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      document.querySelectorAll('.tab-panel').forEach(function(p) { p.style.display = 'none'; });
+      var panel = document.getElementById('tab-' + tab);
+      if (panel) panel.style.display = 'block';
     });
   });
 </script>
