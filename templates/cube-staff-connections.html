@@ -522,94 +522,119 @@
       gap: 8px;
       font-family: 'DM Sans', sans-serif;
     }
-    .cs-page-hdr-row {
+    .cs-breadcrumb {
       display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 16px;
+      align-items: center;
+      gap: 6px;
+      height: 32px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #98A2B3;
     }
-    .cs-page-title {
+    .cs-bc-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      font-size: 14px;
+      color: #173D82;
+    }
+    .cs-bc-link {
+      color: #173D82;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .cs-bc-sep {
+      font-size: 10px;
+      color: #98A2B3;
+    }
+    .cs-bc-cur { color: #101828; }
+    .cs-pg-title {
       font-size: 24px;
       font-weight: 600;
       color: #101828;
       line-height: 32px;
     }
 
-    /* Sub-page tab strip */
-    .cs-tabs-strip {
-      padding: 8px 16px 0;
-      border-bottom: 1px solid #E3E8EF;
-      display: flex;
-      overflow-x: auto;
-      flex-shrink: 0;
-    }
-    .cs-tabs-strip::-webkit-scrollbar { display: none; }
-
-    /* Content below tabs */
+    /* Content area below page header */
     .cs-body {
       flex: 1;
       overflow-y: auto;
       padding: 24px;
     }
 
-    /* Page header */
-    .pg-hdr {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 24px;
+    /* Cube Staff sidebar popup */
+    .staff-row-wrap {
+      position: relative;
     }
-
-    .pg-title {
+    .staff-popup {
+      position: absolute;
+      bottom: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1px solid #E3E8EF;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      padding: 4px;
+      z-index: 200;
+      display: none;
+    }
+    .staff-popup.open { display: block; }
+    .staff-pop-item {
+      height: 36px;
+      padding: 0 12px;
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 24px;
-      font-weight: 700;
-      color: #222B3A;
-      line-height: 32px;
-    }
-
-    .pg-sub {
       font-size: 14px;
-      font-weight: 400;
-      color: #677489;
-      margin-top: 4px;
-    }
-
-    .pg-sub a {
-      color: #2667D8;
-      text-decoration: none;
-    }
-
-    .pg-actions { display: flex; align-items: center; gap: 8px; }
-
-    /* Tabs */
-    .view-tabs {
-      display: flex;
-      gap: 0;
-      border-bottom: 1px solid #E3E8EF;
-      margin-bottom: 24px;
-    }
-
-    .vtab {
-      height: 36px;
-      padding: 0 16px;
-      font-size: 14px;
-      font-weight: 500;
-      color: #677489;
-      background: transparent;
-      border: none;
-      border-bottom: 2px solid transparent;
-      margin-bottom: -1px;
+      color: #353F4F;
+      border-radius: 8px;
       cursor: pointer;
       white-space: nowrap;
+      user-select: none;
     }
-    .vtab:hover { color: #222B3A; }
-    .vtab.active {
-      color: #2667D8;
-      border-bottom-color: #2667D8;
+    .staff-pop-item:hover { background: #F5F7FA; }
+    .staff-pop-item.active {
+      color: #173D82;
       font-weight: 600;
+      background: #EFF6FF;
+    }
+
+    /* Connections card header search */
+    .connections-card-hdr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .connections-search {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 32px;
+      border: 1px solid #CDD5E0;
+      border-radius: 8px;
+      padding: 0 10px;
+    }
+    .connections-search i { font-size: 12px; color: #98A2B3; }
+    .connections-search input {
+      border: none;
+      outline: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: #353F4F;
+      width: 160px;
+      background: transparent;
+    }
+    .connections-search input::placeholder { color: #98A2B3; }
+
+    /* Tables section description */
+    .settings-tables-desc {
+      font-size: 13px;
+      color: #677489;
+      line-height: 18px;
+      margin-top: 4px;
     }
 
     /* Info banner */
@@ -1091,15 +1116,29 @@
 
       <div class="dv" style="margin:0"></div>
 
-      <!-- Cube Staff footer row — active on this page -->
-      <div class="staff-row" style="background:#EFF6FF;border-top:2px solid #2667D8">
-        <div class="staff-row-left">
-          <div class="ni-ic" style="color:#2667D8"><i class="fa-regular fa-users"></i></div>
-          <span class="staff-label" style="color:#2667D8;font-weight:600">Cube Staff</span>
+      <!-- Cube Staff footer row — active on this page, popup for sub-pages -->
+      <div class="staff-row-wrap">
+        <div class="staff-popup" id="staff-popup">
+          <div class="staff-pop-item">New Company</div>
+          <div class="staff-pop-item">New Hands On Cube</div>
+          <div class="staff-pop-item">Company</div>
+          <div class="staff-pop-item active">Connections</div>
+          <div class="staff-pop-item">Multi-currency</div>
+          <div class="staff-pop-item">Authentication</div>
+          <div class="staff-pop-item">Dimensions</div>
+          <div class="staff-pop-item">Boomi</div>
+          <div class="staff-pop-item">Analytics Exports</div>
+          <div class="staff-pop-item">Cube Access</div>
         </div>
-        <button class="staff-more-btn" aria-label="More options">
-          <i class="fa-solid fa-ellipsis-vertical"></i>
-        </button>
+        <div class="staff-row" style="background:#EFF6FF;border-top:2px solid #2667D8">
+          <div class="staff-row-left">
+            <div class="ni-ic" style="color:#2667D8"><i class="fa-regular fa-users"></i></div>
+            <span class="staff-label" style="color:#2667D8;font-weight:600">Cube Staff</span>
+          </div>
+          <button class="staff-more-btn" id="staff-more-btn" aria-label="More options">
+            <i class="fa-solid fa-ellipsis-vertical"></i>
+          </button>
+        </div>
       </div>
     </div><!-- .sb-card -->
   </aside>
@@ -1141,29 +1180,18 @@
 
     <main class="page-content">
 
-      <!-- Page header — matches PageHeader component (24px/600/gray-900) -->
-      <div class="cs-page-hdr">
-        <div class="cs-page-hdr-row">
-          <h1 class="cs-page-title">Cube Staff</h1>
+      <!-- Page header — PageHeader component pattern (breadcrumb + title) -->
+      <div class="cs-pg-hdr">
+        <div class="cs-breadcrumb">
+          <span class="cs-bc-icon"><i class="fa-regular fa-users"></i></span>
+          <a class="cs-bc-link">Cube Staff</a>
+          <i class="fa-regular fa-chevron-right cs-bc-sep"></i>
+          <span class="cs-bc-cur">Connections</span>
         </div>
-      </div>
-
-      <!-- Sub-page tab strip -->
-      <div class="cs-tabs-strip">
-        <button class="vtab" data-tab="new-company">New Company</button>
-        <button class="vtab" data-tab="new-hoc">New Hands On Cube</button>
-        <button class="vtab" data-tab="company">Company</button>
-        <button class="vtab active" data-tab="connections">Connections</button>
-        <button class="vtab" data-tab="multi-currency">Multi-currency</button>
-        <button class="vtab" data-tab="authentication">Authentication</button>
-        <button class="vtab" data-tab="dimensions">Dimensions</button>
-        <button class="vtab" data-tab="boomi">Boomi</button>
-        <button class="vtab" data-tab="analytics-exports">Analytics Exports</button>
-        <button class="vtab" data-tab="cube-access">Cube Access</button>
+        <h1 class="cs-pg-title">Connections</h1>
       </div>
 
       <div class="cs-body">
-      <div id="tab-connections" class="tab-panel">
 
       <!-- Info Banner -->
       <div class="info-banner">
@@ -1176,7 +1204,13 @@
 
       <!-- Supported Connections -->
       <div class="connections-card">
-        <div class="connections-card-title">Supported Connections</div>
+        <div class="connections-card-hdr">
+          <div class="connections-card-title">Supported Connections</div>
+          <div class="connections-search">
+            <i class="fa-regular fa-magnifying-glass"></i>
+            <input type="text" placeholder="Search connections...">
+          </div>
+        </div>
 
         <div class="connections-grid">
 
@@ -1641,75 +1675,154 @@
         </div>
       </div>
 
-      </div><!-- #tab-connections -->
+      <!-- Connection Card 3: Paylocity (Cube Universal Connect) -->
+      <div class="settings-card">
+        <div class="settings-card-hdr">
+          <div>
+            <div class="settings-card-title">Paylocity (Cube Universal Connect)</div>
+            <div class="settings-card-meta">
+              <div class="settings-card-id">Connection ID: 9dee5a3457544536bf9156e420fb9ae8</div>
+              <div class="settings-card-id">Data Table ID: f188701e14fc487fbca4df11beb3a161</div>
+            </div>
+          </div>
+          <button class="btn-secondary">Re-sync TLDs and Dimensions</button>
+        </div>
 
-      <!-- ══ DIMENSIONS TAB ══════════════════════════════════════ -->
-      <div id="tab-dimensions" class="tab-panel" style="display:none">
+        <div class="settings-divider"></div>
 
-        <!-- Import Dimensions -->
-        <div class="dim-card">
-          <h2 class="dim-card-title">Import Dimensions</h2>
-          <p class="dim-card-desc">Upload dimensions for a company. The uploaded file is expected to be in a format like:</p>
-          <pre class="dim-code-example">Parent 1:Child 1:Child 2
-Parent 1:Child 1:Child 3
-Parent 2:Child 4</pre>
-          <div class="dim-upload-row">
-            <input type="file" class="dim-file-input">
-            <button class="btn-primary">Upload Dimensions</button>
+        <!-- Remote Process Configuration -->
+        <div class="settings-row">
+          <div class="settings-label">Remote Process Configuration</div>
+          <div class="settings-control">
+            <div class="settings-row-top">
+              <div class="settings-check-row">
+                <input type="checkbox" id="plc-boomi">
+                <label for="plc-boomi">Trigger Boomi workflow when importing</label>
+              </div>
+              <button class="btn-ghost">Show Configuration Parameters</button>
+            </div>
+            <div style="margin-top:10px">
+              <div class="settings-label" style="font-size:12px;margin-bottom:4px">Default Transaction Upload Type</div>
+              <select class="settings-select">
+                <option>Remove and replace existing records between the time periods specified in this uploaded data</option>
+                <option>Append to existing records</option>
+              </select>
+            </div>
           </div>
         </div>
 
-        <!-- Add New Top Level Dimension -->
-        <div class="dim-card">
-          <h2 class="dim-card-title">Add New Top Level Dimension</h2>
-          <div class="dim-banner-warn">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            <span>WARNING &ndash; Please only create one TLD at a time</span>
+        <!-- Dimension Settings -->
+        <div class="settings-row">
+          <div class="settings-label">
+            Dimension Settings
+            <div style="font-size:12px;font-weight:400;color:#677489;margin-top:2px">
+              <a href="#" style="color:#173D82">Who can view this?</a>
+            </div>
           </div>
-          <p class="dim-card-desc">Each Cube is limited to 16 top level dimensions. Account, Department, Scenario, Time plus 12 additional</p>
-          <p class="dim-card-meta">Current number of TLDs: 7</p>
-          <div class="dim-field">
-            <label class="dim-label" for="tld-name">Name</label>
-            <input type="text" id="tld-name" class="dim-input" style="max-width:400px">
+          <div class="settings-control">
+            <div style="font-size:12px;font-weight:600;color:#353F4F;margin-bottom:8px">Enabled Top Level Dimensions</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <label style="display:flex;align-items:center;gap:6px;font-size:14px;color:#222B3A;cursor:pointer">
+                <input type="checkbox" checked style="accent-color:#173D82;width:14px;height:14px"> Location
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:14px;color:#222B3A;cursor:pointer">
+                <input type="checkbox" checked style="accent-color:#173D82;width:14px;height:14px"> Department
+              </label>
+            </div>
           </div>
-          <button class="btn-primary" style="margin-top:16px">Add New TLD</button>
         </div>
 
-        <!-- Clear Top Level Dimension and Cube Values -->
-        <div class="dim-card">
-          <h2 class="dim-card-title">Clear Top Level Dimension and Cube Values</h2>
-          <div class="dim-banner-error">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            <span>WARNING &ndash; THIS IS EXTREMELY DESTRUCTIVE. DO NOT DO THIS IF YOU DO NOT UNDERSTAND WHAT IT DOES.</span>
+        <!-- Connection Specific Settings -->
+        <div class="settings-row">
+          <div class="settings-label">Connection Specific Settings</div>
+          <div class="settings-control" style="gap:10px">
+            <div class="settings-check-row">
+              <input type="checkbox" id="plc-cross" checked>
+              <label for="plc-cross">Write 0s to mapped cross-sections? <a href="#" style="color:#173D82">Click here</a> for more information.</label>
+            </div>
+            <div class="settings-check-row">
+              <input type="checkbox" id="plc-balance" checked>
+              <label for="plc-balance">Use values in Cube Opening Balance time dimension for beginning balance calculations when importing.</label>
+            </div>
+            <div class="settings-check-row">
+              <input type="checkbox" id="plc-rollup">
+              <label for="plc-rollup">Use Dimension Member Rollup Type for Opening Balances</label>
+            </div>
+            <div class="settings-check-row">
+              <input type="checkbox" id="plc-retained">
+              <label for="plc-retained">Include values from Retained Earnings accounts?</label>
+            </div>
+            <div class="settings-check-row">
+              <input type="checkbox" id="plc-boomi2">
+              <label for="plc-boomi2">Trigger Boomi workflow when importing</label>
+            </div>
           </div>
-          <div class="dim-field" style="margin-top:16px">
-            <label class="dim-label" for="tld-clear">Name</label>
-            <select id="tld-clear" class="dim-select" style="max-width:400px">
-              <option value="">-- None --</option>
-              <option>Account</option>
-              <option>Department</option>
-              <option>Location</option>
-              <option>Product</option>
-            </select>
-          </div>
-          <button class="btn-danger" style="margin-top:16px">Clear TLD and Values</button>
         </div>
 
-        <!-- Set Entity Top Level Dimension -->
-        <div class="dim-card">
-          <h2 class="dim-card-title">Set Entity Top Level Dimension</h2>
-          <div class="dim-field">
-            <label class="dim-label" for="entity-tld">Entity tld</label>
-            <select id="entity-tld" class="dim-select" style="max-width:400px">
-              <option value="">-- None --</option>
-              <option>Entity</option>
-              <option>Location</option>
-            </select>
+        <!-- Values can be modified -->
+        <div class="settings-row">
+          <div class="settings-label">Values can be modified</div>
+          <div class="settings-control">
+            <div class="settings-check-row">
+              <input type="checkbox" id="plc-overwrite" checked>
+              <label for="plc-overwrite">This will allow imports from other connections to overwrite data for this connection. This should typically always be disabled to avoid systems from overwriting data from each other.</label>
+            </div>
           </div>
-          <button class="btn-primary" style="margin-top:16px">Set Entity TLD</button>
         </div>
 
-      </div><!-- #tab-dimensions -->
+        <!-- Description / Notes -->
+        <div class="settings-row">
+          <div class="settings-label">Description / Notes</div>
+          <div class="settings-control">
+            <textarea class="settings-textarea" placeholder="Add notes about this connection..."></textarea>
+          </div>
+        </div>
+
+        <!-- Active -->
+        <div class="settings-row">
+          <div class="settings-label">Active</div>
+          <div class="settings-control">
+            <div class="settings-check-row">
+              <input type="checkbox" id="plc-active" checked>
+              <label for="plc-active">This will remove this connection from the UI. No data tied to this connection will be affected.</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transaction Field Mapping -->
+        <div class="settings-row">
+          <div class="settings-label">Transaction Field Mapping</div>
+          <div class="settings-control">
+            <textarea class="settings-textarea" style="font-family:monospace;font-size:12px">{}</textarea>
+            <div class="settings-helper">Helpful for engineering, CS can ignore</div>
+          </div>
+        </div>
+
+        <!-- Tables -->
+        <div class="settings-row">
+          <div class="settings-label">Tables</div>
+          <div class="settings-control">
+            <div class="settings-check-row">
+              <input type="checkbox" id="plc-tables" checked>
+              <label for="plc-tables">Enabled for Planning Tables</label>
+            </div>
+            <div class="settings-tables-desc">When enabled, this connection can be selected when creating a Planning Table, and a Tables column appears on its Mapping page.</div>
+          </div>
+        </div>
+
+        <div class="card-save-row">
+          <button class="btn-primary">Save Settings</button>
+        </div>
+
+        <!-- Import Transactions -->
+        <div class="imported-row">
+          <div class="imported-label">Import Transactions</div>
+          <div class="imported-actions">
+            <button class="btn-danger">Delete All Imported Transactions</button>
+            <button class="btn-secondary">Export All Imported Transactions</button>
+          </div>
+        </div>
+      </div>
 
       </div><!-- .cs-body -->
     </main>
@@ -1731,17 +1844,18 @@ Parent 2:Child 4</pre>
     });
   });
 
-  // Tab strip switching
-  document.querySelectorAll('.vtab[data-tab]').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      var tab = btn.getAttribute('data-tab');
-      document.querySelectorAll('.vtab').forEach(function(b) { b.classList.remove('active'); });
-      btn.classList.add('active');
-      document.querySelectorAll('.tab-panel').forEach(function(p) { p.style.display = 'none'; });
-      var panel = document.getElementById('tab-' + tab);
-      if (panel) panel.style.display = 'block';
+  // Cube Staff popup toggle
+  var staffPopup = document.getElementById('staff-popup');
+  var staffMoreBtn = document.getElementById('staff-more-btn');
+  if (staffMoreBtn && staffPopup) {
+    staffMoreBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      staffPopup.classList.toggle('open');
     });
-  });
+    document.addEventListener('click', function() {
+      staffPopup.classList.remove('open');
+    });
+  }
 </script>
 
 </body>
