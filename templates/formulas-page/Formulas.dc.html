@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<!-- @template name="Workspace Template: Formulas" description="Formulas screen — computed formula list, built on the App Shell, reusing the Table component." -->
+<!-- @built-against design-sync 2026-08-19 (see github.md); last verified 2026-08-25 -->
+<helmet>
+  <script src="./ds-base.js"></script>
+  <script src="./_sidebar-icons.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+    .fa-solid::before,.fa-regular::before,.fa-brands::before,.fa-light::before,.fa-thin::before,.fa-duotone::before { content:var(--fa) !important; }
+    body { font-family:'DM Sans',sans-serif; background:#F5F7FA; height:100vh; overflow:hidden; color:#222B3A; }
+    a { text-decoration:none; color:inherit; }
+    .app-shell { display:flex; height:100vh; }
+    .sb { width:255px; min-width:255px; padding:8px; display:flex; flex-direction:column; height:100vh; transition:width .2s ease,min-width .2s ease; overflow:hidden; }
+    .sb.col { width:64px; min-width:64px; }
+    .sb-card { background:#fff; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06); flex:1; display:flex; flex-direction:column; overflow:hidden; }
+    .sb-hdr { height:48px; padding:16px 12px 0 16px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; white-space:nowrap; }
+    .sb.col .sb-hdr { flex-direction:column; height:auto; justify-content:center; align-items:center; gap:8px; padding:12px 0 8px; }
+    .logo-wm { display:flex; align-items:center; }
+    .logo-wm img { height:28px; width:auto; display:block; }
+    .logo-ic { display:none; align-items:center; justify-content:center; }
+    .logo-ic img { height:28px; width:auto; display:block; }
+    .sb.col .logo-wm { display:none; }
+    .sb.col .logo-ic { display:flex; }
+    .col-btn { width:28px; height:28px; border:none; border-radius:4px; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#4A5567; }
+    .col-btn:hover { background:#F1F4F8; }
+    .cc-left,.cc-right { display:inline-flex; align-items:center; justify-content:center; }
+    .cc-right { display:none; }
+    .sb.col .cc-left { display:none; }
+    .sb.col .cc-right { display:inline-flex; }
+    .sb-nav { flex:1; overflow-y:auto; overflow-x:hidden; padding:24px 0; }
+    .sb-nav::-webkit-scrollbar { width:4px; }
+    .sb-nav::-webkit-scrollbar-thumb { background:#CDD5E0; border-radius:2px; }
+    .dv { height:1px; background:#E3E8EF; margin:8px 0; }
+    .nav-section { display:flex; flex-direction:column; gap:4px; padding:8px 0; }
+    .sb.col .nav-section { padding:0; align-items:center; }
+    .sec { display:flex; align-items:center; gap:4px; height:20px; padding:0 16px; font-family:'DM Sans', sans-serif; font-size:12px; font-weight:400; color:#4A5567; white-space:nowrap; }
+    .sb.col .sec { justify-content:center; padding:0; }
+    .sb.col .sec-lbl,.sb.col .sec-crt { display:none; }
+    .sec-crt { font-size:8px; color:#677489; transition:transform .15s ease; }
+    .sec { cursor:pointer; user-select:none; }
+    .nav-section.collapsed > *:not(.sec) { display:none; }
+    .nav-section.collapsed .sec-crt { transform:rotate(-90deg); }
+    .ni { height:32px; padding:0 24px 0 29px; border-left:3px solid transparent; display:flex; align-items:center; gap:8px; border-radius:0; cursor:pointer; position:relative; white-space:nowrap; color:inherit; width:100%; }
+    .ni.home { padding:0 24px 0 29px; border-left:3px solid transparent; }
+    .nav-section .ni:hover { background:#EFF6FF; border-left-color:#2667D8; }
+    .nav-section .ni:hover .ni-lbl { color:#2667D8; }
+    .nav-section .ni:hover .ni-ic { color:#2667D8; }
+    .ni.home:hover { background:#EFF6FF; border-left-color:#2667D8; }
+    .ni.home:hover .ni-lbl { color:#2667D8; }
+    .ni.home:hover .ni-ic { color:#2667D8; }
+    .nav-section .ni.active { background:#EFF6FF; border-left-color:#2667D8; }
+    .ni.home.active { background:#EFF6FF; border-left-color:#2667D8; }
+    .ni.active .ni-lbl { color:#2667D8; font-weight:500; }
+    .ni.active .ni-ic { color:#2667D8; }
+    .ni-ic { width:22px; height:22px; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#4A5567; font-size:15px; }
+    .ni-lbl { font-size:14px; font-weight:400; color:#222B3A; }
+    .sb.col .ni { padding:0; border-left:none; width:36px; justify-content:center; border-radius:4px; }
+    .sb.col .ni.home { padding:0; border-radius:4px; }
+    .sb.col .ni-lbl { display:none; }
+    .sb.col .ni:hover::after { content:attr(data-label); position:absolute; left:calc(100% + 8px); top:50%; transform:translateY(-50%); background:#222B3A; color:#fff; font-size:12px; font-weight:500; padding:4px 10px; border-radius:4px; white-space:nowrap; z-index:300; pointer-events:none; }
+    .ni-sub-wrap { padding-left:34px; display:flex; flex-direction:column; }
+    .ni-sub { display:flex; align-items:center; height:32px; padding:4px 16px 4px 18px; border-left:2px solid #E3E8EF; font-size:14px; font-weight:400; color:#222B3A; cursor:pointer; white-space:nowrap; }
+    .ni-sub:hover { background:#EFF6FF; }
+    .ni-sub.active { color:#2667D8; font-weight:600; border-left-color:#2667D8; }
+    .sb.col .ni-sub-wrap { display:none; }
+    .apps-wrap { padding:0 8px 16px; }
+    .sb.col .apps-wrap { padding:0 0 8px; }
+    .apps-sec { display:flex; align-items:center; gap:4px; padding:8px 8px 4px; font-family:'DM Sans', sans-serif; font-size:12px; font-weight:400; color:#4A5567; }
+    .sb.col .apps-sec { justify-content:center; padding:8px 0 4px; }
+    .sb.col .apps-sec .sec-lbl,.sb.col .apps-sec .sec-crt { display:none; }
+    .apps-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:4px; padding:4px 0; }
+    .apps-grid .app-tile:nth-child(8) { grid-column:1; }
+    .sb.col .apps-grid { display:flex; flex-direction:column; align-items:center; gap:4px; }
+    .app-tile { display:flex; flex-direction:column; align-items:center; gap:4px; padding:4px 0; border-radius:8px; cursor:pointer; position:relative; }
+    .app-tile:hover { background:#EFF6FF; }
+    .app-circ { width:32px; height:32px; border-radius:50%; background:#EEF0F4; border:1.5px solid #DDE1E8; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#4A5567; font-size:13px; }
+    .app-lbl { font-size:10px; font-weight:500; color:#353F4F; text-align:center; line-height:1.2; }
+    .sb.col .app-lbl { display:none; }
+    .sb.col .app-tile:hover::after { content:attr(data-label); position:absolute; left:calc(100% + 8px); top:50%; transform:translateY(-50%); background:#222B3A; color:#fff; font-size:12px; font-weight:500; padding:4px 10px; border-radius:4px; white-space:nowrap; z-index:300; pointer-events:none; }
+    .main { flex:1; display:flex; flex-direction:column; min-width:0; overflow:hidden; }
+    .topnav { height:80px; background:#F5F7FA; border-bottom:1px solid #E3E8EF; display:flex; align-items:center; justify-content:space-between; padding:0 24px; flex-shrink:0; }
+    .tn-company { display:flex; align-items:center; gap:4px; height:32px; padding:0 12px; background:#fff; border-radius:16px; box-shadow:0 2px 2px #E3E8EF; cursor:pointer; white-space:nowrap; }
+    .tn-company:hover { box-shadow:0 2px 4px #CDD5E0; }
+    .tn-company-ic { width:22px; height:22px; display:flex; align-items:center; justify-content:center; color:#173D82; font-size:13px; }
+    .tn-company-name { font-size:12px; font-weight:400; color:#677489; }
+    .tn-chevron { width:22px; height:22px; display:flex; align-items:center; justify-content:center; color:#353F4F; font-size:11px; }
+    .tn-right { display:flex; align-items:center; gap:8px; }
+    .tn-btn { width:32px; height:32px; border-radius:4px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; color:#4A5567; font-size:15px; }
+    .tn-btn:hover { background:#F8FAFC; }
+    .tn-ai-btn { width:28px; height:28px; border:none; border-radius:50%; background:linear-gradient(135deg,#7A5AF8 10%,#9B8AFB 50%,#5925DC 100%); padding:0; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; position:relative; }
+    .tn-ai-btn:hover { opacity:.85; }
+    .tn-ai-btn:hover::after { content:attr(data-tip); position:absolute; top:calc(100% + 8px); left:50%; transform:translateX(-50%); background:#222B3A; color:#fff; font-size:12px; font-weight:500; padding:4px 10px; border-radius:4px; white-space:nowrap; z-index:300; pointer-events:none; }
+    .tn-user { display:flex; align-items:center; gap:8px; height:32px; padding:0 8px; background:#fff; border-radius:20px; box-shadow:0 2px 2px #E3E8EF; cursor:pointer; white-space:nowrap; }
+    .tn-user:hover { box-shadow:0 2px 4px #CDD5E0; }
+    .tn-user-name { font-size:12px; font-weight:400; color:#677489; }
+    .page-content { flex:1; overflow-y:auto; background:#F5F7FA; padding:32px; }
+    .pg { max-width:1360px; }
+    .pg-head { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
+    .pg-title-row { display:flex; align-items:center; gap:10px; }
+    .pg-title-ic { color:#222B3A; font-size:22px; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; }
+    .pg-title { font-size:24px; line-height:32px; font-weight:600; color:#222B3A; }
+    .pg-sub { font-size:14px; color:#677489; margin:12px 0 20px; display:flex; align-items:center; gap:6px; }
+    .pg-sub i { color:#97A3B6; font-size:13px; cursor:pointer; }
+    .filter-bar { display:flex; align-items:center; gap:10px; margin:0 0 16px; }
+    .filter-lbl { font-size:13px; color:#677489; }
+    .filter-pill { display:inline-flex; align-items:center; gap:8px; height:36px; padding:0 12px; border:1px solid #E3E8EF; border-radius:8px; background:#fff; font-size:13px; color:#222B3A; cursor:pointer; }
+    .filter-pill:hover { border-color:#CDD5E0; }
+    .filter-search { margin-left:auto; display:flex; align-items:center; gap:8px; height:36px; padding:0 12px; border:1px solid #E3E8EF; border-radius:8px; background:#fff; width:240px; color:#97A3B6; }
+    .filter-search input { border:none; outline:none; font-family:'DM Sans',sans-serif; font-size:13px; color:#222B3A; width:100%; background:transparent; }
+    .cell-name { color:#2667D8; font-weight:500; cursor:pointer; }
+    .cell-name:hover { text-decoration:underline; }
+    .cell-formula { font-family:'DM Sans', sans-serif; font-size:12.5px; color:#4A5567; line-height:1.5; }
+    .rowchk { width:16px; height:16px; accent-color:var(--color-cobalt-500); cursor:pointer; }
+    .staff-row { display:flex; align-items:center; justify-content:space-between; padding:0 12px 0 24px; height:40px; flex-shrink:0; }
+    .staff-row-left { display:flex; align-items:center; gap:8px; }
+    .staff-label { font-size:14px; font-weight:400; color:#222B3A; }
+    .staff-more-btn { width:28px; height:28px; border:none; background:transparent; border-radius:4px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#677489; font-size:14px; }
+    .staff-more-btn:hover { background:#F2F5F9; }
+    .sb.col .staff-row { padding:0; justify-content:center; }
+    .sb.col .staff-label { display:none; }
+    .sb.col .staff-more-btn { display:none; }
+  </style>
+</helmet>
+<div class="app-shell">
+  <aside id="sb" class="sb">
+    <div class="sb-card">
+      <div class="sb-hdr">
+        <div class="logo-wm"><img src="./cube-full-logo-mrp7qtfz-2a8j.svg" alt="Cube"></div>
+        <div class="logo-ic"><img src="./cube-icon-logo-mrp7voek-lnif.svg" alt="Cube"></div>
+        <button class="col-btn" data-action="collapse" aria-label="Toggle sidebar">
+          <span class="cc-left">{{ ic.collapseLeft }}</span><span class="cc-right">{{ ic.collapseRight }}</span>
+        </button>
+      </div>
+      <div class="sb-nav">
+        <div class="ni home" data-label="Home"><div class="ni-ic">{{ ic.home }}</div><span class="ni-lbl">Home</span></div>
+
+        <div class="dv"></div>
+
+        <!-- AI -->
+        <div class="nav-section">
+          <div class="sec"><i class="fa-solid fa-caret-down sec-crt"></i><span class="sec-lbl">AI</span></div>
+          <div class="ni" data-label="AI Hub"><div class="ni-ic">{{ ic.aiAnalyst }}</div><span class="ni-lbl">AI Hub</span></div>
+          <div class="ni" data-label="Planner"><div class="ni-ic"><i class="fa-regular fa-book-sparkles"></i></div><span class="ni-lbl">Planner</span></div>
+          <div class="ni" data-label="Smart Variance"><div class="ni-ic">{{ ic.smartVariance }}</div><span class="ni-lbl">Smart Variance</span></div>
+        </div>
+
+        <div class="dv"></div>
+
+        <!-- Reporting & Analytics -->
+        <div class="nav-section">
+          <div class="sec"><i class="fa-solid fa-caret-down sec-crt"></i><span class="sec-lbl">Reporting &amp; Analytics</span></div>
+          <div class="ni" data-label="Boards"><div class="ni-ic">{{ ic.boards }}</div><span class="ni-lbl">Boards</span></div>
+          <div class="ni" data-label="Cube BI"><div class="ni-ic">{{ ic.cubeBI }}</div><span class="ni-lbl">Cube BI</span></div>
+          <div class="ni" data-label="Builder"><div class="ni-ic"><i class="fa-regular fa-hammer"></i></div><span class="ni-lbl">Builder</span></div>
+          <div class="ni" data-label="Library"><div class="ni-ic">{{ ic.library }}</div><span class="ni-lbl">Library</span></div>
+          <div class="ni-sub-wrap">
+            <a class="ni-sub" data-label="Reports"><span>Reports</span></a>
+            <a class="ni-sub" data-label="Files"><span>Files</span></a>
+          </div>
+        </div>
+
+        <div class="dv"></div>
+
+        <!-- Planning -->
+        <div class="nav-section">
+          <div class="sec"><i class="fa-solid fa-caret-down sec-crt"></i><span class="sec-lbl">Planning</span></div>
+          <div class="ni" data-label="Scenarios"><div class="ni-ic">{{ ic.scenarios }}</div><span class="ni-lbl">Scenarios</span></div>
+          <div class="ni" data-label="Workflows"><div class="ni-ic">{{ ic.workflows }}</div><span class="ni-lbl">Workflows</span></div>
+          <div class="ni" data-label="Tables"><div class="ni-ic">{{ ic.tables }}</div><span class="ni-lbl">Tables</span></div>
+        </div>
+
+        <div class="dv"></div>
+
+        <!-- Modeling -->
+        <div class="nav-section">
+          <div class="sec"><i class="fa-solid fa-caret-down sec-crt"></i><span class="sec-lbl">Modeling</span></div>
+          <div class="ni" data-label="Dimensions"><div class="ni-ic">{{ ic.dimensions }}</div><span class="ni-lbl">Dimensions</span></div>
+          <div class="ni active" data-label="Formulas"><div class="ni-ic">{{ ic.formulas }}</div><span class="ni-lbl">Formulas</span></div>
+          <div class="ni" data-label="Tags"><div class="ni-ic">{{ ic.tags }}</div><span class="ni-lbl">Tags</span></div>
+        </div>
+
+        <div class="dv"></div>
+
+        <!-- Data -->
+        <div class="nav-section">
+          <div class="sec"><i class="fa-solid fa-caret-down sec-crt"></i><span class="sec-lbl">Data</span></div>
+          <div class="ni" data-label="Integrations"><div class="ni-ic">{{ ic.integrations }}</div><span class="ni-lbl">Integrations</span></div>
+          <div class="ni" data-label="Data Export"><div class="ni-ic">{{ ic.dataExport }}</div><span class="ni-lbl">Data Export</span></div>
+        </div>
+
+        <div class="dv"></div>
+
+        <!-- Admin -->
+        <div class="nav-section">
+          <div class="sec"><i class="fa-solid fa-caret-down sec-crt"></i><span class="sec-lbl">Admin</span></div>
+          <div class="ni" data-label="Users"><div class="ni-ic">{{ ic.users }}</div><span class="ni-lbl">Users</span></div>
+          <div class="ni" data-label="Currencies"><div class="ni-ic">{{ ic.currencies }}</div><span class="ni-lbl">Currencies</span></div>
+          <div class="ni" data-label="Audit Trail"><div class="ni-ic">{{ ic.auditTrail }}</div><span class="ni-lbl">Audit Trail</span></div>
+          <div class="ni" data-label="Usages"><div class="ni-ic"><i class="fa-regular fa-gauge-simple-high"></i></div><span class="ni-lbl">Usages</span></div>
+        </div>
+
+        <div class="dv"></div>
+
+        <!-- Apps -->
+        <div class="apps-wrap">
+          <div class="apps-sec"><i class="fa-solid fa-caret-down sec-crt"></i><span class="sec-lbl">Apps</span></div>
+          <div class="apps-grid">
+            <div class="app-tile" data-label="AI Plugin"><div class="app-circ">{{ ic.aiPlugin }}</div><span class="app-lbl">AI Plugin</span></div>
+            <div class="app-tile" data-label="ChatGPT"><div class="app-circ">{{ ic.chatgpt }}</div><span class="app-lbl">ChatGPT</span></div>
+            <div class="app-tile" data-label="Claude"><div class="app-circ">{{ ic.claude }}</div><span class="app-lbl">Claude</span></div>
+            <div class="app-tile" data-label="Excel"><div class="app-circ">{{ ic.excel }}</div><span class="app-lbl">Excel</span></div>
+            <div class="app-tile" data-label="Sheets"><div class="app-circ">{{ ic.sheets }}</div><span class="app-lbl">Sheets</span></div>
+            <div class="app-tile" data-label="Slack"><div class="app-circ">{{ ic.slack }}</div><span class="app-lbl">Slack</span></div>
+            <div class="app-tile" data-label="Teams"><div class="app-circ">{{ ic.teams }}</div><span class="app-lbl">Teams</span></div>
+            <div class="app-tile" data-label="Slides"><div class="app-circ">{{ ic.slides }}</div><span class="app-lbl">Slides</span></div>
+            <div class="app-tile" data-label="PowerPoint"><div class="app-circ">{{ ic.powerpoint }}</div><span class="app-lbl">PowerPoint</span></div>
+          </div>
+        </div>
+      </div>
+      <div style="height:1px;background:#E3E8EF;margin:0"></div>
+      <div class="staff-row">
+        <div class="staff-row-left">
+          <div class="ni-ic" style="color:#4A5567"><i class="fa-regular fa-users"></i></div>
+          <span class="staff-label">Cube Staff</span>
+        </div>
+        <button class="staff-more-btn" aria-label="More options">
+          <i class="fa-solid fa-ellipsis-vertical"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+  <div class="main">
+    <header class="topnav">
+      <div class="tn-company">
+        <div class="tn-company-ic"><i class="fa-solid fa-buildings"></i></div>
+        <span class="tn-company-name">{{ companyName }}</span>
+        <div class="tn-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+      </div>
+      <div class="tn-right">
+        <button class="tn-btn" title="Background tasks">{{ ic.backgroundTasks }}</button>
+        <button class="tn-btn" title="Help"><i class="fa-regular fa-circle-question"></i></button>
+        <button class="tn-ai-btn" data-tip="Cube AI">{{ ic.cubeAiAnalyst }}</button>
+        <div class="tn-user">
+          <x-import component-from-global-scope="FolioDS.Avatar" type="initials" size="xs" name="{{ userName }}" hint-size="24px,24px"></x-import>
+          <span class="tn-user-name">{{ userName }}</span>
+          <div class="tn-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+        </div>
+      </div>
+    </header>
+    <main class="page-content">
+      <div class="pg">
+        <div class="pg-head">
+          <div class="pg-title-row"><i class="fa-solid fa-square-root-variable pg-title-ic"></i><span class="pg-title">Formulas</span></div>
+          {{ newBtn }}
+        </div>
+        <p class="pg-sub">Add formulas to automatically calculate values using your data in Cube. <i class="fa-regular fa-circle-question"></i></p>
+        <div class="filter-bar">
+          <span class="filter-lbl">Filter by:</span>
+          <div class="filter-pill">Parent: All <i class="fa-solid fa-chevron-down" style="font-size:10px;color:#97A3B6"></i></div>
+          <div class="filter-pill">Scenario: All <i class="fa-solid fa-chevron-down" style="font-size:10px;color:#97A3B6"></i></div>
+          <div class="filter-pill">Last modified by: All <i class="fa-solid fa-chevron-down" style="font-size:10px;color:#97A3B6"></i></div>
+          <div class="filter-search"><i class="fa-solid fa-magnifying-glass" style="font-size:13px"></i><input placeholder="Search"></div>
+        </div>
+        {{ tableEl }}
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() {
+    this._onClick = (e) => {
+      const secEl = e.target.closest('.sec');
+      if (secEl) { const ns = secEl.closest('.nav-section'); if (ns) ns.classList.toggle('collapsed'); return; }
+      const collapse = e.target.closest('[data-action="collapse"]');
+      if (collapse) { const sb = document.getElementById('sb'); if (sb) sb.classList.toggle('col'); return; }
+      const ni = e.target.closest('.ni');
+      if (ni) { document.querySelectorAll('.ni').forEach((i) => i.classList.remove('active')); ni.classList.add('active'); return; }
+      const sub = e.target.closest('.ni-sub');
+      if (sub) { document.querySelectorAll('.ni-sub').forEach((i) => i.classList.remove('active')); sub.classList.add('active'); }
+    };
+    document.addEventListener('click', this._onClick);
+    if (!window.SIDEBAR_ICONS || !window.FolioDS) {
+      this._iconWait = setInterval(() => {
+        if (window.SIDEBAR_ICONS && window.FolioDS) { clearInterval(this._iconWait); this.forceUpdate(); }
+      }, 60);
+    }
+  }
+  componentWillUnmount() {
+    document.removeEventListener('click', this._onClick);
+    if (this._iconWait) clearInterval(this._iconWait);
+  }
+  renderVals() {
+    const companyName = this.props.companyName ?? 'Accuplanner Inc';
+    const userName = this.props.userName ?? 'Nan O.';
+    const ICONS = window.SIDEBAR_ICONS || {};
+    const mk = (k) => ICONS[k]
+      ? React.createElement('span', { style: { display:'inline-flex', alignItems:'center', justifyContent:'center' }, dangerouslySetInnerHTML:{ __html: ICONS[k] } })
+      : null;
+    const ic = {};
+    ['home','boards','library','smartVariance','aiAnalyst','scenarios','workflows','tables','dimensions','formulas','tags','integrations','dataExport','users','currencies','auditTrail','cubeBI','aiPlugin','chatgpt','claude','excel','sheets','slack','teams','slides','powerpoint','backgroundTasks','cubeAiAnalyst','collapseLeft','collapseRight'].forEach((k) => { ic[k] = mk(k); });
+    const F = window.FolioDS;
+    let tableEl = null;
+    let newBtn = null;
+    if (F) {
+      const e = React.createElement;
+      const C = F.Cell;
+      const abtn = (label, cls) => e(C.ActionButton, { 'aria-label':label, icon:e('i', { className:cls, style:{ fontSize:13, color:'#677489' } }) });
+      const acts = () => e(C.Actions, null, abtn('Refresh','fa-regular fa-arrow-rotate-right'), abtn('Edit','fa-regular fa-pen'), abtn('Delete','fa-regular fa-circle-xmark'));
+      const columns = [
+        { key:'chk', label:'', sortable:false, render:()=> e('input', { type:'checkbox', className:'rowchk' }) },
+        { key:'name', label:'Name', render:(v)=> e(C.Link, null, v) },
+        { key:'formula', label:'Formula', render:(v)=> e('span', { className:'cell-formula' }, v) },
+        { key:'parent', label:'Parent' },
+        { key:'scenario', label:'Scenario' },
+        { key:'modifiedBy', label:'Last Modified By' },
+        { key:'acts', label:'', sortable:false, align:'right', render:()=> acts() }
+      ];
+      const rows = [
+        { id:1, name:'355000 – Net Income', formula:'<YEAR_TO_DATE("Net Income")>', parent:'Equity', scenario:'All', modifiedBy:'Cube Staff' },
+        { id:2, name:'602001 – Salary & Wages', formula:'"Salary Detail"', parent:'Personnel Expenses', scenario:'All', modifiedBy:'Cube Staff' },
+        { id:3, name:'602002 – Bonus', formula:'"Salary Detail" * 0.075', parent:'Personnel Expenses', scenario:'All', modifiedBy:'Cube Staff' },
+        { id:4, name:'602004 – Payroll Taxes', formula:'"Payroll Taxes Detail"', parent:'Personnel Expenses', scenario:'All', modifiedBy:'Cube Staff' },
+        { id:5, name:'602005 – Benefits', formula:'"Benefits Detail"', parent:'Personnel Expenses', scenario:'All', modifiedBy:'Cube Staff' },
+        { id:6, name:'Account 2', formula:'"131000 – Prepaids"', parent:'Account', scenario:'All', modifiedBy:'Cube Staff' },
+        { id:7, name:'Actual', formula:'"Actuals"', parent:'Scenario', scenario:'All', modifiedBy:'Cube Staff' },
+        { id:8, name:'Actual – formula', formula:'"Actuals"', parent:'Scenario', scenario:'All', modifiedBy:'Cube Staff' },
+        { id:9, name:'Beginning Cash', formula:'<MONTHS_AGO("100000 – Cash & Equivalents", 1)>', parent:'Ending Cash', scenario:'All', modifiedBy:'Cube Staff' },
+        { id:10, name:'BvA-J', formula:'"2024 Budget" - "Actuals"', parent:'Scenario', scenario:'All', modifiedBy:'Cube Staff' },
+        { id:11, name:'Change In Cash', formula:'"100000 – Cash & Equivalents" - <MONTHS_AGO("100000 – Cash & Equivalents", 1)>', parent:'Ending Cash', scenario:'All', modifiedBy:'Cube Staff' },
+        { id:12, name:'Change in Current Assets', formula:'"Current Assets" - <MONTHS_AGO("Current Assets", 1)>', parent:'Operating Activities', scenario:'All', modifiedBy:'Cube Staff' },
+        { id:13, name:'Change in Current Liabilities', formula:'"Liabilities" - <MONTHS_AGO("Liabilities", 1)>', parent:'Operating Activities', scenario:'All', modifiedBy:'Cube Staff' },
+        { id:14, name:'Customer Count', formula:'"Customer Count Start" - "Churn Customers" + "Renewed" + "New Logos"', parent:'Sales Force Metrics', scenario:'All', modifiedBy:'Cube Staff' },
+        { id:15, name:'FTEs', formula:'"FTE Detail"', parent:'HR Metrics', scenario:'All', modifiedBy:'Cube Staff' },
+        { id:16, name:'Gross Margin', formula:'"Revenue" - "Cost of Goods Sold"', parent:'Income Statement', scenario:'All', modifiedBy:'Cube Staff' }
+      ];
+      tableEl = e(F.Table, { columns, rows });
+      newBtn = e(F.Button, { variant:'primary', size:'small', leadingIcon:e('i', { className:'fa-regular fa-plus' }) }, 'Formula');
+    }
+    return { companyName, userName, ic, tableEl, newBtn };
+  }
+}
+</script>
+</body>
+</html>
