@@ -1171,8 +1171,8 @@
         <button class="tn-btn" title="Help">
           <i class="fa-regular fa-circle-question" style="color:#4A5567;font-size:16px"></i>
         </button>
-        <button class="tn-btn" title="AI Analyst">
-          <i class="fa-solid fa-sparkles" style="color:#7A5AF8;font-size:16px"></i>
+        <button class="tn-btn" title="AI Analyst" style="width:32px;height:32px;border-radius:9999px;background:linear-gradient(135deg,#7A5AF8,#9E77ED);color:#fff">
+          <i class="fa-solid fa-sparkles" style="font-size:14px"></i>
         </button>
         <div class="tn-user">
           <div class="tn-avatar">NO</div>
@@ -1205,7 +1205,7 @@
           <i class="fa-solid fa-circle-info"></i>
           <span class="info-banner-text">This page is used to manage various settings for connections. The settings differ based on the source system.</span>
         </div>
-        <button class="btn-view-docs">View docs</button>
+        <button class="btn-view-docs">View Doc</button>
       </div>
 
       <!-- Supported Connections -->
@@ -1260,9 +1260,6 @@
           <div class="conn-row"><div class="conn-item"><input type="checkbox" id="conn-bob"> <label for="conn-bob">Bob <span style="color:#97A3B6;font-size:12px;font-style:italic">(built via Boomi)</span></label></div></div>
           <div class="conn-row"><div class="conn-item"><input type="checkbox" id="conn-rippling"> <label for="conn-rippling">Rippling</label></div></div>
         </div>
-        <div class="connections-save-row">
-          <button class="btn-primary">Save</button>
-        </div>
       </div>
 
       <!-- Connection Card 1: Paylocity (Cube Universal Connect) -->
@@ -1292,7 +1289,7 @@
               <button class="btn-ghost">Show Configuration Parameter</button>
             </div>
             <div style="margin-top:10px">
-              <div class="settings-label" style="font-size:12px;margin-bottom:4px">Default Transaction Upload Type</div>
+              <div style="font-size:12px;font-weight:500;color:#677489;margin-bottom:2px">Default Transaction Upload Type</div>
               <select class="settings-select">
                 <option>Remove and replace existing records between the time periods specified in this uploaded data</option>
                 <option>Append to existing records</option>
@@ -1303,14 +1300,10 @@
 
         <!-- Dimension Settings -->
         <div class="settings-row">
-          <div class="settings-label">
-            Dimension Settings
-            <div style="font-size:12px;font-weight:400;color:#677489;margin-top:2px">
-              <a href="#" style="color:#173D82">Who can view this?</a>
-            </div>
-          </div>
+          <div class="settings-label">Dimension Settings</div>
           <div class="settings-control">
-            <div style="font-size:12px;font-weight:600;color:#353F4F;margin-bottom:8px">Enabled Top Level Dimensions</div>
+            <div style="font-size:12px;font-weight:600;color:#353F4F">Enabled Top Level Dimensions</div>
+            <a href="#" style="font-size:12px;color:#173D82;text-decoration:none">Who can view this?</a>
             <div style="display:flex;gap:8px;flex-wrap:wrap">
               <label style="display:flex;align-items:center;gap:6px;font-size:14px;color:#222B3A;cursor:pointer">
                 <input type="checkbox" checked style="accent-color:#173D82;width:14px;height:14px"> Location
@@ -1442,7 +1435,7 @@
               <button class="btn-ghost">Show Configuration Parameter</button>
             </div>
             <div style="margin-top:10px">
-              <div class="settings-label" style="font-size:12px;margin-bottom:4px">Default Transaction Upload Type</div>
+              <div style="font-size:12px;font-weight:500;color:#677489;margin-bottom:2px">Default Transaction Upload Type</div>
               <select class="settings-select">
                 <option>Remove and replace existing records between the time periods specified in this uploaded data</option>
                 <option>Append to existing records</option>
@@ -1453,14 +1446,10 @@
 
         <!-- Dimension Settings -->
         <div class="settings-row">
-          <div class="settings-label">
-            Dimension Settings
-            <div style="font-size:12px;font-weight:400;color:#677489;margin-top:2px">
-              <a href="#" style="color:#173D82">Who can view this?</a>
-            </div>
-          </div>
+          <div class="settings-label">Dimension Settings</div>
           <div class="settings-control">
-            <div style="font-size:12px;font-weight:600;color:#353F4F;margin-bottom:8px">Enabled Top Level Dimensions</div>
+            <div style="font-size:12px;font-weight:600;color:#353F4F">Enabled Top Level Dimensions</div>
+            <a href="#" style="font-size:12px;color:#173D82;text-decoration:none">Who can view this?</a>
             <div style="display:flex;gap:8px;flex-wrap:wrap">
               <label style="display:flex;align-items:center;gap:6px;font-size:14px;color:#222B3A;cursor:pointer">
                 <input type="checkbox" checked style="accent-color:#173D82;width:14px;height:14px"> Location
