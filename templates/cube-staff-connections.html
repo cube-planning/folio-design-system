@@ -36,8 +36,33 @@
       display: flex;
       flex-direction: column;
       height: 100vh;
+      transition: width 0.2s ease, min-width 0.2s ease;
       overflow: hidden;
     }
+
+    .sb.col { width: 64px; min-width: 64px; }
+    .sb.col .sb-hdr { flex-direction: column; height: auto; justify-content: center; align-items: center; gap: 8px; padding: 12px 0 8px; }
+    .sb.col .logo-wm { display: none; }
+    .sb.col .logo-ic { display: flex; }
+    .sb.col .nav-section { padding: 0; align-items: center; }
+    .sb.col .sec { justify-content: center; padding: 0; }
+    .sb.col .sec-lbl { display: none; }
+    .sb.col .sec-crt { display: none; }
+    .sb.col .ni { padding: 0; width: 36px; justify-content: center; border-radius: 4px; }
+    .sb.col .ni.home { padding: 0; border-radius: 4px; }
+    .sb.col .ni-lbl { display: none; }
+    .sb.col .ni:hover::after { content: attr(data-label); position: absolute; left: calc(100% + 8px); top: 50%; transform: translateY(-50%); background: #222B3A; color: #fff; font-size: 12px; font-weight: 500; padding: 4px 10px; border-radius: 4px; white-space: nowrap; z-index: 300; pointer-events: none; }
+    .sb.col .ni-sub-wrap { display: none; }
+    .sb.col .apps-wrap { padding: 0 0 8px; }
+    .sb.col .apps-sec { justify-content: center; padding: 8px 0 4px; }
+    .sb.col .apps-sec .sec-lbl { display: none; }
+    .sb.col .apps-sec .sec-crt { display: none; }
+    .sb.col .apps-grid { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .sb.col .app-lbl { display: none; }
+    .sb.col .app-tile:hover::after { content: attr(data-label); position: absolute; left: calc(100% + 8px); top: 50%; transform: translateY(-50%); background: #222B3A; color: #fff; font-size: 12px; font-weight: 500; padding: 4px 10px; border-radius: 4px; white-space: nowrap; z-index: 300; pointer-events: none; }
+    .sb.col .staff-row { padding: 0; justify-content: center; }
+    .sb.col .staff-label { display: none; }
+    .sb.col .staff-more-btn { display: none; }
 
     .sb-card {
       background: #fff;
@@ -67,6 +92,7 @@
       flex-shrink: 0;
     }
     .logo-wm svg { width: 78.7px; height: 30.71px; display: block; }
+    .logo-ic { display: none; align-items: center; justify-content: center; }
 
     .col-btn {
       width: 28px;
@@ -848,6 +874,7 @@
 
       <div class="sb-hdr">
         <div class="logo-wm" data-icon="wordmark"></div>
+        <div class="logo-ic" data-icon="logoMark"></div>
         <button class="col-btn" onclick="toggleSB()" aria-label="Toggle sidebar">
           <span id="cicon" data-icon="collapseLeft"></span>
         </button>
@@ -1526,7 +1553,9 @@
 <script>
   function toggleSB() {
     var s = document.getElementById('sb');
-    s.classList.toggle('col');
+    var collapsed = s.classList.toggle('col');
+    var ic = document.getElementById('cicon');
+    ic.innerHTML = collapsed ? window.SIDEBAR_ICONS.collapseRight : window.SIDEBAR_ICONS.collapseLeft;
   }
 
   document.querySelectorAll('.ni').forEach(function(item) {

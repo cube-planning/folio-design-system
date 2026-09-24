@@ -6,7 +6,8 @@
   <title>Folio — Library</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Lato:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../vendor/fontawesome/css/all.min.css">
 
   <script src="../components/_sidebar-icons.js"></script>
   <link rel="stylesheet" href="../tokens/tokens.css">
@@ -126,9 +127,9 @@
       gap: 4px;
       height: 20px;
       padding: 0 8px;
-      font-family: 'Lato', sans-serif;
+      font-family: 'DM Sans', sans-serif;
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 400;
       color: #4A5567;
       white-space: nowrap;
     }
@@ -217,7 +218,7 @@
     }
 
     .ni-sub-wrap {
-      padding-left: 42px;
+      padding-left: 34px;
       display: flex;
       flex-direction: column;
     }
@@ -246,9 +247,9 @@
       align-items: center;
       gap: 4px;
       padding: 8px 8px 4px;
-      font-family: 'Lato', sans-serif;
+      font-family: 'DM Sans', sans-serif;
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 400;
       color: #4A5567;
     }
     .sb.col .apps-sec { justify-content: center; padding: 8px 0 4px; }
@@ -421,7 +422,7 @@
     .page-content {
       flex: 1;
       overflow-y: auto;
-      background: #FCFCFD;
+      background: var(--color-bg-canvas);
       padding: 32px;
     }
 
@@ -734,6 +735,15 @@
     .pg-btn.active { background: #2667D8; border-color: #2667D8; color: #FFFFFF; }
     .pg-btn:disabled { opacity: 0.4; cursor: default; }
 
+    .staff-row { display: flex; align-items: center; justify-content: space-between; padding: 0 12px 0 24px; height: 40px; flex-shrink: 0; }
+    .staff-row-left { display: flex; align-items: center; gap: 8px; }
+    .staff-label { font-size: 14px; font-weight: 400; color: #222B3A; }
+    .staff-more-btn { width: 28px; height: 28px; border: none; background: transparent; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #677489; font-size: 14px; }
+    .staff-more-btn:hover { background: #F2F5F9; }
+    .sb.col .staff-row { padding: 0; justify-content: center; }
+    .sb.col .staff-label { display: none; }
+    .sb.col .staff-more-btn { display: none; }
+
   </style>
 </head>
 <body>
@@ -762,16 +772,28 @@
 
         <div class="dv"></div>
 
+        <!-- AI -->
+        <div class="nav-section">
+          <div class="sec">
+            <span class="sec-crt"><i class="fa-solid fa-caret-down"></i></span>
+            <span class="sec-lbl">AI</span>
+          </div>
+          <div class="ni" data-label="AI Hub"><div class="ni-ic" data-icon="aiAnalyst"></div><span class="ni-lbl">AI Hub</span></div>
+          <div class="ni" data-label="Planner"><div class="ni-ic"><i class="fa-regular fa-book-sparkles"></i></div><span class="ni-lbl">Planner</span></div>
+          <div class="ni" data-label="Smart Variance"><div class="ni-ic" data-icon="smartVariance"></div><span class="ni-lbl">Smart Variance</span></div>
+        </div>
+
+        <div class="dv"></div>
+
         <!-- Reporting & Analytics -->
         <div class="nav-section">
           <div class="sec">
-            <svg class="sec-crt" width="8" height="5" viewBox="0 0 10 6" fill="none"><path d="M4.29 5.71C4.68 6.1 5.32 6.1 5.71 5.71L9.71 1.71C10 1.42 10.08.99 9.92.62 9.77.24 9.4 0 9 0H1C.6 0 .23.25.08.62c-.16.38-.07.81.21 1.1L4.29 5.71z" fill="#677489"/></svg>
+            <span class="sec-crt"><i class="fa-solid fa-caret-down"></i></span>
             <span class="sec-lbl">Reporting &amp; Analytics</span>
           </div>
-          <div class="ni" data-label="Cube BI"><div class="ni-ic" data-icon="cubeBI"></div><span class="ni-lbl">Cube BI</span></div>
           <div class="ni" data-label="Boards"><div class="ni-ic" data-icon="boards"></div><span class="ni-lbl">Boards</span></div>
-          <div class="ni" data-label="Smart Variance"><div class="ni-ic" data-icon="smartVariance"></div><span class="ni-lbl">Smart Variance</span></div>
-          <div class="ni" data-label="Cube AI"><div class="ni-ic" data-icon="aiAnalyst"></div><span class="ni-lbl">Cube AI</span></div>
+          <div class="ni" data-label="Cube BI"><div class="ni-ic" data-icon="cubeBI"></div><span class="ni-lbl">Cube BI</span></div>
+          <div class="ni" data-label="Builder"><div class="ni-ic"><i class="fa-regular fa-hammer"></i></div><span class="ni-lbl">Builder</span></div>
           <div class="ni active" data-label="Library"><div class="ni-ic" data-icon="library"></div><span class="ni-lbl">Library</span></div>
           <div class="ni-sub-wrap">
             <a class="ni-sub active" data-label="Reports"><span>Reports</span></a>
@@ -784,12 +806,12 @@
         <!-- Planning -->
         <div class="nav-section">
           <div class="sec">
-            <svg class="sec-crt" width="8" height="5" viewBox="0 0 10 6" fill="none"><path d="M4.29 5.71C4.68 6.1 5.32 6.1 5.71 5.71L9.71 1.71C10 1.42 10.08.99 9.92.62 9.77.24 9.4 0 9 0H1C.6 0 .23.25.08.62c-.16.38-.07.81.21 1.1L4.29 5.71z" fill="#677489"/></svg>
+            <span class="sec-crt"><i class="fa-solid fa-caret-down"></i></span>
             <span class="sec-lbl">Planning</span>
           </div>
-          <div class="ni" data-label="Planners"><div class="ni-ic" data-icon="planners"></div><span class="ni-lbl">Planners</span></div>
           <div class="ni" data-label="Scenarios"><div class="ni-ic" data-icon="scenarios"></div><span class="ni-lbl">Scenarios</span></div>
           <div class="ni" data-label="Workflows"><div class="ni-ic" data-icon="workflows"></div><span class="ni-lbl">Workflows</span></div>
+          <div class="ni" data-label="Tables"><div class="ni-ic"><i class="fa-regular fa-table"></i></div><span class="ni-lbl">Tables</span></div>
         </div>
 
         <div class="dv"></div>
@@ -797,7 +819,7 @@
         <!-- Modeling -->
         <div class="nav-section">
           <div class="sec">
-            <svg class="sec-crt" width="8" height="5" viewBox="0 0 10 6" fill="none"><path d="M4.29 5.71C4.68 6.1 5.32 6.1 5.71 5.71L9.71 1.71C10 1.42 10.08.99 9.92.62 9.77.24 9.4 0 9 0H1C.6 0 .23.25.08.62c-.16.38-.07.81.21 1.1L4.29 5.71z" fill="#677489"/></svg>
+            <span class="sec-crt"><i class="fa-solid fa-caret-down"></i></span>
             <span class="sec-lbl">Modeling</span>
           </div>
           <div class="ni" data-label="Dimensions"><div class="ni-ic" data-icon="dimensions"></div><span class="ni-lbl">Dimensions</span></div>
@@ -810,7 +832,7 @@
         <!-- Data -->
         <div class="nav-section">
           <div class="sec">
-            <svg class="sec-crt" width="8" height="5" viewBox="0 0 10 6" fill="none"><path d="M4.29 5.71C4.68 6.1 5.32 6.1 5.71 5.71L9.71 1.71C10 1.42 10.08.99 9.92.62 9.77.24 9.4 0 9 0H1C.6 0 .23.25.08.62c-.16.38-.07.81.21 1.1L4.29 5.71z" fill="#677489"/></svg>
+            <span class="sec-crt"><i class="fa-solid fa-caret-down"></i></span>
             <span class="sec-lbl">Data</span>
           </div>
           <div class="ni" data-label="Integrations"><div class="ni-ic" data-icon="integrations"></div><span class="ni-lbl">Integrations</span></div>
@@ -822,12 +844,13 @@
         <!-- Admin -->
         <div class="nav-section">
           <div class="sec">
-            <svg class="sec-crt" width="8" height="5" viewBox="0 0 10 6" fill="none"><path d="M4.29 5.71C4.68 6.1 5.32 6.1 5.71 5.71L9.71 1.71C10 1.42 10.08.99 9.92.62 9.77.24 9.4 0 9 0H1C.6 0 .23.25.08.62c-.16.38-.07.81.21 1.1L4.29 5.71z" fill="#677489"/></svg>
+            <span class="sec-crt"><i class="fa-solid fa-caret-down"></i></span>
             <span class="sec-lbl">Admin</span>
           </div>
           <div class="ni" data-label="Users"><div class="ni-ic" data-icon="users"></div><span class="ni-lbl">Users</span></div>
           <div class="ni" data-label="Currencies"><div class="ni-ic" data-icon="currencies"></div><span class="ni-lbl">Currencies</span></div>
           <div class="ni" data-label="Audit Trail"><div class="ni-ic" data-icon="auditTrail"></div><span class="ni-lbl">Audit Trail</span></div>
+          <div class="ni" data-label="Usages"><div class="ni-ic"><i class="fa-regular fa-gauge-simple-high"></i></div><span class="ni-lbl">Usages</span></div>
         </div>
 
         <div class="dv"></div>
@@ -835,7 +858,7 @@
         <!-- Apps -->
         <div class="apps-wrap">
           <div class="apps-sec">
-            <svg class="sec-crt" width="8" height="5" viewBox="0 0 10 6" fill="none"><path d="M4.29 5.71C4.68 6.1 5.32 6.1 5.71 5.71L9.71 1.71C10 1.42 10.08.99 9.92.62 9.77.24 9.4 0 9 0H1C.6 0 .23.25.08.62c-.16.38-.07.81.21 1.1L4.29 5.71z" fill="#677489"/></svg>
+            <span class="sec-crt"><i class="fa-solid fa-caret-down"></i></span>
             <span class="sec-lbl">Apps</span>
           </div>
           <div class="apps-grid">
@@ -852,6 +875,16 @@
         </div>
 
       </div><!-- .sb-nav -->
+      <div style="height:1px;background:#E3E8EF;margin:0"></div>
+      <div class="staff-row">
+        <div class="staff-row-left">
+          <div class="ni-ic" style="color:#4A5567"><i class="fa-regular fa-users"></i></div>
+          <span class="staff-label">Cube Staff</span>
+        </div>
+        <button class="staff-more-btn" aria-label="More options">
+          <i class="fa-solid fa-ellipsis-vertical"></i>
+        </button>
+      </div>
     </div><!-- .sb-card -->
   </aside>
 
