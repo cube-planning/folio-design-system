@@ -87,10 +87,10 @@ const { Badge, Button, Avatar, Stepper } = window.FolioDS;
 <TaskCard
   title="EMEA Entity – Intacct Sync Dimensions"
   steps={[
-    { label: "Authenticating..", state: "active" },
-    { label: "Sync", state: "pending" },
-    { label: "Validate", state: "pending" },
-    { label: "Save to Cube", state: "pending" },
+    { label: "Authenticating..", status: "active" },
+    { label: "Sync", status: "inactive" },
+    { label: "Validate", status: "inactive" },
+    { label: "Save to Cube", status: "inactive" },
   ]}
   user={{ name: "Jessica Smith" }}
   startedAt="Started 4:23 pm"

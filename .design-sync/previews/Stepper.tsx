@@ -38,3 +38,17 @@ export function AllComplete() {
     />
   );
 }
+
+export function PageWizardFixedPitch() {
+  return (
+    <Stepper
+      pitch={236}
+      align="center"
+      steps={[
+        { key: "source", label: "Data Source", status: "done" },
+        { key: "config", label: "Table Configuration", status: "done" },
+        { key: "mapping", label: "Mapping", status: "active" },
+      ]}
+    />
+  );
+}

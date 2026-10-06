@@ -132,6 +132,23 @@
     .scen-lbl { font-size:12px; font-weight:500; color:#222B3A; }
     .kebab-btn { width:32px; height:32px; border-radius:8px; border:1px solid #E3E8EF; background:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; color:#4A5567; }
     .avatar-img { width:20px; height:20px; border-radius:50%; object-fit:cover; flex-shrink:0; }
+    /* ── Scenario bar (Flow 4) ─────────────────────────────────────────── */
+    .scen-bar { display:flex; align-items:center; gap:12px; background:#fff; border:1px solid #E3E8EF; border-radius:12px; padding:11px 16px; margin-bottom:16px; }
+    .scen-bar.scen-locked { background:#FAFAFA; }
+    .scen-bar-lbl { font-size:13px; font-weight:500; color:#4A5567; white-space:nowrap; flex-shrink:0; }
+    .scen-bar-select { flex-shrink:0; width:180px; }
+    .scen-bar-status-wrap { flex:1; min-width:0; display:flex; align-items:center; }
+    .scen-bar-status { display:flex; align-items:center; gap:7px; font-size:13px; white-space:nowrap; overflow:hidden; }
+    .scen-bar-status.up-to-date { color:#027A48; }
+    .scen-bar-status.scen-locked-st { color:#677489; }
+    .scen-bar-acts { display:flex; align-items:center; gap:8px; }
+    /* ── Inline title rename (Flow 4) ───────────────────────────────────── */
+    .detail-title-wrap { display:flex; align-items:center; gap:8px; }
+    .detail-title-edit { cursor:pointer; }
+    .detail-title-edit:hover { text-decoration:underline dotted #97A3B6; }
+    .detail-title-pen { color:#97A3B6; font-size:14px; cursor:pointer; opacity:0; transition:opacity .15s; }
+    .detail-title-wrap:hover .detail-title-pen { opacity:1; }
+    .detail-title-input { font-size:24px; line-height:32px; font-weight:600; color:#222B3A; border:none; border-bottom:2px solid #173D82; outline:none; background:transparent; padding:0; font-family:inherit; min-width:200px; }
     .edit-overlay { position:fixed; inset:0; background:#94A3B8; z-index:200; display:flex; flex-direction:column; padding:14px; }
     .edit-card { width:100%; height:100%; background:#fff; border-radius:16px; display:flex; flex-direction:column; overflow:hidden; }
     .edit-hdr { display:flex; align-items:center; justify-content:space-between; padding:20px 28px; flex-shrink:0; background:#F5F7FA; border-bottom:1px solid #E3E8EF; }
@@ -174,20 +191,6 @@
     .nt-choice-card { border:1px solid #E3E8EF; border-radius:8px; padding:14px; cursor:pointer; background:#fff; }
     .nt-choice-card.nt-card-selected { border-color:#173D82; background:#EFF6FF; box-shadow:0 0 0 1px #173D82; }
     .nt-choice-desc { font-size:13px; color:#677489; margin-top:6px; margin-left:28px; line-height:1.4; }
-    .nt-stepper { display:flex; align-items:flex-start; padding:8px 8px 0; margin-bottom:44px; }
-    .nt-step-node { flex:0 0 32px; width:32px; position:relative; }
-    .nt-step-circle { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; border:2px solid transparent; }
-    .nt-step-circle.done { background:#E6EBF4; color:#173D82; }
-    .nt-step-circle.active { background:#fff; border-color:#173D82; }
-    .nt-step-circle.active::after { content:''; width:9px; height:9px; border-radius:50%; background:#173D82; }
-    .nt-step-circle.inactive { background:#fff; border:2px solid #E3E8EF; }
-    .nt-step-circle.inactive::after { content:''; width:7px; height:7px; border-radius:50%; background:#E3E8EF; }
-    .nt-step-label { position:absolute; top:40px; left:50%; transform:translateX(-50%); white-space:nowrap; font-size:12px; }
-    .nt-step-label.done { color:#222B3A; }
-    .nt-step-label.active { color:#173D82; font-weight:600; }
-    .nt-step-label.inactive { color:#97A3B6; }
-    .nt-step-connector { height:2px; flex:1 1 auto; min-width:32px; background:#E3E8EF; margin-top:15px; }
-    .nt-step-connector.filled { background:#8EABE1; }
     .nt-conn-list { display:flex; flex-direction:column; gap:16px; margin-top:20px; }
     .nt-conn-card { background:#fff; border:1px solid #E3E8EF; border-radius:12px; padding:20px 24px; display:flex; align-items:center; gap:16px; }
     .nt-conn-avatar { width:44px; height:44px; border-radius:50%; overflow:hidden; flex-shrink:0; background:#F8FAFC; display:flex; align-items:center; justify-content:center; }
@@ -301,23 +304,50 @@
         </div>
         <div class="detail-head">
           <div>
-            <div class="detail-title">{{ activeTable.name }}</div>
+            <div class="detail-title-wrap">
+              <sc-if value="{{ isTitleEditing }}" hint-placeholder-val="{{ false }}">
+                <input class="detail-title-input" value="{{ titleDraft }}" onInput="{{ onTitleDraftChange }}" onBlur="{{ saveTitleRename }}" />
+              </sc-if>
+              <sc-if value="{{ isNotTitleEditing }}" hint-placeholder-val="{{ true }}">
+                <div class="detail-title detail-title-edit" onClick="{{ startTitleRename }}">{{ activeTable.name }}</div>
+                <i class="fa-regular fa-pen detail-title-pen" onClick="{{ startTitleRename }}"></i>
+              </sc-if>
+            </div>
             <div class="detail-meta">
-              <sc-if value="{{ activeTable.isSynced }}" hint-placeholder-val="{{ true }}"><img class="avatar-img" src="./justworks-avatar.png" alt="Justworks"></sc-if>
+              <sc-if value="{{ activeTable.isSynced }}" hint-placeholder-val="{{ true }}"><img class="avatar-img" src="{{ activeTable.logo }}" alt="{{ activeTable.by }}"></sc-if>
               <sc-if value="{{ activeTable.notSynced }}" hint-placeholder-val="{{ false }}"><x-import component-from-global-scope="FolioDS.Avatar" type="initials" size="xs" name="{{ activeTable.by }}" hint-size="20px,20px"></x-import></sc-if>
               <sc-if value="{{ activeTable.isSynced }}" hint-placeholder-val="{{ true }}"><span><b>{{ activeTable.source }}</b> · Last Import {{ activeTable.imported }}</span></sc-if>
               <sc-if value="{{ activeTable.notSynced }}" hint-placeholder-val="{{ false }}"><span>Created by <b>{{ activeTable.by }}</b> · Last modified {{ activeTable.modified }}</span></sc-if>
-              <sc-if value="{{ activeTable.isSynced }}" hint-placeholder-val="{{ true }}"><x-import component-from-global-scope="FolioDS.Button" variant="subtle-blue" size="small" hint-size="110px,28px"><i class="fa-regular fa-arrows-rotate" style="margin-right:6px"></i>Get Latest Data</x-import></sc-if>
             </div>
           </div>
           <div class="detail-actions">
-            <div class="scen-field">
-              <span class="scen-lbl">Scenarios<span style="color:#D92D20">*</span></span>
-              <x-import component-from-global-scope="FolioDS.Select" size="large" options="{{ scenarioOptions }}" value="{{ activeTable.scenario }}" hint-size="180px,36px"></x-import>
-            </div>
-            <x-import component-from-global-scope="FolioDS.Button" variant="secondary" size="large" onClick="{{ openEdit }}" hint-size="90px,32px"><i class="fa-regular fa-pen" style="margin-right:6px"></i>Edit</x-import>
+            <sc-if value="{{ activeTable.isSynced }}" hint-placeholder-val="{{ true }}"><x-import component-from-global-scope="FolioDS.Button" variant="subtle-blue" size="large" hint-size="130px,32px"><i class="fa-regular fa-arrows-rotate" style="margin-right:6px"></i>Get Latest Data</x-import></sc-if>
             <x-import component-from-global-scope="FolioDS.Button" variant="primary" size="large" hint-size="100px,32px"><i class="fa-regular fa-users" style="margin-right:6px"></i>Share</x-import>
-            <x-import component-from-global-scope="FolioDS.Button" variant="ghost-gray" size="large" aria-label="More actions" icon="{{ kebabIcon }}" hint-size="32px,32px"></x-import>
+          </div>
+        </div>
+
+        <div class="{{ scenarioBarClass }}">
+          <span class="scen-bar-lbl">Scenario</span>
+          <div class="scen-bar-select">
+            <x-import component-from-global-scope="FolioDS.Select" size="large" options="{{ scenarioOptions }}" value="{{ activeTable.scenario }}" hint-size="180px,36px"></x-import>
+          </div>
+          <div class="scen-bar-status-wrap">
+            <sc-if value="{{ isScenarioLocked }}" hint-placeholder-val="{{ true }}">
+              <div class="scen-bar-status scen-locked-st">
+                <i class="fa-solid fa-lock" style="font-size:12px"></i>
+                <span>Locked by Liam Bennett · May 06, 2024 at 12:05 pm</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ isScenarioUnlocked }}" hint-placeholder-val="{{ false }}">
+              <div class="scen-bar-status up-to-date">
+                <i class="fa-solid fa-circle-check" style="font-size:13px"></i>
+                <span>Up to date · Last Import May 06, 2024 at 12:05 pm</span>
+              </div>
+            </sc-if>
+          </div>
+          <div class="scen-bar-acts">
+            <x-import component-from-global-scope="FolioDS.Button" variant="secondary" size="large" onClick="{{ openEdit }}" hint-size="80px,32px"><i class="fa-regular fa-pen" style="margin-right:6px"></i>Edit</x-import>
+            <x-import component-from-global-scope="FolioDS.Button" variant="ghost-gray" size="large" aria-label="Toggle lock" icon="{{ kebabIcon }}" onClick="{{ toggleScenarioLock }}" hint-size="32px,32px"></x-import>
           </div>
         </div>
 
@@ -362,15 +392,7 @@
         </div>
         <div class="detail-title">New Table</div>
 
-        <div class="nt-stepper">
-          <sc-for list="{{ ntSteps }}" as="s" hint-placeholder-count="3">
-            <div class="nt-step-node">
-              <div class="nt-step-circle {{ s.statusClass }}">{{ s.mark }}</div>
-              <div class="nt-step-label {{ s.statusClass }}">{{ s.label }}</div>
-            </div>
-            <sc-if value="{{ s.hasConnector }}" hint-placeholder-val="{{ true }}"><div class="nt-step-connector {{ s.connectorClass }}"></div></sc-if>
-          </sc-for>
-        </div>
+        <x-import component-from-global-scope="FolioDS.Stepper" steps="{{ ntSteps }}" pitch="{{ ntStepperPitch }}" align="center" hint-size="568px,71px"></x-import>
 
         <div class="nt-conn-card">
           <div class="nt-conn-avatar"><img src="{{ ntSelectedSource.logo }}" alt="{{ ntSelectedSource.name }}"></div>
@@ -464,7 +486,7 @@
         <div>
           <div class="detail-title">{{ activeTable.name }}</div>
           <div class="detail-meta">
-            <sc-if value="{{ activeTable.isSynced }}" hint-placeholder-val="{{ true }}"><img class="avatar-img" src="./justworks-avatar.png" alt="Justworks"></sc-if>
+            <sc-if value="{{ activeTable.isSynced }}" hint-placeholder-val="{{ true }}"><img class="avatar-img" src="{{ activeTable.logo }}" alt="{{ activeTable.by }}"></sc-if>
             <sc-if value="{{ activeTable.notSynced }}" hint-placeholder-val="{{ false }}"><x-import component-from-global-scope="FolioDS.Avatar" type="initials" size="xs" name="{{ activeTable.by }}" hint-size="20px,20px"></x-import></sc-if>
             <sc-if value="{{ activeTable.isSynced }}" hint-placeholder-val="{{ true }}"><span><b>{{ activeTable.source }}</b> · Last Import {{ activeTable.imported }}</span></sc-if>
             <sc-if value="{{ activeTable.notSynced }}" hint-placeholder-val="{{ false }}"><span>Created by <b>{{ activeTable.by }}</b> · Last modified {{ activeTable.modified }}</span></sc-if>
@@ -499,10 +521,11 @@
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1600px&quot;,&quot;height&quot;:&quot;1000px&quot;},&quot;companyName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Accuplanner Inc&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;userName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Nina Graham&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;}}">
 class Component extends DCLogic {
   state = { view: 'list', editOpen: false, activeIdx: 0, rows: null, customTables: [],
+    scenarioLocked: false, titleEditing: false, titleDraft: '', customTitles: {},
     nt: { chooseOpen: false, start: 'source', sourceId: null, mapOpen: false, fields: {}, colNames: {} } };
   NT_SOURCES = [
-    { id: 'justworks', name: 'Justworks', logo: './justworks-avatar.png', sub: 'Cube Universal Connect \u2022 Last Import Jun 24, 2026 at 11:10 am' },
-    { id: 'quickbooks', name: 'Quickbook', logo: './quickbooks-logo.png', sub: 'Cube Universal Connect \u2022 Last Import May 06, 2024 at 12:05 pm' }
+    { id: 'paylocity', name: 'Paylocity', logo: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44"%3E%3Ccircle cx="22" cy="22" r="22" fill="%23005C87"/%3E%3Ctext x="22" y="28" font-family="DM Sans,Arial,sans-serif" font-size="20" font-weight="700" fill="%23fff" text-anchor="middle"%3EP%3C/text%3E%3C/svg%3E', sub: 'Cube Universal Connect \u2022 Last Import Sep 20, 2026 at 09:15 am' },
+    { id: 'quickbooks', name: 'QuickBooks', logo: './quickbooks-logo.png', sub: 'Cube Universal Connect \u2022 Last Import May 06, 2024 at 12:05 pm' }
   ];
   NT_FIELDS = [
     { key: 'id', label: 'Employee ID', type: 'text' },
@@ -546,7 +569,7 @@ class Component extends DCLogic {
     const cols = selected.map((f) => ({ key: f.key, label: nt.colNames[f.key] || f.label, align: f.type === 'numeric' ? 'right' : undefined, mono: f.type === 'numeric' }));
     const source = this.NT_SOURCES.find((s) => s.id === nt.sourceId);
     const name = source ? source.name + ' Table' : 'New Table';
-    const table = { name, access: 'Table Managers Only', modified: 'Just now', by: this.props.userName ?? 'Nina Graham', cols, rows: [], isSynced: true, source: source ? source.name : '', imported: 'Just now' };
+    const table = { name, access: 'Table Managers Only', modified: 'Just now', by: this.props.userName ?? 'Nina Graham', cols, rows: [], isSynced: true, source: source ? source.name + ' • Cube Universal Connect' : '', imported: 'Just now', logo: source ? source.logo : '' };
     this.setState((s) => ({ customTables: [...s.customTables, table], view: 'detail', activeName: name, rows: null,
       nt: { chooseOpen: false, start: 'source', sourceId: null, mapOpen: false, fields: {}, colNames: {} } }));
   }
@@ -559,13 +582,20 @@ class Component extends DCLogic {
       const goList = e.target.closest('[data-action="go-list"]');
       if (goList) { e.preventDefault(); this.setState({ view: 'list' }); return; }
     };
+    this._onKeyDown = (e) => {
+      if (!this.state.titleEditing) return;
+      if (e.key === 'Enter') { e.preventDefault(); this.saveTitleRename(); }
+      if (e.key === 'Escape') { e.preventDefault(); this.setState({ titleEditing: false }); }
+    };
     document.addEventListener('click', this._onClick);
+    document.addEventListener('keydown', this._onKeyDown);
     if (!window.SIDEBAR_ICONS || !window.FolioDS) {
       this._iconWait = setInterval(() => { if (window.SIDEBAR_ICONS && window.FolioDS) { clearInterval(this._iconWait); this.forceUpdate(); } }, 60);
     }
   }
   componentWillUnmount() {
     document.removeEventListener('click', this._onClick);
+    document.removeEventListener('keydown', this._onKeyDown);
     if (this._iconWait) clearInterval(this._iconWait);
   }
   get TABLES() {
@@ -588,7 +618,7 @@ class Component extends DCLogic {
   get DATASETS() {
     return {
       'Employee Roster': {
-        title: 'Employee Roster FY26', isSynced: true, source: 'Justworks \u2022 Cube Universal Connect', imported: 'Jun 24, 2026 at 11:10 am', by: 'Justworks',
+        title: 'Paylocity Employee Roster', isSynced: true, source: 'Paylocity \u2022 Cube Universal Connect', imported: 'Jun 24, 2026 at 11:10 am', by: 'Paylocity', logo: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44"%3E%3Ccircle cx="22" cy="22" r="22" fill="%23005C87"/%3E%3Ctext x="22" y="28" font-family="DM Sans,Arial,sans-serif" font-size="20" font-weight="700" fill="%23fff" text-anchor="middle"%3EP%3C/text%3E%3C/svg%3E',
         cols: [
           { key: 'sourceStatus', label: 'Source Status', badge: 'sync' }, { key: 'id', label: 'Employee ID' }, { key: 'name', label: 'Employee Name' },
           { key: 'dept', label: 'Department' }, { key: 'title', label: 'Title' }, { key: 'salary', label: 'Annual Salary', align: 'right', mono: true },
@@ -790,10 +820,30 @@ class Component extends DCLogic {
     };
   }
   openTable(row) {
-    this.setState({ view: 'detail', activeName: row.name, rows: null });
+    const locked = row.name === 'Employee Roster';
+    this.setState({ view: 'detail', activeName: row.name, rows: null, scenarioLocked: locked, titleEditing: false });
   }
   openEdit() { this.setState({ editOpen: true }); }
   closeEdit() { this.setState({ editOpen: false }); }
+  toggleScenarioLock() { this.setState((s) => ({ scenarioLocked: !s.scenarioLocked })); }
+  startTitleRename() {
+    const activeName = this.state.activeName || 'Employee Roster';
+    const name = this.state.customTitles[activeName] || (this.DATASETS[activeName] ? (this.DATASETS[activeName].title || activeName) : activeName);
+    this.setState({ titleEditing: true, titleDraft: name }, () => {
+      const inp = document.querySelector('.detail-title-input');
+      if (inp) { inp.focus(); inp.select(); }
+    });
+  }
+  saveTitleRename() {
+    const draft = this.state.titleDraft.trim();
+    if (draft) {
+      const activeName = this.state.activeName || 'Employee Roster';
+      this.setState((s) => ({ customTitles: { ...s.customTitles, [activeName]: draft }, titleEditing: false }));
+    } else {
+      this.setState({ titleEditing: false });
+    }
+  }
+  onTitleDraftChange(v) { this.setState({ titleDraft: v }); }
   deleteRow(i) {
     this.setState((s) => {
       const dataset = this.DATASETS[s.activeName || 'Employee Roster'] || this.DATASETS['Employee Roster'];
@@ -912,8 +962,9 @@ class Component extends DCLogic {
     const companyName = this.props.companyName ?? 'Accuplanner Inc';
     const userName = this.props.userName ?? 'Nina Graham';
     const initials = userName.trim().split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase();
+    const customTitle = this.state.customTitles[activeName];
     const activeTable = {
-      name: dataset.title || activeName, by: dataset.by || tableRow.by, modified: tableRow.modified,
+      name: customTitle || dataset.title || activeName, by: dataset.by || tableRow.by, modified: tableRow.modified,
       isSynced: !!dataset.isSynced, notSynced: !dataset.isSynced, source: dataset.source, imported: dataset.imported,
       scenario: 'Actuals', scenarios: ['Forecast B', 'Actuals'], scenariosText: 'Forecast B, Actuals', access: 'Table Managers Only'
     };
@@ -923,11 +974,9 @@ class Component extends DCLogic {
     const NT_STEP_LABELS = ['Data Source', 'Table Configuration', 'Mapping'];
     const ntStepIndex = nt.mapOpen ? 2 : 1;
     const ntSteps = NT_STEP_LABELS.map((label, i) => ({
+      key: label,
       label,
-      statusClass: i < ntStepIndex ? 'done' : i === ntStepIndex ? 'active' : 'inactive',
-      mark: i < ntStepIndex ? React.createElement('i', { className: 'fa-solid fa-check', style: { fontSize: 11 } }) : '',
-      hasConnector: i < NT_STEP_LABELS.length - 1,
-      connectorClass: i < ntStepIndex ? 'filled' : ''
+      status: i < ntStepIndex ? 'done' : i === ntStepIndex ? 'active' : 'inactive'
     }));
     const ntSelectedKeys = this.NT_FIELDS.filter((f) => nt.fields[f.key]);
     const TYPE_META = { text: { icon: 'T', label: 'Text' }, numeric: { icon: '#', label: 'Numeric' }, date: { icon: React.createElement('i', { className: 'fa-regular fa-calendar', style: { fontSize: 11 } }), label: 'Date' } };
@@ -958,6 +1007,16 @@ class Component extends DCLogic {
       companyName, userName, initials, ic, tableEl, kebabIcon,
       isListView: this.state.view === 'list',
       isDetailView: this.state.view === 'detail',
+      isScenarioLocked: this.state.scenarioLocked,
+      isScenarioUnlocked: !this.state.scenarioLocked,
+      scenarioBarClass: this.state.scenarioLocked ? 'scen-bar scen-locked' : 'scen-bar',
+      isTitleEditing: this.state.titleEditing,
+      isNotTitleEditing: !this.state.titleEditing,
+      titleDraft: this.state.titleDraft,
+      startTitleRename: () => this.startTitleRename(),
+      saveTitleRename: () => this.saveTitleRename(),
+      onTitleDraftChange: (v) => this.onTitleDraftChange(v),
+      toggleScenarioLock: () => this.toggleScenarioLock(),
       isSourceView: this.state.view === 'source',
       isNewTableView: this.state.view === 'newtable',
       editOpen: this.state.editOpen,
@@ -981,6 +1040,7 @@ class Component extends DCLogic {
       ntConnections,
       ntSelectedSource: ntSelectedSourceObj,
       ntSteps,
+      ntStepperPitch: 236,
       ntNextDisabled: ntSelectedKeys.length === 0,
       ntFieldsTableEl,
       ntOpenMapping: () => this.ntOpenMapping(),

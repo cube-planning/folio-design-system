@@ -22,7 +22,7 @@ import { useState } from "react";
 
 const COLORS = {
   cobalt100: "#C6D3EC", // hover fill
-  cobalt200: "#8EABE1", // pressed fill
+  cobalt200: "#8EA8E1", // pressed fill
   cobalt500: "#173D82", // border + icon color
 };
 

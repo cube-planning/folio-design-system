@@ -11,13 +11,24 @@
 // very useful. Figma's "done" fill and Hover state are baked into image
 // assets with no extractable color value, and this repo skips hover-state
 // variants elsewhere (Radio, Checkbox) for the same reason — left unchanged.
+//
+// Layout modes:
+//   - fill (default): track stretches to its container. Right for narrow
+//     hosts like TaskCard's drawer, where labels wrap inside a fixed box.
+//   - pitch: pass `pitch` (distance between node centers, px) and the track
+//     becomes a fixed width, labels stay on one line. Right for page-level
+//     wizards ("New Table" etc.) — a 3- or 4-step flow keeps the same step
+//     spacing instead of stretching to the full content width. Add
+//     `align="center"` to center the track under the page title block.
 
+// Hexes mirror tokens/tokens.css (cobalt-50/200/500, gray-300/600/900).
 const COLORS = {
   cobalt500: "#173D82",
   cobalt200: "#8EA8E1",
   cobalt50:  "#E6EBF4",
-  gray900:   "#101828",
-  gray300:   "#E4E7EC",
+  gray900:   "#222B3A",
+  gray600:   "#677489",
+  gray300:   "#E3E8EF",
 };
 
 const SIZE = {
@@ -63,16 +74,40 @@ function Circle({ status, size }) {
 function labelColor(status) {
   if (status === "done") return COLORS.gray900;
   if (status === "active") return COLORS.cobalt500;
-  return COLORS.gray300;
+  // Upcoming steps stay muted but readable — gray-300 is a border color and
+  // fails contrast as text (~1.2:1 on white).
+  return COLORS.gray600;
 }
 
-export function Stepper({ steps, size = "md", style }) {
+export function Stepper({ steps, size = "md", pitch, align = "start", style }) {
   const s = SIZE[size] ?? SIZE.md;
+  const fixed = typeof pitch === "number";
+  // In pitch mode labels never wrap, so one line of height is all the track
+  // needs below the circle; in fill mode reserve two lines for wrapped labels.
+  const labelLines = fixed ? 1 : 2;
 
   return (
-    <div style={{ display: "flex", alignItems: "flex-start", width: "100%", paddingBottom: s.font * 1.5 * 2 + 12, fontFamily: "'DM Sans', sans-serif", ...style }}>
+    <ol
+      aria-label="Progress"
+      style={{
+        display: "flex",
+        alignItems: "flex-start",
+        listStyle: "none",
+        margin: align === "center" ? "0 auto" : 0,
+        padding: 0,
+        paddingBottom: s.gap + s.font * 1.5 * labelLines + 12,
+        width: fixed ? pitch * (steps.length - 1) + s.circle : "100%",
+        maxWidth: "100%",
+        fontFamily: "'DM Sans', sans-serif",
+        ...style,
+      }}
+    >
       {steps.map((step, i) => (
-        <div key={step.key ?? i} style={{ display: "flex", alignItems: "flex-start", flex: i < steps.length - 1 ? 1 : "0 0 auto" }}>
+        <li
+          key={step.key ?? i}
+          aria-current={step.status === "active" ? "step" : undefined}
+          style={{ display: "flex", alignItems: "flex-start", flex: i < steps.length - 1 ? 1 : "0 0 auto" }}
+        >
           {/* Node is fixed-width (= circle diameter) so the circle's horizontal
               position never shifts to accommodate a wider label — the label is
               positioned absolutely so it can't affect the track's geometry. */}
@@ -83,19 +118,18 @@ export function Stepper({ steps, size = "md", style }) {
               top: s.circle + s.gap,
               left: "50%",
               transform: "translateX(-50%)",
-              width: s.labelWidth,
+              ...(fixed ? { whiteSpace: "nowrap" } : { width: s.labelWidth, wordBreak: "break-word" }),
               fontSize: s.font,
               fontWeight: step.status === "active" ? 600 : 500,
               color: labelColor(step.status),
               textAlign: "center",
               lineHeight: 1.5,
-              wordBreak: "break-word",
             }}>
               {step.label}
             </span>
           </div>
           {i < steps.length - 1 && (
-            <div style={{
+            <div aria-hidden="true" style={{
               height: 2,
               flex: 1,
               minWidth: 24,
@@ -103,8 +137,8 @@ export function Stepper({ steps, size = "md", style }) {
               background: steps[i + 1].status === "inactive" ? COLORS.gray300 : COLORS.cobalt200,
             }} />
           )}
-        </div>
+        </li>
       ))}
-    </div>
+    </ol>
   );
 }
