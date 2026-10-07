@@ -53,14 +53,6 @@
     .bp-title:hover { border-color:#CDD5E0; }
     .bp-title:focus { border-color:#173D82; box-shadow:0 0 0 4px rgba(23,61,130,.24); }
 
-    /* The DS Drawer hardcodes a 2px cobalt-500 rule under its header
-       (CLAUDE.md § Side Drawer). The Figma Add Widget drawer has no rule
-       there — the header flows straight into the New/Existing tabs — so it
-       is suppressed here. Drawer exposes no prop for this, hence the
-       scoped override rather than a component change. Drawer sets the rule
-       as an inline style, so !important is required to beat it. */
-    div[role="dialog"][aria-label="Add Widget"] > div:first-child { border-bottom:none !important; }
-
     /* Drawer list rows */
     .bp-row {
       display:flex; align-items:center; gap:8px;
@@ -133,9 +125,9 @@
           — so every add path here inserts exactly one widget.
 
    Deliberate departures from the Figma frames, all Folio canon:
-   - The Add Widget drawer uses the DS Drawer: 400px wide with the
-     cobalt-500 header rule (CLAUDE.md § Side Drawer). The Figma frames
-     draw it ~365px with a plain header.
+   - The Add Widget drawer uses the DS Drawer: 400px wide, plain header
+     with no bottom rule (CLAUDE.md § Side Drawer). The Figma frames
+     draw it ~365px.
    - Two Figma frames label the drawer tab "Exising"; shipped as "Existing".
    - The canvas widget and the modal preview share one Table config. The
      Figma has them diverge (one uppercase + sort glyphs, one not); the
