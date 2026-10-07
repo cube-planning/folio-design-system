@@ -790,3 +790,24 @@ The governing ratio is diameter ≈ 4× stroke width; the absolute floor is 8px
 because a marker on a product chart is also a hover target. Surface ring dropped
 on decorative graphics (a white ring breaks the hue and reads as a separate
 bead); **kept** on product charts, where hit area matters more than restraint.
+
+---
+
+## 2026-10-07 — Page content margin is 24px, set once on `.page-content`
+
+**Changed:** `.page-content` padding is now `24px` in every page template under `templates/`
+(was `32px` in 17 of them; `scenarios-page`, `tables-page`, `boards-page`, `audit-trail-page`
+were already 24px). `cube-staff-connections.html` header and body gutters moved from 32px to
+24px. Added a "Page content margin" rule to `CLAUDE.md` § 3 and `npm run page-padding:check`.
+
+**Why:** the Figma redline puts the content edge 24px from the main column edge. The shell
+and most copies drifted to 32px because each template re-declared the rule and nothing
+compared them. The 24 vs 32 split was invisible in any single file.
+
+**Second cause, same day:** `.pg { max-width:1560px; margin:0 auto }` in Library, Workflow,
+WorkflowTask, AiHub and Homepage centered the content, so the left margin kept growing with
+the window; `max-width` caps on `.pg` in Integrations, Tags, Currencies, Formulas, Dimensions
+left a dead strip on the right. All `.pg` wrappers are now `width:100%`, left-aligned.
+
+**What was checked:** every `.page-content` rule in `templates/` enumerated before and after;
+`homepage.html` stays `padding: 0` (full-bleed, centered sections) and is allow-listed in the check.

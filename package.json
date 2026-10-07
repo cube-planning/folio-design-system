@@ -35,6 +35,7 @@
     "design-sync": "node build.mjs && node .design-sync/run-resync.mjs",
     "design-sync:test": "node .design-sync/run-resync.test.mjs",
     "style-guide:sync": "node -e \"const f=require('fs');f.writeFileSync('archive/cube-brand-design-system/glass-ui-style.md',f.readFileSync('.design-sync/style-guide-banner.txt','utf8')+f.readFileSync('brand/glass-ui-style.md','utf8'))\"",
+    "page-padding:check": "node scripts/check-page-padding.mjs",
     "style-guide:check": "node -e \"const f=require('fs');const a=f.readFileSync('brand/glass-ui-style.md','utf8');const b=f.readFileSync('archive/cube-brand-design-system/glass-ui-style.md','utf8');const i=b.indexOf('-->');if(b.slice(i+4).trimStart()!==a.trimStart()){console.error('style guide copies differ - run npm run style-guide:sync');process.exit(1)}console.log('style guide copies match')\""
   }
 }

@@ -528,12 +528,13 @@
       color: #677489;
     }
 
-    /* Page content — override in each screen */
+    /* Page content — 24px margin on all sides (Figma redline). Do not change per screen;
+       see CLAUDE.md "Page content margin". Checked by npm run page-padding:check. */
     .page-content {
       flex: 1;
       overflow-y: auto;
       background: var(--color-bg-canvas);
-      padding: 32px;
+      padding: 24px;
     }
   </style>
 </head>

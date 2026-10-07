@@ -159,6 +159,22 @@ continuous tinted surface with the white `.sb-card` and content cards floating o
 > `subtle-gray` button fills, segmented-control tracks, chips, and avatar placeholders.
 > Do not blanket-replace `#F2F5F9`; only the canvas surfaces change.
 
+#### Page content margin
+
+Page content sits **24px** from the sidebar edge and from the right and bottom of the viewport.
+Set it once, on the shell: `.page-content { padding: 24px; }`. Do not use 32px, and do not add
+extra left margin or padding inside the page (`.pg`, `.pg-wrap`, wrappers) to compensate.
+
+- The 24px is measured from the main column edge, which is 8px past the sidebar card (the
+  sidebar's own padding), matching the Figma redline.
+- Full-bleed pages (`homepage.html`, `cube-staff-connections.html`) use `padding: 0` on
+  `.page-content`, and their inner sections must use 24px gutters.
+- The page wrapper (`.pg`) must be `width:100%`, left-aligned. Never `margin: 0 auto` and never
+  a `max-width` on it: centering makes the left margin grow with the window (it read as ~90px+
+  and kept expanding on wide screens, 2026-10-07). Cap an inner element instead if a line length
+  limit is needed.
+- `npm run page-padding:check` enforces this across `templates/`. Run it after touching any template.
+
 #### Cobalt vs Blue
 
 | Token | Use for |
@@ -525,6 +541,7 @@ Never recolor, rotate, outline, stretch, or substitute the mark — `fa-cube` is
 - Never put lifecycle rules in the create-new-scenario drawer
 - Never use `<form>` tags in components (use event handlers directly)
 - Never modify the sidebar, header, or shell structure when building new screens
+- Never set `.page-content` horizontal padding to anything but 24px (see "Page content margin")
 
 ### WHEN BUILDING NEW COMPONENTS
 1. Check if a shadcn primitive exists (Sheet, Dialog, Switch, Collapsible, etc.)
