@@ -14,6 +14,27 @@
 
 ---
 
+## 2026-10-07 - Side Drawer follows the Figma eng handoff
+
+**Changed:** `components/Drawer.jsx` and the `CLAUDE.md` Side Drawer spec. The header has no
+bottom rule (it was a 2px cobalt-500 line). The close icon is `fa-regular xmark` at 14px in a
+22px wrapper (was solid, 16px). The footer has no top border and uses `px-4 pb-6` (was a
+1px rule with `p-4`). The subtitle is 12px gray-700 (was 14px gray-600). Colors now read from
+`--color-gray-*` instead of generic hex grays (`#101828`, `#475467`, `#E4E7EC`).
+`Cancel` in a Drawer is `secondary`, an explicit exception to the header-`×` rule.
+
+**Evidence:** four drawers in the "Folio DS 2026 UI Refresh, Eng Handoff" file (nodes 176:9462,
+176:9256, 176:8483, 176:8343) share this shell exactly.
+
+**Known Figma issues, not copied into code:** Lato in a few text nodes (Folio is DM Sans only),
+a "Import Data" primary on the Manage Notifications drawer (likely meant "Save"), and a stray
+blue wrapper behind the Sharing warning toast.
+
+**Not yet done:** the Schedule Import prototype (`Oct 2.dc.html`, design project only) still
+forces a gray header border, 420px width, and `ghost-gray` Cancel.
+
+---
+
 ## 2026-09-22 — The screen background is cobalt-25, not gray-200
 
 **Changed:** added `--color-bg-canvas: var(--color-cobalt-25)` to `tokens/tokens.css`,

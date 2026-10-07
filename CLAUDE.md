@@ -332,6 +332,7 @@ Error:  border-cube-red-500
 `Cancel` (or any dismiss/back-out action) picks its variant based on whether the container already has a header `×` close control:
 
 - **Has a header `×`** (most modals) → `Cancel` uses `ghost-gray`. The `×` already owns the dismiss action; `Cancel` is a low-emphasis echo of it, so it shouldn't compete visually.
+- **Side Drawer** → `Cancel` uses `secondary`, even though it has a header `×`. This is the one exception: every Drawer in the Figma handoff pairs secondary Cancel with a primary action.
 - **No header `×`** (e.g. an inline edit-mode panel/bar) → `Cancel` uses `secondary`. It's the only way to back out, so it needs enough visual weight to read as a real, findable action.
 
 Do not ask which variant to use for a Cancel button — check for a header `×` and apply this rule automatically.
@@ -365,10 +366,18 @@ Use `fa-regular` icons at 14px (`large`) / 12px (`small`), matching the `iconSiz
 `PageHeader`'s `topActions` and `actions` slots only accept the Folio `Button` component (see `components/PageHeader.jsx`) — never a raw `<button>`. For icon-only buttons in those slots (bell, import, edit, etc.), default to `variant="ghost-gray"` `size="large"` (32×32) unless the Figma reference or the user specifies a different variant. Do not ask which variant/size to use for a header icon button — apply this default automatically.
 
 ### Side Drawer
+Matches Figma "Folio DS 2026 UI Refresh, Eng Handoff" (nodes 176:9462, 176:9256, 176:8483, 176:8343). All four share one shell.
 ```
-Container: w-[400px] h-full bg-white rounded-2xl p-4 shadow-lg
-Header:    pb-4 flex justify-between items-start   (no bottom rule — removed 2026-10-07)
-Footer:    pt-4 mt-4 flex gap-2 justify-end
+Container: w-[400px] h-full bg-white rounded-2xl shadow-lg flex flex-col
+Header:    p-4 flex justify-between items-start. No bottom rule.
+  Title:    title-2 SemiBold, text-cube-gray-900 (18px / 28px)
+  Subtitle: caption-1 Regular, text-cube-gray-700 (12px / 18px)
+  Close:    fa-regular fa-xmark, 14px, in a 22px x 22px wrapper
+Body:      flex-1 overflow-y-auto p-4 flex flex-col gap-4
+  Divider:   1px bg-cube-gray-300, pt-2 (between section groups)
+  Section title: body SemiBold (14px), 28px tall, optional leading 14px icon in a 22px wrapper, gap-2
+Footer:    px-4 pb-6 flex gap-2 justify-end. No top border, no top padding.
+  Buttons:   Cancel = secondary, action = primary (both large, 32px)
 ```
 **shadcn:** Use `<Sheet side="right">` with custom width and header styling.
 

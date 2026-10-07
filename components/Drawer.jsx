@@ -5,10 +5,10 @@
 // deliberate part of the family name.
 
 const COLORS = {
-  gray200:   "#E4E7EC",
-  gray900:   "#101828",
-  gray600:   "#475467",
-  white:     "#FFFFFF",
+  gray600: "var(--color-gray-600)",
+  gray700: "var(--color-gray-700)",
+  gray900: "var(--color-gray-900)",
+  white:   "#FFFFFF",
 };
 
 export function Drawer({ open = true, title, subtitle, onClose, footer, children, style }) {
@@ -61,7 +61,7 @@ export function Drawer({ open = true, title, subtitle, onClose, footer, children
               </h2>
             )}
             {subtitle && (
-              <p style={{ margin: 0, fontSize: 14, fontWeight: 400, color: COLORS.gray600, lineHeight: "20px" }}>
+              <p style={{ margin: 0, fontSize: 12, fontWeight: 400, color: COLORS.gray700, lineHeight: "18px" }}>
                 {subtitle}
               </p>
             )}
@@ -72,12 +72,13 @@ export function Drawer({ open = true, title, subtitle, onClose, footer, children
               aria-label="Close drawer"
               style={{
                 background: "none", border: "none", cursor: "pointer",
-                color: COLORS.gray600, fontSize: 16, padding: 4,
+                color: COLORS.gray600, fontSize: 14, padding: 0,
+                width: 22, height: 22,
                 display: "inline-flex", alignItems: "center", justifyContent: "center",
                 flexShrink: 0,
               }}
             >
-              <i className="fa-solid fa-xmark" aria-hidden="true" />
+              <i className="fa-regular fa-xmark" aria-hidden="true" />
             </button>
           )}
         </div>
@@ -97,8 +98,7 @@ export function Drawer({ open = true, title, subtitle, onClose, footer, children
         {/* Footer */}
         {footer && (
           <div style={{
-            padding: 16,
-            borderTop: `1px solid ${COLORS.gray200}`,
+            padding: "0 16px 24px",
             display: "flex",
             gap: 8,
             justifyContent: "flex-end",
