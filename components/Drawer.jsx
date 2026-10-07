@@ -5,7 +5,6 @@
 // deliberate part of the family name.
 
 const COLORS = {
-  cobalt500: "#173D82",
   gray200:   "#E4E7EC",
   gray900:   "#101828",
   gray600:   "#475467",
@@ -50,7 +49,6 @@ export function Drawer({ open = true, title, subtitle, onClose, footer, children
         {/* Header */}
         <div style={{
           padding: 16,
-          borderBottom: `2px solid ${COLORS.cobalt500}`,
           display: "flex",
           justifyContent: "space-between",
           alignItems: "flex-start",

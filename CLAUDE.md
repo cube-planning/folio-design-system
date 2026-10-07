@@ -193,13 +193,11 @@ GLOBAL TOKEN               SEMANTIC TOKENS               COMPONENT TOKENS       
 --color-cobalt-500   ┬──  color-bg-fill-primary    ┬──  Button.primary.bg         →  primary button fill
    (#173D82)          │                              └──  Toggle.on.bg             →  toggle "on" state
                        │
-                       ├──  color-border-active      ┬──  Input.focus-border       →  input focus ring color
-                       │                              └──  SegmentedButton.active   →  active segment border
-                       │
-                       └──  color-border-accent      ──  Drawer.header-border      →  side drawer header rule
+                       └──  color-border-active      ┬──  Input.focus-border       →  input focus ring color
+                                                      └──  SegmentedButton.active   →  active segment border
 ```
 
-One global cobalt value, three semantic roles (fill, focus/active border, accent border),
+One global cobalt value, two semantic roles (fill, focus/active border),
 each reused across more than one component — same shape as the AI-purple example, just
 scoped to Folio's own primary color rather than the shared AI accent.
 
@@ -369,7 +367,7 @@ Use `fa-regular` icons at 14px (`large`) / 12px (`small`), matching the `iconSiz
 ### Side Drawer
 ```
 Container: w-[400px] h-full bg-white rounded-2xl p-4 shadow-lg
-Header:    pb-4 border-b-2 border-cube-cobalt-500 flex justify-between items-start
+Header:    pb-4 flex justify-between items-start   (no bottom rule — removed 2026-10-07)
 Footer:    pt-4 mt-4 flex gap-2 justify-end
 ```
 **shadcn:** Use `<Sheet side="right">` with custom width and header styling.
