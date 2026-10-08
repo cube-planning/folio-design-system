@@ -381,6 +381,27 @@ Footer:    px-4 pb-6 flex gap-2 justify-end. No top border, no top padding.
 ```
 **shadcn:** Use `<Sheet side="right">` with custom width and header styling.
 
+### Modal
+One shell for every modal. The content changes per use; the shell does not. Never rebuild a modal per screen.
+```
+Container: bg-white rounded-2xl shadow-md flex flex-col, overflow-hidden
+  Widths:   420 small, 540 default, 590 or 640 large
+Header:    p-5 flex justify-between items-start
+  Title:    title-2 SemiBold, text-cube-gray-900
+  Subtitle: caption-1 Regular, text-cube-gray-700 (optional)
+  Close:    fa-regular fa-xmark, 14px, always present
+Body:      px-5 py-1, holds the swappable content
+Divider:   1px bg-cube-gray-300 above the footer (see rule below)
+Footer:    p-5 flex gap-2 justify-end (optional)
+  Buttons:   secondary action on the left of the primary, both large (32px)
+Scrim:     --color-overlay-default (48%) behind the modal
+```
+- **Cancel variant:** `ghost-gray`, because the header already has a `x`. Use `secondary` Cancel only for a modal with no header `x` (see "Cancel Button Variant Rule").
+- **Footer divider:** show it when the body scrolls, or when the modal is a form with many fields, so the footer feels anchored. Omit it when the content is short, fully visible and fixed height.
+- **Footer is optional.** Omit it for progress or status modals (for example "Reconnecting...").
+- **Figma:** use the shared `Modal` component set in the Folio library (Modal page). Variant `Footer divider` = Visible or Hidden. Properties: Title, Subtitle, Show subtitle, Show footer, Body (swap the body slot for your own content component). Resize the instance for width.
+- **Code:** `FolioDS.Modal` (`open`, `title`, `subtitle`, `onClose`, `footer`). **shadcn:** use `<Dialog>` with custom header and footer styling.
+
 ### Source Card (Collapsible)
 ```
 Expanded:  bg-cube-cobalt-25 border border-cube-cobalt-100 rounded-xl p-4 flex flex-col gap-4
@@ -538,6 +559,7 @@ Never recolor, rotate, outline, stretch, or substitute the mark — `fa-cube` is
 - Use `templates/shell.html` as the base layout for all new screens — only add content inside `<main>`
 
 ### DO NOT
+- Never build a one-off modal: use the shared Modal shell (see "Modal"), swap the body, keep the header, footer and divider rules
 - Never use `rounded-[4px]` for buttons — use `rounded-full`
 - Never use inline `style={{}}` attributes
 - Never use arbitrary hex values — always use token classes
