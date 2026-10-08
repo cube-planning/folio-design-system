@@ -1,47 +1,15 @@
 import type { ReactNode } from "react";
 
-export interface FlowCardIcon {
-  /** Image URL, rendered in the 40px tile. */
-  img?: string;
-  /** Font Awesome icon name, e.g. "fa-table". Rendered Solid on a gray tile. */
-  fa?: string;
-  /** Single letter on a gray tile. */
-  initial?: string;
-}
-
-export interface FlowCardAction {
-  /** Font Awesome icon name, e.g. "fa-arrows-rotate". Rendered Regular. */
-  icon: string;
-  /** Accessible name. Required unless `tooltip` is set. */
-  label?: string;
-  /** Tooltip text shown on hover and focus. */
-  tooltip?: string;
-  onClick?: () => void;
-  /** Spins the icon (e.g. while syncing). */
-  spinning?: boolean;
-}
-
-export interface FlowCardStatus {
-  tone: "red" | "orange" | "blue";
-  /** Optional Font Awesome icon name, rendered Solid, e.g. "fa-wrench". */
-  icon?: string;
-  text: string;
-  /** Makes the line a clickable button. */
-  onClick?: () => void;
-}
-
-export interface FlowCardButton {
-  label: string;
-  onClick?: () => void;
-  /** "danger" is the red-tinted variant, e.g. Mapping when values are unmapped. */
-  tone?: "default" | "danger";
-}
-
+// Note: keep every shape inline in FlowCardProps. design-sync copies only the Props
+// interface into the emitted .d.ts, so named helper types would be left undefined.
 export interface FlowCardProps {
   /** Caption above the card: "Source", "Connection" or "Destination". */
   label?: string;
-  /** A node, or { img } | { fa } | { initial }. */
-  icon?: ReactNode | FlowCardIcon;
+  /**
+   * The 40px leading tile: exactly one of { img: image URL } | { fa: Font Awesome name such as
+   * "fa-table", rendered Solid } | { initial: single letter }. (A ready-made node also works at runtime.)
+   */
+  icon?: { img?: string; fa?: string; initial?: string };
   /** "circle" is for source logos. Default "rounded". */
   iconShape?: "circle" | "rounded";
   /** Single line; truncates with an ellipsis and shows the full text in a Tooltip when clipped. */
@@ -52,16 +20,24 @@ export interface FlowCardProps {
   onTitleClick?: () => void;
   /** Neutral 12px text under the title. */
   subtitle?: string;
-  /** Colored 12px line under the title. */
-  status?: FlowCardStatus;
-  /** Node shown under the title block, e.g. a red Badge. */
+  /**
+   * Colored 12px line under the title, e.g. "Xero is Disconnected" (red), "Set Mapping Rules" (orange),
+   * "Schedule Now" (blue). `icon` is an optional Font Awesome name such as "fa-wrench", rendered Solid.
+   * `onClick` makes it a clickable button.
+   */
+  status?: { tone: "red" | "orange" | "blue"; icon?: string; text: string; onClick?: () => void };
+  /** Node shown under the title block, e.g. a red Badge with "12 unmapped values". */
   badge?: ReactNode;
-  /** Icon-only plain-blue buttons pinned to the top-right corner; a node is accepted as an escape hatch. */
-  actions?: FlowCardAction[] | ReactNode;
-  /** Node between the header and the button. */
+  /**
+   * Icon-only plain-blue buttons (24x24) pinned to the card's top-right corner. `icon` is a Font Awesome
+   * name such as "fa-arrows-rotate", rendered Regular. `label` is the accessible name (required unless
+   * `tooltip` is set). `spinning` spins the icon (e.g. while syncing). (A ready-made node also works at runtime.)
+   */
+  actions?: Array<{ icon: string; label?: string; tooltip?: string; onClick?: () => void; spinning?: boolean }>;
+  /** Node between the header and the button, e.g. Schedule / Date Range rows. */
   body?: ReactNode;
-  /** Full-width small pill at the bottom. */
-  button?: FlowCardButton;
+  /** Full-width small pill at the bottom. tone "danger" is the red-tinted variant, e.g. Mapping when values are unmapped. */
+  button?: { label: string; onClick?: () => void; tone?: "default" | "danger" };
 }
 
 export function FlowCard(props: FlowCardProps): JSX.Element;
