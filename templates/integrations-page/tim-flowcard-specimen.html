@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TIM FlowCard specimen</title>
+<!-- Local specimen for tim-shared.js (FlowCard / FlowRow). Serve the repo root and open
+     /templates/integrations-page/tim-flowcard-specimen.html. Needs the compiled ds-bundle/
+     (gitignored) plus the staged logos in ds-bundle/templates/integrations-page/. -->
+<link rel="stylesheet" href="../../ds-bundle/fontawesome/css/all.min.css">
+<link rel="stylesheet" href="../../ds-bundle/fonts/fonts.css">
+<link rel="stylesheet" href="../../ds-bundle/_ds_bundle.css">
+<link rel="stylesheet" href="../../ds-bundle/styles.css">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>body { margin:0; padding:24px; background:var(--color-bg-canvas, #F5F7FA); font-family:'DM Sans',sans-serif; } .sp-h { font-size:12px; font-weight:700; color:#4A5567; margin:24px 0 8px; } .sp-h:first-child { margin-top:0; }</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="../../ds-bundle/_vendor/react.js"></script>
+<script src="../../ds-bundle/_vendor/react-dom.js"></script>
+<script src="../../ds-bundle/_ds_bundle.js"></script>
+<script src="./tim-shared.js"></script>
+<script>
+(function () {
+  const e = React.createElement, T = window.TIM, F = window.FolioDS;
+  const IMG = '../../ds-bundle/templates/integrations-page/';
+  const noop = () => {};
+
+  const sync = { icon: 'fa-arrows-rotate', label: 'Sync dimensions', tooltip: 'Sync Dimensions Now' };
+  const rows = (s, d) => e('div', { style: { fontSize: 12, color: 'var(--color-gray-700)', display: 'flex', flexDirection: 'column', gap: 2, marginTop: -8 } },
+    e('span', null, e('b', { style: { fontWeight: 500 } }, 'Schedule: '), s), e('span', null, e('b', { style: { fontWeight: 500 } }, 'Date Range: '), d));
+  const src = (o) => e(T.FlowCard, Object.assign({ label: 'Source', iconShape: 'circle', button: { label: 'Source Dimensions' } }, o));
+  const conn = (o) => e(T.FlowCard, Object.assign({ label: 'Connection', icon: { img: IMG + 'import-icon.png' }, title: 'Import Setup', actions: [{ icon: 'fa-clock', label: 'Schedule' }], button: { label: 'Mapping' } }, o));
+  const dst = (o) => e(T.FlowCard, Object.assign({ label: 'Destination', icon: { img: IMG + 'cube-icon.png' }, title: 'Cube Dimensions', actions: [{ icon: 'fa-arrow-up-from-bracket', label: 'Export', tooltip: 'Data Exporter' }], button: { label: 'Cube Dimensions' } }, o));
+  const H = (t) => e('div', { className: 'sp-h' }, t);
+  const sched = rows('Weekly, Monday, 7 am', 'Last 3 months');
+
+  const view = e('div', null,
+    H('1. Default (Integrations overview)'),
+    e(T.FlowRow, null,
+      src({ icon: { img: IMG + 'sage-logo.png' }, title: 'Teal Plantations', titleColor: 'var(--color-blue-500)', actions: [sync, { icon: 'fa-pen', label: 'Edit connection', tooltip: 'Edit connection' }] }),
+      conn({ body: sched }), dst({})),
+
+    H('2. Source disconnected: Connect button, Update Mapping status, danger Mapping button'),
+    e(T.FlowRow, null,
+      src({ icon: { img: IMG + 'xero.png' }, title: 'Orange Plantations', status: { tone: 'red', text: 'Xero is Disconnected' }, actions: [sync, { icon: 'fa-link-slash', label: 'Connect Xero', tooltip: 'Connect Xero', onClick: noop }] }),
+      conn({ status: { tone: 'red', text: 'Update Mapping', onClick: noop }, body: sched, button: { label: 'Mapping', tone: 'danger' } }), dst({})),
+
+    H('3. Set Mapping Rules + unmapped badge (badge and danger button only when N > 0)'),
+    e(T.FlowRow, null,
+      src({ icon: { img: IMG + 'quickbook.png' }, title: 'Green Plantations', titleColor: 'var(--color-blue-500)', actions: [sync] }),
+      conn({ status: { tone: 'orange', text: 'Set Mapping Rules', onClick: noop }, badge: e(F.Badge, { color: 'red', size: 'sm' }, '12 unmapped values'), button: { label: 'Mapping', tone: 'danger' } }), dst({})),
+    e(T.FlowRow, null,
+      src({ icon: { img: IMG + 'quickbook.png' }, title: 'Green Plantations', titleColor: 'var(--color-blue-500)', actions: [sync] }),
+      conn({ status: { tone: 'orange', text: 'Set Mapping Rules', onClick: noop }, body: sched }), dst({})),
+
+    H('4. Reauthenticate, Schedule Now, Boomi Atom'),
+    e(T.FlowRow, null,
+      src({ icon: { img: IMG + 'quickbook.png' }, title: 'Green Plantations', status: { tone: 'red', icon: 'fa-shield-exclamation', text: 'Reauthenticate' }, actions: [sync] }),
+      conn({ status: { tone: 'blue', text: 'Schedule Now', onClick: noop } }), dst({})),
+    e(T.FlowRow, null,
+      src({ icon: { img: IMG + 'cube-icon.png' }, title: 'Green Plantations', status: { tone: 'red', icon: 'fa-wrench', text: 'Enable Boomi Atom' }, actions: [sync] }),
+      conn({ body: sched }), dst({})),
+
+    H('5. Source with Settings or File Management action; long title truncates, full name in tooltip'),
+    e(T.FlowRow, null,
+      src({ icon: { img: IMG + 'salesforce.png' }, title: 'Mariner Global Co', titleColor: 'var(--color-blue-500)', actions: [{ icon: 'fa-gear', label: 'Settings', tooltip: 'Settings' }] }),
+      conn({ body: sched }), dst({})),
+    e(T.FlowRow, null,
+      src({ icon: { img: IMG + 'cube-icon.png' }, title: 'Cube-Hosted File Management', titleColor: 'var(--color-blue-500)', actions: [sync, { icon: 'fa-folder', label: 'File Management', tooltip: 'File Management' }] }),
+      conn({ body: sched }), dst({})),
+
+    H('6. Table destination: subtitle + "Open table" (Tables page)'),
+    e(T.FlowRow, null,
+      src({ icon: { img: IMG + 'quickbook.png' }, title: 'Green Plantations', titleColor: 'var(--color-blue-500)', actions: [sync] }),
+      conn({ body: sched }),
+      dst({ icon: { fa: 'fa-table' }, title: 'Revenue Table', subtitle: 'Actuals, Budget', actions: null, button: { label: 'Open table' } })),
+
+    H('7. Standalone card (no FlowRow); sync while syncing spins'),
+    e('div', { style: { display: 'flex', gap: 24 } },
+      src({ icon: { img: IMG + 'xero.png' }, title: 'Orange Plantations', actions: [sync, { icon: 'fa-link', label: 'Disconnect Xero', tooltip: 'Disconnect Xero' }] }),
+      src({ icon: { img: IMG + 'xero.png' }, title: 'Orange Plantations', actions: [Object.assign({}, sync, { spinning: true }), { icon: 'fa-link', label: 'Disconnect Xero', tooltip: 'Disconnect Xero' }] }))
+  );
+  ReactDOM.createRoot(document.getElementById('root')).render(view);
+})();
+</script>
+</body>
+</html>
