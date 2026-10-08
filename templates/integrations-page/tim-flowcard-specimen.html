@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>TIM FlowCard specimen</title>
-<!-- Local specimen for tim-shared.js (FlowCard / FlowRow). Serve the repo root and open
+<title>FlowCard specimen</title>
+<!-- Local specimen for the FlowCard / FlowRow components (components/FlowCard.jsx). Serve the repo root and open
      /templates/integrations-page/tim-flowcard-specimen.html. Needs the compiled ds-bundle/
      (gitignored) plus the staged logos in ds-bundle/templates/integrations-page/. -->
 <link rel="stylesheet" href="../../ds-bundle/fontawesome/css/all.min.css">
@@ -18,10 +18,9 @@
 <script src="../../ds-bundle/_vendor/react.js"></script>
 <script src="../../ds-bundle/_vendor/react-dom.js"></script>
 <script src="../../ds-bundle/_ds_bundle.js"></script>
-<script src="./tim-shared.js"></script>
 <script>
 (function () {
-  const e = React.createElement, T = window.TIM, F = window.FolioDS;
+  const e = React.createElement, F = window.FolioDS, T = { FlowCard: F.FlowCard, FlowRow: F.FlowRow };
   const IMG = '../../ds-bundle/templates/integrations-page/';
   const noop = () => {};
 

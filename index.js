@@ -10,6 +10,8 @@ export { Checkbox }   from "./components/Checkbox.jsx";
 export { StatusDot }  from "./components/StatusDot.jsx";
 export { IconBadge }  from "./components/IconBadge.jsx";
 export { AgentCard }  from "./components/AgentCard.jsx";
+export { FlowCard }   from "./components/FlowCard.jsx";
+export { FlowRow }    from "./components/FlowRow.jsx";
 export { Tag }        from "./components/Tag.jsx";
 export { Tab }        from "./components/Tab.jsx";
 export { Filter }     from "./components/Filter.jsx";

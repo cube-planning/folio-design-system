@@ -12,7 +12,6 @@
 <helmet>
   <script src="./ds-base.js"></script>
   <script src="./_sidebar-icons.js"></script>
-  <script src="./tim-shared.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <style>
@@ -525,7 +524,6 @@ class Component extends DCLogic {
   buildOverview(F, row) {
     if (row.detailType === 'table') return this.buildTableDetailOverview(F, row);
     const e = React.createElement;
-    const TIM = window.TIM;
     const C = F.Cell;
     const STI = { success:'fa-solid fa-check', error:'fa-solid fa-xmark', warning:'fa-solid fa-xmark' };
     const statusColor = { success:'success', error:'error', warning:'warning' }[row.status.c] || 'neutral';
@@ -563,15 +561,15 @@ class Component extends DCLogic {
           e(F.Button, { variant:'primary', size:'large' }, e('i', { className:'fa-regular fa-arrow-down-to-line', style:{ marginRight:6 } }), 'Import')
         )
       ),
-      e(TIM.FlowRow, null,
-        e(TIM.FlowCard, { label:'Source', icon:{ img: row.sourceImg || './sage-logo.png' }, iconShape:'circle', title:row.name, titleColor:'var(--color-blue-500)',
+      e(F.FlowRow, null,
+        e(F.FlowCard, { label:'Source', icon:{ img: row.sourceImg || './sage-logo.png' }, iconShape:'circle', title:row.name, titleColor:'var(--color-blue-500)',
           actions:[{ icon:'fa-arrows-rotate', label:'Sync dimensions', tooltip:'Sync Dimensions Now' }, { icon:'fa-pen', label:'Edit connection', tooltip:'Edit connection' }],
           button:{ label:'Source Dimensions' } }),
-        e(TIM.FlowCard, { label:'Connection', icon:{ img:'./import-icon.png' }, title:'Import Setup',
+        e(F.FlowCard, { label:'Connection', icon:{ img:'./import-icon.png' }, title:'Import Setup',
           actions:[{ icon:'fa-clock', label:'Schedule' }],
           body:e('div', { style:{ fontSize:12, color:'var(--color-gray-700)', display:'flex', flexDirection:'column', gap:2, marginTop:-8 } }, e('span', null, e('b', { style:{ fontWeight:500 } }, 'Schedule: '), 'Weekly, Monday, 7 am'), e('span', null, e('b', { style:{ fontWeight:500 } }, 'Date Range: '), 'Last 3 months')),
           button:{ label:'Mapping' } }),
-        e(TIM.FlowCard, { label:'Destination', icon:{ img:'./cube-icon.png' }, title:'Cube Dimensions',
+        e(F.FlowCard, { label:'Destination', icon:{ img:'./cube-icon.png' }, title:'Cube Dimensions',
           actions:[{ icon:'fa-arrow-up-from-bracket', label:'Export', tooltip:'Data Exporter' }],
           button:{ label:'Cube Dimensions' } })
       ),
@@ -626,9 +624,9 @@ class Component extends DCLogic {
       const sb = document.getElementById('sb');
       if (sb) sb.classList.add('col');
     }
-    if (!window.SIDEBAR_ICONS || !window.FolioDS || !window.TIM) {
+    if (!window.SIDEBAR_ICONS || !window.FolioDS) {
       this._iconWait = setInterval(() => {
-        if (window.SIDEBAR_ICONS && window.FolioDS && window.TIM) { clearInterval(this._iconWait); this.forceUpdate(); }
+        if (window.SIDEBAR_ICONS && window.FolioDS) { clearInterval(this._iconWait); this.forceUpdate(); }
       }, 60);
     }
   }

@@ -563,3 +563,15 @@ or styling change moves `bundleSha12` (and usually `styleSha`) and nothing else.
 Corollary for the anchor: after uploading, refresh the cache with
 `cp ds-bundle/_ds_sync.json .design-sync/.cache/remote-sync.json` — otherwise the next run
 re-reports the same `aux`/`bundle` deltas against a stale anchor.
+
+## FlowCard + FlowRow added (2026-10-08)
+
+**2026-10-08:** The Source -> Connection -> Destination overview was hand-built twice (CSS classes in `templates/integrations-page/Integrations.dc.html`, plus a planned copy in the Tables page). Promoted to two components, `FlowCard` (one 300x164 card) and `FlowRow` (the tinted 1fr 40px 1fr 40px 1fr panel with arrows), so one fix plus one sync reaches every page. Both added to `index.js` and `componentSrcMap`, with hand-written `.d.ts` files (real prop contracts, unlike most of the package) and authored previews (`FlowCard.tsx` 5 cells, `FlowRow.tsx` 1 cell), all graded `good`.
+
+- `FlowRow` needed `cfg.overrides.FlowRow = {"cardMode": "column"}` and the preview wraps the panel in `zoom: 0.62`: the panel is ~1028px wide (three fixed 300px cards), wider than the preview card. Fixed with the targeted `preview-rebuild.mjs` loop.
+- Actions are 24x24 `plain-blue` icon buttons pinned 16px from the card's top-right. `Button` only offers 28/32 icon-only sizes, so the 24px comes from `style={{ width: 24, height: 24 }}`. If a 24px `Button` size is ever added, drop that override.
+- The old inline `subtle-blue` overrides (cobalt-50 fill, cobalt-500 text, pill radius) are gone: they equalled the variant's defaults and only served to disable its hover colour.
+- The Connection card's button is 28px, not the old squeezed 25px: body rows sit 8px under the header (`marginTop: -8` on the body) so the content fits the 164px card.
+- Titles truncate with an ellipsis and show the full text in a `Tooltip` only when clipped (measured with a `ResizeObserver`).
+- `templates/integrations-page/tim-flowcard-specimen.html` renders every variant locally; it needs `ds-bundle/` and staged logos, neither of which is committed.
+- **Templates are not part of this sync.** `Integrations.dc.html` lives in the design project separately; after this sync it still needs `F.FlowRow` / `F.FlowCard` swapped in there (DesignSync `get_file`, patch, re-upload).
