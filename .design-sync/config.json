@@ -27,6 +27,8 @@
     "Checkbox": "components/Checkbox.jsx",
     "StatusDot": "components/StatusDot.jsx",
     "IconBadge": "components/IconBadge.jsx",
+    "FlowCard": "components/FlowCard.jsx",
+    "FlowRow": "components/FlowRow.jsx",
     "AgentCard": "components/AgentCard.jsx",
     "Tag": "components/Tag.jsx",
     "Tab": "components/Tab.jsx",
@@ -105,6 +107,9 @@
       "cardMode": "column"
     },
     "IconBadge": {
+      "cardMode": "column"
+    },
+    "FlowRow": {
       "cardMode": "column"
     }
   }

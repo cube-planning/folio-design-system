@@ -18,7 +18,7 @@ Don't use a card when content is already inside a drawer, modal, or table row â€
 | **Stat card** | A single metric: label, large number, trend delta | Ending ARR, 12 Mo Revenue |
 | **Metric + ring card** | A metric paired with a circular progress/usage indicator | Credit Pool, Usage by Tier |
 | **Insight card** | An icon header band over a colored tint, plus a title and body copy | Risk / Opportunity / Gap |
-| **Connector card** | Source/destination integration with logo, title, action icons, and a pill sub-link | Source, Step, Destination cards |
+| **Connector card** | Source/destination integration with logo, title, action icons, and a pill sub-link. Built as `FlowCard`; wrap three in `FlowRow` for the Source -> Connection -> Destination overview | Source, Step, Destination cards |
 | **Promo / CTA card** | Colored header band, body copy, and a button | "AI-Powered Collaboration" fireside chat |
 | **Onboarding tile** | Icon illustration on a tinted top half, title + description below, radio affordance | "Add your company logo", "Create a board" |
 | **Chart card** | Title + legend above a full chart | 2025 Budget v Actuals |

@@ -144,67 +144,7 @@
       <div class="sb-nav">
         <div class="ni home" data-label="Home"><div class="ni-ic">{{ ic.home }}</div><span class="ni-lbl">Home</span></div>
         <div class="dv"></div>
-        <div class="nav-section">
-          <div class="sec"><i class="fa-solid fa-caret-down sec-crt"></i><span class="sec-lbl">AI</span></div>
-          <div class="ni" data-label="AI Hub"><div class="ni-ic">{{ ic.aiAnalyst }}</div><span class="ni-lbl">AI Hub</span></div>
-          <div class="ni" data-label="Planner"><div class="ni-ic"><i class="fa-regular fa-book-sparkles"></i></div><span class="ni-lbl">Planner</span></div>
-          <div class="ni" data-label="Smart Variance"><div class="ni-ic">{{ ic.smartVariance }}</div><span class="ni-lbl">Smart Variance</span></div>
-        </div>
-        <div class="dv"></div>
-        <div class="nav-section">
-          <div class="sec"><i class="fa-solid fa-caret-down sec-crt"></i><span class="sec-lbl">Reporting &amp; Analytics</span></div>
-          <div class="ni" data-label="Boards"><div class="ni-ic"><i class="fa-regular fa-chart-user"></i></div><span class="ni-lbl">Boards</span></div>
-          <div class="ni" data-label="Cube BI"><div class="ni-ic">{{ ic.cubeBI }}</div><span class="ni-lbl">Cube BI</span></div>
-          <div class="ni" data-label="Builder"><div class="ni-ic"><i class="fa-regular fa-hammer"></i></div><span class="ni-lbl">Builder</span></div>
-          <div class="ni" data-label="Library"><div class="ni-ic">{{ ic.library }}</div><span class="ni-lbl">Library</span></div>
-          <div class="ni-sub-wrap">
-            <a class="ni-sub" data-label="Reports"><span>Reports</span></a>
-            <a class="ni-sub" data-label="Files"><span>Files</span></a>
-          </div>
-        </div>
-        <div class="dv"></div>
-        <div class="nav-section">
-          <div class="sec"><i class="fa-solid fa-caret-down sec-crt"></i><span class="sec-lbl">Planning</span></div>
-          <div class="ni" data-label="Scenarios"><div class="ni-ic">{{ ic.scenarios }}</div><span class="ni-lbl">Scenarios</span></div>
-          <div class="ni" data-label="Workflows"><div class="ni-ic"><i class="fa-regular fa-layer-group"></i></div><span class="ni-lbl">Workflows</span></div>
-          <div class="ni" data-label="Tables"><div class="ni-ic"><i class="fa-regular fa-table"></i></div><span class="ni-lbl">Tables</span></div>
-        </div>
-        <div class="dv"></div>
-        <div class="nav-section">
-          <div class="sec"><i class="fa-solid fa-caret-down sec-crt"></i><span class="sec-lbl">Modeling</span></div>
-          <div class="ni active" data-label="Dimensions"><div class="ni-ic">{{ ic.dimensions }}</div><span class="ni-lbl">Dimensions</span></div>
-          <div class="ni" data-label="Formulas"><div class="ni-ic">{{ ic.formulas }}</div><span class="ni-lbl">Formulas</span></div>
-          <div class="ni" data-label="Tags"><div class="ni-ic">{{ ic.tags }}</div><span class="ni-lbl">Tags</span></div>
-        </div>
-        <div class="dv"></div>
-        <div class="nav-section">
-          <div class="sec"><i class="fa-solid fa-caret-down sec-crt"></i><span class="sec-lbl">Data</span></div>
-          <div class="ni" data-label="Integrations"><div class="ni-ic">{{ ic.integrations }}</div><span class="ni-lbl">Integrations</span></div>
-          <div class="ni" data-label="Data Export"><div class="ni-ic">{{ ic.dataExport }}</div><span class="ni-lbl">Data Export</span></div>
-        </div>
-        <div class="dv"></div>
-        <div class="nav-section">
-          <div class="sec"><i class="fa-solid fa-caret-down sec-crt"></i><span class="sec-lbl">Admin</span></div>
-          <div class="ni" data-label="Users"><div class="ni-ic">{{ ic.users }}</div><span class="ni-lbl">Users</span></div>
-          <div class="ni" data-label="Currencies"><div class="ni-ic">{{ ic.currencies }}</div><span class="ni-lbl">Currencies</span></div>
-          <div class="ni" data-label="Audit Trail"><div class="ni-ic">{{ ic.auditTrail }}</div><span class="ni-lbl">Audit Trail</span></div>
-          <div class="ni" data-label="Usages"><div class="ni-ic"><i class="fa-regular fa-gauge-simple-high"></i></div><span class="ni-lbl">Usages</span></div>
-        </div>
-        <div class="dv"></div>
-        <div class="apps-wrap">
-          <div class="apps-sec"><i class="fa-solid fa-caret-down sec-crt"></i><span class="sec-lbl">Apps</span></div>
-          <div class="apps-grid">
-            <div class="app-tile" data-label="AI Plugin"><div class="app-circ">{{ ic.aiPlugin }}</div><span class="app-lbl">AI Plugin</span></div>
-            <div class="app-tile" data-label="ChatGPT"><div class="app-circ">{{ ic.chatgpt }}</div><span class="app-lbl">ChatGPT</span></div>
-            <div class="app-tile" data-label="Claude"><div class="app-circ">{{ ic.claude }}</div><span class="app-lbl">Claude</span></div>
-            <div class="app-tile" data-label="Excel"><div class="app-circ">{{ ic.excel }}</div><span class="app-lbl">Excel</span></div>
-            <div class="app-tile" data-label="Sheets"><div class="app-circ">{{ ic.sheets }}</div><span class="app-lbl">Sheets</span></div>
-            <div class="app-tile" data-label="Slack"><div class="app-circ">{{ ic.slack }}</div><span class="app-lbl">Slack</span></div>
-            <div class="app-tile" data-label="Teams"><div class="app-circ">{{ ic.teams }}</div><span class="app-lbl">Teams</span></div>
-            <div class="app-tile" data-label="Slides"><div class="app-circ">{{ ic.slides }}</div><span class="app-lbl">Slides</span></div>
-            <div class="app-tile" data-label="PowerPoint"><div class="app-circ">{{ ic.powerpoint }}</div><span class="app-lbl">PowerPoint</span></div>
-          </div>
-        </div>
+        {{ sideNavEl }}
       </div>
       <div style="height:1px;background:#E3E8EF;margin:0"></div>
       <div class="staff-row">
@@ -271,7 +211,7 @@ class Component extends DCLogic {
       const secEl = e.target.closest('.sec');
       if (secEl) { const ns = secEl.closest('.nav-section'); if (ns) ns.classList.toggle('collapsed'); return; }
       const collapse = e.target.closest('[data-action="collapse"]');
-      if (collapse) { const sb = document.getElementById('sb'); if (sb) sb.classList.toggle('col'); return; }
+      if (collapse) { const sb = document.getElementById('sb'); if (sb) sb.classList.toggle('col'); this.setState((st) => ({ sbCollapsed: !(st && st.sbCollapsed) })); return; }
       const ni = e.target.closest('.ni');
       if (ni) { document.querySelectorAll('.ni').forEach((i) => i.classList.remove('active')); ni.classList.add('active'); return; }
       const tab = e.target.closest('[data-tab]');
@@ -283,8 +223,8 @@ class Component extends DCLogic {
       }
     };
     document.addEventListener('click', this._onClick);
-    if (!window.SIDEBAR_ICONS) {
-      this._iconWait = setInterval(() => { if (window.SIDEBAR_ICONS) { clearInterval(this._iconWait); this.forceUpdate(); } }, 60);
+    if (!window.SIDEBAR_ICONS || !window.FolioDS) {
+      this._iconWait = setInterval(() => { if (window.SIDEBAR_ICONS && window.FolioDS) { clearInterval(this._iconWait); this.forceUpdate(); } }, 60);
     }
   }
   componentWillUnmount() {
@@ -352,6 +292,7 @@ class Component extends DCLogic {
         e('tbody', null, trs)));
   }
   renderVals() {
+    const sideNavEl = window.FolioDS ? React.createElement(window.FolioDS.PortalSideBarNav, { expanded: !(this.state && this.state.sbCollapsed), activeItemId: 'dimensions', style: { width: '100%' } }) : null;
     const activeTab = this.state.activeTab;
     const collapsed = this.state.collapsed;
     const F = window.FolioDS;
@@ -392,7 +333,7 @@ class Component extends DCLogic {
     const companyName = this.props.companyName ?? 'Accuplanner Inc';
     const userName = this.props.userName ?? 'Nina Graham';
     const initials = userName.trim().split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase();
-    return { companyName, userName, initials, ic, tableEl, tabsEl, searchFilterEl, toolbarEl, newBtn, renameBtn, moreBtn };
+    return { sideNavEl, companyName, userName, initials, ic, tableEl, tabsEl, searchFilterEl, toolbarEl, newBtn, renameBtn, moreBtn };
   }
 }
 
