@@ -976,7 +976,7 @@ class Component extends DCLogic {
     const ntSteps = NT_STEP_LABELS.map((label, i) => ({
       key: label,
       label,
-      status: i < ntStepIndex ? 'done' : i === ntStepIndex ? 'active' : 'inactive'
+      status: i < ntStepIndex ? 'completed' : i === ntStepIndex ? 'active' : 'upcoming'
     }));
     const ntSelectedKeys = this.NT_FIELDS.filter((f) => nt.fields[f.key]);
     const TYPE_META = { text: { icon: 'T', label: 'Text' }, numeric: { icon: '#', label: 'Numeric' }, date: { icon: React.createElement('i', { className: 'fa-regular fa-calendar', style: { fontSize: 11 } }), label: 'Date' } };
