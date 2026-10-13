@@ -88,9 +88,9 @@ const { Badge, Button, Avatar, Stepper } = window.FolioDS;
   title="EMEA Entity – Intacct Sync Dimensions"
   steps={[
     { label: "Authenticating..", status: "active" },
-    { label: "Sync", status: "inactive" },
-    { label: "Validate", status: "inactive" },
-    { label: "Save to Cube", status: "inactive" },
+    { label: "Sync", status: "upcoming" },
+    { label: "Validate", status: "upcoming" },
+    { label: "Save to Cube", status: "upcoming" },
   ]}
   user={{ name: "Jessica Smith" }}
   startedAt="Started 4:23 pm"
