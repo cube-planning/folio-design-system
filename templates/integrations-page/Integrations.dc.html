@@ -280,11 +280,9 @@
     .mp-row.mp-hd > div { min-height:40px; background:var(--color-gray-200); border-bottom:none; font-weight:600; color:var(--color-gray-700); text-transform:uppercase; gap:4px; cursor:pointer; user-select:none; }
     .mp-row.mp-hd > div i { color:var(--color-gray-500); font-size:14px; width:22px; text-align:center; }
     .mp-name { gap:8px; white-space:nowrap; }
-    .mp-caret { width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; font-size:12px; color:var(--color-gray-900); cursor:pointer; flex-shrink:0; }
     .mp-leaf { width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; font-size:14px; color:var(--color-blue-500); flex-shrink:0; }
     .mp-link { color:var(--color-blue-500); cursor:pointer; }
     .mp-link:hover { text-decoration:underline; }
-    .mp-group { cursor:pointer; }
     .mp-empty { padding:32px 8px; text-align:center; font-size:14px; color:var(--color-gray-600); }
     .mp-editbar { height:64px; margin:-24px -24px 0; padding:0 24px; background:#EFF6FF; border-bottom:1px solid #E3E8EF; display:flex; align-items:center; justify-content:space-between; position:sticky; top:-24px; z-index:20; }
     .mp-editbar-title { font-size:18px; font-weight:600; line-height:28px; color:#222B3A; }
@@ -572,59 +570,52 @@ class Component extends DCLogic {
     this.setState((st) => ({ mEditDraft: { ...st.mEditDraft, [key]: { ...(st.mEditDraft[key] || {}), ...patch, date: 'Oct 15, 2026' } } }));
   }
   // Filters one tab's tree by the search text and unmapped toggle; returns flat visible rows.
-  flattenMap(tab) {
-    const { mOpen: open, mQuery: query, mOnly: onlyUnmapped } = this.state;
-    const q = query.trim().toLowerCase();
-    const filtering = !!q || onlyUnmapped;
-    const keep = (n) => n.children ? n.children.some(keep)
-      : (!q || n.name.toLowerCase().includes(q) || (n.cube || '').toLowerCase().includes(q)) && (!onlyUnmapped || !n.cube);
-    const flat = [];
-    const walk = (nodes, level) => nodes.forEach((n) => {
-      if (!keep(n)) return;
+  // Search / unmapped filter: prunes the tree to matching leaves (and the groups above them). The Table keeps the
+  // hierarchy, so rows come back nested and carry an id for expansion state.
+  pruneMap(tab) {
+    const q = this.state.mQuery.trim().toLowerCase();
+    const onlyUnmapped = this.state.mOnly;
+    const build = (nodes) => nodes.reduce((out, n) => {
       if (n.children) {
-        flat.push({ ...n, level, kind:'group' });
-        if (filtering || (open[n.id] ?? n.open ?? true)) walk(n.children, level + 1);
-      } else flat.push({ ...n, level, kind:'leaf' });
-    });
-    walk(tab.tree, 0);
-    return flat;
+        const kids = build(n.children);
+        if (kids.length) out.push({ ...n, id:n.id, children:kids });
+      } else if ((!q || n.name.toLowerCase().includes(q) || (n.cube || '').toLowerCase().includes(q)) && (!onlyUnmapped || !n.cube)) {
+        out.push({ ...n, id:tab.label + '|' + n.name });
+      }
+      return out;
+    }, []);
+    return build(tab.tree);
   }
   countUnmapped(tab) {
     const c = (nodes) => nodes.reduce((t, n) => t + (n.children ? c(n.children) : (n.cube ? 0 : 1)), 0);
     return c(tab.tree);
   }
-  buildMapTable(tab, flat, source) {
+  buildMapTable(tab, rows, source) {
     const e = React.createElement;
     const F = window.FolioDS;
-    const open = this.state.mOpen;
     const filtering = !!this.state.mQuery.trim() || this.state.mOnly;
     const editing = this.state.mEdit;
     const opts = editing ? this.mapOptions(tab) : [];
-    const nameCell = (r) => {
-      const pad = r.level * 24;
-      const isOpen = filtering || (open[r.id] ?? r.open ?? true);
-      const o = (r.open ?? true) ? '1' : '0';
-      return r.kind === 'group'
-        ? e('div', { className:'mp-name', style:{ paddingLeft:pad } },
-            e('span', { className:'mp-caret mp-group', 'data-action':'toggle', 'data-id':r.id, 'data-open':o }, e('i', { className:isOpen ? 'fa-solid fa-caret-down' : 'fa-solid fa-caret-right' })),
-            e('span', { className:'mp-group', 'data-action':'toggle', 'data-id':r.id, 'data-open':o }, r.name))
-        : e('div', { className:'mp-name', style:{ paddingLeft:pad } },
-            e('span', { className:'mp-leaf' }, e('i', { className:'fa-regular fa-file' })),
-            e('span', { className:'mp-link' }, r.name));
-    };
+    // Group ids across the whole tab: expansion is stored per id and forced open while filtering.
+    const groupIds = [];
+    const collect = (nodes) => nodes.forEach((n) => n.children && (groupIds.push(n.id), collect(n.children)));
+    collect(tab.tree);
+    const openOf = (id) => { const n = (function find(ns) { for (const x of ns) { if (x.id === id) return x; const f = x.children && find(x.children); if (f) return f; } return null; })(tab.tree); return this.state.mOpen[id] ?? n?.open ?? true; };
+    const expandedIds = filtering ? groupIds : groupIds.filter(openOf);
     const columns = [
-      { key:'name', label:source + ' Dimension', sortable:false, render:(v, r) => nameCell(r) },
-      { key:'cube', label:'Cube Dimension', sortable:false, render:(v, r) => editing && r.kind === 'leaf'
+      { key:'name', label:source + ' Dimension', sortable:false, render:(v, r, m) => m.isGroup ? r.name
+        : e('span', { className:'mp-name' }, e('span', { className:'mp-leaf' }, e('i', { className:'fa-regular fa-file' })), e('span', { className:'mp-link' }, r.name)) },
+      { key:'cube', label:'Cube Dimension', sortable:false, render:(v, r, m) => editing && !m.isGroup
         ? e('div', { className:'mp-sel', style:{ width:'100%', maxWidth:280 } }, e(F.Select, { size:'large', placeholder:'Select dimension', options:opts, value:r.cube || undefined, onChange:(val) => this.setMapCell(tab.label, r.name, { cube:val, flip:!!r.flip }) }))
-        : r.kind === 'leaf' ? (r.cube || e(F.Badge, { type:'solid', color:'yellow', size:'sm' }, 'Unmapped')) : '--' },
-      { key:'flip', label:'Flip Sign', sortable:false, render:(v, r) => editing && r.kind === 'leaf' && r.cube
+        : !m.isGroup ? (r.cube || e(F.Badge, { type:'solid', color:'yellow', size:'sm' }, 'Unmapped')) : '--' },
+      { key:'flip', label:'Flip Sign', sortable:false, render:(v, r, m) => editing && !m.isGroup && r.cube
         ? e(F.Toggle, { checked:!!r.flip, onChange:(val) => this.setMapCell(tab.label, r.name, { cube:r.cube, flip:val }) })
-        : r.kind === 'leaf' && r.cube ? e(F.Badge, { type:'solid', color:r.flip ? 'green' : 'red', size:'sm' }, r.flip ? 'Yes' : 'No') : '--' },
-      { key:'date', label:'Last Modified', sortable:false, render:(v, r) => r.kind === 'leaf' && r.cube ? r.date : '--' }
+        : !m.isGroup && r.cube ? e(F.Badge, { type:'solid', color:r.flip ? 'green' : 'red', size:'sm' }, r.flip ? 'Yes' : 'No') : '--' },
+      { key:'date', label:'Last Modified', sortable:false, render:(v, r, m) => !m.isGroup && r.cube ? r.date : '--' }
     ];
-    const rows = flat.map((r, i) => ({ ...r, id:r.id || (r.name + i) }));
     if (!rows.length) return e('div', { className:'mp-table' }, e('div', { className:'mp-empty' }, 'No dimensions match your filters.'));
-    return e('div', { className:'mp-table' }, e(F.Table, { columns, rows }));
+    return e('div', { className:'mp-table' }, e(F.Table, { columns, rows, expandedIds,
+      onExpandedChange:(ids) => this.setState({ mOpen:Object.fromEntries(groupIds.map((id) => [id, ids.includes(id)])) }) }));
   }
   mapSourceName(row) {
     const img = (row && row.sourceImg) || '';
@@ -640,7 +631,7 @@ class Component extends DCLogic {
     const dimsOf = (t) => { const out = []; const w = (ns) => ns.forEach((n) => n.children ? w(n.children) : n.cube && !out.includes(n.cube) && out.push(n.cube)); w(t.tree); return out; };
     tabs.forEach((t) => { t.rule = ruleOf(t); });
     const tab = tabs[this.state.mTab];
-    const flat = this.flattenMap(tab);
+    const rows = this.pruneMap(tab);
     const draft = this.state.mDraft;
     const getD = (t) => draft[t.label] || this.state.mRules[t.label] || { rule:t.rule.text, dim:t.rule.text === 'Map to Existing' ? (dimsOf(t)[0] || '') : '' };
     const setD = (t, patch) => this.setState((st) => ({ mDraft:{ ...st.mDraft, [t.label]:{ ...getD(t), ...patch } } }));
@@ -684,7 +675,7 @@ class Component extends DCLogic {
       e('div', { className:'mp-filter' }, e(F.SearchAndFilter, { searchPlaceholder:'Find', searchValue:this.state.mQuery, onSearchChange:(ev) => this.setState({ mQuery:ev.target.value }), filters:[
         { label:'Status', value:'All' }, { label:'Last Updated', value:'All' }, { label:'Flip Sign', value:'All' }
       ] })),
-      this.buildMapTable(tab, flat, source),
+      this.buildMapTable(tab, rows, source),
       drawer);
   }
   buildOverview(F, row) {
@@ -750,8 +741,6 @@ class Component extends DCLogic {
     this._onClick = (e) => {
       const secEl = e.target.closest('.sec');
       if (secEl) { const ns = secEl.closest('.nav-section'); if (ns) ns.classList.toggle('collapsed'); return; }
-      const mTg = e.target.closest('[data-action="toggle"]');
-      if (mTg) { const id = mTg.getAttribute('data-id'); this.setState((st) => ({ mOpen: { ...st.mOpen, [id]: !(st.mOpen[id] ?? mTg.getAttribute('data-open') === '1') } })); return; }
       if (e.target.closest('[data-action="unmapped"]')) { this.setState((st) => ({ mOnly: !st.mOnly })); return; }
       const dTab = e.target.closest('[data-action="detail-tab"]');
       if (dTab) { this.setState({ detailTab: dTab.getAttribute('data-tab') }); return; }

@@ -51,3 +51,42 @@ export function EmptyState() {
     </div>
   );
 }
+
+const treeColumns = [
+  {
+    key: "name",
+    label: "QuickBooks Dimension",
+    sortable: false,
+    render: (v, row, meta) =>
+      meta.isGroup ? v : (
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+          <i className="fa-regular fa-file" style={{ color: "var(--color-blue-500)", fontSize: 14, width: 24, textAlign: "center" }} />
+          <span style={{ color: "var(--color-blue-500)" }}>{v}</span>
+        </span>
+      ),
+  },
+  { key: "cube", label: "Cube Dimension", sortable: false, render: (v, row, meta) => (meta.isGroup ? "--" : v) },
+  { key: "modified", label: "Last Modified", sortable: false, render: (v, row, meta) => (meta.isGroup ? "--" : v) },
+];
+
+const treeRows = [
+  { id: "income", name: "Income", children: [
+    { id: "sales", name: "Sales of Product Income", cube: "Product Revenue", modified: "Oct 14, 2026" },
+    { id: "services", name: "Services", cube: "Service Revenue", modified: "Oct 14, 2026" },
+    { id: "subs", name: "Subscription Revenue", children: [
+      { id: "annual", name: "Annual Plans", cube: "Subscription Revenue", modified: "Oct 2, 2026" },
+      { id: "monthly", name: "Monthly Plans", cube: "Subscription Revenue", modified: "Oct 2, 2026" },
+    ] },
+  ] },
+  { id: "cogs", name: "Cost of Goods Sold", defaultExpanded: false, children: [
+    { id: "hosting", name: "Hosting & Infrastructure", cube: "Cost of Revenue", modified: "Sep 28, 2026" },
+  ] },
+];
+
+export function TreeRows() {
+  return (
+    <div style={{ width: 780 }}>
+      <Table columns={treeColumns} rows={treeRows} />
+    </div>
+  );
+}

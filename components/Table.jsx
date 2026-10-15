@@ -23,9 +23,74 @@ function SortIcon({ direction }) {
   );
 }
 
-export function Table({ columns = [], rows = [], style }) {
+// ── Tree support ────────────────────────────────────────────────────────────
+// A row with a `children` array is a group row. Nested rows indent by `indent` px per level and the
+// tree column (first column unless `treeColumn` says otherwise) gets a caret on group rows.
+// Rows need a stable `id` in a tree; ids are what the expanded state is keyed on.
+const rowKey = (row, path) => row.id ?? path;
+const hasChildren = (row) => Array.isArray(row.children) && row.children.length > 0;
+
+function collectGroupIds(rows, path = "") {
+  const out = [];
+  rows.forEach((r, i) => {
+    const p = `${path}${i}`;
+    if (hasChildren(r)) {
+      out.push({ id: rowKey(r, p), collapsed: r.defaultExpanded === false });
+      out.push(...collectGroupIds(r.children, `${p}.`));
+    }
+  });
+  return out;
+}
+
+function Caret({ open, label, onToggle }) {
+  return (
+    <button
+      type="button"
+      aria-expanded={open}
+      aria-label={`${open ? "Collapse" : "Expand"} ${label ?? "row"}`}
+      onClick={(e) => { e.stopPropagation(); onToggle(); }}
+      style={{
+        width: 24, height: 24, padding: 0, border: "none", background: "none",
+        display: "inline-flex", alignItems: "center", justifyContent: "center",
+        color: token.gray900, cursor: "pointer", flexShrink: 0,
+      }}
+    >
+      <i className={`fa-solid fa-caret-${open ? "down" : "right"}`} style={{ fontSize: 12 }} aria-hidden="true" />
+    </button>
+  );
+}
+
+export function Table({
+  columns = [],
+  rows = [],
+  style,
+  treeColumn,
+  defaultExpanded = "all",
+  expandedIds,
+  onExpandedChange,
+  indent = 24,
+}) {
   const [sortKey, setSortKey] = useState(null);
   const [sortDir, setSortDir] = useState("asc");
+  const isTree = rows.some(hasChildren);
+  const treeKey = treeColumn ?? columns[0]?.key;
+
+  // Uncontrolled expansion: every group open unless defaultExpanded says otherwise, and a group row's own
+  // `defaultExpanded: false` collapses just that group. Pass `expandedIds` to control it from outside.
+  const [innerExpanded, setInnerExpanded] = useState(() => {
+    const groups = isTree ? collectGroupIds(rows) : [];
+    if (Array.isArray(defaultExpanded)) return new Set(defaultExpanded);
+    if (defaultExpanded === "none") return new Set();
+    return new Set(groups.filter((g) => !g.collapsed).map((g) => g.id));
+  });
+  const expanded = expandedIds ? new Set(expandedIds) : innerExpanded;
+
+  function toggle(id) {
+    const next = new Set(expanded);
+    next.has(id) ? next.delete(id) : next.add(id);
+    if (!expandedIds) setInnerExpanded(next);
+    onExpandedChange?.([...next]);
+  }
 
   function handleSort(key) {
     if (!key) return;
@@ -37,17 +102,26 @@ export function Table({ columns = [], rows = [], style }) {
     }
   }
 
-  const sorted = sortKey
-    ? [...rows].sort((a, b) => {
-        const av = a[sortKey], bv = b[sortKey];
-        if (av == null) return 1;
-        if (bv == null) return -1;
-        const cmp = typeof av === "number"
-          ? av - bv
-          : String(av).localeCompare(String(bv));
-        return sortDir === "asc" ? cmp : -cmp;
-      })
-    : rows;
+  const sortRows = (list) => !sortKey ? list : [...list].sort((a, b) => {
+    const av = a[sortKey], bv = b[sortKey];
+    if (av == null) return 1;
+    if (bv == null) return -1;
+    const cmp = typeof av === "number"
+      ? av - bv
+      : String(av).localeCompare(String(bv));
+    return sortDir === "asc" ? cmp : -cmp;
+  });
+
+  // Flat list of visible rows, each carrying its depth. Sorting applies to siblings so children stay under their parent.
+  const visible = [];
+  const walk = (list, level, path) => sortRows(list).forEach((row, i) => {
+    const key = rowKey(row, `${path}${i}`);
+    const group = hasChildren(row);
+    visible.push({ row, level, group, key });
+    if (group && expanded.has(key)) walk(row.children, level + 1, `${path}${i}.`);
+  });
+  walk(rows, 0, "");
+  const sorted = visible.map((v) => v.row);
 
   return (
     <div style={{
@@ -100,26 +174,41 @@ export function Table({ columns = [], rows = [], style }) {
           </tr>
         </thead>
         <tbody>
-          {sorted.map((row, i) => (
-            <tr key={row.id ?? i} style={{ background: token.white }}>
-              {columns.map((col) => (
-                <td
-                  key={col.key}
-                  style={{
-                    height: 48,
-                    padding: "0 8px",
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 14,
-                    fontWeight: 400,
-                    lineHeight: "20px",
-                    color: token.gray900,
-                    textAlign: col.align ?? "left",
-                    borderBottom: i < sorted.length - 1 ? `1px solid ${token.borderTableStroke}` : undefined,
-                  }}
-                >
-                  {col.render ? col.render(row[col.key], row) : row[col.key]}
-                </td>
-              ))}
+          {visible.map(({ row, level, group, key }, i) => (
+            <tr
+              key={key ?? i}
+              style={{ background: token.white }}
+              aria-level={isTree ? level + 1 : undefined}
+              aria-expanded={isTree && group ? expanded.has(key) : undefined}
+            >
+              {columns.map((col) => {
+                const isTreeCell = isTree && col.key === treeKey;
+                const meta = { level, isGroup: group, expanded: group && expanded.has(key) };
+                const content = col.render ? col.render(row[col.key], row, meta) : row[col.key];
+                return (
+                  <td
+                    key={col.key}
+                    style={{
+                      height: 48,
+                      padding: "0 8px",
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 14,
+                      fontWeight: 400,
+                      lineHeight: "20px",
+                      color: token.gray900,
+                      textAlign: col.align ?? "left",
+                      borderBottom: i < visible.length - 1 ? `1px solid ${token.borderTableStroke}` : undefined,
+                    }}
+                  >
+                    {isTreeCell ? (
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, paddingLeft: level * indent, whiteSpace: "nowrap" }}>
+                        {group && <Caret open={expanded.has(key)} label={row[col.key]} onToggle={() => toggle(key)} />}
+                        {content}
+                      </div>
+                    ) : content}
+                  </td>
+                );
+              })}
             </tr>
           ))}
         </tbody>

@@ -7,6 +7,34 @@ Data table for the Folio Design System. Use via `window.FolioDS.Table`; compose 
 - `rows`: `Array<{ id, [key]: value }>`
 - Sorting is built in (click a header). `align: "right"` for numeric columns.
 
+## Tree rows
+
+Give a row a `children` array and the table becomes a tree. Group rows get a caret in the tree column
+(the first column unless `treeColumn` names another), nested rows indent 24px per level, and sorting
+applies to siblings so children stay under their parent. Flat tables are unaffected.
+
+```jsx
+const rows = [
+  { id: "income", name: "Income", children: [
+    { id: "sales", name: "Sales of Product Income", cube: "Product Revenue" },
+    { id: "subs", name: "Subscription Revenue", children: [
+      { id: "annual", name: "Annual Plans", cube: "Subscription Revenue" },
+    ] },
+  ] },
+  { id: "cogs", name: "Cost of Goods Sold", defaultExpanded: false, children: [ /* … */ ] },
+];
+
+<Table columns={columns} rows={rows} />
+```
+
+- `rows[].id` — required in a tree. Expanded state is keyed on it.
+- `rows[].defaultExpanded` — `false` starts that group collapsed. Groups start open by default.
+- `defaultExpanded` (prop) — `"all"` (default), `"none"`, or an array of ids to start open.
+- `expandedIds` + `onExpandedChange(ids)` — control expansion from outside, e.g. to force groups open while filtering.
+- `treeColumn` — key of the column that carries the caret and indent. `indent` — px per level (default 24).
+- `columns[].render(value, row, { level, isGroup, expanded })` — the third argument tells a cell where it sits.
+  The table draws the caret; render only the icon and label (group rows show label only, leaves usually add an icon).
+
 ## Cell variants — say the name, get the cell
 
 Ask for a column by its **cell name** and it maps to `Cell.*`:
