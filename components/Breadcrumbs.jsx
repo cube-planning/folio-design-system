@@ -3,7 +3,7 @@
 // "Breadcrumbs" (node 183:32990, type=Add On | Portal)
 //
 //   type="addOn"  : plain text crumb trail (Level 1 > Level 2 > ... > current),
-//                   blue-500 links, gray-900 current (non-link) crumb.
+//                   cobalt-500 links, gray-900 current (non-link) crumb.
 //   type="portal" : first crumb renders as a pill chip with a leading icon
 //                   (e.g. "Workflows"), remaining crumbs are plain text.
 //
@@ -16,7 +16,7 @@ const COLORS = {
   gray900: "#222B3A",
   gray700: "#4A5567",
   gray600: "#677489",
-  blue500: "#2667D8",
+  cobalt500: "#173D82",
 };
 
 function Chevron() {
@@ -73,7 +73,7 @@ export function Breadcrumbs({ type = "addOn", items = [], style }) {
                   border: "none",
                   background: "transparent",
                   borderRadius: 9999,
-                  color: COLORS.blue500,
+                  color: COLORS.cobalt500,
                   fontSize: 14,
                   fontWeight: 500,
                   cursor: isClickable ? "pointer" : "default",
@@ -106,7 +106,7 @@ export function Breadcrumbs({ type = "addOn", items = [], style }) {
                   border: "none",
                   background: "transparent",
                   borderRadius: 4,
-                  color: COLORS.blue500,
+                  color: COLORS.cobalt500,
                   fontSize: 14,
                   fontWeight: 400,
                   cursor: "pointer",

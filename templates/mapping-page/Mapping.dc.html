@@ -263,10 +263,7 @@
     .td-tree-val { font-size:12px; font-weight:600; letter-spacing:.04em; color:#677489; }
     .td-tree-note { font-size:13px; color:#222B3A; margin-top:14px; }
 
-    .pg { width:100%; display:flex; flex-direction:column; gap:8px; }
-    .mp-head { display:flex; align-items:center; justify-content:space-between; min-height:32px; }
-    .mp-actions { display:flex; align-items:center; gap:8px; }
-    .mp-title { font-size:24px; line-height:32px; font-weight:600; color:var(--color-gray-900); }
+    .pg { width:100%; display:flex; flex-direction:column; }
     .mp-tabs { margin-top:8px; }
     .mp-summary { background:var(--color-gray-100); border:1px solid var(--color-gray-300); border-radius:16px; padding:16px; display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:8px; }
     .mp-card { background:#fff; border:1px solid var(--color-gray-300); border-radius:16px; padding:16px; height:100px; display:flex; flex-direction:column; justify-content:space-between; }
@@ -338,11 +335,7 @@
     </header>
     <main class="page-content">
       <div class="pg">
-        <div class="mp-head">
-          {{ crumbsEl }}
-          <div class="mp-actions">{{ bellBtn }}{{ importBtn }}</div>
-        </div>
-        <div class="mp-title">Mapping</div>
+        {{ headerEl }}
         <div class="mp-tabs">{{ tabsEl }}</div>
         <div class="mp-summary">
           <div class="mp-card">
@@ -480,17 +473,6 @@ class Component extends DCLogic {
     const c = (nodes) => nodes.reduce((t, n) => t + (n.children ? c(n.children) : (n.cube ? 0 : 1)), 0);
     return c(tab.tree);
   }
-  // Portal breadcrumb per Figma (Button 3.0, small): ghost-blue crumbs, chevron separators, current page in gray.
-  buildCrumbs(F, items) {
-    const e = React.createElement;
-    const out = [];
-    items.forEach((it, i) => {
-      const last = i === items.length - 1;
-      if (i) out.push(e('span', { key:'s' + i, style:{ width:28, height:28, display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:12, color:'var(--color-gray-700)' }, 'aria-hidden':'true' }, e('i', { className:'fa-regular fa-chevron-right' })));
-      out.push(e(F.Button, { key:'c' + i, variant:last ? 'ghost-gray' : 'ghost-blue', size:'small', leadingIcon:it.icon, onClick:last ? undefined : it.onClick }, it.label));
-    });
-    return e('nav', { 'aria-label':'Breadcrumb', style:{ display:'flex', alignItems:'center' } }, out);
-  }
   buildTable(tab, flat, source) {
     const e = React.createElement;
     const F = window.FolioDS;
@@ -540,15 +522,14 @@ class Component extends DCLogic {
     const e = React.createElement;
     const fa = (cls) => e('i', { className:cls });
     const sideNavEl = F ? e(F.PortalSideBarNav, { expanded: !this.state.sbCollapsed, activeItemId: 'integrations', style: { width: '100%' } }) : null;
-    let crumbsEl = null, bellBtn = null, importBtn = null, tabsEl = null, editBtn = null, ruleBadge = null, filterEl = null, tableEl = null;
+    let headerEl = null, tabsEl = null, editBtn = null, ruleBadge = null, filterEl = null, tableEl = null;
     if (F) {
-      crumbsEl = this.buildCrumbs(F, [
+      headerEl = e(F.PageHeader, { title:'Mapping', style:{ borderBottom:'none', paddingBottom:0 }, breadcrumbs:[
         { label:'Integrations', icon:fa('fa-regular fa-database'), onClick:() => {} },
         { label:connectionName, onClick:() => {} },
         { label:'Mapping' }
-      ]);
-      bellBtn = e(F.Button, { variant:'secondary', size:'large', icon:fa('fa-regular fa-bell'), 'aria-label':'Notifications' });
-      importBtn = e(F.Button, { variant:'primary', size:'large', leadingIcon:fa('fa-regular fa-file-import') }, 'Import');
+      ],
+        topActions:e(React.Fragment, null, e(F.Button, { variant:'secondary', size:'large', icon:fa('fa-regular fa-bell'), 'aria-label':'Notifications' }), e(F.Button, { variant:'primary', size:'large', leadingIcon:fa('fa-regular fa-file-import') }, 'Import')) });
       tabsEl = e(F.TabGroup, { type:'secondary', activeIndex:this.state.tab, onChange:(i) => this.setState({ tab:i, query:'', onlyUnmapped:false }), tabs:tabs.map((t) => ({ label:t.label, icon:fa(t.icon) })) });
       editBtn = e(F.Button, { variant:'ghost-gray', size:'small', icon:fa('fa-regular fa-pen'), 'aria-label':'Edit mapping rules' });
       ruleBadge = e('span', { style:{ alignSelf:'flex-start' } }, e(F.Badge, { type:'solid', color:tab.rule.color, size:'md' }, tab.rule.text));
@@ -559,7 +540,7 @@ class Component extends DCLogic {
       ] });
       tableEl = this.buildTable(tab, flat, source);
     }
-    return { companyName, userName, ic, sideNavEl, crumbsEl, bellBtn, importBtn, tabsEl, editBtn, ruleBadge, filterEl, tableEl, unmappedCount, unmappedLabel };
+    return { companyName, userName, ic, sideNavEl, headerEl, tabsEl, editBtn, ruleBadge, filterEl, tableEl, unmappedCount, unmappedLabel };
   }
 }
 
