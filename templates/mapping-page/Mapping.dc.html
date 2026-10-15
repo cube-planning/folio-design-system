@@ -263,15 +263,17 @@
     .td-tree-val { font-size:12px; font-weight:600; letter-spacing:.04em; color:#677489; }
     .td-tree-note { font-size:13px; color:#222B3A; margin-top:14px; }
 
-    .pg { width:100%; display:flex; flex-direction:column; }
-    .mp-tabs { margin-top:8px; }
-    .mp-summary { background:var(--color-gray-100); border:1px solid var(--color-gray-300); border-radius:16px; padding:16px; display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:8px; }
+    .mp-pg { width:100%; display:flex; flex-direction:column; gap:16px; }
+    .mp-sel { position:relative; }
+    .mp-sel div[style*="z-index: 50"] { left:0 !important; right:0 !important; top:calc(100% + 4px) !important; margin-top:0 !important; min-width:0 !important; box-sizing:border-box; max-height:240px; overflow-y:auto !important; }
+    .mp-tabs { margin-top:0; }
+    .mp-summary { background:var(--color-gray-100); border:1px solid var(--color-gray-300); border-radius:16px; padding:16px; display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:0; }
     .mp-card { background:#fff; border:1px solid var(--color-gray-300); border-radius:16px; padding:16px; height:100px; display:flex; flex-direction:column; justify-content:space-between; }
     .mp-card-hd { display:flex; align-items:flex-start; justify-content:space-between; height:28px; }
     .mp-card-lbl { font-size:12px; line-height:18px; font-weight:500; color:var(--color-gray-600); }
     .mp-count { font-size:24px; line-height:32px; font-weight:700; color:var(--color-blue-500); text-decoration:underline; cursor:pointer; align-self:flex-start; }
-    .mp-filter { margin-top:8px; }
-    .mp-table { background:#fff; border:1px solid var(--color-gray-300); border-radius:16px; padding:16px; margin-top:8px; }
+    .mp-filter { margin-top:0; }
+    .mp-table { margin-top:0; }
     .mp-row { display:grid; grid-template-columns:300px 270px 270px 1fr; align-items:center; }
     .mp-row > div { min-height:48px; padding:10px 8px; display:flex; align-items:center; border-bottom:1px solid var(--color-gray-200); font-size:14px; line-height:20px; color:var(--color-gray-900); }
     .mp-row.mp-last > div { border-bottom:none; }
@@ -284,6 +286,8 @@
     .mp-link:hover { text-decoration:underline; }
     .mp-group { cursor:pointer; }
     .mp-empty { padding:32px 8px; text-align:center; font-size:14px; color:var(--color-gray-600); }
+    .mp-editbar { height:64px; margin:-24px -24px 0; padding:0 24px; background:#EFF6FF; border-bottom:1px solid #E3E8EF; display:flex; align-items:center; justify-content:space-between; position:sticky; top:-24px; z-index:20; }
+    .mp-editbar-title { font-size:18px; font-weight:600; line-height:28px; color:#222B3A; }
   </style>
 </helmet>
 
@@ -335,20 +339,7 @@
     </header>
     <main class="page-content">
       <div class="pg">
-        {{ headerEl }}
-        <div class="mp-tabs">{{ tabsEl }}</div>
-        <div class="mp-summary">
-          <div class="mp-card">
-            <div class="mp-card-hd"><span class="mp-card-lbl">Mapping Rules</span>{{ editBtn }}</div>
-            {{ ruleBadge }}
-          </div>
-          <div class="mp-card">
-            <div class="mp-card-hd"><span class="mp-card-lbl">{{ unmappedLabel }}</span></div>
-            <span class="mp-count" data-action="unmapped">{{ unmappedCount }}</span>
-          </div>
-        </div>
-        <div class="mp-filter">{{ filterEl }}</div>
-        {{ tableEl }}
+        {{ pageEl }}
       </div>
     </main>
   </div>
@@ -356,14 +347,14 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1440px&quot;,&quot;height&quot;:&quot;1357px&quot;},&quot;companyName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Accuplanner Inc&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;userName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Nina Graham&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;sourceName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;QuickBooks&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;connectionName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Shop Revenue Load&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;startCollapsed&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Layout&quot;}}">
 class Component extends DCLogic {
-  state = { sbCollapsed: false, tab: 0, open: {}, query: '', onlyUnmapped: false };
+  state = { sbCollapsed: false, mTab: 0, mOpen: {}, mQuery: '', mOnly: false, mDrawer: false, mRules: {}, mDraft: {}, mEdit: false, mEdits: {}, mEditDraft: {} };
   componentDidMount() {
     this._onClick = (e) => {
       const secEl = e.target.closest('.sec');
       if (secEl) { const ns = secEl.closest('.nav-section'); if (ns) ns.classList.toggle('collapsed'); return; }
-      const tg = e.target.closest('[data-action="toggle"]');
-      if (tg) { const id = tg.getAttribute('data-id'); this.setState((st) => ({ open: { ...st.open, [id]: !st.open[id] } })); return; }
-      if (e.target.closest('[data-action="unmapped"]')) { this.setState((st) => ({ onlyUnmapped: !st.onlyUnmapped })); return; }
+      const mTg = e.target.closest('[data-action="toggle"]');
+      if (mTg) { const id = mTg.getAttribute('data-id'); this.setState((st) => ({ mOpen: { ...st.mOpen, [id]: !(st.mOpen[id] ?? mTg.getAttribute('data-open') === '1') } })); return; }
+      if (e.target.closest('[data-action="unmapped"]')) { this.setState((st) => ({ mOnly: !st.mOnly })); return; }
       const collapse = e.target.closest('[data-action="collapse"]');
       if (collapse) {
         const sb = document.getElementById('sb');
@@ -388,8 +379,7 @@ class Component extends DCLogic {
     document.removeEventListener('click', this._onClick);
     if (this._iconWait) clearInterval(this._iconWait);
   }
-  // Mapping data per tab. A leaf with cube:null is unmapped. Dates are the last edit to the mapping.
-  getData(src) {
+  getMapDataBase(src) {
     const L = (name, cube, flip, date) => ({ name, cube, flip, date });
     return [
       { label:'Account', icon:'fa-regular fa-clipboard', rule:{ text:'Map to Existing', color:'green' }, tree:[
@@ -451,9 +441,37 @@ class Component extends DCLogic {
       ] }
     ];
   }
+  // Edit Mapping keeps changes as overrides keyed by tab + source name, so the sample data stays the baseline.
+  // While editing, the draft is shown; Cancel drops it and Save promotes it to mEdits.
+  getMapData(src) {
+    const ov = this.state.mEdit ? this.state.mEditDraft : this.state.mEdits;
+    const apply = (label, nodes) => nodes.map((n) => n.children
+      ? { ...n, children: apply(label, n.children) }
+      : (ov[label + '|' + n.name] ? { ...n, ...ov[label + '|' + n.name] } : n));
+    return this.getMapDataBase(src).map((t) => ({ ...t, tree: apply(t.label, t.tree) }));
+  }
+  // Cube dimension members offered in the edit-mode select: what the tab already maps to, plus a few unused members.
+  mapOptions(tab) {
+    const extra = {
+      Account: ['Marketing Expense', 'Professional Fees', 'Insurance', 'Other Income', 'Depreciation'],
+      Class: ['Operations', 'Finance', 'People'],
+      Customer: ['Stark Industries', 'Soylent Corp', 'Other Customers']
+    }[tab.label] || [];
+    const seen = [];
+    const walk = (nodes) => nodes.forEach((n) => n.children ? walk(n.children) : (n.cube && !seen.includes(n.cube) && seen.push(n.cube)));
+    walk(tab.tree);
+    return seen.concat(extra.filter((x) => !seen.includes(x))).sort();
+  }
+  enterMapEdit() { this.setState((st) => ({ mEdit: true, mEditDraft: { ...st.mEdits }, mQuery: '', mOnly: false })); }
+  cancelMapEdit() { this.setState({ mEdit: false, mEditDraft: {} }); }
+  saveMapEdit() { this.setState((st) => ({ mEdit: false, mEdits: { ...st.mEditDraft }, mEditDraft: {} })); }
+  setMapCell(label, name, patch) {
+    const key = label + '|' + name;
+    this.setState((st) => ({ mEditDraft: { ...st.mEditDraft, [key]: { ...(st.mEditDraft[key] || {}), ...patch, date: 'Oct 15, 2026' } } }));
+  }
   // Filters one tab's tree by the search text and unmapped toggle; returns flat visible rows.
-  flatten(tab) {
-    const { open, query, onlyUnmapped } = this.state;
+  flattenMap(tab) {
+    const { mOpen: open, mQuery: query, mOnly: onlyUnmapped } = this.state;
     const q = query.trim().toLowerCase();
     const filtering = !!q || onlyUnmapped;
     const keep = (n) => n.children ? n.children.some(keep)
@@ -473,45 +491,105 @@ class Component extends DCLogic {
     const c = (nodes) => nodes.reduce((t, n) => t + (n.children ? c(n.children) : (n.cube ? 0 : 1)), 0);
     return c(tab.tree);
   }
-  buildTable(tab, flat, source) {
+  buildMapTable(tab, flat, source) {
     const e = React.createElement;
     const F = window.FolioDS;
-    const open = this.state.open;
-    const filtering = !!this.state.query.trim() || this.state.onlyUnmapped;
-    const hd = [source + ' Dimension', 'Cube Dimension', 'Flip Sign', 'Last Modified'].map((h) =>
-      e('div', { key:h }, h, e('i', { className:'fa-solid fa-sort' })));
-    const rows = flat.map((r, i) => {
-      const last = i === flat.length - 1;
-      const pad = 8 + r.level * 24;
+    const open = this.state.mOpen;
+    const filtering = !!this.state.mQuery.trim() || this.state.mOnly;
+    const editing = this.state.mEdit;
+    const opts = editing ? this.mapOptions(tab) : [];
+    const nameCell = (r) => {
+      const pad = r.level * 24;
       const isOpen = filtering || (open[r.id] ?? r.open ?? true);
-      const nameCell = r.kind === 'group'
+      const o = (r.open ?? true) ? '1' : '0';
+      return r.kind === 'group'
         ? e('div', { className:'mp-name', style:{ paddingLeft:pad } },
-            e('span', { className:'mp-caret mp-group', 'data-action':'toggle', 'data-id':r.id }, e('i', { className:isOpen ? 'fa-solid fa-caret-down' : 'fa-solid fa-caret-right' })),
-            e('span', { className:'mp-group', 'data-action':'toggle', 'data-id':r.id }, r.name))
+            e('span', { className:'mp-caret mp-group', 'data-action':'toggle', 'data-id':r.id, 'data-open':o }, e('i', { className:isOpen ? 'fa-solid fa-caret-down' : 'fa-solid fa-caret-right' })),
+            e('span', { className:'mp-group', 'data-action':'toggle', 'data-id':r.id, 'data-open':o }, r.name))
         : e('div', { className:'mp-name', style:{ paddingLeft:pad } },
             e('span', { className:'mp-leaf' }, e('i', { className:'fa-regular fa-file' })),
             e('span', { className:'mp-link' }, r.name));
-      const leaf = r.kind === 'leaf';
-      const mapped = leaf && r.cube;
-      return e('div', { key:r.id || (r.name + i), className:'mp-row' + (last ? ' mp-last' : '') },
-        nameCell,
-        e('div', null, mapped ? r.cube : leaf ? e(F.Badge, { type:'solid', color:'yellow', size:'sm' }, 'Unmapped') : '--'),
-        e('div', null, mapped ? e(F.Badge, { type:'solid', color:r.flip ? 'green' : 'red', size:'sm' }, r.flip ? 'Yes' : 'No') : '--'),
-        e('div', null, mapped ? r.date : '--'));
-    });
-    if (!rows.length) rows.push(e('div', { key:'empty', className:'mp-empty' }, 'No dimensions match your filters.'));
-    return e('div', { className:'mp-table' }, e('div', { className:'mp-row mp-hd' }, hd), rows);
+    };
+    const columns = [
+      { key:'name', label:source + ' Dimension', sortable:false, render:(v, r) => nameCell(r) },
+      { key:'cube', label:'Cube Dimension', sortable:false, render:(v, r) => editing && r.kind === 'leaf'
+        ? e('div', { className:'mp-sel', style:{ width:'100%', maxWidth:280 } }, e(F.Select, { size:'large', placeholder:'Select dimension', options:opts, value:r.cube || undefined, onChange:(val) => this.setMapCell(tab.label, r.name, { cube:val, flip:!!r.flip }) }))
+        : r.kind === 'leaf' ? (r.cube || e(F.Badge, { type:'solid', color:'yellow', size:'sm' }, 'Unmapped')) : '--' },
+      { key:'flip', label:'Flip Sign', sortable:false, render:(v, r) => editing && r.kind === 'leaf' && r.cube
+        ? e(F.Toggle, { checked:!!r.flip, onChange:(val) => this.setMapCell(tab.label, r.name, { cube:r.cube, flip:val }) })
+        : r.kind === 'leaf' && r.cube ? e(F.Badge, { type:'solid', color:r.flip ? 'green' : 'red', size:'sm' }, r.flip ? 'Yes' : 'No') : '--' },
+      { key:'date', label:'Last Modified', sortable:false, render:(v, r) => r.kind === 'leaf' && r.cube ? r.date : '--' }
+    ];
+    const rows = flat.map((r, i) => ({ ...r, id:r.id || (r.name + i) }));
+    if (!rows.length) return e('div', { className:'mp-table' }, e('div', { className:'mp-empty' }, 'No dimensions match your filters.'));
+    return e('div', { className:'mp-table' }, e(F.Table, { columns, rows }));
+  }
+  mapSourceName(row) {
+    if (this.props.sourceName) return this.props.sourceName;
+    const img = (row && row.sourceImg) || '';
+    return img.includes('quickbook') ? 'QuickBooks' : img.includes('xero') ? 'Xero' : img.includes('netsuite') ? 'NetSuite' : img.includes('sage') ? 'Sage Intacct' : img.includes('salesforce') ? 'Salesforce' : 'Source';
+  }
+  buildMapping(F, row) {
+    const e = React.createElement;
+    const fa = (cls) => e('i', { className:cls });
+    const source = this.mapSourceName(row);
+    const tabs = this.getMapData(source);
+    const RULES = { 'Map to Existing':'green', 'Create New':'blue', 'None':'gray' };
+    const ruleOf = (t) => { const r = this.state.mRules[t.label]; return r ? { text:r.rule, color:RULES[r.rule] } : t.rule; };
+    const dimsOf = (t) => { const out = []; const w = (ns) => ns.forEach((n) => n.children ? w(n.children) : n.cube && !out.includes(n.cube) && out.push(n.cube)); w(t.tree); return out; };
+    tabs.forEach((t) => { t.rule = ruleOf(t); });
+    const tab = tabs[this.state.mTab];
+    const flat = this.flattenMap(tab);
+    const draft = this.state.mDraft;
+    const getD = (t) => draft[t.label] || this.state.mRules[t.label] || { rule:t.rule.text, dim:t.rule.text === 'Map to Existing' ? (dimsOf(t)[0] || '') : '' };
+    const setD = (t, patch) => this.setState((st) => ({ mDraft:{ ...st.mDraft, [t.label]:{ ...getD(t), ...patch } } }));
+    const req = (txt) => e('span', null, txt, e('span', { style:{ color:'var(--color-red-500)', marginLeft:2 } }, '*'));
+    const closeDrawer = () => this.setState({ mDrawer:false, mDraft:{} });
+    const saveDrawer = () => this.setState((st) => ({ mDrawer:false, mDraft:{}, mRules:{ ...st.mRules, ...Object.fromEntries(tabs.map((t) => [t.label, { ...getD(t) }])) } }));
+    const drawer = this.state.mDrawer ? e(F.Drawer, { title:'Mapping Rules', onClose:closeDrawer, style:{ width:408 },
+      footer:e('div', { style:{ display:'flex', gap:8 } }, e(F.Button, { variant:'primary', size:'large', onClick:saveDrawer }, 'Save'), e(F.Button, { variant:'secondary', size:'large', onClick:closeDrawer }, 'Cancel')) },
+      e('div', { style:{ display:'flex', flexDirection:'column', gap:24, padding:'0 16px 16px' } }, tabs.map((t, i) => {
+        const d = getD(t);
+        return e('div', { key:t.label, style:{ display:'flex', flexDirection:'column', gap:16, paddingTop:i ? 24 : 0, borderTop:i ? '1px solid var(--color-gray-300)' : 'none' } },
+          e('h3', { style:{ margin:0, fontSize:16, fontWeight:600, color:'var(--color-gray-900)', lineHeight:'24px' } }, t.label),
+          e('div', { className:'mp-sel' }, e(F.Select, { label:req('Rule'), value:d.rule, options:Object.keys(RULES), onChange:(v) => setD(t, { rule:v, dim:v === 'Map to Existing' ? (d.dim || dimsOf(t)[0] || '') : '' }) })),
+          d.rule === 'Map to Existing' ? e('div', { className:'mp-sel' }, e(F.Select, { label:req('Dimension'), value:d.dim, options:dimsOf(t), onChange:(v) => setD(t, { dim:v }) })) : null,
+          d.rule === 'None' ? e('span', { style:{ fontSize:12, lineHeight:'18px', color:'var(--color-gray-700)' } }, 'Manual mapping of new dimensions required before import.') : null);
+      }))) : null;
+    const editing = this.state.mEdit;
+    const goList = () => this.setState({ mEdit:false, mEditDraft:{} });
+    const goOverview = () => this.setState({ mEdit:false, mEditDraft:{} });
+    const editBar = editing ? e('div', { className:'mp-editbar' },
+      e('span', { className:'mp-editbar-title' }, 'Edit Mapping'),
+      e('div', { style:{ display:'flex', gap:8 } },
+        e(F.Button, { variant:'secondary', onClick:() => this.cancelMapEdit() }, 'Cancel'),
+        e(F.Button, { variant:'primary', onClick:() => this.saveMapEdit() }, 'Save Mapping'))) : null;
+    return e('div', { className:'mp-pg' },
+      editBar,
+      e(F.PageHeader, { title:'Mapping', style:{ borderBottom:'none', paddingBottom:0 }, breadcrumbs:[
+          { label:'Integrations', icon:fa('fa-regular fa-database'), onClick:goList },
+          { label:row.name, onClick:goOverview },
+          { label:'Mapping' }
+        ],
+        topActions:editing ? null : e(React.Fragment, null, e(F.Button, { variant:'secondary', size:'large', leadingIcon:fa('fa-regular fa-pen'), onClick:() => this.enterMapEdit() }, 'Edit Mapping'), e(F.Button, { variant:'secondary', size:'large', icon:fa('fa-regular fa-bell'), 'aria-label':'Notifications' }), e(F.Button, { variant:'primary', size:'large', leadingIcon:fa('fa-regular fa-file-import') }, 'Import')) }),
+      e('div', { className:'mp-tabs' }, e(F.TabGroup, { type:'secondary', activeIndex:this.state.mTab, onChange:(i) => this.setState({ mTab:i, mQuery:'', mOnly:false }), tabs:tabs.map((t) => ({ label:t.label, icon:fa(t.icon) })) })),
+      e('div', { className:'mp-summary' },
+        e('div', { className:'mp-card' },
+          e('div', { className:'mp-card-hd' }, e('span', { className:'mp-card-lbl' }, 'Mapping Rules'), e(F.Button, { variant:'ghost-gray', size:'small', icon:fa('fa-regular fa-pen'), 'aria-label':'Edit mapping rules', onClick:() => this.setState({ mDrawer:true, mDraft:{} }) })),
+          e('span', { style:{ alignSelf:'flex-start' } }, e(F.Badge, { type:'solid', color:tab.rule.color, size:'md' }, tab.rule.text))),
+        e('div', { className:'mp-card' },
+          e('div', { className:'mp-card-hd' }, e('span', { className:'mp-card-lbl' }, 'Unmapped ' + tab.label + ' Dimensions')),
+          e('span', { className:'mp-count', 'data-action':'unmapped' }, this.countUnmapped(tab)))),
+      e('div', { className:'mp-filter' }, e(F.SearchAndFilter, { searchPlaceholder:'Find', searchValue:this.state.mQuery, onSearchChange:(ev) => this.setState({ mQuery:ev.target.value }), filters:[
+        { label:'Status', value:'All' }, { label:'Last Updated', value:'All' }, { label:'Flip Sign', value:'All' }
+      ] })),
+      this.buildMapTable(tab, flat, source),
+      drawer);
   }
   renderVals() {
     const companyName = this.props.companyName ?? 'Accuplanner Inc';
     const userName = this.props.userName ?? 'Nina Graham';
     const connectionName = this.props.connectionName ?? 'Shop Revenue Load';
-    const source = this.props.sourceName ?? 'QuickBooks';
-    const tabs = this.getData(source);
-    const tab = tabs[this.state.tab];
-    const flat = this.flatten(tab);
-    const unmappedCount = this.countUnmapped(tab);
-    const unmappedLabel = 'Unmapped ' + tab.label + ' Dimensions';
     const ICONS = window.SIDEBAR_ICONS || {};
     const mk = (k) => ICONS[k]
       ? React.createElement('span', { style: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }, dangerouslySetInnerHTML: { __html: ICONS[k] } })
@@ -519,28 +597,9 @@ class Component extends DCLogic {
     const ic = {};
     ['home','cubeBI','smartVariance','aiAnalyst','library','scenarios','dimensions','formulas','tags','integrations','dataExport','users','currencies','auditTrail','backgroundTasks','cubeAiAnalyst','aiPlugin','chatgpt','claude','excel','sheets','slack','teams','slides','powerpoint','collapseLeft','collapseRight'].forEach((k) => { ic[k] = mk(k); });
     const F = window.FolioDS;
-    const e = React.createElement;
-    const fa = (cls) => e('i', { className:cls });
-    const sideNavEl = F ? e(F.PortalSideBarNav, { expanded: !this.state.sbCollapsed, activeItemId: 'integrations', style: { width: '100%' } }) : null;
-    let headerEl = null, tabsEl = null, editBtn = null, ruleBadge = null, filterEl = null, tableEl = null;
-    if (F) {
-      headerEl = e(F.PageHeader, { title:'Mapping', style:{ borderBottom:'none', paddingBottom:0 }, breadcrumbs:[
-        { label:'Integrations', icon:fa('fa-regular fa-database'), onClick:() => {} },
-        { label:connectionName, onClick:() => {} },
-        { label:'Mapping' }
-      ],
-        topActions:e(React.Fragment, null, e(F.Button, { variant:'secondary', size:'large', icon:fa('fa-regular fa-bell'), 'aria-label':'Notifications' }), e(F.Button, { variant:'primary', size:'large', leadingIcon:fa('fa-regular fa-file-import') }, 'Import')) });
-      tabsEl = e(F.TabGroup, { type:'secondary', activeIndex:this.state.tab, onChange:(i) => this.setState({ tab:i, query:'', onlyUnmapped:false }), tabs:tabs.map((t) => ({ label:t.label, icon:fa(t.icon) })) });
-      editBtn = e(F.Button, { variant:'ghost-gray', size:'small', icon:fa('fa-regular fa-pen'), 'aria-label':'Edit mapping rules' });
-      ruleBadge = e('span', { style:{ alignSelf:'flex-start' } }, e(F.Badge, { type:'solid', color:tab.rule.color, size:'md' }, tab.rule.text));
-      filterEl = e(F.SearchAndFilter, { searchPlaceholder:'Find', searchValue:this.state.query, onSearchChange:(ev) => this.setState({ query:ev.target.value }), filters:[
-        { label:'Status', value:'All' },
-        { label:'Last Updated', value:'All' },
-        { label:'Flip Sign', value:'All' }
-      ] });
-      tableEl = this.buildTable(tab, flat, source);
-    }
-    return { companyName, userName, ic, sideNavEl, headerEl, tabsEl, editBtn, ruleBadge, filterEl, tableEl, unmappedCount, unmappedLabel };
+    const sideNavEl = F ? React.createElement(F.PortalSideBarNav, { expanded: !this.state.sbCollapsed, activeItemId: 'integrations', style: { width: '100%' } }) : null;
+    const pageEl = F ? this.buildMapping(F, { name: connectionName }) : null;
+    return { companyName, userName, ic, sideNavEl, pageEl };
   }
 }
 
