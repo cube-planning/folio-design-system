@@ -284,6 +284,8 @@
     .mp-link:hover { text-decoration:underline; }
     .mp-group { cursor:pointer; }
     .mp-empty { padding:32px 8px; text-align:center; font-size:14px; color:var(--color-gray-600); }
+    .mp-editbar { height:64px; margin:-24px -24px 24px; padding:0 24px; background:#EFF6FF; border-bottom:1px solid #E3E8EF; display:flex; align-items:center; justify-content:space-between; position:sticky; top:-24px; z-index:20; }
+    .mp-editbar-title { font-size:18px; font-weight:600; line-height:28px; color:#222B3A; }
   </style>
 </helmet>
 
@@ -385,7 +387,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1440px&quot;,&quot;height&quot;:&quot;900px&quot;},&quot;companyName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Accuplanner Inc&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;userName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Nina Graham&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;startCollapsed&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Layout&quot;}}">
 class Component extends DCLogic {
-  state = { selectedRow: null, ovTab: 'import', detailTab: 'details', sbCollapsed: false, mapping: false, mTab: 0, mOpen: {}, mQuery: '', mOnly: false };
+  state = { selectedRow: null, ovTab: 'import', detailTab: 'details', sbCollapsed: false, mapping: false, mTab: 0, mOpen: {}, mQuery: '', mOnly: false, mEdit: false, mSaved: {}, mDraft: {} };
   buildTableDetailOverview(F, row) {
     const e = React.createElement;
     const tabs = [
@@ -477,7 +479,7 @@ class Component extends DCLogic {
     );
   }
   // Mapping data per tab. A leaf with cube:null is unmapped. Dates are the last edit to the mapping.
-  getMapData(src) {
+  getMapDataBase(src) {
     const L = (name, cube, flip, date) => ({ name, cube, flip, date });
     return [
       { label:'Account', icon:'fa-regular fa-clipboard', rule:{ text:'Map to Existing', color:'green' }, tree:[
@@ -539,6 +541,34 @@ class Component extends DCLogic {
       ] }
     ];
   }
+  // Edits are kept as overrides keyed by tab + source name, so the sample data stays the baseline.
+  // While editing, the draft is shown; Cancel drops it and Save promotes it to mSaved.
+  getMapData(src) {
+    const ov = this.state.mEdit ? this.state.mDraft : this.state.mSaved;
+    const apply = (label, nodes) => nodes.map((n) => n.children
+      ? { ...n, children: apply(label, n.children) }
+      : (ov[label + '|' + n.name] ? { ...n, ...ov[label + '|' + n.name] } : n));
+    return this.getMapDataBase(src).map((t) => ({ ...t, tree: apply(t.label, t.tree) }));
+  }
+  // Cube dimension members offered in the edit-mode select: what the tab already maps to, plus a few unused members.
+  mapOptions(tab) {
+    const extra = {
+      Account: ['Marketing Expense', 'Professional Fees', 'Insurance', 'Other Income', 'Depreciation'],
+      Class: ['Operations', 'Finance', 'People'],
+      Customer: ['Stark Industries', 'Soylent Corp', 'Other Customers']
+    }[tab.label] || [];
+    const seen = [];
+    const walk = (nodes) => nodes.forEach((n) => n.children ? walk(n.children) : (n.cube && !seen.includes(n.cube) && seen.push(n.cube)));
+    walk(tab.tree);
+    return seen.concat(extra.filter((x) => !seen.includes(x))).sort();
+  }
+  enterMapEdit() { this.setState((st) => ({ mEdit: true, mDraft: { ...st.mSaved }, mQuery: '', mOnly: false })); }
+  cancelMapEdit() { this.setState({ mEdit: false, mDraft: {} }); }
+  saveMapEdit() { this.setState((st) => ({ mEdit: false, mSaved: { ...st.mDraft }, mDraft: {} })); }
+  setMapCell(label, name, patch) {
+    const key = label + '|' + name;
+    this.setState((st) => ({ mDraft: { ...st.mDraft, [key]: { ...(st.mDraft[key] || {}), ...patch, date: 'Oct 15, 2026' } } }));
+  }
   // Filters one tab's tree by the search text and unmapped toggle; returns flat visible rows.
   flattenMap(tab) {
     const { mOpen: open, mQuery: query, mOnly: onlyUnmapped } = this.state;
@@ -566,6 +596,8 @@ class Component extends DCLogic {
     const F = window.FolioDS;
     const open = this.state.mOpen;
     const filtering = !!this.state.mQuery.trim() || this.state.mOnly;
+    const editing = this.state.mEdit;
+    const opts = editing ? this.mapOptions(tab) : [];
     const hd = [source + ' Dimension', 'Cube Dimension', 'Flip Sign', 'Last Modified'].map((h) =>
       e('div', { key:h }, h, e('i', { className:'fa-solid fa-sort' })));
     const rows = flat.map((r, i) => {
@@ -583,8 +615,12 @@ class Component extends DCLogic {
       const mapped = leaf && r.cube;
       return e('div', { key:r.id || (r.name + i), className:'mp-row' + (last ? ' mp-last' : '') },
         nameCell,
-        e('div', null, mapped ? r.cube : leaf ? e(F.Badge, { type:'solid', color:'yellow', size:'sm' }, 'Unmapped') : '--'),
-        e('div', null, mapped ? e(F.Badge, { type:'solid', color:r.flip ? 'green' : 'red', size:'sm' }, r.flip ? 'Yes' : 'No') : '--'),
+        e('div', null, editing && leaf
+          ? e('div', { style:{ width:'100%', maxWidth:280 } }, e(F.Select, { size:'large', placeholder:'Select dimension', options:opts, value:r.cube || undefined, onChange:(v) => this.setMapCell(tab.label, r.name, { cube:v, flip:!!r.flip }) }))
+          : mapped ? r.cube : leaf ? e(F.Badge, { type:'solid', color:'yellow', size:'sm' }, 'Unmapped') : '--'),
+        e('div', null, editing && mapped
+          ? e(F.Toggle, { checked:!!r.flip, onChange:(v) => this.setMapCell(tab.label, r.name, { cube:r.cube, flip:v }) })
+          : mapped ? e(F.Badge, { type:'solid', color:r.flip ? 'green' : 'red', size:'sm' }, r.flip ? 'Yes' : 'No') : '--'),
         e('div', null, mapped ? r.date : '--'));
     });
     if (!rows.length) rows.push(e('div', { key:'empty', className:'mp-empty' }, 'No dimensions match your filters.'));
@@ -601,15 +637,22 @@ class Component extends DCLogic {
     const tabs = this.getMapData(source);
     const tab = tabs[this.state.mTab];
     const flat = this.flattenMap(tab);
-    const goList = () => this.setState({ selectedRow:null, mapping:false });
-    const goOverview = () => this.setState({ mapping:false });
+    const editing = this.state.mEdit;
+    const goList = () => this.setState({ selectedRow:null, mapping:false, mEdit:false, mDraft:{} });
+    const goOverview = () => this.setState({ mapping:false, mEdit:false, mDraft:{} });
+    const editBar = editing ? e('div', { className:'mp-editbar' },
+      e('span', { className:'mp-editbar-title' }, 'Edit Mapping'),
+      e('div', { style:{ display:'flex', gap:8 } },
+        e(F.Button, { variant:'secondary', onClick:() => this.cancelMapEdit() }, 'Cancel'),
+        e(F.Button, { variant:'primary', onClick:() => this.saveMapEdit() }, 'Save Mapping'))) : null;
     return e('div', { className:'mp-pg' },
+      editBar,
       e(F.PageHeader, { title:'Mapping', style:{ borderBottom:'none', paddingBottom:0 }, breadcrumbs:[
           { label:'Integrations', icon:fa('fa-regular fa-database'), onClick:goList },
           { label:row.name, onClick:goOverview },
           { label:'Mapping' }
         ],
-        topActions:e(React.Fragment, null, e(F.Button, { variant:'secondary', size:'large', icon:fa('fa-regular fa-bell'), 'aria-label':'Notifications' }), e(F.Button, { variant:'primary', size:'large', leadingIcon:fa('fa-regular fa-file-import') }, 'Import')) }),
+        topActions:editing ? null : e(React.Fragment, null, e(F.Button, { variant:'secondary', size:'large', leadingIcon:fa('fa-regular fa-pen'), onClick:() => this.enterMapEdit() }, 'Edit Mapping'), e(F.Button, { variant:'secondary', size:'large', icon:fa('fa-regular fa-bell'), 'aria-label':'Notifications' }), e(F.Button, { variant:'primary', size:'large', leadingIcon:fa('fa-regular fa-file-import') }, 'Import')) }),
       e('div', { className:'mp-tabs' }, e(F.TabGroup, { type:'secondary', activeIndex:this.state.mTab, onChange:(i) => this.setState({ mTab:i, mQuery:'', mOnly:false }), tabs:tabs.map((t) => ({ label:t.label, icon:fa(t.icon) })) })),
       e('div', { className:'mp-summary' },
         e('div', { className:'mp-card' },
@@ -664,7 +707,7 @@ class Component extends DCLogic {
         e(F.FlowCard, { label:'Connection', icon:{ img:'./import-icon.png' }, title:'Import Setup',
           actions:[{ icon:'fa-clock', label:'Schedule' }],
           body:e('div', { style:{ fontSize:12, color:'var(--color-gray-700)', display:'flex', flexDirection:'column', gap:2, marginTop:-8 } }, e('span', null, e('b', { style:{ fontWeight:500 } }, 'Schedule: '), 'Weekly, Monday, 7 am'), e('span', null, e('b', { style:{ fontWeight:500 } }, 'Date Range: '), 'Last 3 months')),
-          button:{ label:'Mapping', onClick:() => this.setState({ mapping:true, mTab:0, mOpen:{}, mQuery:'', mOnly:false }) } }),
+          button:{ label:'Mapping', onClick:() => this.setState({ mapping:true, mTab:0, mOpen:{}, mQuery:'', mOnly:false, mEdit:false, mDraft:{} }) } }),
         e(F.FlowCard, { label:'Destination', icon:{ img:'./cube-icon.png' }, title:'Cube Dimensions',
           actions:[{ icon:'fa-arrow-up-from-bracket', label:'Export', tooltip:'Data Exporter' }],
           button:{ label:'Cube Dimensions' } })
