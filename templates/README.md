@@ -14,7 +14,13 @@ sidebar, header, or shell structure.
 ## 2. Design-project specimens — `<Name>.dc.html` + `ds-base.js` + `support.js`
 
 `audit-trail-demo/`, `board-mvp-single-add/`, `chart-rules-mock/`, `cube-addon-demo/`,
-`page-header-demo/`
+`page-header-demo/`, `mapping-page/`
+
+`mapping-page/` is the Integrations > Mapping screen (Figma "Folio DS 2026 UI Refresh,
+Eng Handoff", node `460:30254`): the page reached from the **Mapping** button on a
+connection overview. It uses the Folio components (`Breadcrumbs`, `TabGroup`,
+`SearchAndFilter`, `Badge`, `Button`) plus a hand-built expandable tree table, since
+`Table` has no tree rows.
 
 `board-mvp-single-add/` — design-project name **"Board MVP: single add"** — is the
 Interactive Boards canvas flow: edit mode and read-only view, the Add Widget drawer,

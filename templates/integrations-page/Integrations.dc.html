@@ -262,6 +262,30 @@
     .td-tree-child { padding-left:26px; }
     .td-tree-val { font-size:12px; font-weight:600; letter-spacing:.04em; color:#677489; }
     .td-tree-note { font-size:13px; color:#222B3A; margin-top:14px; }
+    .mp-pg { width:100%; display:flex; flex-direction:column; gap:8px; }
+    .mp-head { display:flex; align-items:center; justify-content:space-between; min-height:32px; }
+    .mp-actions { display:flex; align-items:center; gap:8px; }
+    .mp-title { font-size:24px; line-height:32px; font-weight:600; color:var(--color-gray-900); }
+    .mp-tabs { margin-top:8px; }
+    .mp-summary { background:var(--color-gray-100); border:1px solid var(--color-gray-300); border-radius:16px; padding:16px; display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:8px; }
+    .mp-card { background:#fff; border:1px solid var(--color-gray-300); border-radius:16px; padding:16px; height:100px; display:flex; flex-direction:column; justify-content:space-between; }
+    .mp-card-hd { display:flex; align-items:flex-start; justify-content:space-between; height:28px; }
+    .mp-card-lbl { font-size:12px; line-height:18px; font-weight:500; color:var(--color-gray-600); }
+    .mp-count { font-size:24px; line-height:32px; font-weight:700; color:var(--color-blue-500); text-decoration:underline; cursor:pointer; align-self:flex-start; }
+    .mp-filter { margin-top:8px; }
+    .mp-table { background:#fff; border:1px solid var(--color-gray-300); border-radius:16px; padding:16px; margin-top:8px; }
+    .mp-row { display:grid; grid-template-columns:300px 270px 270px 1fr; align-items:center; }
+    .mp-row > div { min-height:48px; padding:10px 8px; display:flex; align-items:center; border-bottom:1px solid var(--color-gray-200); font-size:14px; line-height:20px; color:var(--color-gray-900); }
+    .mp-row.mp-last > div { border-bottom:none; }
+    .mp-row.mp-hd > div { min-height:40px; background:var(--color-gray-200); border-bottom:none; font-weight:600; color:var(--color-gray-700); text-transform:uppercase; gap:4px; cursor:pointer; user-select:none; }
+    .mp-row.mp-hd > div i { color:var(--color-gray-500); font-size:14px; width:22px; text-align:center; }
+    .mp-name { gap:8px; white-space:nowrap; }
+    .mp-caret { width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; font-size:12px; color:var(--color-gray-900); cursor:pointer; flex-shrink:0; }
+    .mp-leaf { width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; font-size:14px; color:var(--color-blue-500); flex-shrink:0; }
+    .mp-link { color:var(--color-blue-500); cursor:pointer; }
+    .mp-link:hover { text-decoration:underline; }
+    .mp-group { cursor:pointer; }
+    .mp-empty { padding:32px 8px; text-align:center; font-size:14px; color:var(--color-gray-600); }
   </style>
 </helmet>
 
@@ -368,7 +392,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1440px&quot;,&quot;height&quot;:&quot;900px&quot;},&quot;companyName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Accuplanner Inc&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;userName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Nina Graham&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;startCollapsed&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Layout&quot;}}">
 class Component extends DCLogic {
-  state = { selectedRow: null, ovTab: 'import', detailTab: 'details', sbCollapsed: false };
+  state = { selectedRow: null, ovTab: 'import', detailTab: 'details', sbCollapsed: false, mapping: false, mTab: 0, mOpen: {}, mQuery: '', mOnly: false };
   buildTableDetailOverview(F, row) {
     const e = React.createElement;
     const tabs = [
@@ -461,6 +485,157 @@ class Component extends DCLogic {
       content
     );
   }
+  // Mapping data per tab. A leaf with cube:null is unmapped. Dates are the last edit to the mapping.
+  getMapData(src) {
+    const L = (name, cube, flip, date) => ({ name, cube, flip, date });
+    return [
+      { label:'Account', icon:'fa-regular fa-clipboard', rule:{ text:'Map to Existing', color:'green' }, tree:[
+        { id:'a-income', name:'Income', children:[
+          L('Sales of Product Income', 'Product Revenue', false, 'Oct 14, 2026'),
+          L('Services', 'Service Revenue', false, 'Oct 14, 2026'),
+          L('Billable Expense Income', 'Reimbursed Expenses', false, 'Oct 9, 2026'),
+          L('Discounts Given', 'Contra Revenue', true, 'Oct 9, 2026'),
+          { id:'a-subs', name:'Subscription Revenue', children:[
+            L('Annual Plans', 'Subscription Revenue', false, 'Oct 2, 2026'),
+            L('Monthly Plans', 'Subscription Revenue', false, 'Oct 2, 2026')
+          ] },
+          L('Unapplied Cash Payment Income', null),
+          L('Uncategorized Income', null)
+        ] },
+        { id:'a-cogs', name:'Cost of Goods Sold', open:false, children:[
+          L('Hosting & Infrastructure', 'Cost of Revenue', false, 'Sep 28, 2026'),
+          L('Customer Support Labor', 'Cost of Revenue', false, 'Sep 28, 2026'),
+          L('Merchant Fees', null)
+        ] },
+        { id:'a-exp', name:'Expenses', open:false, children:[
+          L('Payroll Expenses', 'Salaries & Wages', false, 'Oct 2, 2026'),
+          L('Rent & Lease', 'Facilities', false, 'Sep 21, 2026'),
+          L('Software Subscriptions', 'Software & Tools', false, 'Sep 21, 2026'),
+          L('Travel & Meals', 'Travel & Entertainment', false, 'Sep 21, 2026'),
+          L('Ask My Accountant', null)
+        ] }
+      ] },
+      { label:'Class', icon:'fa-regular fa-briefcase', rule:{ text:'Map to Existing', color:'green' }, tree:[
+        { id:'c-dept', name:'Departments', children:[
+          L('Sales', 'Sales', false, 'Oct 12, 2026'),
+          L('Marketing', 'Marketing', false, 'Oct 12, 2026'),
+          L('Engineering', 'Research & Development', false, 'Oct 5, 2026'),
+          L('Customer Success', 'Customer Success', false, 'Oct 5, 2026'),
+          L('General & Administrative', 'G&A', false, 'Oct 5, 2026')
+        ] },
+        { id:'c-region', name:'Regions', children:[
+          L('North America', 'North America', false, 'Sep 30, 2026'),
+          L('EMEA', 'EMEA', false, 'Sep 30, 2026'),
+          L('APAC', null),
+          L('Unassigned', null)
+        ] }
+      ] },
+      { label:'Customer', icon:'fa-regular fa-briefcase', rule:{ text:'Create New', color:'blue' }, tree:[
+        { id:'u-ent', name:'Enterprise', children:[
+          L('Acme Corporation', 'Acme Corporation', false, 'Oct 13, 2026'),
+          L('Globex Inc.', 'Globex', false, 'Oct 13, 2026'),
+          L('Initech', 'Initech', false, 'Oct 6, 2026')
+        ] },
+        { id:'u-mm', name:'Mid-Market', children:[
+          L('Umbrella Co.', 'Umbrella', false, 'Oct 6, 2026'),
+          L('Hooli', 'Hooli', false, 'Sep 29, 2026'),
+          L('Wayne Enterprises', null)
+        ] },
+        { id:'u-smb', name:'SMB', open:false, children:[
+          L('Pied Piper', 'Pied Piper', false, 'Sep 29, 2026'),
+          L('Vandelay Industries', null)
+        ] }
+      ] }
+    ];
+  }
+  // Filters one tab's tree by the search text and unmapped toggle; returns flat visible rows.
+  flattenMap(tab) {
+    const { mOpen: open, mQuery: query, mOnly: onlyUnmapped } = this.state;
+    const q = query.trim().toLowerCase();
+    const filtering = !!q || onlyUnmapped;
+    const keep = (n) => n.children ? n.children.some(keep)
+      : (!q || n.name.toLowerCase().includes(q) || (n.cube || '').toLowerCase().includes(q)) && (!onlyUnmapped || !n.cube);
+    const flat = [];
+    const walk = (nodes, level) => nodes.forEach((n) => {
+      if (!keep(n)) return;
+      if (n.children) {
+        flat.push({ ...n, level, kind:'group' });
+        if (filtering || (open[n.id] ?? n.open ?? true)) walk(n.children, level + 1);
+      } else flat.push({ ...n, level, kind:'leaf' });
+    });
+    walk(tab.tree, 0);
+    return flat;
+  }
+  countUnmapped(tab) {
+    const c = (nodes) => nodes.reduce((t, n) => t + (n.children ? c(n.children) : (n.cube ? 0 : 1)), 0);
+    return c(tab.tree);
+  }
+  buildMapTable(tab, flat, source) {
+    const e = React.createElement;
+    const F = window.FolioDS;
+    const open = this.state.mOpen;
+    const filtering = !!this.state.mQuery.trim() || this.state.mOnly;
+    const hd = [source + ' Dimension', 'Cube Dimension', 'Flip Sign', 'Last Modified'].map((h) =>
+      e('div', { key:h }, h, e('i', { className:'fa-solid fa-sort' })));
+    const rows = flat.map((r, i) => {
+      const last = i === flat.length - 1;
+      const pad = 8 + r.level * 24;
+      const isOpen = filtering || (open[r.id] ?? r.open ?? true);
+      const nameCell = r.kind === 'group'
+        ? e('div', { className:'mp-name', style:{ paddingLeft:pad } },
+            e('span', { className:'mp-caret mp-group', 'data-action':'toggle', 'data-id':r.id, 'data-open':(r.open ?? true) ? '1' : '0' }, e('i', { className:isOpen ? 'fa-solid fa-caret-down' : 'fa-solid fa-caret-right' })),
+            e('span', { className:'mp-group', 'data-action':'toggle', 'data-id':r.id, 'data-open':(r.open ?? true) ? '1' : '0' }, r.name))
+        : e('div', { className:'mp-name', style:{ paddingLeft:pad } },
+            e('span', { className:'mp-leaf' }, e('i', { className:'fa-regular fa-file' })),
+            e('span', { className:'mp-link' }, r.name));
+      const leaf = r.kind === 'leaf';
+      const mapped = leaf && r.cube;
+      return e('div', { key:r.id || (r.name + i), className:'mp-row' + (last ? ' mp-last' : '') },
+        nameCell,
+        e('div', null, mapped ? r.cube : leaf ? e(F.Badge, { type:'solid', color:'yellow', size:'sm' }, 'Unmapped') : '--'),
+        e('div', null, mapped ? e(F.Badge, { type:'solid', color:r.flip ? 'green' : 'red', size:'sm' }, r.flip ? 'Yes' : 'No') : '--'),
+        e('div', null, mapped ? r.date : '--'));
+    });
+    if (!rows.length) rows.push(e('div', { key:'empty', className:'mp-empty' }, 'No dimensions match your filters.'));
+    return e('div', { className:'mp-table' }, e('div', { className:'mp-row mp-hd' }, hd), rows);
+  }
+  mapSourceName(row) {
+    const img = (row && row.sourceImg) || '';
+    return img.includes('quickbook') ? 'QuickBooks' : img.includes('xero') ? 'Xero' : img.includes('netsuite') ? 'NetSuite' : img.includes('sage') ? 'Sage Intacct' : img.includes('salesforce') ? 'Salesforce' : 'Source';
+  }
+  buildMapping(F, row) {
+    const e = React.createElement;
+    const fa = (cls) => e('i', { className:cls });
+    const source = this.mapSourceName(row);
+    const tabs = this.getMapData(source);
+    const tab = tabs[this.state.mTab];
+    const flat = this.flattenMap(tab);
+    const goList = () => this.setState({ selectedRow:null, mapping:false });
+    const goOverview = () => this.setState({ mapping:false });
+    return e('div', { className:'mp-pg' },
+      e('div', { className:'mp-head' },
+        e(F.Breadcrumbs, { type:'portal', items:[
+          { label:'Integrations', icon:fa('fa-regular fa-database'), onClick:goList },
+          { label:row.name, onClick:goOverview },
+          { label:'Mapping' }
+        ] }),
+        e('div', { className:'mp-actions' },
+          e(F.Button, { variant:'secondary', size:'large', icon:fa('fa-regular fa-bell'), 'aria-label':'Notifications' }),
+          e(F.Button, { variant:'primary', size:'large', leadingIcon:fa('fa-regular fa-file-import') }, 'Import'))),
+      e('div', { className:'mp-title' }, 'Mapping'),
+      e('div', { className:'mp-tabs' }, e(F.TabGroup, { type:'secondary', activeIndex:this.state.mTab, onChange:(i) => this.setState({ mTab:i, mQuery:'', mOnly:false }), tabs:tabs.map((t) => ({ label:t.label, icon:fa(t.icon) })) })),
+      e('div', { className:'mp-summary' },
+        e('div', { className:'mp-card' },
+          e('div', { className:'mp-card-hd' }, e('span', { className:'mp-card-lbl' }, 'Mapping Rules'), e(F.Button, { variant:'ghost-gray', size:'small', icon:fa('fa-regular fa-pen'), 'aria-label':'Edit mapping rules' })),
+          e('span', { style:{ alignSelf:'flex-start' } }, e(F.Badge, { type:'solid', color:tab.rule.color, size:'md' }, tab.rule.text))),
+        e('div', { className:'mp-card' },
+          e('div', { className:'mp-card-hd' }, e('span', { className:'mp-card-lbl' }, 'Unmapped ' + tab.label + ' Dimensions')),
+          e('span', { className:'mp-count', 'data-action':'unmapped' }, this.countUnmapped(tab)))),
+      e('div', { className:'mp-filter' }, e(F.SearchAndFilter, { searchPlaceholder:'Find', searchValue:this.state.mQuery, onSearchChange:(ev) => this.setState({ mQuery:ev.target.value }), filters:[
+        { label:'Status', value:'All' }, { label:'Last Updated', value:'All' }, { label:'Flip Sign', value:'All' }
+      ] })),
+      this.buildMapTable(tab, flat, source));
+  }
   buildOverview(F, row) {
     if (row.detailType === 'table') return this.buildTableDetailOverview(F, row);
     const e = React.createElement;
@@ -508,7 +683,7 @@ class Component extends DCLogic {
         e(F.FlowCard, { label:'Connection', icon:{ img:'./import-icon.png' }, title:'Import Setup',
           actions:[{ icon:'fa-clock', label:'Schedule' }],
           body:e('div', { style:{ fontSize:12, color:'var(--color-gray-700)', display:'flex', flexDirection:'column', gap:2, marginTop:-8 } }, e('span', null, e('b', { style:{ fontWeight:500 } }, 'Schedule: '), 'Weekly, Monday, 7 am'), e('span', null, e('b', { style:{ fontWeight:500 } }, 'Date Range: '), 'Last 3 months')),
-          button:{ label:'Mapping' } }),
+          button:{ label:'Mapping', onClick:() => this.setState({ mapping:true, mTab:0, mOpen:{}, mQuery:'', mOnly:false }) } }),
         e(F.FlowCard, { label:'Destination', icon:{ img:'./cube-icon.png' }, title:'Cube Dimensions',
           actions:[{ icon:'fa-arrow-up-from-bracket', label:'Export', tooltip:'Data Exporter' }],
           button:{ label:'Cube Dimensions' } })
@@ -530,6 +705,9 @@ class Component extends DCLogic {
     this._onClick = (e) => {
       const secEl = e.target.closest('.sec');
       if (secEl) { const ns = secEl.closest('.nav-section'); if (ns) ns.classList.toggle('collapsed'); return; }
+      const mTg = e.target.closest('[data-action="toggle"]');
+      if (mTg) { const id = mTg.getAttribute('data-id'); this.setState((st) => ({ mOpen: { ...st.mOpen, [id]: !(st.mOpen[id] ?? mTg.getAttribute('data-open') === '1') } })); return; }
+      if (e.target.closest('[data-action="unmapped"]')) { this.setState((st) => ({ mOnly: !st.mOnly })); return; }
       const dTab = e.target.closest('[data-action="detail-tab"]');
       if (dTab) { this.setState({ detailTab: dTab.getAttribute('data-tab') }); return; }
       const openC = e.target.closest('[data-action="open-connect"]');
@@ -628,7 +806,7 @@ class Component extends DCLogic {
     }
     const sideNavEl = F ? React.createElement(F.PortalSideBarNav, { expanded: !this.state.sbCollapsed, activeItemId: 'integrations', style: { width: '100%' } }) : null;
     const selectedRow = this.state.selectedRow;
-    const overviewEl = (F && selectedRow) ? this.buildOverview(F, selectedRow) : null;
+    const overviewEl = (F && selectedRow) ? (this.state.mapping ? this.buildMapping(F, selectedRow) : this.buildOverview(F, selectedRow)) : null;
     const newBtn = F ? React.createElement(F.Button, { variant:'primary', size:'small', leadingIcon:React.createElement('i', { className:'fa-regular fa-plus' }), trailingIcon:React.createElement('i', { className:'fa-regular fa-chevron-down', style:{ fontSize:11 } }), onClick:() => { const d = document.getElementById('newDd'); if (d) d.classList.toggle('open'); } }, 'New') : null;
     return { companyName, userName, initials, ic, tableEl, newBtn, overviewEl, sideNavEl, showList: !selectedRow, showOverview: !!selectedRow };
   }
