@@ -603,6 +603,17 @@ class Component extends DCLogic {
     const img = (row && row.sourceImg) || '';
     return img.includes('quickbook') ? 'QuickBooks' : img.includes('xero') ? 'Xero' : img.includes('netsuite') ? 'NetSuite' : img.includes('sage') ? 'Sage Intacct' : img.includes('salesforce') ? 'Salesforce' : 'Source';
   }
+  // Portal breadcrumb per Figma (Button 3.0, small): ghost-blue crumbs, chevron separators, current page in gray.
+  buildCrumbs(F, items) {
+    const e = React.createElement;
+    const out = [];
+    items.forEach((it, i) => {
+      const last = i === items.length - 1;
+      if (i) out.push(e('span', { key:'s' + i, style:{ width:28, height:28, display:'inline-flex', alignItems:'center', justifyContent:'center', fontSize:12, color:'var(--color-gray-700)' }, 'aria-hidden':'true' }, e('i', { className:'fa-regular fa-chevron-right' })));
+      out.push(e(F.Button, { key:'c' + i, variant:last ? 'ghost-gray' : 'ghost-blue', size:'small', leadingIcon:it.icon, onClick:last ? undefined : it.onClick }, it.label));
+    });
+    return e('nav', { 'aria-label':'Breadcrumb', style:{ display:'flex', alignItems:'center' } }, out);
+  }
   buildMapping(F, row) {
     const e = React.createElement;
     const fa = (cls) => e('i', { className:cls });
@@ -614,11 +625,11 @@ class Component extends DCLogic {
     const goOverview = () => this.setState({ mapping:false });
     return e('div', { className:'mp-pg' },
       e('div', { className:'mp-head' },
-        e(F.Breadcrumbs, { type:'portal', items:[
+        this.buildCrumbs(F, [
           { label:'Integrations', icon:fa('fa-regular fa-database'), onClick:goList },
           { label:row.name, onClick:goOverview },
           { label:'Mapping' }
-        ] }),
+        ]),
         e('div', { className:'mp-actions' },
           e(F.Button, { variant:'secondary', size:'large', icon:fa('fa-regular fa-bell'), 'aria-label':'Notifications' }),
           e(F.Button, { variant:'primary', size:'large', leadingIcon:fa('fa-regular fa-file-import') }, 'Import'))),
