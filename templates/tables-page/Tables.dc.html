@@ -63,8 +63,8 @@
     .sb.col .ni { padding:0; border-left:none; width:36px; justify-content:center; border-radius:4px; }
     .sb.col .ni-lbl { display:none; }
     .sb.col .ni:hover::after { content:attr(data-label); position:absolute; left:calc(100% + 8px); top:50%; transform:translateY(-50%); background:#222B3A; color:#fff; font-size:12px; font-weight:500; padding:4px 10px; border-radius:4px; white-space:nowrap; z-index:300; pointer-events:none; }
-    .ni-sub-wrap { padding-left:34px; display:flex; flex-direction:column; }
-    .ni-sub { display:flex; align-items:center; height:32px; padding:4px 16px 4px 18px; border-left:2px solid #E3E8EF; font-size:14px; font-weight:400; color:#222B3A; cursor:pointer; white-space:nowrap; }
+    .ni-sub-wrap { padding-left:42px; display:flex; flex-direction:column; }
+    .ni-sub { display:flex; align-items:center; height:32px; padding:4px 16px 4px 16px; border-left:2px solid #E3E8EF; font-size:14px; font-weight:400; color:#222B3A; cursor:pointer; white-space:nowrap; }
     .ni-sub:hover { background:#EFF6FF; }
     .sb.col .ni-sub-wrap { display:none; }
     .apps-wrap { padding:0 8px 16px; }
@@ -267,13 +267,8 @@
       <sc-if value="{{ isListView }}" hint-placeholder-val="{{ true }}">
       <div class="pg">
 
-        <div class="pg-head">
-          <div>
-            <div class="pg-title-row"><span class="pg-title-ic">{{ ic.tablesLg }}</span><span class="pg-title">Tables</span></div>
-            <p class="pg-sub"><span style="color: rgb(74, 85, 103); font-family: &quot;DM Sans&quot;, Arial, sans-serif; font-size: 16px; background-color: #FFFFFF00">Keep line-item detail like rosters, contracts, and projects connected to your models.</span></p>
-          </div>
-          <x-import component-from-global-scope="FolioDS.Button" variant="primary" size="large" onClick="{{ ntOpenChoose }}" hint-size="110px,32px"><i class="fa-regular fa-plus" style="margin-right:6px"></i>Table</x-import>
-        </div>
+        {{ headerListEl }}
+        <p class="pg-sub"><span style="color: rgb(74, 85, 103); font-family: &quot;DM Sans&quot;, Arial, sans-serif; font-size: 16px; background-color: #FFFFFF00">Keep line-item detail like rosters, contracts, and projects connected to your models.</span></p>
 
         <div class="filter-bar">
           <span class="filter-lbl">Filter by:</span>
@@ -296,34 +291,12 @@
 
       <sc-if value="{{ isDetailView }}" hint-placeholder-val="{{ false }}">
       <div class="pg">
-        <div class="crumbs">
-          <i class="fa-regular fa-table" style="color:#173D82;font-size:12px"></i>
-          <a href="#" data-action="go-list">Tables</a>
-          <span class="sep"><i class="fa-solid fa-chevron-right"></i></span>
-          <span class="cur">{{ activeTable.name }}</span>
-        </div>
-        <div class="detail-head">
-          <div>
-            <div class="detail-title-wrap">
-              <sc-if value="{{ isTitleEditing }}" hint-placeholder-val="{{ false }}">
-                <input class="detail-title-input" value="{{ titleDraft }}" onInput="{{ onTitleDraftChange }}" onBlur="{{ saveTitleRename }}" />
-              </sc-if>
-              <sc-if value="{{ isNotTitleEditing }}" hint-placeholder-val="{{ true }}">
-                <div class="detail-title detail-title-edit" onClick="{{ startTitleRename }}">{{ activeTable.name }}</div>
-                <i class="fa-regular fa-pen detail-title-pen" onClick="{{ startTitleRename }}"></i>
-              </sc-if>
-            </div>
-            <div class="detail-meta">
-              <sc-if value="{{ activeTable.isSynced }}" hint-placeholder-val="{{ true }}"><img class="avatar-img" src="{{ activeTable.logo }}" alt="{{ activeTable.by }}"></sc-if>
-              <sc-if value="{{ activeTable.notSynced }}" hint-placeholder-val="{{ false }}"><x-import component-from-global-scope="FolioDS.Avatar" type="initials" size="xs" name="{{ activeTable.by }}" hint-size="20px,20px"></x-import></sc-if>
-              <sc-if value="{{ activeTable.isSynced }}" hint-placeholder-val="{{ true }}"><span><b>{{ activeTable.source }}</b> · Last Import {{ activeTable.imported }}</span></sc-if>
-              <sc-if value="{{ activeTable.notSynced }}" hint-placeholder-val="{{ false }}"><span>Created by <b>{{ activeTable.by }}</b> · Last modified {{ activeTable.modified }}</span></sc-if>
-            </div>
-          </div>
-          <div class="detail-actions">
-            <sc-if value="{{ activeTable.isSynced }}" hint-placeholder-val="{{ true }}"><x-import component-from-global-scope="FolioDS.Button" variant="subtle-blue" size="large" hint-size="130px,32px"><i class="fa-regular fa-arrows-rotate" style="margin-right:6px"></i>Get Latest Data</x-import></sc-if>
-            <x-import component-from-global-scope="FolioDS.Button" variant="primary" size="large" hint-size="100px,32px"><i class="fa-regular fa-users" style="margin-right:6px"></i>Share</x-import>
-          </div>
+        {{ headerDetailEl }}
+        <div class="detail-meta">
+          <sc-if value="{{ activeTable.isSynced }}" hint-placeholder-val="{{ true }}"><img class="avatar-img" src="{{ activeTable.logo }}" alt="{{ activeTable.by }}"></sc-if>
+          <sc-if value="{{ activeTable.notSynced }}" hint-placeholder-val="{{ false }}"><x-import component-from-global-scope="FolioDS.Avatar" type="initials" size="xs" name="{{ activeTable.by }}" hint-size="20px,20px"></x-import></sc-if>
+          <sc-if value="{{ activeTable.isSynced }}" hint-placeholder-val="{{ true }}"><span><b>{{ activeTable.source }}</b> · Last Import {{ activeTable.imported }}</span></sc-if>
+          <sc-if value="{{ activeTable.notSynced }}" hint-placeholder-val="{{ false }}"><span>Created by <b>{{ activeTable.by }}</b> · Last modified {{ activeTable.modified }}</span></sc-if>
         </div>
 
         <div class="{{ scenarioBarClass }}">
@@ -357,13 +330,7 @@
 
       <sc-if value="{{ isSourceView }}" hint-placeholder-val="{{ false }}">
       <div class="pg">
-        <div class="crumbs">
-          <i class="fa-regular fa-table" style="color:#173D82;font-size:12px"></i>
-          <a href="#" data-action="go-list">Tables</a>
-          <span class="sep"><i class="fa-solid fa-chevron-right"></i></span>
-          <span class="cur">Data Source</span>
-        </div>
-        <div class="detail-title">Create a table from a data source</div>
+        {{ headerSourceEl }}
         <div class="nt-conn-list">
           <sc-for list="{{ ntConnections }}" as="conn" hint-placeholder-count="2">
           <div class="nt-conn-card">
@@ -384,13 +351,7 @@
 
       <sc-if value="{{ isNewTableView }}" hint-placeholder-val="{{ false }}">
       <div class="pg">
-        <div class="crumbs">
-          <i class="fa-regular fa-table" style="color:#173D82;font-size:12px"></i>
-          <a href="#" data-action="go-list">Tables</a>
-          <span class="sep"><i class="fa-solid fa-chevron-right"></i></span>
-          <span class="cur">New Table</span>
-        </div>
-        <div class="detail-title">New Table</div>
+        {{ headerNewEl }}
 
         <x-import component-from-global-scope="FolioDS.Stepper" steps="{{ ntSteps }}" pitch="{{ ntStepperPitch }}" align="center" hint-size="568px,71px"></x-import>
 
@@ -976,7 +937,7 @@ class Component extends DCLogic {
     const ntSteps = NT_STEP_LABELS.map((label, i) => ({
       key: label,
       label,
-      status: i < ntStepIndex ? 'completed' : i === ntStepIndex ? 'active' : 'upcoming'
+      status: i < ntStepIndex ? 'done' : i === ntStepIndex ? 'active' : 'inactive'
     }));
     const ntSelectedKeys = this.NT_FIELDS.filter((f) => nt.fields[f.key]);
     const TYPE_META = { text: { icon: 'T', label: 'Text' }, numeric: { icon: '#', label: 'Numeric' }, date: { icon: React.createElement('i', { className: 'fa-regular fa-calendar', style: { fontSize: 11 } }), label: 'Date' } };
@@ -1001,10 +962,39 @@ class Component extends DCLogic {
     // Icon-only Button needs the icon through the `icon` prop, not as children:
     // `isIconOnly` gates on it, and without it the button loses its 32x32 square
     // and Button drops the aria-label entirely (CLAUDE.md s 6, Icon-Only Buttons).
+    const hdrE = React.createElement;
+    const hdrIcon = (cls) => hdrE('i', { className: cls });
+    const hdrStyle = { borderBottom: 'none', paddingBottom: 0 };
+    const hdrGoList = () => this.setState({ view: 'list' });
+    const hdrCrumbs = (last) => [
+      { label: 'Tables', icon: hdrIcon('fa-regular fa-table'), onClick: hdrGoList },
+      { label: last }
+    ];
+    let headerListEl = null, headerDetailEl = null, headerSourceEl = null, headerNewEl = null;
+    if (F) {
+      headerListEl = hdrE(F.PageHeader, {
+        icon: hdrIcon('fa-regular fa-table'), title: 'Tables', style: hdrStyle,
+        actions: hdrE(F.Button, { variant: 'primary', size: 'large', leadingIcon: hdrIcon('fa-regular fa-plus'), onClick: () => this.ntOpenChoose() }, 'Table')
+      });
+      const titleNode = this.state.titleEditing
+        ? hdrE('input', { className: 'detail-title-input', value: this.state.titleDraft, onChange: (ev) => this.onTitleDraftChange(ev.target.value), onBlur: () => this.saveTitleRename() })
+        : hdrE('div', { className: 'detail-title-wrap' },
+            hdrE('div', { className: 'detail-title detail-title-edit', onClick: () => this.startTitleRename() }, activeTable.name),
+            hdrE('i', { className: 'fa-regular fa-pen detail-title-pen', onClick: () => this.startTitleRename() }));
+      headerDetailEl = hdrE(F.PageHeader, {
+        breadcrumbs: hdrCrumbs(activeTable.name), title: titleNode, style: hdrStyle,
+        actions: hdrE(React.Fragment, null,
+          activeTable.isSynced ? hdrE(F.Button, { variant: 'subtle-blue', size: 'large', leadingIcon: hdrIcon('fa-regular fa-arrows-rotate') }, 'Get Latest Data') : null,
+          hdrE(F.Button, { variant: 'primary', size: 'large', leadingIcon: hdrIcon('fa-regular fa-users') }, 'Share'))
+      });
+      headerSourceEl = hdrE(F.PageHeader, { breadcrumbs: hdrCrumbs('Data Source'), title: 'Create a table from a data source', style: hdrStyle });
+      headerNewEl = hdrE(F.PageHeader, { breadcrumbs: hdrCrumbs('New Table'), title: 'New Table', style: hdrStyle });
+    }
     const kebabIcon = React.createElement('i', { className: 'fa-regular fa-ellipsis-vertical' });
     return {
       sideNavEl,
       companyName, userName, initials, ic, tableEl, kebabIcon,
+      headerListEl, headerDetailEl, headerSourceEl, headerNewEl,
       isListView: this.state.view === 'list',
       isDetailView: this.state.view === 'detail',
       isScenarioLocked: this.state.scenarioLocked,
