@@ -194,12 +194,7 @@
     <main class="page-content">
       <div class="pg">
 
-        <div class="crumb"><a href="./Workflow.dc.html" style="display:flex;align-items:center;gap:6px;color:#173D82;font-weight:500"><i class="fa-regular fa-layer-group" style="font-size:13px"></i>Workflows</a><i class="fa-regular fa-chevron-right" style="font-size:9px"></i><span class="cur">{{ workflowName }}</span></div>
-
-        <div>
-          <div class="wf-title-row"><span class="wf-title">{{ workflowName }}</span></div>
-          <div class="wf-meta" style="margin-top:6px">Owner: {{ ownerName }} &nbsp;•&nbsp; <x-import component-from-global-scope="FolioDS.Cell.Status" color="info" size="md" hint-size="80px,28px">{{ wfStatus }}</x-import></div>
-        </div>
+        {{ headerEl }}
 
         <div class="tasks-head">
           <span class="tasks-title">Tasks ({{ visibleCount }})</span>
@@ -359,7 +354,19 @@ class Component extends DCLogic {
     const userName = this.props.userName ?? 'Nina Graham';
     const ownerName = this.props.ownerName ?? 'Nina Graham';
     const workflowName = this.props.workflowName ?? 'FY 2026 Planning';
+    const FH = window.FolioDS;
+    const headerEl = FH ? React.createElement(FH.PageHeader, {
+      breadcrumbs: [
+        { label: 'Workflows', icon: React.createElement('i', { className: 'fa-regular fa-layer-group' }), onClick: () => { window.location.href = './Workflow.dc.html'; } },
+        { label: workflowName },
+      ],
+      title: workflowName,
+      owner: ownerName,
+      status: { label: 'In Progress', color: 'blue' },
+      style: { borderBottom: 'none', paddingBottom: 0 },
+    }) : null;
     return {
+      headerEl,
       sideNavEl,
       companyName, userName, ownerName, workflowName, ic,
       wfStatus: 'In Progress',

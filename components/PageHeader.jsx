@@ -36,8 +36,8 @@
 //   badges      : node — Badge component(s) only, size "md" — inline next to title (e.g. "Update Mapping", "Mapping Assistant")
 //   owner       : string — renders as "Owner: {owner}" below the title
 //   status      : { label, color } — passed straight to <Badge color size="md">, below the title
-//   topActions  : node — Button component(s) only — right-aligned slot on the breadcrumb row (e.g. bell, Import)
-//   actions     : node — Button component(s) only — right-aligned slot on the title row (e.g. edit icon + Mark Complete)
+//   topActions  : node — Button / ButtonGroup component(s) only — right-aligned slot on the breadcrumb row (e.g. bell, Import)
+//   actions     : node — Button / ButtonGroup component(s) only — right-aligned slot on the title row (e.g. edit icon + Mark Complete)
 //
 // actions/topActions/badges are validated at render time: passing anything
 // other than this design system's own Button (for actions/topActions) or
@@ -47,6 +47,7 @@
 import { Children, Fragment, isValidElement } from "react";
 import { Badge } from "./Badge";
 import { Button } from "./Button";
+import { ButtonGroup } from "./ButtonGroup";
 
 function assertOnlySlotComponent(node, slotName, Component, componentName, extraCheck) {
   Children.forEach(node, (child) => {
@@ -55,7 +56,8 @@ function assertOnlySlotComponent(node, slotName, Component, componentName, extra
       assertOnlySlotComponent(child.props.children, slotName, Component, componentName, extraCheck);
       return;
     }
-    if (!isValidElement(child) || child.type !== Component) {
+    const allowed = Array.isArray(Component) ? Component : [Component];
+    if (!isValidElement(child) || !allowed.includes(child.type)) {
       throw new Error(
         `PageHeader: \`${slotName}\` may only contain the Folio design system's ${componentName} component.`
       );
@@ -174,8 +176,8 @@ export function PageHeader({
       throw new Error(`PageHeader: \`badges\` Badge components must use size="md" (got "${size}").`);
     }
   });
-  assertOnlySlotComponent(topActions, "topActions", Button, "Button");
-  assertOnlySlotComponent(actions, "actions", Button, "Button");
+  assertOnlySlotComponent(topActions, "topActions", [Button, ButtonGroup], "Button or ButtonGroup");
+  assertOnlySlotComponent(actions, "actions", [Button, ButtonGroup], "Button or ButtonGroup");
   assertRegularFontAwesomeIcon(icon, "icon");
   (breadcrumbs ?? []).forEach((item) => assertRegularFontAwesomeIcon(item.icon, "breadcrumbs[].icon"));
 

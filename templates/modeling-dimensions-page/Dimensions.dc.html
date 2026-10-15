@@ -128,6 +128,7 @@
     .filter-row { padding:24px 0 16px; }
     .tree-caret { width:16px; height:16px; display:inline-flex; align-items:center; justify-content:center; color:#677489; font-size:10px; cursor:pointer; flex-shrink:0; background:none; border:none; }
     .tree-caret.leaf { visibility:hidden; cursor:default; }
+    .pg > .pg-sub, .pg-wrap > .pg-sub { margin-top:8px; }
   </style>
 </helmet>
 
@@ -179,18 +180,8 @@
     </header>
     <main class="page-content">
       <div class="pg">
-        <div class="pg-head">
-          <div>
-            <div class="pg-title-row"><i class="fa-regular fa-network-wired pg-title-ic"></i><span class="pg-title">Dimensions</span></div>
-            <p class="pg-sub">Manage your data structure in Cube.</p>
-          </div>
-          <div class="pg-head-acts">
-            {{ renameBtn }}
-            {{ moreBtn }}
-            {{ toolbarEl }}
-            {{ newBtn }}
-          </div>
-        </div>
+        {{ headerEl }}
+        <p class="pg-sub">Manage your data structure in Cube.</p>
 
         <div class="tabs-row">{{ tabsEl }}</div>
 
@@ -333,7 +324,15 @@ class Component extends DCLogic {
     const companyName = this.props.companyName ?? 'Accuplanner Inc';
     const userName = this.props.userName ?? 'Nina Graham';
     const initials = userName.trim().split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase();
-    return { sideNavEl, companyName, userName, initials, ic, tableEl, tabsEl, searchFilterEl, toolbarEl, newBtn, renameBtn, moreBtn };
+    const FH = window.FolioDS;
+    const headerEl = FH ? React.createElement(FH.PageHeader, {
+      icon: React.createElement('i', { className: 'fa-regular fa-network-wired' }),
+      title: 'Dimensions',
+      style: { borderBottom: 'none', paddingBottom: 0 },
+      actions: newBtn ? React.createElement(React.Fragment, null, renameBtn, moreBtn, toolbarEl, newBtn) : null,
+    }) : null;
+
+    return { headerEl, sideNavEl, companyName, userName, initials, ic, tableEl, tabsEl, searchFilterEl, toolbarEl, newBtn, renameBtn, moreBtn };
   }
 }
 

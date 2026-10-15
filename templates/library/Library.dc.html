@@ -128,6 +128,7 @@
     .sb.col .staff-row { padding:0; justify-content:center; }
     .sb.col .staff-label { display:none; }
     .sb.col .staff-more-btn { display:none; }
+    .pg > .pg-sub, .pg-wrap > .pg-sub { margin-top:8px; }
   </style>
 </helmet>
 
@@ -182,16 +183,8 @@
     <main class="page-content">
       <div class="pg">
 
-        <div class="pg-head">
-          <div>
-            <div class="pg-title-row"><span class="pg-title-ic">{{ ic.libraryLg }}</span><span class="pg-title">Library</span></div>
-            <p class="pg-sub">Store regularly used files and URLs to share with team members</p>
-          </div>
-          <div class="pg-head-acts">
-            <x-import component-from-global-scope="FolioDS.Button" variant="secondary" size="large" style="background:#fff" hint-size="110px,32px"><i class="fa-regular fa-plus" style="margin-right:6px"></i>Folder</x-import>
-            <x-import component-from-global-scope="FolioDS.Button" variant="primary" size="large" hint-size="110px,32px"><i class="fa-regular fa-arrow-up-from-bracket" style="margin-right:6px"></i>Upload</x-import>
-          </div>
-        </div>
+        {{ headerEl }}
+        <p class="pg-sub">Store regularly used files and URLs to share with team members</p>
 
         <div class="assets-row">
           <span class="assets-title">Assets ({{ assetCount }})</span>
@@ -286,7 +279,15 @@ class Component extends DCLogic {
     const companyName = this.props.companyName ?? 'Accuplanner Inc';
     const userName = this.props.userName ?? 'Nina Graham';
     const initials = userName.trim().split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase();
-    return { sideNavEl, companyName, userName, initials, ic, tableEl, assetCount: this.ASSETS.length };
+    const FH = window.FolioDS;
+    const headerEl = FH ? React.createElement(FH.PageHeader, {
+      icon: React.createElement('i', { className: 'fa-regular fa-book-open' }),
+      title: 'Library',
+      style: { borderBottom: 'none', paddingBottom: 0 },
+      actions: FH ? React.createElement(React.Fragment, null, React.createElement(FH.Button, { variant: 'secondary', size: 'large', leadingIcon: React.createElement('i', { className: 'fa-regular fa-plus' }) }, 'Folder'), React.createElement(FH.Button, { variant: 'primary', size: 'large', leadingIcon: React.createElement('i', { className: 'fa-regular fa-arrow-up-from-bracket' }) }, 'Upload')) : null,
+    }) : null;
+
+    return { headerEl, sideNavEl, companyName, userName, initials, ic, tableEl, assetCount: this.ASSETS.length };
   }
 }
 

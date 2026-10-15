@@ -556,6 +556,7 @@ Never recolor, rotate, outline, stretch, or substitute the mark — `fa-cube` is
 - Use the committed logo artwork via `Logo` / `Favicon` — never draw or generate a Cube logo
 - Collapsible sections default to collapsed when data exists, expanded when empty
 - Reference `cube-personas.md` when a feature targets a specific user — use persona context to inform UX decisions
+- Every page header (breadcrumb, title, badges, top actions) is the `PageHeader` component, never hand-built markup. Breadcrumb links are cobalt-500 at 12px. Pass `style={{ borderBottom: 'none', paddingBottom: 0 }}` when the page has no rule under the header
 - Use `templates/shell.html` as the base layout for all new screens — only add content inside `<main>`
 
 ### DO NOT

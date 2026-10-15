@@ -143,6 +143,7 @@
     .btn-connect { height:30px; padding:0 14px; border-radius:9999px; background:#173D82; border:none; color:#fff; font-family:'DM Sans',sans-serif; font-weight:500; font-size:13px; cursor:pointer; }
     .btn-connect:hover { background:#122E64; }
     .new-dd-wrap { position:relative; }
+    .new-dd-wrap .new-dd { top:40px; }
     .new-dd { position:absolute; top:calc(100% + 8px); right:0; width:280px; background:#fff; border:1px solid #E3E8EF; border-radius:12px; box-shadow:0 12px 32px rgba(16,24,40,.14); padding:8px; display:none; z-index:300; }
     .new-dd.open { display:block; }
     .new-dd-item { padding:10px 12px; border-radius:8px; font-size:14px; color:#222B3A; cursor:pointer; }
@@ -335,28 +336,23 @@
     <main class="page-content">
       <div class="pg">
         <sc-if value="{{ showList }}" hint-placeholder-val="{{ true }}">
-          <div class="pg-head">
-            <div>
-              <div class="pg-title-row"><i class="fa-regular fa-database pg-title-ic"></i><span class="pg-title">Integrations</span></div>
-              <p class="pg-sub">Connect, import, and map your source system data.</p>
-            </div>
-            <div class="new-dd-wrap">
-              {{ newBtn }}
-              <div class="new-dd" id="newDd">
-                <div class="new-dd-item" data-action="close-newdd">Cube-Hosted File Management</div>
-                <div class="new-dd-item" data-action="close-newdd">Sage Intacct</div>
-                <div class="new-dd-item" data-action="close-newdd">Cube Universal Connect</div>
-                <div class="new-dd-item" data-action="close-newdd">Salesforce</div>
-                <div class="new-dd-item" data-action="close-newdd">Tableau</div>
-                <div class="new-dd-item" data-action="close-newdd">BambooHR</div>
-                <div class="new-dd-item" data-action="close-newdd">NetSuite</div>
-                <div class="new-dd-item" data-action="close-newdd">QuickBooks</div>
-                <div class="new-dd-item" data-action="close-newdd">Xero</div>
-                <div class="new-dd-item" data-action="close-newdd">Externally-Hosted File Management (SFTP)</div>
-                <div class="new-dd-item" data-action="close-newdd">Data Table</div>
-              </div>
+          <div class="new-dd-wrap">
+            {{ headerEl }}
+            <div class="new-dd" id="newDd">
+              <div class="new-dd-item" data-action="close-newdd">Cube-Hosted File Management</div>
+              <div class="new-dd-item" data-action="close-newdd">Sage Intacct</div>
+              <div class="new-dd-item" data-action="close-newdd">Cube Universal Connect</div>
+              <div class="new-dd-item" data-action="close-newdd">Salesforce</div>
+              <div class="new-dd-item" data-action="close-newdd">Tableau</div>
+              <div class="new-dd-item" data-action="close-newdd">BambooHR</div>
+              <div class="new-dd-item" data-action="close-newdd">NetSuite</div>
+              <div class="new-dd-item" data-action="close-newdd">QuickBooks</div>
+              <div class="new-dd-item" data-action="close-newdd">Xero</div>
+              <div class="new-dd-item" data-action="close-newdd">Externally-Hosted File Management (SFTP)</div>
+              <div class="new-dd-item" data-action="close-newdd">Data Table</div>
             </div>
           </div>
+          <p class="pg-sub">Connect, import, and map your source system data.</p>
           <div class="filter-bar">
             <span class="filter-lbl">Filter by:</span>
             <div class="filter-pill">Source: All <i class="fa-solid fa-chevron-down" style="font-size:10px;color:#97A3B6"></i></div>
@@ -472,12 +468,10 @@ class Component extends DCLogic {
       );
     }
     return e('div', null,
-      e('div', { className:'ov-crumb' },
-        e('a', { onClick:()=> this.setState({ selectedRow:null }) }, e('i', { className:'fa-regular fa-database', style:{ fontSize:13 } }), 'Integrations'),
-        e('i', { className:'fa-regular fa-chevron-right', style:{ fontSize:10 } }),
-        e('span', null, row.name)
-      ),
-      e('div', { className:'ov-title-row' }, e('span', { className:'ov-title' }, row.name, ' via Manual Data Upload')),
+      e(F.PageHeader, { title:row.name + ' via Manual Data Upload', style:{ borderBottom:'none', paddingBottom:0 }, breadcrumbs:[
+        { label:'Integrations', icon:e('i', { className:'fa-regular fa-database' }), onClick:()=> this.setState({ selectedRow:null }) },
+        { label:row.name }
+      ] }),
       e('div', { className:'td-tabs' }, tabs.map((t) => e('button', { key:t.key, className:'td-tab' + (tab === t.key ? ' active' : ''), 'data-action':'detail-tab', 'data-tab':t.key }, e('i', { className:t.icon }), t.label))),
       content
     );
@@ -653,22 +647,16 @@ class Component extends DCLogic {
     ];
     const histTable = e(F.Table, { columns:histColumns, rows:history });
     return e('div', null,
-      e('div', { className:'ov-crumb' },
-        e('a', { onClick:()=> this.setState({ selectedRow:null }) }, e('i', { className:'fa-regular fa-database', style:{ fontSize:13 } }), 'Integrations'),
-        e('i', { className:'fa-regular fa-chevron-right', style:{ fontSize:10 } }),
-        e('span', null, row.name)
-      ),
-      e('div', { style:{ display:'flex', alignItems:'center', justifyContent:'space-between' } },
-        e('div', { className:'ov-title-row' },
-          e('span', { className:'ov-title' }, row.name),
-          e('span', { style:{ cursor:'pointer' } }, e(F.Badge, { type:'solid', color:'red', size:'lg', icon:e('i', { className:'fa-solid fa-xmark', style:{ fontSize:11 } }) }, 'Update Mapping')),
-          e('span', { style:{ cursor:'pointer' } }, e(F.Badge, { type:'solid', color:'purple', size:'lg', icon:e('i', { className:'fa-solid fa-sparkles', style:{ fontSize:11 } }) }, 'Mapping Assistant'))
-        ),
-        e('div', { style:{ display:'flex', alignItems:'center', gap:8 } },
-          e(F.Button, { variant:'secondary', size:'large', icon:e('i', { className:'fa-solid fa-bell' }), 'aria-label':'Notifications' }),
-          e(F.Button, { variant:'primary', size:'large' }, e('i', { className:'fa-regular fa-arrow-down-to-line', style:{ marginRight:6 } }), 'Import')
-        )
-      ),
+      e(F.PageHeader, { title:row.name, style:{ borderBottom:'none', paddingBottom:0 }, breadcrumbs:[
+          { label:'Integrations', icon:e('i', { className:'fa-regular fa-database' }), onClick:()=> this.setState({ selectedRow:null }) },
+          { label:row.name }
+        ],
+        badges:e(React.Fragment, null,
+          e(F.Badge, { type:'solid', color:'red', size:'md', icon:e('i', { className:'fa-solid fa-xmark', style:{ fontSize:11 } }) }, 'Update Mapping'),
+          e(F.Badge, { type:'solid', color:'purple', size:'md', icon:e('i', { className:'fa-solid fa-sparkles', style:{ fontSize:11 } }) }, 'Mapping Assistant')),
+        topActions:e(React.Fragment, null,
+          e(F.Button, { variant:'secondary', size:'large', icon:e('i', { className:'fa-regular fa-bell' }), 'aria-label':'Notifications' }),
+          e(F.Button, { variant:'primary', size:'large', leadingIcon:e('i', { className:'fa-regular fa-arrow-down-to-line' }) }, 'Import')) }),
       e(F.FlowRow, null,
         e(F.FlowCard, { label:'Source', icon:{ img: row.sourceImg || './sage-logo.png' }, iconShape:'circle', title:row.name, titleColor:'var(--color-blue-500)',
           actions:[{ icon:'fa-arrows-rotate', label:'Sync dimensions', tooltip:'Sync Dimensions Now' }, { icon:'fa-pen', label:'Edit connection', tooltip:'Edit connection' }],
@@ -801,7 +789,14 @@ class Component extends DCLogic {
     const selectedRow = this.state.selectedRow;
     const overviewEl = (F && selectedRow) ? (this.state.mapping ? this.buildMapping(F, selectedRow) : this.buildOverview(F, selectedRow)) : null;
     const newBtn = F ? React.createElement(F.Button, { variant:'primary', size:'small', leadingIcon:React.createElement('i', { className:'fa-regular fa-plus' }), trailingIcon:React.createElement('i', { className:'fa-regular fa-chevron-down', style:{ fontSize:11 } }), onClick:() => { const d = document.getElementById('newDd'); if (d) d.classList.toggle('open'); } }, 'New') : null;
-    return { companyName, userName, initials, ic, tableEl, newBtn, overviewEl, sideNavEl, showList: !selectedRow, showOverview: !!selectedRow };
+
+    const headerEl = F ? React.createElement(F.PageHeader, {
+      icon: React.createElement('i', { className:'fa-regular fa-database' }),
+      title: 'Integrations',
+      style: { borderBottom:'none', paddingBottom:0 },
+      actions: newBtn
+    }) : null;
+    return { headerEl, companyName, userName, initials, ic, tableEl, newBtn, overviewEl, sideNavEl, showList: !selectedRow, showOverview: !!selectedRow };
   }
 }
 

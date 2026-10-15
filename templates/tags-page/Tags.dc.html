@@ -130,6 +130,7 @@
     .sb.col .staff-row { padding:0; justify-content:center; }
     .sb.col .staff-label { display:none; }
     .sb.col .staff-more-btn { display:none; }
+    .pg > .pg-sub, .pg-wrap > .pg-sub { margin-top:8px; }
   </style>
 </helmet>
 <div class="app-shell">
@@ -180,10 +181,7 @@
     </header>
     <main class="page-content">
       <div class="pg">
-        <div class="pg-head">
-          <div class="pg-title-row"><i class="fa-solid fa-hashtag pg-title-ic"></i><span class="pg-title">Tags</span></div>
-          {{ newBtn }}
-        </div>
+        {{ headerEl }}
         <p class="pg-sub">Use tags to create and summarize alternative hierarchies within your dimensions. <i class="fa-regular fa-circle-question"></i></p>
         <div class="filter-bar">
           <span class="filter-lbl">Filter by:</span>
@@ -255,7 +253,15 @@ class Component extends DCLogic {
       tableEl = e(F.Table, { columns, rows });
       newBtn = e(F.Button, { variant:'primary', size:'small', leadingIcon:e('i', { className:'fa-regular fa-plus' }) }, 'Tag');
     }
-    return { sideNavEl, companyName, userName, ic, tableEl, newBtn };
+    const FH = window.FolioDS;
+    const headerEl = FH ? React.createElement(FH.PageHeader, {
+      icon: React.createElement('i', { className: 'fa-regular fa-hashtag' }),
+      title: 'Tags',
+      style: { borderBottom: 'none', paddingBottom: 0 },
+      actions: newBtn,
+    }) : null;
+
+    return { headerEl, sideNavEl, companyName, userName, ic, tableEl, newBtn };
   }
 }
 </script>

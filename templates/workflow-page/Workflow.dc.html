@@ -125,6 +125,7 @@
     .sb.col .staff-row { padding:0; justify-content:center; }
     .sb.col .staff-label { display:none; }
     .sb.col .staff-more-btn { display:none; }
+    .pg > .pg-sub, .pg-wrap > .pg-sub { margin-top:8px; }
   </style>
 </helmet>
 
@@ -179,13 +180,8 @@
     <main class="page-content">
       <div class="pg">
 
-        <div class="pg-head">
-          <div>
-            <div class="pg-title-row"><span class="pg-title-ic">{{ ic.workflowsLg }}</span><span class="pg-title">Workflows</span></div>
-            <p class="pg-sub">Orchestrate finance-led processes to keep them structured, visible, and on track.</p>
-          </div>
-          <x-import component-from-global-scope="FolioDS.Button" variant="primary" size="large" hint-size="140px,32px"><i class="fa-regular fa-plus" style="margin-right:6px"></i>Workflow</x-import>
-        </div>
+        {{ headerEl }}
+        <p class="pg-sub">Orchestrate finance-led processes to keep them structured, visible, and on track.</p>
 
         <div class="stat-row">
           <div class="stat-card">
@@ -282,7 +278,15 @@ class Component extends DCLogic {
     const companyName = this.props.companyName ?? 'Accuplanner Inc';
     const userName = this.props.userName ?? 'Nina Graham';
     const initials = userName.trim().split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase();
-    return { sideNavEl, companyName, userName, initials, ic, tableEl };
+    const FH = window.FolioDS;
+    const headerEl = FH ? React.createElement(FH.PageHeader, {
+      icon: React.createElement('i', { className: 'fa-regular fa-layer-group' }),
+      title: 'Workflows',
+      style: { borderBottom: 'none', paddingBottom: 0 },
+      actions: FH ? React.createElement(FH.Button, { variant: 'primary', size: 'large', leadingIcon: React.createElement('i', { className: 'fa-regular fa-plus' }) }, 'Workflow') : null,
+    }) : null;
+
+    return { headerEl, sideNavEl, companyName, userName, initials, ic, tableEl };
   }
 }
 </script>
