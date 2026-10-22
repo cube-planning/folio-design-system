@@ -297,6 +297,8 @@
   --color-bg-subtle:        var(--color-gray-50);
   --color-bg-muted:         var(--color-gray-100);
   --color-bg-sidebar:       var(--color-cobalt-25);
+  --color-bg-row-hover:     var(--color-gray-100);   /* @kind color — clickable Table row on hover */
+  --color-bg-row-selected:  var(--color-cobalt-50);  /* @kind color — selected Table row */
 
   /* Border */
   --color-border-default:   var(--color-gray-200);

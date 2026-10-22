@@ -68,6 +68,9 @@ export function Input({
   errorMessage,
   disabled = false,
   onChange,
+  onKeyDown,
+  onBlur,
+  autoFocus = false,
   style,
 }) {
   const resolvedState = disabled ? "disabled" : state;
@@ -143,6 +146,9 @@ export function Input({
             value={value}
             disabled={disabled}
             onChange={onChange}
+            onKeyDown={onKeyDown}
+            onBlur={onBlur}
+            autoFocus={autoFocus}
           />
           {charCount && maxChars && (
             <span style={{

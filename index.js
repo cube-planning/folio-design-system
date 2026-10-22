@@ -22,7 +22,7 @@ export { Modal }      from "./components/Modal.jsx";
 export { ImportDrawer } from "./components/ImportDrawer.jsx";
 export { SegmentedButton } from "./components/SegmentedButton.jsx";
 export { Toggle }     from "./components/Toggle.jsx";
-export { Table }      from "./components/Table.jsx";
+export { Table, EditableCell } from "./components/Table.jsx";
 export { Cell }       from "./components/TableCells.jsx";
 export { SourceCard } from "./components/SourceCard.jsx";
 export { Stepper }    from "./components/Stepper.jsx";
