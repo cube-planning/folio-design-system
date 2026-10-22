@@ -155,7 +155,7 @@ export function StickyHeaderAndColumns() {
         sortKey={sortKey}
         sortDir={sortDir}
         onSortChange={(k, d) => { setSortKey(k); setSortDir(d); }}
-        style={{ height: 420, padding: 0 }}
+        style={{ height: 420 }}
       />
     </div>
   );

@@ -405,6 +405,10 @@ export function Table({
   const sized = scrolls || columns.some((c) => c.width != null || c.minWidth != null);
   const lastCol = columns.length - 1;
 
+  // The root's top padding sits above a sticky header, so rows would scroll visibly through it. A white
+  // shadow the height of that padding, cast upward from each sticky header cell, hides them.
+  const padTop = parseFloat(style?.paddingTop ?? style?.padding ?? (grid ? 0 : 16)) || 0;
+
   const stickyCell = (i, header) => {
     if (!frozen[i] && !(header && stickyHeader)) return null;
     return {
@@ -412,6 +416,7 @@ export function Table({
       top: header && stickyHeader ? 0 : undefined,
       left: frozen[i] ? leftOf[i] : undefined,
       zIndex: header ? (frozen[i] ? Z.frozenHeader : Z.stickyHeader) : Z.frozenBody,
+      ...(header && stickyHeader && padTop > 0 && { boxShadow: `0 -${padTop}px 0 ${token.white}` }),
       ...(i === lastFrozen && { borderRight: `1px solid ${token.borderStrong}` }),
     };
   };

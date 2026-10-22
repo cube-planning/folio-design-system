@@ -83,7 +83,8 @@ Reserved (coming with the feature pages): **Select cell** (row checkbox) and **D
 ```
 
 - `stickyHeader` pins the header (`top: 0`, z-index 3). It needs a root with a height: pass `maxHeight` or `height` in `style`.
-  With the default 16px root padding rows scroll visibly through the gap above the header, so use `padding: 0` here.
+  The root's padding (16px default) is kept: a white shadow cast above each sticky header cell hides rows scrolling through that gap.
+  Pass `padding: 0` to sit the header flush to the edge instead.
 - `stickyColumns={N}` freezes the first N columns. Each `left` is the sum of the measured widths of the frozen columns before it
   (ResizeObserver, nothing hardcoded). Frozen cells are opaque and follow the row background (selected, hover, `_style.background`).
   The last frozen column gets a 1px right divider. Frozen header cells sit at z-index 4. `columns[].sticky` overrides per column;

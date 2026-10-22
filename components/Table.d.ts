@@ -81,7 +81,7 @@ export interface TableProps {
   /** Pixels of indent per level. Default 24. */
   indent?: number;
 
-  /** Header stays pinned to the top of the root while rows scroll. Use `padding: 0` in `style` to sit flush. */
+  /** Header stays pinned to the top of the root while rows scroll. Root padding is kept and masked; use `padding: 0` in `style` to sit flush. */
   stickyHeader?: boolean;
   /** Freeze the first N columns. Offsets are measured, not hardcoded. Default 0. */
   stickyColumns?: number;
