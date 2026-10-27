@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<script src="./ds-base.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;overflow:hidden}
+.mrow:hover{background:#F1F5FB !important}
+.mrow:hover .mact{opacity:1 !important}
+.fa-solid::before,.fa-regular::before{content:var(--fa) !important}
+</style>
+</helmet>
+<div style="width:100vw;height:100vh;display:flex;flex-direction:column;background:#fff;font-family:Arial,sans-serif;overflow:hidden">
+  <div style="display:flex;align-items:center;gap:10px;padding:8px 16px">
+    <div style="width:36px;height:36px;background:#0F9D58;border-radius:4px;display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-table-cells" style="color:#fff;font-size:16px"></i></div>
+    <div><div style="font-size:18px;color:#202124">Department P&amp;L</div>
+    <div style="display:flex;gap:16px;margin-top:2px;font-size:13px;color:#3c4043"><span>File</span><span>Edit</span><span>View</span><span>Insert</span><span>Format</span><span>Data</span><span>Tools</span><span style="font-weight:500;color:#202124">Extensions</span><span>Help</span></div></div>
+  </div>
+  <div style="height:36px;border-top:1px solid #E1E3E1;border-bottom:1px solid #E1E3E1;display:flex;align-items:center;padding:0 16px;gap:12px;font-size:12px;color:#5f6368"><span style="width:70px">A1</span><i style="font-style:italic">fx</i></div>
+  <div style="flex:1;position:relative;background-color:#fff;background-image:linear-gradient(#E1E3E1 1px,transparent 1px),linear-gradient(90deg,#E1E3E1 1px,transparent 1px);background-size:100px 21px"></div>
+
+  <div style="position:fixed;top:16px;right:16px;bottom:16px;width:340px;border-radius:16px;overflow:hidden;box-shadow:0 8px 24px rgba(34,43,58,.18);background:#fff;border:1px solid #E4E7EC;display:flex;flex-direction:column;font-family:'DM Sans',sans-serif;color:#222B3A">
+    <div style="height:44px;flex-shrink:0;background:#173D82;display:flex;align-items:center;padding:0 12px;gap:12px;color:#fff;font-size:12px;font-weight:500"><i class="fa-regular fa-bars"></i>Company<i class="fa-regular fa-chevron-down" style="font-size:9px"></i>USD<i class="fa-regular fa-chevron-down" style="font-size:9px"></i></div>
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;border-bottom:1px solid #E3E8EF;padding:0 8px">
+        <span style="padding:10px 10px;font-size:13px;font-weight:600;color:#2667D8;border-bottom:2px solid #2667D8">Build</span>
+        <span style="padding:10px 10px;font-size:13px;color:#677489">Analyze</span>
+        <span style="padding:10px 10px;font-size:13px;color:#677489">Publish</span>
+        <span style="padding:10px 10px;font-size:13px;color:#677489">Tables</span>
+      </div>
+      <div style="padding:16px;display:flex;flex-direction:column;gap:16px;overflow-y:auto">
+        <div style="border:1px solid #E3E8EF;border-radius:12px;padding:12px"><div style="font-size:12px;color:#677489">Table range</div><div style="font-size:14px;font-weight:600;margin-top:2px">Department P&amp;L · A1:F40</div></div>
+        <div>
+          <div style="font-size:12px;font-weight:600;color:#4A5567;text-transform:uppercase;margin-bottom:8px">Filters</div>
+          <div style="border:1px solid #E3E8EF;border-radius:12px;overflow:hidden">
+            <div style="display:flex;align-items:center;height:44px;padding:0 12px;border-bottom:1px solid #F2F5F9;font-size:13px"><span style="flex:1;color:#677489">Account</span><span>Income Statement</span></div>
+            <div onClick="{{ openFilter }}" class="mrow" style="display:flex;align-items:center;height:44px;padding:0 12px;border-bottom:1px solid #F2F5F9;font-size:13px;cursor:pointer;gap:8px"><span style="flex:1;color:#677489">Department</span><span style="font-weight:600;color:#173D82">{{ appliedName }}</span><i class="fa-regular fa-chevron-right" style="font-size:10px;color:#97A3B6"></i></div>
+            <div style="display:flex;align-items:center;height:44px;padding:0 12px;border-bottom:1px solid #F2F5F9;font-size:13px"><span style="flex:1;color:#677489">Scenario</span><span>Actual</span></div>
+            <div style="display:flex;align-items:center;height:44px;padding:0 12px;font-size:13px"><span style="flex:1;color:#677489">Time</span><span>FY2026</span></div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ isFilter }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1;display:flex;flex-direction:column;min-height:0">
+    <div style="padding:12px 16px 8px;display:flex;align-items:center;gap:8px">
+      <i onClick="{{ goBack }}" title="Back" class="fa-regular fa-chevron-left" style="font-size:12px;color:#677489;cursor:pointer;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:12px"></i>
+      <div style="font-size:16px;font-weight:600;flex:1">Filter: Department</div>
+      <sc-if value="{{ isViewer }}" hint-placeholder-val="{{ false }}"><i class="fa-regular fa-lock" title="Only users with the Manage Dimension Members, Formulas &amp; Tags permission can change the default" style="font-size:12px;color:#677489"></i></sc-if>
+    </div>
+    <div style="margin:0 16px 8px;padding:10px 12px;border-radius:12px;background:#F8FAFC;font-size:12px;line-height:18px;color:#4A5567">
+      <sc-if value="{{ isSet }}" hint-placeholder-val="{{ false }}"><span>Opens on <b style="color:#173D82">{{ defaultName }}</b>, set for everyone in the company.</span></sc-if>
+      <sc-if value="{{ isUnset }}" hint-placeholder-val="{{ true }}"><span>Opens on <b>{{ autoName }}</b>, the parent with the most children.<sc-if value="{{ canEdit }}" hint-placeholder-val="{{ true }}"> Hover a member to set a default.</sc-if></span></sc-if>
+    </div>
+    <div style="margin:0 16px 8px;position:relative"><i class="fa-regular fa-magnifying-glass" style="position:absolute;left:12px;top:11px;font-size:12px;color:#677489"></i>
+      <input value="{{ query }}" onInput="{{ onQuery }}" placeholder="Search members" style="width:100%;height:34px;border:1px solid #CDD5E0;border-radius:8px;padding:0 12px 0 32px;font:13px 'DM Sans',sans-serif;outline:none"></div>
+    <div style="flex:1;overflow-y:auto;padding:0 8px">
+      <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+        <div class="mrow" onClick="{{ r.pick }}" style="display:flex;align-items:center;gap:6px;min-height:36px;padding:0 8px 0 {{ r.pad }}px;border-radius:8px;cursor:pointer;background:{{ r.bg }}">
+          <i onClick="{{ r.toggle }}" class="{{ r.caret }}" style="width:14px;font-size:12px;visibility:{{ r.caretVis }}"></i>
+          <span style="font-size:13px;flex:1;font-weight:{{ r.weight }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span>
+          <sc-if value="{{ r.isDefault }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 8px;border-radius:9999px;background:#DBEAFE;color:#173D82;font-size:11px;font-weight:600"><i class="fa-solid fa-star" style="font-size:9px"></i>Default</span></sc-if>
+          <sc-if value="{{ r.showAct }}" hint-placeholder-val="{{ false }}"><span class="mact" title="{{ r.tip }}" onClick="{{ r.setDefault }}" style="opacity:0;display:inline-flex;align-items:center;gap:4px;height:24px;padding:0 8px;border-radius:9999px;font-size:11px;font-weight:500;white-space:nowrap;color:{{ r.actColor }};cursor:{{ r.cursor }};border:1px solid {{ r.actBorder }}"><i class="{{ r.actIcon }}" style="font-size:10px"></i>{{ r.actLabel }}</span></sc-if>
+        </div>
+      </sc-for>
+    </div>
+    <div style="padding:12px 16px;border-top:1px solid #E3E8EF;display:flex;gap:8px;justify-content:flex-end">
+      <x-import component-from-global-scope="FolioDS.Button" variant="ghost-gray" size="small" hint-size="auto,28px" onClick="{{ goBack }}">Cancel</x-import>
+      <x-import component-from-global-scope="FolioDS.Button" variant="primary" size="small" hint-size="auto,28px" onClick="{{ applyFilter }}">Apply filter</x-import>
+    </div>
+
+      </div>
+    </sc-if>
+    <sc-if value="{{ confirmOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;inset:0;background:rgba(16,24,40,.45);display:flex;align-items:flex-end">
+        <div style="background:#fff;width:100%;border-radius:16px 16px 0 0;padding:16px;display:flex;flex-direction:column;gap:12px">
+          <div style="font-size:16px;font-weight:600">{{ confirmTitle }}</div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#F8FAFC;border-radius:12px;padding:10px 12px;font-size:13px"><span style="color:#677489;text-decoration:line-through">{{ prevName }}</span><i class="fa-solid fa-arrow-right" style="font-size:10px;color:#97A3B6"></i><b style="color:#173D82">{{ nextName }}</b></div>
+          <ul style="margin:0;padding-left:18px;font-size:12px;line-height:18px;color:#353F4F;display:flex;flex-direction:column;gap:4px">
+            <li>Applies to everyone in the company, in Excel and Google Sheets.</li>
+            <li>Applies to filters opened from now on. Saved ranges are not changed.</li>
+            <li>The change is recorded in the audit trail.</li>
+          </ul>
+          <div style="display:flex;gap:8px;justify-content:flex-end">
+            <x-import component-from-global-scope="FolioDS.Button" variant="ghost-gray" onClick="{{ closeConfirm }}" hint-size="auto,32px">Cancel</x-import>
+            <x-import component-from-global-scope="FolioDS.Button" variant="primary" onClick="{{ commit }}" hint-size="auto,32px">{{ confirmCta }}</x-import>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ toastOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;left:16px;right:16px;bottom:64px;background:#222B3A;color:#fff;border-radius:12px;padding:10px 12px;font-size:12px;line-height:18px;display:flex;gap:8px;align-items:center"><i class="fa-solid fa-circle-check" style="color:#32D583"></i><span style="flex:1">{{ toastText }}</span><i class="fa-solid fa-xmark" onClick="{{ closeToast }}" style="cursor:pointer"></i></div>
+    </sc-if>
+  </div>
+
+  <div style="position:fixed;left:16px;bottom:16px;z-index:50;display:flex;align-items:center;gap:8px;white-space:nowrap;background:#222B3A;color:#fff;border-radius:9999px;padding:6px 8px 6px 14px;font-size:12px;font-family:'DM Sans',sans-serif">
+    Prototype: view as
+    <span onClick="{{ viewAdmin }}" style="cursor:pointer;padding:4px 12px;border-radius:9999px;font-weight:500;background:{{ adminBg }};color:{{ adminFg }}">Admin</span>
+    <span onClick="{{ viewViewer }}" style="cursor:pointer;padding:4px 12px;border-radius:9999px;font-weight:500;background:{{ viewerBg }};color:{{ viewerFg }}">Viewer</span>
+    <a href="Dimension Default Filter Member.dc.html" style="color:#fff;padding:4px 12px;border-radius:9999px;border:1px solid #4A5567;text-decoration:none">Web workspace</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { role: 'admin', def: null, open: {}, query: '', confirm: undefined, toast: null, screen: 'home', chosen: null, applied: null };
+  NODES = [['all', null, 'All Departments'], ['corp', 'all', 'Corporate'], ['ga', 'corp', 'G&A'], ['fin', 'corp', 'Finance'], ['ppl', 'corp', 'People'], ['gtm', 'all', 'Go-to-Market'], ['sal', 'gtm', 'Sales'], ['mkt', 'gtm', 'Marketing'], ['cs', 'gtm', 'Customer Success'], ['rd', 'all', 'R&D'], ['plat', 'rd', 'Platform'], ['data', 'rd', 'Data'], ['des', 'rd', 'Design'], ['ns', 'all', 'NetSuite Connection'], ['ns1', 'ns', 'NS - Operations'], ['ns2', 'ns', 'NS - Facilities'], ['ns3', 'ns', 'NS - Legal'], ['ns4', 'ns', 'NS - IT'], ['ns5', 'ns', 'NS - Procurement'], ['ns6', 'ns', 'NS - Support']];
+  tree() {
+    const nodes = this.NODES.map(([id, parent, name]) => ({ id, parent, name, kids: [] })), by = {};
+    nodes.forEach((n) => { by[n.id] = n; }); nodes.forEach((n) => { if (n.parent) by[n.parent].kids.push(n); });
+    return { nodes, by };
+  }
+  commit = () => {
+    const s = this.state, t = this.tree();
+    this.setState({ def: s.confirm, confirm: undefined, toast: s.confirm ? 'Default set to ' + t.by[s.confirm].name + ' for everyone.' : 'Default reset to automatic.' });
+    clearTimeout(this._t); this._t = setTimeout(() => this.setState({ toast: null }), 5000);
+  };
+  renderVals() {
+    const s = this.state, t = this.tree(), canEdit = s.role === 'admin', isViewer = !canEdit;
+    let auto = t.nodes[0]; t.nodes.forEach((n) => { if (n.kids.length > auto.kids.length) auto = n; });
+    const cur = s.chosen || s.def || auto.id, q = s.query.trim().toLowerCase();
+    const list = [];
+    const walk = (n, d) => { list.push({ n, d }); if (n.kids.length && s.open[n.id] !== false) n.kids.forEach((c) => walk(c, d + 1)); };
+    if (q) t.nodes.filter((n) => n.name.toLowerCase().includes(q)).forEach((n) => list.push({ n, d: 0 })); else walk(t.nodes[0], 0);
+    const rows = list.map(({ n, d }) => {
+      const isDefault = n.id === s.def, has = n.kids.length > 0 && !q;
+      return {
+        pad: 8 + d * 20, name: n.name, weight: n.id === cur ? 600 : 400, bg: n.id === cur ? '#EFF6FF' : 'transparent', isDefault,
+        caret: 'fa-solid fa-caret-' + (s.open[n.id] !== false ? 'down' : 'right'), caretVis: has ? 'visible' : 'hidden',
+        toggle: (ev) => { ev.stopPropagation(); this.setState((st) => ({ open: { ...st.open, [n.id]: st.open[n.id] === false } })); },
+        pick: () => this.setState({ chosen: n.id }),
+        showAct: !isDefault, actLabel: 'Set default', actIcon: canEdit ? 'fa-regular fa-star' : 'fa-regular fa-lock', actColor: canEdit ? '#2667D8' : '#97A3B6', actBorder: canEdit ? '#BFD4F7' : '#E3E8EF', cursor: canEdit ? 'pointer' : 'not-allowed',
+        tip: canEdit ? 'Set as default filter member for everyone' : 'Requires the Manage Dimension Members, Formulas & Tags permission',
+        setDefault: (ev) => { ev.stopPropagation(); if (canEdit) this.setState({ confirm: n.id }); }
+      };
+    });
+    if (s.def) rows.forEach((r) => { if (r.isDefault && canEdit) { r.showAct = false; } });
+    const nm = (id) => id ? t.by[id].name : 'Automatic (' + auto.name + ')';
+    return {
+      isHome: s.screen === 'home', isFilter: s.screen === 'filter', appliedName: s.applied ? t.by[s.applied].name : 'All',
+      openFilter: () => this.setState({ screen: 'filter', chosen: s.def || auto.id, query: '' }),
+      goBack: () => this.setState({ screen: 'home', query: '' }),
+      applyFilter: () => this.setState({ screen: 'home', applied: cur, query: '', toast: 'Filter applied: ' + t.by[cur].name }),
+      rows, isViewer, canEdit, isSet: !!s.def, isUnset: !s.def, defaultName: s.def ? t.by[s.def].name : '', autoName: auto.name,
+      query: s.query, onQuery: (e) => this.setState({ query: e.target.value }),
+      confirmOpen: s.confirm !== undefined, confirmTitle: s.confirm ? 'Set as default for everyone?' : 'Reset to automatic?', confirmCta: s.confirm ? 'Set default' : 'Reset',
+      prevName: nm(s.def), nextName: nm(s.confirm || null), commit: this.commit, closeConfirm: () => this.setState({ confirm: undefined }),
+      toastOpen: !!s.toast, toastText: s.toast || '', closeToast: () => this.setState({ toast: null }),
+      viewAdmin: () => this.setState({ role: 'admin' }), viewViewer: () => this.setState({ role: 'viewer' }),
+      adminBg: canEdit ? '#fff' : 'transparent', adminFg: canEdit ? '#222B3A' : '#fff', viewerBg: isViewer ? '#fff' : 'transparent', viewerFg: isViewer ? '#222B3A' : '#fff'
+    };
+  }
+}
+</script>
+</body>
+</html>

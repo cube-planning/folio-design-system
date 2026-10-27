@@ -613,9 +613,9 @@ Fetch the anchor before syncing, or the diff reports every component as changed:
 
 Read `.design-sync/NOTES.md` before any sync work — it records the per-component decisions, the known render warnings (a warning **not** listed there is new and needs looking at), and the upload-plan rules.
 
-### The add-on prototype is not in this repo
+### The add-on prototype: repo copy is ahead of the design project (2026-10-27)
 
-The interactive Cube add-on sidebar exists **only** in the design project, as two hand-authored `sc-if` templates that have drifted apart before:
+The interactive Cube add-on sidebar is two hand-authored `sc-if` templates that have drifted apart before. Both are now in the repo (with the Department default-filter-member feature) and **the design project still holds the older versions**; upload to sync them. Do not trust either side to be current without comparing:
 
 - `templates/cube-addon-sidebar/CubeAddonSidebar.dc.html`
 - `templates/cube-addon-sidebar-sheets-host/CubeAddonSidebar.dc.html`

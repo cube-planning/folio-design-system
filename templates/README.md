@@ -14,7 +14,16 @@ sidebar, header, or shell structure.
 ## 2. Design-project specimens — `<Name>.dc.html` + `ds-base.js` + `support.js`
 
 `audit-trail-demo/`, `board-mvp-single-add/`, `chart-rules-mock/`, `cube-addon-demo/`,
-`page-header-demo/`
+`cube-addon-sidebar/`, `cube-addon-sidebar-sheets-host/`, `page-header-demo/`
+
+`cube-addon-sidebar/` ("Cube Add-on Sidebar") and `cube-addon-sidebar-sheets-host/`
+("Cube Add-on — Google Sheets Host") are the two hand-authored add-on prototypes. They were
+remote-only until 2026-10-27, when both were exported into the repo with the **Department
+default filter member** feature added (filter screen, admin "Set default", confirm sheet,
+toast, viewer lock; reference source in `prototypes/default-filter-member/`). **The repo
+copies are now ahead of the design project**, which still holds the pre-feature versions.
+Patch both folders' `CubeAddonSidebar.dc.html` in the same pass; they differ only in the
+card layout (fixed 320px vs 100%-height flex) and the filter list's `max-height`.
 
 The **Integrations > Mapping** screen (Figma "Folio DS 2026 UI Refresh, Eng Handoff", node
 `460:30254`) is not its own template. It lives only inside
