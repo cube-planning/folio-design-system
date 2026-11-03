@@ -11,7 +11,7 @@ import { Badge } from "./Badge.jsx";
 import { Avatar } from "./Avatar.jsx";
 
 const C = {
-  blue:   "#2667D8",  // dataviz blue-500 (Metric tone)
+  cobalt: "#173D82",  // cobalt-500 (Metric tone)
   link:   "#173D82",  // link: cobalt-500
   purple: "#7A5AF8",  // MCP / AI
   gray900:"#222B3A",
@@ -55,12 +55,12 @@ function statusColor(status) {
   return STATUS_COLOR[String(status ?? "").toLowerCase()] ?? "gray";
 }
 
-const TONES = { blue: C.blue, purple: C.purple, default: C.gray900 };
-function Metric({ children, tone = "blue", bold = false, weight }) {
+const TONES = { cobalt: C.cobalt, blue: C.cobalt, purple: C.purple, default: C.gray900 };
+function Metric({ children, tone = "cobalt", bold = false, weight }) {
   if (children == null || children === "") return null;
   const fontWeight = weight === "medium" ? 500 : bold ? 700 : 400;
   return (
-    <span style={{ fontFamily: FONT, fontSize: 14, color: TONES[tone] ?? C.blue, fontWeight }}>
+    <span style={{ fontFamily: FONT, fontSize: 14, color: TONES[tone] ?? C.cobalt, fontWeight }}>
       {children}
     </span>
   );
@@ -129,7 +129,7 @@ export const Cell = {
   // Spoken vocabulary — say "make Owner a User cell" → Cell.User
   Text,          // plain value (default)
   Link,          // cobalt clickable record/name link; pass `icon` to prefix a leading icon
-  Metric,        // right-aligned number; tone "blue" | "purple" | "default"; weight "medium" for totals; blank when value is null/empty
+  Metric,        // right-aligned number; tone "cobalt" | "purple" | "default" ("blue" is an alias for cobalt); weight "medium" for totals; blank when value is null/empty
   Icon,          // leading icon + text
   User,          // Avatar + name
   Status: Badge, // status badge (the Badge component)

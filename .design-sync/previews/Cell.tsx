@@ -12,8 +12,8 @@ export function TextAndLink() {
 export function MetricAndStatus() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 12, alignItems: "flex-start" }}>
-      <Cell.Metric tone="blue" bold>$482,000</Cell.Metric>
-      <Cell.Status variant="lifecycle">In Review</Cell.Status>
+      <Cell.Metric tone="cobalt" bold>$482,000</Cell.Metric>
+      <Cell.Status color="blue" type="solid">In Review</Cell.Status>
     </div>
   );
 }

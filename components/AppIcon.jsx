@@ -12,7 +12,7 @@
 // inline React (no external assets), mirroring SourceCard's tile/token
 // conventions.
 
-import quickbooksLogo from "./assets/quickbooks.svg";
+import { COMPANY_LOGOS } from "./companyLogos.js";
 
 // An entry with `image` shows that real logo (an exported SVG in ./assets) instead of a glyph on a
 // brand-color tile. The tile is clipped to its radius, so the logo follows the shape.
@@ -26,7 +26,7 @@ const APPS = {
   hubspot:    { label: "HubSpot",    background: "#FF7A59", icon: "fa-brands fa-hubspot",    color: "#FFFFFF" },
   google:     { label: "Google Sheets", background: "#0F9D58", icon: "fa-brands fa-google",  color: "#FFFFFF" },
   microsoft:  { label: "Excel",      background: "#217346", icon: "fa-brands fa-microsoft",  color: "#FFFFFF" },
-  quickbooks: { label: "QuickBooks", background: "#FFFFFF", image: quickbooksLogo },
+  quickbooks: { label: "QuickBooks", background: "#FFFFFF", image: COMPANY_LOGOS.quickbooks },
   netsuite:   { label: "NetSuite",   background: "#173D82", icon: "fa-solid fa-cube",         color: "#FFFFFF" },
   workday:    { label: "Workday",    background: "#F49A1A", icon: "fa-solid fa-briefcase",    color: "#FFFFFF" },
   adaptive:   { label: "Adaptive Insights", background: "#6E2585", icon: "fa-solid fa-chart-line", color: "#FFFFFF" },

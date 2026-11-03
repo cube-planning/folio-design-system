@@ -120,6 +120,7 @@
     .pg-title-ic { color:#222B3A; font-size:24px; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; }
     .pg-title { font-size:24px; line-height:32px; font-weight:700; color:#222B3A; }
     .pg-sub { font-size:14px; color:#677489; margin-top:8px; }
+    .pg-sub-help { color:#173D82; font-size:14px; cursor:pointer; }
     .pg-head-acts { display:flex; align-items:center; gap:8px; }
     /* Tab strip and filter row are now TabGroup / SearchAndFilter — only the
        surrounding spacing lives here. Gaps per Figma 71:26428: tabs pt 16,
@@ -181,7 +182,7 @@
     <main class="page-content">
       <div class="pg">
         {{ headerEl }}
-        <p class="pg-sub">Manage your data structure in Cube.</p>
+        <p class="pg-sub">Manage your data structure in Cube. <i class="fa-regular fa-circle-question pg-sub-help" aria-label="Help"></i></p>
 
         <div class="tabs-row">{{ tabsEl }}</div>
 
@@ -316,7 +317,7 @@ class Component extends DCLogic {
     const ghostIcon = (icon, label, size) => F ? e(F.Button, { variant: 'ghost-gray', size: size || 'small', 'aria-label': label, icon: e('i', { className: icon, style: { fontSize: size === 'large' ? 14 : 13 } }) }) : null;
     const renameBtn = ghostIcon('fa-regular fa-pen', 'Rename', 'large');
     const moreBtn = ghostIcon('fa-regular fa-ellipsis-vertical', 'More', 'large');
-    const newBtn = F ? e(F.Button, { variant: 'primary', size: 'small', leadingIcon: e('i', { className: 'fa-regular fa-plus' }), trailingIcon: e('i', { className: 'fa-regular fa-chevron-down', style: { fontSize: 11 } }) }, 'New') : null;
+    const newBtn = F ? e(F.Button, { variant: 'primary', size: 'large', leadingIcon: e('i', { className: 'fa-regular fa-plus' }), trailingIcon: e('i', { className: 'fa-regular fa-chevron-down', style: { fontSize: 11 } }) }, 'New') : null;
     const ICONS = window.SIDEBAR_ICONS || {};
     const mk = (k) => ICONS[k] ? React.createElement('span', { style: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }, dangerouslySetInnerHTML: { __html: ICONS[k] } }) : null;
     const ic = {};

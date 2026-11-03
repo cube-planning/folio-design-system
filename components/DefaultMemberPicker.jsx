@@ -244,5 +244,5 @@ export function DefaultMemberPicker({
 }
 
 const linkButton = {
-  background: "none", border: "none", padding: 0, color: COLORS.blue500, fontWeight: 500, cursor: "pointer", font: "500 12px 'DM Sans', sans-serif",
+  background: "none", border: "none", padding: 0, color: COLORS.cobalt500, fontWeight: 500, cursor: "pointer", font: "500 12px 'DM Sans', sans-serif",
 };

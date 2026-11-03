@@ -34,7 +34,7 @@ export function ConnectionUnmapped() {
   return (
     <FlowCard
       label="Connection"
-      icon={{ fa: "fa-file-import" }}
+      icon={{ flow: "import" }}
       title="Import Setup"
       status={{ tone: "orange", text: "Set Mapping Rules", onClick: () => {} }}
       badge={<Badge color="red" size="sm">12 unmapped values</Badge>}

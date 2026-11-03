@@ -45,7 +45,7 @@ Ask for a column by its **cell name** and it maps to `Cell.*`:
 |---|---|---|---|
 | **Text cell** | `Cell.Text` | plain gray-900 text | default values |
 | **Link cell** | `Cell.Link` | cobalt-500 clickable text | record / name links |
-| **Metric cell** | `Cell.Metric` | right-aligned number; `tone="blue"\|"purple"\|"default"`, `bold` | KPIs, counts, totals |
+| **Metric cell** | `Cell.Metric` | right-aligned number; `tone="cobalt"\|"purple"\|"default"` (`"blue"` still works, renders cobalt), `bold` | KPIs, counts, totals |
 | **Icon cell** | `Cell.Icon` | leading icon + text | schedule (clock), source, type |
 | **User cell** | `Cell.User` | Avatar + name | owner, created by, assignee |
 | **Status cell** | `Cell.Status` | Badge | statuses / states |

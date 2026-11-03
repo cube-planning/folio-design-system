@@ -6,11 +6,13 @@
 // Compose three of them inside <FlowRow>, or use one on its own.
 //
 //   label        : small caption above the card ("Source", "Connection", "Destination")
-//   icon         : a node, or { img } | { fa } | { initial } — the 40px leading tile
-//   iconShape    : "rounded" (default, 8px) | "circle" — circle is for source logos
+//   icon         : a node, or { img } | { company } | { flow } | { fa } | { initial } — the 40px leading tile.
+//                  `flow` is the Figma step artwork: "import" (Connection) or "cube" (Destination)
+//   iconShape    : "rounded" (default, 8px) | "circle" — circle is for source logos; a circle
+//                  `img` is shown whole on white with a gray-300 ring (the Figma logo mask)
 //   title        : card title (single line; truncates with an ellipsis, and the
 //                  full text shows in a Tooltip on hover only when it is clipped)
-//   titleColor   : CSS color override. Default is link blue when `onTitleClick`
+//   titleColor   : CSS color override. Default is link cobalt when `onTitleClick`
 //                  is set, gray-900 otherwise
 //   onTitleClick : makes the title a link
 //   subtitle     : neutral 12px text under the title
@@ -35,6 +37,12 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "./Button.jsx";
 import { Tooltip } from "./Tooltip.jsx";
+import { COMPANY_LOGOS, COMPANY_AVATARS } from "./companyLogos.js";
+import flowImport from "./assets/flowcard-import.svg";
+import flowCube from "./assets/flowcard-cube.svg";
+
+// Figma 186:30184 / 186:30203 — self-contained 40px circles (tile fill + glyph baked in).
+const FLOW_ICONS = { import: flowImport, cube: flowCube };
 
 // Token-valued hexes, matching how Badge.jsx and AgentCard.jsx inline theirs —
 // DS components are self-styled and can't reach Tailwind classes.
@@ -44,7 +52,7 @@ const COLORS = {
   label: "#97A3B6",    // gray-500
   title: "#222B3A",    // gray-900
   muted: "#4A5567",    // gray-700
-  link: "#2667D8",     // blue-500 (links and navigation only)
+  link: "#173D82",     // cobalt-500 (links)
   tile: "#F2F5F9",     // gray-200
   tileInk: "#173D82",  // cobalt-500
 };
@@ -59,14 +67,32 @@ const FONT = "'DM Sans', sans-serif";
 
 function IconTile({ icon, shape }) {
   const box = { width: 40, height: 40, borderRadius: shape === "circle" ? "50%" : 8, flexShrink: 0 };
-  if (icon && icon.img) {
-    return <img src={icon.img} alt="" style={{ ...box, display: "block", objectFit: "cover" }} />;
+  if (icon && icon.flow && FLOW_ICONS[icon.flow]) {
+    return <img src={FLOW_ICONS[icon.flow]} alt="" style={{ ...box, borderRadius: "50%", display: "block" }} />;
+  }
+  if (icon && icon.company && COMPANY_AVATARS[icon.company]) {
+    // Self-contained 40px circle (logo + mask + ring baked in): no extra ring or padding.
+    return <img src={COMPANY_AVATARS[icon.company]} alt="" style={{ ...box, borderRadius: "50%", display: "block" }} />;
+  }
+  const logo = icon && (icon.company ? COMPANY_LOGOS[icon.company] : icon.img);
+  if (logo) {
+    if (shape === "circle") {
+      return (
+        <img
+          src={logo}
+          alt=""
+          style={{ ...box, display: "block", objectFit: "contain", background: COLORS.white, border: `1px solid ${COLORS.border}`, boxSizing: "border-box", padding: 4 }}
+        />
+      );
+    }
+    return <img src={logo} alt="" style={{ ...box, display: "block", objectFit: "cover" }} />;
   }
   if (icon && (icon.fa || icon.initial)) {
     return (
       <span
         style={{
           ...box,
+          borderRadius: "50%", // Figma 186:30184 / 186:30203: every step avatar is a 40px circle
           background: COLORS.tile,
           color: COLORS.tileInk,
           display: "flex",

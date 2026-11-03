@@ -119,7 +119,7 @@
     .sel-btn:hover { background:#F5F9FF; }
     .sel-btn.danger { color:#D92D20; border-color:#FDA29B; }
     .chk { width:16px; height:16px; accent-color:#2667D8; cursor:pointer; }
-    .name-link { color:#2667D8; font-size:14px; cursor:pointer; }
+    .name-link { color:#173D82; font-size:14px; cursor:pointer; }
     .name-link:hover { text-decoration:underline; }
     .due-pill { display:inline-flex; align-items:center; height:24px; padding:0 8px; border-radius:4px; background:#FEF3F2; font-size:13px; color:#222B3A; }
     .mention { display:inline-flex; align-items:center; height:22px; padding:0 6px; border-radius:4px; background:#F2F5F9; font-size:13px; font-weight:500; color:#2667D8; }
@@ -361,8 +361,17 @@ class Component extends DCLogic {
         { label: workflowName },
       ],
       title: workflowName,
-      owner: ownerName,
-      status: { label: 'In Progress', color: 'blue' },
+      badges: React.createElement(React.Fragment, null,
+        React.createElement(FH.Badge, { type: 'outlined', color: 'gray', size: 'md' }, 'Owner: ' + ownerName),
+        React.createElement(FH.Badge, { type: 'solid', color: 'blue', size: 'md' }, 'In Progress')
+      ),
+      topActions: React.createElement(React.Fragment, null,
+        React.createElement(FH.ButtonGroup, { items: [
+          { icon: React.createElement('i', { className: 'fa-regular fa-bell' }), 'aria-label': 'Notifications', onClick: () => {} },
+          { icon: React.createElement('i', { className: 'fa-regular fa-pen' }), 'aria-label': 'Edit', onClick: () => {} },
+        ] }),
+        React.createElement(FH.Button, { variant: 'primary', size: 'large', leadingIcon: React.createElement('i', { className: 'fa-regular fa-circle-check' }) }, 'Mark Complete')
+      ),
       style: { borderBottom: 'none', paddingBottom: 0 },
     }) : null;
     return {

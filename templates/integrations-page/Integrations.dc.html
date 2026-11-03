@@ -281,7 +281,7 @@
     .mp-row.mp-hd > div i { color:var(--color-gray-500); font-size:14px; width:22px; text-align:center; }
     .mp-name { gap:8px; white-space:nowrap; }
     .mp-leaf { width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; font-size:14px; color:var(--color-blue-500); flex-shrink:0; }
-    .mp-link { color:var(--color-blue-500); cursor:pointer; }
+    .mp-link { color:var(--color-cobalt-500); cursor:pointer; }
     .mp-link:hover { text-decoration:underline; }
     .mp-empty { padding:32px 8px; text-align:center; font-size:14px; color:var(--color-gray-600); }
     .mp-editbar { height:64px; margin:-24px -24px 0; padding:0 24px; background:#EFF6FF; border-bottom:1px solid #E3E8EF; display:flex; align-items:center; justify-content:space-between; position:sticky; top:-24px; z-index:20; }
@@ -711,9 +711,9 @@ class Component extends DCLogic {
           e(F.Badge, { type:'solid', color:'purple', size:'md', icon:e('i', { className:'fa-solid fa-sparkles', style:{ fontSize:11 } }) }, 'Mapping Assistant')),
         topActions:e(React.Fragment, null,
           e(F.Button, { variant:'secondary', size:'large', icon:e('i', { className:'fa-regular fa-bell' }), 'aria-label':'Notifications' }),
-          e(F.Button, { variant:'primary', size:'large', leadingIcon:e('i', { className:'fa-regular fa-arrow-down-to-line' }) }, 'Import')) }),
+          e(F.Button, { variant:'primary', size:'large', leadingIcon:e('i', { className:'fa-regular fa-file-import' }) }, 'Import')) }),
       e('div', { style:{ marginTop:16 } }, e(F.FlowRow, null,
-        e(F.FlowCard, { label:'Source', icon:{ img: row.sourceImg || './sage-logo.png' }, iconShape:'circle', title:row.name, titleColor:'var(--color-blue-500)',
+        e(F.FlowCard, { label:'Source', icon:{ img: row.sourceImg || './sage-logo.png' }, iconShape:'circle', title:row.name, titleColor:'var(--color-cobalt-500)',
           actions:[{ icon:'fa-arrows-rotate', label:'Sync dimensions', tooltip:'Sync Dimensions Now' }, { icon:'fa-pen', label:'Edit connection', tooltip:'Edit connection' }],
           button:{ label:'Source Dimensions' } }),
         e(F.FlowCard, { label:'Connection', icon:{ img:'./import-icon.png' }, title:'Import Setup',

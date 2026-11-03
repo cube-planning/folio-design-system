@@ -14,7 +14,7 @@ const columns = [
   { key: "owner", label: "Owner", render: (v) => <Cell.User name={v} /> },
   { key: "status", label: "Status", sortable: false, render: (v) => <Cell.Status color={Cell.statusColor(v)}>{v}</Cell.Status> },
   { key: "progress", label: "Progress", sortable: false, render: (v, row) => <Cell.Progress value={v} max={row.total} /> },
-  { key: "budget", label: "Budget", align: "right", render: (v) => <Cell.Metric tone="blue" weight="medium">{v}</Cell.Metric> },
+  { key: "budget", label: "Budget", align: "right", render: (v) => <Cell.Metric tone="cobalt" weight="medium">{v}</Cell.Metric> },
   {
     key: "actions",
     label: "",
@@ -61,8 +61,8 @@ const treeColumns = [
     render: (v, row, meta) =>
       meta.isGroup ? v : (
         <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-          <i className="fa-regular fa-file" style={{ color: "var(--color-blue-500)", fontSize: 14, width: 24, textAlign: "center" }} />
-          <span style={{ color: "var(--color-blue-500)" }}>{v}</span>
+          <i className="fa-regular fa-file" style={{ color: "var(--color-cobalt-500)", fontSize: 14, width: 24, textAlign: "center" }} />
+          <span style={{ color: "var(--color-cobalt-500)" }}>{v}</span>
         </span>
       ),
   },

@@ -21,8 +21,8 @@ const LEVEL_INDENT = 20; // px per nesting level, matches Figma "Level" variant 
  * Figma property mapping:
  *   state    -> `disabled` prop + CSS hover (State variant: Default/Hover/Disabled)
  *   level    -> `level` prop (Level variant: 0-3, drives indentation)
- *   tree     -> `tree` prop (Tree boolean: shows the expand/collapse chevron)
- *   expanded -> `expanded` prop (nested chevron rotation - not yet exposed as a
+ *   tree     -> `tree` prop (Tree boolean: shows the expand/collapse caret)
+ *   expanded -> `expanded` prop (nested caret direction - not yet exposed as a
  *               top-level Figma property, see component description in Figma)
  *   selected -> `selected` prop, single-select only (Selected boolean)
  *   checked  -> `checked` prop, multi-select only (Checked instance-swap:
@@ -93,7 +93,7 @@ export function ListItem({
             color: disabled ? COLORS.gray400 : COLORS.gray500,
           }}
         >
-          <i className={`fa-solid fa-chevron-${expanded ? "down" : "right"}`} style={{ fontSize: 10 }} aria-hidden="true" />
+          <i className={`fa-solid fa-caret-${expanded ? "down" : "right"}`} style={{ fontSize: 12 }} aria-hidden="true" />
         </button>
       ) : (
         <span style={{ width: 14, flexShrink: 0 }} />

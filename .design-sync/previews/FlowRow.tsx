@@ -7,7 +7,7 @@ export function Overview() {
     <FlowRow marginBottom={0}>
       <FlowCard
         label="Source"
-        icon={{ initial: "T" }}
+        icon={{ company: "paylocity" }}
         iconShape="circle"
         title="Teal Plantations"
         onTitleClick={() => {}}
@@ -16,7 +16,7 @@ export function Overview() {
       />
       <FlowCard
         label="Connection"
-        icon={{ fa: "fa-file-import" }}
+        icon={{ flow: "import" }}
         title="Import Setup"
         actions={[{ icon: "fa-clock", label: "Schedule" }]}
         body={
@@ -29,7 +29,7 @@ export function Overview() {
       />
       <FlowCard
         label="Destination"
-        icon={{ fa: "fa-database" }}
+        icon={{ flow: "cube" }}
         title="Cube Dimensions"
         actions={[{ icon: "fa-arrow-up-from-bracket", label: "Export", tooltip: "Data Exporter" }]}
         button={{ label: "Cube Dimensions" }}

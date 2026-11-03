@@ -9,7 +9,7 @@ export interface FlowCardProps {
    * The 40px leading tile: exactly one of { img: image URL } | { fa: Font Awesome name such as
    * "fa-table", rendered Solid } | { initial: single letter }. (A ready-made node also works at runtime.)
    */
-  icon?: { img?: string; fa?: string; initial?: string };
+  icon?: { img?: string; company?: string; flow?: "import" | "cube"; fa?: string; initial?: string };
   /** "circle" is for source logos. Default "rounded". */
   iconShape?: "circle" | "rounded";
   /** Single line; truncates with an ellipsis and shows the full text in a Tooltip when clipped. */
