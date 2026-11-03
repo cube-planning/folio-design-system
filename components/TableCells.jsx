@@ -11,7 +11,8 @@ import { Badge } from "./Badge.jsx";
 import { Avatar } from "./Avatar.jsx";
 
 const C = {
-  blue:   "#2667D8",  // link / dataviz blue-500
+  blue:   "#2667D8",  // dataviz blue-500 (Metric tone)
+  link:   "#173D82",  // link: cobalt-500
   purple: "#7A5AF8",  // MCP / AI
   gray900:"#222B3A",
   gray500:"#97A3B6",
@@ -29,7 +30,7 @@ function Link({ children, href, onClick, icon }) {
     <a
       href={href}
       onClick={onClick}
-      style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: FONT, fontSize: 14, color: C.blue, textDecoration: "none", cursor: "pointer" }}
+      style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: FONT, fontSize: 14, color: C.link, textDecoration: "none", cursor: "pointer" }}
     >
       {icon && (
         <span style={{ display: "inline-flex", width: 14, height: 14, alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
@@ -67,7 +68,7 @@ function Metric({ children, tone = "blue", bold = false, weight }) {
 
 function Icon({ icon, children, tone }) {
   return (
-    <span style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: FONT, fontSize: 14, color: tone === "link" ? C.blue : C.gray900 }}>
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 8, fontFamily: FONT, fontSize: 14, color: tone === "link" ? C.link : C.gray900 }}>
       {icon && (
         <span style={{ display: "inline-flex", width: 16, height: 16, alignItems: "center", justifyContent: "center", color: C.gray500, fontSize: 16, flexShrink: 0 }}>
           {icon}
@@ -127,7 +128,7 @@ function ActionButton({ icon, onClick, "aria-label": ariaLabel }) {
 export const Cell = {
   // Spoken vocabulary — say "make Owner a User cell" → Cell.User
   Text,          // plain value (default)
-  Link,          // blue clickable record/name link; pass `icon` to prefix a leading icon
+  Link,          // cobalt clickable record/name link; pass `icon` to prefix a leading icon
   Metric,        // right-aligned number; tone "blue" | "purple" | "default"; weight "medium" for totals; blank when value is null/empty
   Icon,          // leading icon + text
   User,          // Avatar + name

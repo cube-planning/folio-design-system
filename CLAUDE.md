@@ -129,7 +129,7 @@ src/
 The full color palette lives in `tokens/cube-colors.md`. Below is a quick-reference for the tokens used most in components.
 
 #### Primary Color
-**Cobalt** is the primary brand color — it replaces the old Blue 500. `cube-cobalt-500` (`#173D82`) is the base hue and the resting/interactive stop used for buttons, toggles, and active indicators. `cube-cobalt-600` (`#122E64`) is the hover escalation, not the resting state. Use `cube-cobalt-*` for all primary actions; use `cube-blue-*` for links and navigation only.
+**Cobalt** is the primary brand color — it replaces the old Blue 500. `cube-cobalt-500` (`#173D82`) is the base hue and the resting/interactive stop used for buttons, toggles, and active indicators. `cube-cobalt-600` (`#122E64`) is the hover escalation, not the resting state. Use `cube-cobalt-*` for all primary actions; links use `cube-cobalt-500` (hover `cube-cobalt-600`, pressed `cube-cobalt-700`); use `cube-blue-*` for navigation only.
 
 #### Color Rule
 
@@ -179,8 +179,8 @@ extra left margin or padding inside the page (`.pg`, `.pg-wrap`, wrappers) to co
 
 | Token | Use for |
 |---|---|
-| `cube-cobalt-*` | Primary buttons, CTAs, focus rings, active states, selected indicators |
-| `cube-blue-*` | Links and navigation items only |
+| `cube-cobalt-*` | Primary buttons, CTAs, links (500; hover 600, pressed 700), focus rings, active states, selected indicators |
+| `cube-blue-*` | Navigation items only |
 
 **Usage:** `bg-cube-cobalt-500`, `text-cube-gray-900`, `border-cube-gray-300`, etc.
 

@@ -139,7 +139,7 @@ Copy the prompt below, fill in the bracketed sections, and paste it into Claude 
 > ### Variants
 >
 > Show all variants rendered at actual size with a code snippet each:
-> - **Primary (Default)** — slash separator, blue links, dark current item
+> - **Primary (Default)** — slash separator, cobalt links, dark current item
 > - **Chevron Separator** — chevron icon between items
 > - **With Last Separator** — trailing separator after current item
 > - **With Icons (Chevron)** — icon before each item label, chevron separators
@@ -153,7 +153,7 @@ Copy the prompt below, fill in the bracketed sections, and paste it into Claude 
 > ### Usage Notes
 >
 > **Do**
-> - Use `color-blue-500` for link items
+> - Use `color-cobalt-500` for link items (hover `color-cobalt-600`, pressed `color-cobalt-700`)
 > - Use `color-gray-900` for the current (last) item
 > - Keep labels short — truncate with ellipsis if needed
 > - Use chevron separator when items have icons
@@ -167,7 +167,7 @@ Copy the prompt below, fill in the bracketed sections, and paste it into Claude 
 >
 > | Property | Token | Value |
 > |---|---|---|
-> | Link color | `color-blue-500` | `#2667D8` |
+> | Link color | `color-cobalt-500` | `#173D82` |
 > | Current item | `color-gray-900` | `#222B3A` |
 > | Separator | `color-gray-400` | `#CDD5E0` |
 > | Font | `caption-1` medium | 12px / 500 |
@@ -177,7 +177,7 @@ Copy the prompt below, fill in the bracketed sections, and paste it into Claude 
 > ### Accessibility
 > - **Keyboard:** Tab moves focus through links, Enter activates
 > - **Screen reader:** Wrap in `<nav aria-label="Breadcrumb">`, mark current item with `aria-current="page"`
-> - **Contrast:** Blue-500 on white passes AA (4.6:1)
+> - **Contrast:** Cobalt-500 on white passes AA
 >
 > ### Related components
 > - Pagination — for navigating between pages of results, not hierarchy
@@ -192,7 +192,7 @@ When filling in the Tokens section, use these:
 | Need | Token |
 |---|---|
 | Primary action / CTA | `color-cobalt-500` `#173D82` |
-| Link | `color-blue-500` `#2667D8` |
+| Link | `color-cobalt-500` `#173D82` |
 | Primary text | `color-gray-900` `#222B3A` |
 | Secondary text | `color-gray-700` `#4A5567` |
 | Disabled text | `color-gray-500` `#97A3B6` |

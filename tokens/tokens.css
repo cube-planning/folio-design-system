@@ -48,8 +48,8 @@
 
 
   /* ============================================================
-     COLORS — BLUE (Links + Navigation)
-     Use for links and navigation items only.
+     COLORS — BLUE (Navigation)
+     Use for navigation items only. Links use cobalt-500.
      ============================================================ */
 
   --color-blue-25:  #F7FBFF;
@@ -289,7 +289,7 @@
   --color-text-tertiary:    var(--color-gray-600);
   --color-text-disabled:    var(--color-gray-500);
   --color-text-inverse:     var(--color-white);
-  --color-text-link:        var(--color-blue-500);
+  --color-text-link:        var(--color-cobalt-500);
 
   /* Background */
   --color-bg-page:          var(--color-white);

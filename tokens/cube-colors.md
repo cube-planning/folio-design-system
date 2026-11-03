@@ -10,7 +10,7 @@
 | Stop range | Usage |
 |---|---|
 | `500` | Base hue — brand anchor, illustrations, decorative elements |
-| `600` | Interactive UI — buttons, links, active states; minimum for AA with white text |
+| `600` | Interactive UI — buttons, active states; minimum for AA with white text |
 | `700–800` | Text & icons — colored headings, labels, icons on light backgrounds |
 | `50–200` | Surfaces & backgrounds — tinted chips, badge fills, banner backgrounds |
 | `50` | Chip & page backgrounds — lightest tint for subtle surface differentiation |
@@ -47,9 +47,9 @@ Use `600` for primary buttons, `700–800` for text and icons, `50–200` for ti
 
 ### Blue
 
-Secondary interactive and informational UI — links, chips, badges, and indicators.
+Secondary interactive and informational UI — navigation, chips, badges, and indicators.
 Distinct from Cobalt to preserve action hierarchy.
-Use `500–600` for links, `700–800` for text and icons, `50–200` for badge and chip backgrounds.
+Use `500–600` for navigation, `700–800` for text and icons, `50–200` for badge and chip backgrounds.
 
 ```css
 --cube-blue-25:  #F7FBFF;
