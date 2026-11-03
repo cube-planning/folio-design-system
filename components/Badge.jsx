@@ -3,7 +3,7 @@
 //
 // Axes from Figma:
 //   type   : "solid" (tinted) | "dark" (strong fill) | "outlined" (neutral chip)
-//   color  : green | yellow | red | blue | gray | purple
+//   color  : green | yellow | red | blue | cobalt | gray | purple
 //            (semantic aliases: success | warning | error | info | neutral | ai)
 //   size   : "lg" (32) | "md" (28) | "sm" (20)
 //   icon   : leading node (Font Awesome <i/>) — optional
@@ -34,6 +34,9 @@ const PALETTE = {
   yellow: { base: "#F79009", solidBg: "#FFFAEB", solidBorder: "#FEF0C7", solidFg: "#DC6803", darkBg: "#FEC84B", darkFg: "#222B3A" },
   red:    { base: "#D92D20", solidBg: "#FEF3F2", solidBorder: "#FFE6E5", solidFg: "#D92D20", darkBg: "#D92D20", darkFg: "#FFFFFF" },
   blue:   { base: "#2667D8", solidBg: "#EFF6FF", solidBorder: "#DBEAFE", solidFg: "#2667D8", darkBg: "#2667D8", darkFg: "#FFFFFF" },
+  // Brand cobalt (primary), for chips that should read as Cube's own color rather than a link blue:
+  // cobalt-50 fill, cobalt-100 border, cobalt-500 text (the add-on's dimension chips).
+  cobalt: { base: "#173D82", solidBg: "#E6EBF4", solidBorder: "#C6D3EC", solidFg: "#173D82", darkBg: "#173D82", darkFg: "#FFFFFF" },
   purple: { base: "#7A5AF8", solidBg: "#F4F3FF", solidBorder: "#EBE9FE", solidFg: "#7A5AF8", darkBg: "#7A5AF8", darkFg: "#FFFFFF" },
   gray:   { base: "#97A3B6", solidBg: "#F2F5F9", solidBorder: "#E3E8EF", solidFg: "#4A5567", darkBg: "#4A5567", darkFg: "#FFFFFF" },
 };

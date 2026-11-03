@@ -52,7 +52,7 @@ function KebabMenu({ onAction }) {
   return (
     <div style={{ position: "relative" }}>
       <Button
-        icon={<i className="fa-solid fa-ellipsis-vertical" />}
+        icon={<i className="fa-regular fa-ellipsis-vertical" />}
         aria-label="Report actions"
         variant="ghost-gray"
         size="small"
@@ -153,7 +153,7 @@ export function PublishCard({
           <i className="fa-regular fa-file-chart-column" style={{ fontSize: 40, color: COLORS.gray400 }} aria-hidden="true" />
           <div style={{ fontSize: 12, color: COLORS.gray600 }}>Create or overwrite an existing report</div>
           <div style={{ display: "flex", gap: 8, width: "100%" }}>
-            <Button variant="primary" style={{ flex: 1 }} leadingIcon={<i className="fa-solid fa-plus" />} onClick={onCreateReport}>
+            <Button variant="primary" style={{ flex: 1 }} leadingIcon={<i className="fa-regular fa-plus" />} onClick={onCreateReport}>
               Report
             </Button>
             <Button variant="secondary" style={{ flex: 1 }} onClick={onOverwrite}>
@@ -181,7 +181,7 @@ export function PublishCard({
               <span style={{ flex: 1, fontSize: 12, color: reportArea ? COLORS.gray900 : COLORS.gray500 }}>
                 {reportArea ?? "Select a range or table"}
               </span>
-              <i className="fa-solid fa-chevron-down" style={{ fontSize: 12, color: COLORS.gray600 }} aria-hidden="true" />
+              <i className="fa-regular fa-chevron-down" style={{ fontSize: 12, color: COLORS.gray600 }} aria-hidden="true" />
             </button>
             {reportArea && reportAreaKind && (
               <span style={{ fontSize: 12, color: COLORS.gray500 }}>
@@ -205,7 +205,7 @@ export function PublishCard({
                 {sharedUsers.map((u) => (
                   <Tag key={u.id} size="small" canBeCleared onRemove={() => onRemoveUser?.(u.id)}>{u.name}</Tag>
                 ))}
-                <Button variant="ghost-blue" size="small" leadingIcon={<i className="fa-solid fa-plus" />} onClick={onAddUser}>
+                <Button variant="ghost-blue" size="small" leadingIcon={<i className="fa-regular fa-plus" />} onClick={onAddUser}>
                   Add user
                 </Button>
               </div>

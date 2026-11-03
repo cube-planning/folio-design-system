@@ -599,3 +599,88 @@ Also: upcoming-step label moved from gray-300 (a border color, ~1.2:1) to gray-6
 hand-rolled `.nt-stepper` CSS. `Card.md`'s TaskCard example used `state`/`pending`; the component reads
 `status`/`inactive`. `#8EABE1` typo (cobalt-200) fixed in `ButtonGroup.jsx` and the stepper prototype.
 Re-sync after the change: only `Stepper` changed; upload = `components: Stepper | bundle | styling`.
+
+## Default filter members are real components now (2026-10-27)
+
+The add-on's default filter member feature (per-dimension company default, hover "Set default", confirm sheet, admin management screen) was first prototyped by patching the hand-authored `templates/cube-addon-sidebar*/CubeAddonSidebar.dc.html` files. It now also exists as packaged components, which is the source of truth going forward:
+
+- `DefaultMemberPicker` — member-tree screen. `mode="filter"` (Apply filter) or `mode="default"` (admin, Done). Owns query, collapse, highlight and the confirm sheet; the parent owns `defaultId` / `appliedId` and receives `onDefaultChange(id | null)`.
+- `DefaultMembersScreen` — one row per dimension, default (star) or "Automatic: X", hover Reset.
+- `AddonMenu` — the hamburger dropdown. `AddonSidebar` gained an `overlay` slot (the shell is now `position: relative`) for it and the toast.
+- `FilterField` / `BuildPanel` filters take `isDefault` (cobalt star). The picked-stage list in `BuildPanel` renders `FilterField` separately from `FilterGroup`; both needed the prop.
+- `CubeAddonSidebar` wires it all: `showRoleToggle` (default true) adds a prototype Admin/Viewer switch; a real add-on drives edit rights from the Manage Dimension Members, Formulas & Tags permission.
+
+All three are in `index.js` and `componentSrcMap`, with hand-written `.d.ts` and authored previews (`DefaultMembersScreen.tsx`, `DefaultMemberPicker.tsx`). Previews were **not** rendered or graded and nothing was synced (DesignSync is blocked by the org ZDR policy), so the next `npm run design-sync` will show them as new and needs capture/grade.
+
+The two `.dc.html` templates are a separate, older implementation of the same feature and do not use these components. Keep them in step by hand or retire them.
+
+Verified in a throwaway esbuild harness (bundle `CubeAddonSidebar` into `ds-bundle/harness/`, gitignored): menu, manage screen, set default, Apply, pre-fill with star, toast. Also verified after the spacing change below: viewer mode (picker and manage), reset-from-manage (opens the picker on the "Reset to automatic?" sheet), Build with filters, Analyze, Publish, Tables and the Tables detail view. Not verified: the authored previews.
+
+**`AddonSidebar` spacing aligned to Figma (2026-10-27).** The content column is now 16px padding and 16px between cards (was 12 / 8), per "Add-Ons" node 6399:17463 and `docs/product/cube-addon-design-spec.md`. Cards render 266px wide in the 300px panel (Figma 268; the panel's own 1px border takes the other 2). The change squeezed the viewer header on `DefaultMembersScreen` (a "View only" badge wrapped the title to three lines), so it now shows a lock icon plus a "View only." note. Any other composite that assumed the old 12px gutter should be rechecked.
+
+## Mock Google Sheet + Pivot Table flow (2026-10-27)
+
+Figma "Add-Ons" (kmQDBYBQPuG9bt90qedB6A) page **Pivot Table** (6399:1761) shows the add-on docked in Google Sheets, with frames "User click Drilldown", "User click Pivot table", "User Click New" (Range / Transaction Build) and "User click range". Node 6441:35609 that was first linked is only its top section (the Analyze AI button and the Expand/Collapse tooltip).
+
+- `GoogleSheetMock` — Sheets stand-in (title, menu, toolbar, formula bar, grid, tab bar, docked side panel). Static cells, not a spreadsheet. Takes `sheets: [{ id, name, header, rows, aligns, widths, style, boldRows, indentRows }]`.
+- `CubeAddonSheetsDemo` — composes it with `CubeAddonSidebar`. Drilldown adds the "Drill C20 (2026 P&L) 1" tab (12 transactions behind 20000 – Accounts Payable); Create Pivot Table adds "Pivot Table 1" (Row Labels / Sum of Value, by Class then Vendor, computed from the drill rows, Grand Total 12,046.45 = B2 of the P&L); Back returns to the P&L tab.
+- `CubeAddonSidebar` gained `onDrilldown`, `onDrilldownBack`, `onCreatePivotTable`, `initialOpenSections` and `initialApplied`. In drilldown the trigger reads "Accounts Payable (Drilldown)" and Account is the first filter. Create Pivot Table toasts "Pivot table created".
+- The sample Time tree is now FY2025 (Jan-25 … Dec-25, quarters Q1-25 … Q4-25) so it matches the Figma sheet's Oct-25 / Q4-25 columns. The older `.dc.html` templates still use FY2026.
+- Figma names the pivot tab "Drill C20 (2026 P&L) 1" a second time; that reads as copy-paste, so the mock calls it "Pivot Table 1" like Google Sheets does.
+- **"User Click New" built (2026-10-27).** New opens Build on the segmented Dimensions / Transactions view (the `fetched` stage, now with a Back link). Dimensions: Columns Time, Rows Account, Filters Department, Scenario, Entity, Product, Market. Transactions: Account, Time, Department, Scenario, Entity. `BuildPanel` takes `dimensionFilters` / `transactionFilters` for this (each falls back to `filters`). Fetch Data in Transactions adds a "Transactions 1" tab (the Account 20000 rows, same columns as the drill sheet); in Dimensions it returns to the P&L tab. **The Transactions result sheet is my inference**: Figma shows only the pre-fetch sidebar and the unchanged P&L grid.
+- **Range tree synced to the tabs.** `CubeAddonSidebar` takes `ranges` (`[{ id, sheetId, sheetName, label, meta, triggerLabel, kind }]`), `activeRangeId`, `onRangeApply(ids)` and `onFetchData({ mode })`. The tree is All > tab > range, built from `ranges`; Apply switches to the first checked range's tab; the trigger label and the drilldown mode follow the active tab, and clicking a drilldown tab lands on its Build screen. The pivot tab has no range (it is plain Sheets output). Figma's tree says "Sheet 1 / Sheet 2"; the mock uses the real tab names. The default `ranges` (no host) keeps the Figma wording.
+- Figma annotation on the Range frame, not implemented: "Range builds a standard OLAP range with rows & columns. (update to tooltip)". The matching note for Transaction Build was not read. Both are intended as tooltips on the Dimensions / Transactions segments.
+- The Range frame's trigger reads A1:E14 although the grid occupies A1:E8; the mock follows Figma.
+- Not synced or rendered as previews (DesignSync blocked by ZDR). Verified in the throwaway harness at `/ds-bundle/harness/?v=demo` (note the trailing slash: `serve` drops query strings on its clean-URL redirect).
+
+## Drag-and-drop range builder (2026-10-27)
+
+Figma (the New empty state, plus a production screenshot of the filled state) specifies the Dimensions view of the "New" flow: a tray of dimension Badges, Columns / Rows / Filters drop zones, an Exclude zero row toggle, a "3 Sources" row with Fetch Data inline, Last Publish, and a "Range Set" toast.
+
+- `RangeBuilder` — HTML5 drag and drop. **Every zone takes several dimensions** (Columns and Rows too; an earlier version held one each, which the production selector screenshot disproved: Market and Entity both sit in Columns). A placed field shows a chevron that becomes an X on hover; the X or dragging it back to the tray removes it, and fields can be dragged between zones. Click-to-place fallback for touch and keyboard: press a tray Badge to arm it, then press a zone.
+- The tray uses the `Badge` component. The production screenshot's dark cobalt-500 chips were flagged as wrong; the chips are cobalt-50 fill with cobalt-500 text, via a new `Badge` `color="cobalt"` (cobalt-100 border, white-on-cobalt-500 for `type="dark"`).
+- `BuildPanel` takes `dimensionsView` (replaces the Columns/Rows/Filters groups), `sources` and `fetchDisabled`. With `dimensionsView` and a non-empty `sources`, the full-width Fetch Data becomes the "N Sources" row with Fetch Data inline.
+- **Sources are the integrations linked to the table.** `CubeAddonSidebar` takes a `sources` prop (`[{ id, name, app, status, detail }]`, default a three-source sample: QuickBooks failed, Sage ok, Xero cancelled); an empty list or no linked integration keeps the plain Fetch Data button. `AppIcon` gained `sage` and `xero` with generic glyphs (Font Awesome has no brand icons for either); swap in the real logos when they exist.
+- Fetch Data stays disabled until Columns and Rows each hold a dimension. Dropping into Rows / Columns toasts "Range Set" with the sheet refs from Figma (Rows: C12:E85, Columns: F9:Q10), which are static placeholders, not read from a real selection.
+- Tray dimensions: Account, Department, Scenario, Time, Entity, Product, Market, Class. The sample member trees cover the six filter dimensions; Account and Class show "All Accounts" / "All Classes".
+- The layout does not yet change the sheet: Fetch Data in the Dimensions view still returns to the P&L tab.
+
+## Add-on icons use Font Awesome Regular (2026-10-27)
+
+The add-on components now use `fa-regular` throughout (`AddonTopNav`, `AccordionSection`, `BuildPanel`, `AnalyzePanel`, `PublishCard`, `TablesCard`, `CubeAddonSidebar`, `DefaultMemberPicker`, `DefaultMembersScreen`, `RangeBuilder`, `FilterField`, `RangeSelector`, `ExpandCollapseControl`), matching the Figma "Add-Ons" file. Every name was checked against `fontawesome-pro-7.3.1-web/metadata/icons.json` for a Regular style.
+
+Deliberately still solid:
+- **AI sparkles** (`AddonTopNav`, `BuildPanel`, `AnalyzePanel`), per CLAUDE.md's AI-sparkle rule.
+- **The filled star marking the current default** (`FilterField`, `DefaultMembersScreen`, the Default badge in `DefaultMemberPicker`). The outline star is the "Set default" action, so solid vs regular carries meaning.
+
+Not touched, because they are shared kit components used outside the add-on: `ListItem` (checkbox check / minus, tree caret), `Toast`, `AppIcon`, `Button`, `Badge`. `GoogleSheetMock` keeps solid glyphs since it imitates Google's own UI, not Cube's.
+
+## Drilldown screen aligned to Figma (2026-10-27)
+
+After Drilldown the Build section now reads: range trigger "Accounts Payable (Drilldown)" **above the cards**, a Build card whose header carries a gray "Drilldown" chip (`Badge color="gray" size="sm"`, via `AccordionSection`'s `badge`, now rendered beside the title), Back, a "Filters" heading, grip-icon filter rows, Fetch Data + Sources, Last Publish (value in cobalt-500), and a full-width `subtle-gray` "Create Pivot Table" with `fa-table-pivot`. **No "Build with AI" in drilldown** (`BuildPanel` hides it when `isDrilldown`).
+
+- The range trigger and its tree moved out of `BuildPanel` into `CubeAddonSidebar` (`BuildPanel showRangeTrigger={false}`); the tree is a popover with a shadow, as in Figma's "click range" frame.
+- Group titles (Columns / Rows / Filters) are 14px / 500 (were 12px). Filter rows use `fa-grip-dots-vertical` in cobalt-500 instead of `fa-table-cells`.
+- Non-drilldown screens keep "Build with AI". The "Filters" heading now also shows on the flat list in the Select/Open stage.
+
+## Filter settings gear (2026-10-27)
+
+Defaults are managed apart from filtering. Each "Filters" heading in `BuildPanel` can show a gear (`onFiltersSettings`, `aria-label="Filter settings"`, `ghost-gray` small icon button) that opens the Default filter members screen, the same one the hamburger menu opens. Reasons: a filter row's chevron turns into an X on hover in the product, so a default control there collides; and a bulk "set the filters I'm looking at as everyone's defaults" would make a company-wide change a side effect of filtering. Admins edit there; viewers get the same gear and a read-only screen ("View only"). Back returns to the Build screen with its stage and drilldown intact.
+
+### Member selector (2026-10-27)
+
+Pressing a placed field opens its selector, matching the production screenshot: the label becomes a search box (placeholder = the dimension), the chevron flips up, and below it sit "Selection Type: Include all" and the member tree as `ListItem` rows (multi-select, tri-state parents, expandable). The tree comes from `RangeBuilder`'s `membersFor(key)`; `CubeAddonSidebar` supplies the six filter dimensions' trees plus small Account and Class trees (`BUILDER_ONLY`). The Entity sample tree now matches production and the sheet's data: Global Co > GCo US, GCo UK, GCo Australia, Elimco, Entity - Other.
+
+Still presentational: "Selection Type" is not yet a menu, and the checked members live inside `RangeBuilder` (they are not reported through `onChange`, so they do not affect the range yet).
+
+## New sheets in the mock (2026-10-27)
+
+The "+" in `GoogleSheetMock`'s tab bar now fires `onAddSheet`. In `CubeAddonSheetsDemo` it adds a blank sheet named like Google Sheets does (Sheet2, Sheet3, ...) and switches to it. A blank sheet has no Cube range, so the demo passes `activeRangeId={null}` and the sidebar returns to Build's Select / New / Open start screen (and hides the range trigger). `null` means "no Cube range here"; `undefined` still means "the host is not telling you" (the pivot tab), which keeps the sidebar as it is.
+
+With a blank sheet active, New + Fetch Data writes into **that sheet** instead of jumping to another tab: Dimensions fills it with the P&L grid (range "Range 1 (A1:E14)"), Transactions with the transaction rows (range "Transaction Build 1 (A1:I13)"). The sheet then appears in the range tree like any other. With a non-blank sheet active, Fetch Data behaves as before (Dimensions returns to the P&L tab, Transactions adds "Transactions 1").
+
+The data written is fixed sample data, not built from the Columns / Rows / Filters you chose (the builder's layout still does not drive the grid). Drilldown from a blank sheet still adds the drill tab, which is not meaningful there.
+
+## Real QuickBooks logo in AppIcon (2026-10-27)
+
+`AppIcon` entries can now carry `image` (an SVG from `components/assets/`) instead of a glyph on a brand-color tile; the tile is clipped to its radius so the logo follows its shape. `quickbooks` uses the exported "qb" mark (`components/assets/quickbooks.svg`, from `quickbook.svg`): a green ring and mark on white. The file is 64 KB because it embeds a 300x299 PNG, and esbuild inlines it as a data URL, so it adds roughly 86 KB to the bundle. Re-export it as pure vector paths if that matters. Sage and Xero still use generic glyphs (Font Awesome has no brand icons for either). In the Sources list QuickBooks is the "Green Plantations" card.

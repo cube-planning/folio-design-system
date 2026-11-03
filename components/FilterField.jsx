@@ -13,6 +13,8 @@
 //   icon  : optional leading Font Awesome <i/>
 //   label : field name, e.g. "Time"
 //   value : current selection, e.g. "Oct-25" — rendered as "Time: Oct-25"
+//   isDefault : the value is the company default member; shows a small cobalt
+//               star before the chevron
 
 // Colors match the addon-specific gray ramp verified against Figma "Add-Ons"
 // (node 6399:17463) — Gray/900 #222B3A, Gray/600 #677489, Gray/400 #CDD5E0 —
@@ -27,9 +29,10 @@ const COLORS = {
   gray400: "#CDD5E0",
   gray200: "#F2F5F9",
   white:   "#FFFFFF",
+  cobalt500: "#173D82",
 };
 
-export function FilterField({ icon, label, value, onClick, disabled = false }) {
+export function FilterField({ icon, label, value, onClick, disabled = false, isDefault = false }) {
   return (
     <button
       type="button"
@@ -52,7 +55,7 @@ export function FilterField({ icon, label, value, onClick, disabled = false }) {
       }}
     >
       {icon && (
-        <span style={{ display: "inline-flex", fontSize: 12, color: COLORS.gray600, flexShrink: 0 }} aria-hidden="true">
+        <span style={{ display: "inline-flex", fontSize: 12, color: COLORS.cobalt500, flexShrink: 0 }} aria-hidden="true">
           {icon}
         </span>
       )}
@@ -62,7 +65,10 @@ export function FilterField({ icon, label, value, onClick, disabled = false }) {
       }}>
         {label}{value != null && value !== "" ? `: ${value}` : ""}
       </span>
-      <i className="fa-solid fa-chevron-down" style={{ fontSize: 12, color: COLORS.gray600, flexShrink: 0 }} aria-hidden="true" />
+      {isDefault && (
+        <i className="fa-solid fa-star" title="Default member" style={{ fontSize: 10, color: "#173D82", flexShrink: 0 }} />
+      )}
+      <i className="fa-regular fa-chevron-down" style={{ fontSize: 12, color: COLORS.gray600, flexShrink: 0 }} aria-hidden="true" />
     </button>
   );
 }

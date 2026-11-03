@@ -58,7 +58,7 @@ export function RangeSelectorTrigger({ label, meta, open = false, onClick }) {
         {meta && <span style={{ fontWeight: 400, color: COLORS.gray500 }}> ({meta})</span>}
       </span>
       <i
-        className={`fa-solid fa-chevron-${open ? "up" : "down"}`}
+        className={`fa-regular fa-chevron-${open ? "up" : "down"}`}
         style={{ fontSize: 12, color: COLORS.gray600, flexShrink: 0 }}
         aria-hidden="true"
       />

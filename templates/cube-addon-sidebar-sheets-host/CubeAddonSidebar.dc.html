@@ -16,7 +16,7 @@
 <div style="width:100%;height:100%;font-family:'DM Sans',sans-serif">
 <div style="width:100%;height:100%;background:#fff;border:1px solid #E4E7EC;border-radius:16px;overflow:hidden;color:#222B3A;position:relative;display:flex;flex-direction:column">
 <div style="height:44px;flex-shrink:0;background:#173D82;display:flex;align-items:center;padding:0 8px;gap:10px">
-<i class="fa-regular fa-bars" style="color:#fff;font-size:14px"></i>
+<i onClick="{{ toggleMenu }}" class="fa-regular fa-bars" title="Menu" style="color:#fff;font-size:14px;cursor:pointer"></i>
 <i class="fa-regular fa-database" style="color:#fff;font-size:14px"></i>
 <div style="display:flex;align-items:center;gap:4px;cursor:pointer"><span style="font-size:12px;font-weight:500;color:#fff">Company</span><i class="fa-regular fa-chevron-down" style="color:#fff;font-size:9px"></i></div>
 <div style="display:flex;align-items:center;gap:4px;cursor:pointer"><span style="font-size:12px;font-weight:500;color:#fff">USD</span><i class="fa-regular fa-chevron-down" style="color:#fff;font-size:9px"></i></div>
@@ -25,7 +25,7 @@
 <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(-18.86deg,#7A5AF8 33.1%,#9B8AFB 62.1%,#5925DC 98.4%);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer"><i class="fa-solid fa-sparkles" style="color:#fff;font-size:16px"></i></div>
 </div>
 
-<sc-if value="{{ !deptFilterOpen }}" hint-placeholder-val="{{ true }}">
+<sc-if value="{{ mainShown }}" hint-placeholder-val="{{ true }}">
 <div style="padding:16px;display:flex;flex-direction:column;gap:16px;background:#fff;flex:1;min-height:0;overflow:auto">
 
 <sc-if value="{{ hasSource }}" hint-placeholder-val="{{ false }}">
@@ -202,12 +202,12 @@
 <span style="font-size:12px;font-weight:500;color:#222B3A">Filters</span>
 <div style="display:flex;flex-direction:column;gap:8px">
 <sc-if value="{{ isDrilldown }}"><div style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A"><b>Account:</b> Accounts Payable</span><div style="flex:1"></div><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div></sc-if>
-<div style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A"><b>Time:</b> Oct-25</span><div style="flex:1"></div><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
-<div onClick="{{ openDeptFilter }}" style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px;cursor:pointer"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b>Department:</b> {{ deptValue }}</span><div style="flex:1"></div><sc-if value="{{ deptIsDefault }}" hint-placeholder-val="{{ false }}"><i class="fa-solid fa-star" title="Default member" style="color:#173D82;font-size:10px"></i></sc-if><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
-<div style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A"><b>Scenario:</b> Actuals</span><div style="flex:1"></div><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
-<div style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A"><b>Entity:</b> Global Co</span><div style="flex:1"></div><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
-<div style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A"><b>Product:</b> All Products</span><div style="flex:1"></div><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
-<div style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A"><b>Market:</b> All Markets</span><div style="flex:1"></div><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
+<div onClick="{{ openFilter }}" data-dim="time" style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px;cursor:pointer"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b>Time:</b> {{ fValue.time }}</span><div style="flex:1"></div><sc-if value="{{ fStar.time }}" hint-placeholder-val="{{ false }}"><i class="fa-solid fa-star" title="Default member" style="color:#173D82;font-size:10px"></i></sc-if><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
+<div onClick="{{ openFilter }}" data-dim="dept" style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px;cursor:pointer"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b>Department:</b> {{ fValue.dept }}</span><div style="flex:1"></div><sc-if value="{{ fStar.dept }}" hint-placeholder-val="{{ false }}"><i class="fa-solid fa-star" title="Default member" style="color:#173D82;font-size:10px"></i></sc-if><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
+<div onClick="{{ openFilter }}" data-dim="scen" style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px;cursor:pointer"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b>Scenario:</b> {{ fValue.scen }}</span><div style="flex:1"></div><sc-if value="{{ fStar.scen }}" hint-placeholder-val="{{ false }}"><i class="fa-solid fa-star" title="Default member" style="color:#173D82;font-size:10px"></i></sc-if><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
+<div onClick="{{ openFilter }}" data-dim="ent" style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px;cursor:pointer"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b>Entity:</b> {{ fValue.ent }}</span><div style="flex:1"></div><sc-if value="{{ fStar.ent }}" hint-placeholder-val="{{ false }}"><i class="fa-solid fa-star" title="Default member" style="color:#173D82;font-size:10px"></i></sc-if><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
+<div onClick="{{ openFilter }}" data-dim="prod" style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px;cursor:pointer"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b>Product:</b> {{ fValue.prod }}</span><div style="flex:1"></div><sc-if value="{{ fStar.prod }}" hint-placeholder-val="{{ false }}"><i class="fa-solid fa-star" title="Default member" style="color:#173D82;font-size:10px"></i></sc-if><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
+<div onClick="{{ openFilter }}" data-dim="mkt" style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px;cursor:pointer"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b>Market:</b> {{ fValue.mkt }}</span><div style="flex:1"></div><sc-if value="{{ fStar.mkt }}" hint-placeholder-val="{{ false }}"><i class="fa-solid fa-star" title="Default member" style="color:#173D82;font-size:10px"></i></sc-if><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
 </div>
 <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px">
 <x-import component-from-global-scope="FolioDS.Button" variant="primary" size="small" onClick="{{ fetchData }}" fullWidth="{{ true }}" hint-size="100%,28px">Fetch Data</x-import>
@@ -230,21 +230,21 @@
 <div style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A"><b>Account:</b> 20000 - Accounts...</span><div style="flex:1"></div><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
 <span style="font-size:12px;font-weight:500;color:#222B3A">Filters</span>
 <div style="display:flex;flex-direction:column;gap:8px">
-<div onClick="{{ openDeptFilter }}" style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px;cursor:pointer"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b>Department:</b> {{ deptValue }}</span><div style="flex:1"></div><sc-if value="{{ deptIsDefault }}" hint-placeholder-val="{{ false }}"><i class="fa-solid fa-star" title="Default member" style="color:#173D82;font-size:10px"></i></sc-if><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
-<div style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A"><b>Scenario:</b> Actuals</span><div style="flex:1"></div><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
-<div style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A"><b>Entity:</b> Global Co</span><div style="flex:1"></div><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
-<div style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A"><b>Product:</b> All Products</span><div style="flex:1"></div><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
-<div style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A"><b>Market:</b> All Markets</span><div style="flex:1"></div><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
+<div onClick="{{ openFilter }}" data-dim="dept" style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px;cursor:pointer"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b>Department:</b> {{ fValue.dept }}</span><div style="flex:1"></div><sc-if value="{{ fStar.dept }}" hint-placeholder-val="{{ false }}"><i class="fa-solid fa-star" title="Default member" style="color:#173D82;font-size:10px"></i></sc-if><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
+<div onClick="{{ openFilter }}" data-dim="scen" style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px;cursor:pointer"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b>Scenario:</b> {{ fValue.scen }}</span><div style="flex:1"></div><sc-if value="{{ fStar.scen }}" hint-placeholder-val="{{ false }}"><i class="fa-solid fa-star" title="Default member" style="color:#173D82;font-size:10px"></i></sc-if><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
+<div onClick="{{ openFilter }}" data-dim="ent" style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px;cursor:pointer"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b>Entity:</b> {{ fValue.ent }}</span><div style="flex:1"></div><sc-if value="{{ fStar.ent }}" hint-placeholder-val="{{ false }}"><i class="fa-solid fa-star" title="Default member" style="color:#173D82;font-size:10px"></i></sc-if><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
+<div onClick="{{ openFilter }}" data-dim="prod" style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px;cursor:pointer"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b>Product:</b> {{ fValue.prod }}</span><div style="flex:1"></div><sc-if value="{{ fStar.prod }}" hint-placeholder-val="{{ false }}"><i class="fa-solid fa-star" title="Default member" style="color:#173D82;font-size:10px"></i></sc-if><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
+<div onClick="{{ openFilter }}" data-dim="mkt" style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px;cursor:pointer"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b>Market:</b> {{ fValue.mkt }}</span><div style="flex:1"></div><sc-if value="{{ fStar.mkt }}" hint-placeholder-val="{{ false }}"><i class="fa-solid fa-star" title="Default member" style="color:#173D82;font-size:10px"></i></sc-if><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
 </div>
 </sc-if>
 <sc-if value="{{ !isDimensionsTab }}" hint-placeholder-val="{{ false }}">
 <span style="font-size:12px;font-weight:500;color:#222B3A">Filters</span>
 <div style="display:flex;flex-direction:column;gap:8px">
 <div style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A"><b>Account:</b> 20000 - Accounts...</span><div style="flex:1"></div><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
-<div style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A"><b>Time:</b> Oct-25</span><div style="flex:1"></div><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
-<div onClick="{{ openDeptFilter }}" style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px;cursor:pointer"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b>Department:</b> {{ deptValue }}</span><div style="flex:1"></div><sc-if value="{{ deptIsDefault }}" hint-placeholder-val="{{ false }}"><i class="fa-solid fa-star" title="Default member" style="color:#173D82;font-size:10px"></i></sc-if><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
-<div style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A"><b>Scenario:</b> Actuals</span><div style="flex:1"></div><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
-<div style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A"><b>Entity:</b> Global Co</span><div style="flex:1"></div><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
+<div onClick="{{ openFilter }}" data-dim="time" style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px;cursor:pointer"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b>Time:</b> {{ fValue.time }}</span><div style="flex:1"></div><sc-if value="{{ fStar.time }}" hint-placeholder-val="{{ false }}"><i class="fa-solid fa-star" title="Default member" style="color:#173D82;font-size:10px"></i></sc-if><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
+<div onClick="{{ openFilter }}" data-dim="dept" style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px;cursor:pointer"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b>Department:</b> {{ fValue.dept }}</span><div style="flex:1"></div><sc-if value="{{ fStar.dept }}" hint-placeholder-val="{{ false }}"><i class="fa-solid fa-star" title="Default member" style="color:#173D82;font-size:10px"></i></sc-if><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
+<div onClick="{{ openFilter }}" data-dim="scen" style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px;cursor:pointer"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b>Scenario:</b> {{ fValue.scen }}</span><div style="flex:1"></div><sc-if value="{{ fStar.scen }}" hint-placeholder-val="{{ false }}"><i class="fa-solid fa-star" title="Default member" style="color:#173D82;font-size:10px"></i></sc-if><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
+<div onClick="{{ openFilter }}" data-dim="ent" style="height:32px;border:1px solid #CDD5E0;border-radius:8px;display:flex;align-items:center;padding:0 10px;gap:8px;cursor:pointer"><i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px"></i><span style="font-size:12px;color:#222B3A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><b>Entity:</b> {{ fValue.ent }}</span><div style="flex:1"></div><sc-if value="{{ fStar.ent }}" hint-placeholder-val="{{ false }}"><i class="fa-solid fa-star" title="Default member" style="color:#173D82;font-size:10px"></i></sc-if><i class="fa-regular fa-chevron-down" style="color:#677489;font-size:11px"></i></div>
 </div>
 </sc-if>
 <x-import component-from-global-scope="FolioDS.Button" fullWidth="{{ true }}" variant="primary" size="small" hint-size="100%,28px">Fetch Data</x-import>
@@ -258,7 +258,7 @@
 </sc-if>
 </div>
 
-<sc-if value="{{ !deptFilterOpen }}" hint-placeholder-val="{{ true }}">
+<sc-if value="{{ mainShown }}" hint-placeholder-val="{{ true }}">
 <div style="display:flex;flex-direction:column">
 <sc-if value="{{ analyzeOpen }}" hint-placeholder-val="{{ false }}">
 <div onClick="{{ toggleAnalyze }}" style="height:56px;box-sizing:border-box;border-radius:12px 12px 0 0;border:1px solid #EBE9FE;border-bottom:none;background:#FBFAFE;display:flex;align-items:center;padding:0 16px;justify-content:space-between;cursor:pointer">
@@ -464,21 +464,57 @@
 </div>
 </sc-if>
 
-<sc-if value="{{ deptFilterOpen }}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ toggleMenu }}" style="position:absolute;inset:0;z-index:20"></div>
+<div style="position:absolute;top:48px;left:8px;z-index:21;width:220px;background:#fff;border:1px solid #E3E8EF;border-radius:12px;box-shadow:0 8px 24px rgba(34,43,58,.16);padding:4px">
+<div onClick="{{ openManage }}" class="dm-mrow" style="display:flex;align-items:center;gap:10px;height:36px;padding:0 10px;border-radius:8px;cursor:pointer;font-size:13px"><i class="fa-regular fa-star" style="width:14px;font-size:12px;color:#173D82"></i>Default filter members</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ manageOpen }}" hint-placeholder-val="{{ false }}">
 <div style="position:relative;display:flex;flex-direction:column;height:100%;flex:1;min-height:0;background:#fff">
 <div style="padding:12px 16px 8px;display:flex;align-items:center;gap:8px">
-<i onClick="{{ deptGoBack }}" title="Back" class="fa-regular fa-chevron-left" style="font-size:12px;color:#677489;cursor:pointer;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:12px"></i>
-<div style="font-size:16px;font-weight:600;flex:1">Filter: Department</div>
-<sc-if value="{{ deptIsViewer }}" hint-placeholder-val="{{ false }}"><i class="fa-regular fa-lock" title="Only users with the Manage Dimension Members, Formulas &amp; Tags permission can change the default" style="font-size:12px;color:#677489"></i></sc-if>
+<i onClick="{{ closeManage }}" title="Back" class="fa-regular fa-chevron-left" style="font-size:12px;color:#677489;cursor:pointer;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:12px"></i>
+<div style="flex:1;min-width:0"><div style="font-size:16px;font-weight:600">Default filter members</div>
+<div style="font-size:12px;color:#677489;margin-top:2px">{{ manageCount }} of 6 set &middot; applies to everyone</div></div>
+<sc-if value="{{ isViewer }}" hint-placeholder-val="{{ false }}"><span title="Only users with the Manage Dimension Members, Formulas &amp; Tags permission can change defaults" style="display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 8px;border-radius:9999px;background:#F2F5F9;color:#677489;font-size:11px;font-weight:500"><i class="fa-regular fa-lock" style="font-size:10px"></i>View only</span></sc-if>
+</div>
+<div style="margin:0 16px 8px;font-size:12px;line-height:18px;color:#677489">Where each filter opens in Excel and Google Sheets. People can still pick another member for their own range.</div>
+<div style="flex:1;min-height:0;overflow-y:auto;padding:0 8px">
+<sc-for list="{{ manageRows }}" as="m" hint-placeholder-count="6">
+<div onClick="{{ m.change }}" class="dm-mrow" style="display:flex;align-items:center;gap:10px;min-height:56px;padding:8px;border-radius:8px;cursor:pointer;border-bottom:1px solid #F2F5F9">
+<i class="fa-regular fa-table-cells" style="color:#677489;font-size:12px;width:14px;text-align:center"></i>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+<span style="font-size:13px;font-weight:600">{{ m.label }}</span>
+<span style="display:flex;align-items:center;gap:4px;font-size:12px;color:{{ m.valueColor }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><sc-if value="{{ m.isSet }}" hint-placeholder-val="{{ false }}"><i class="fa-solid fa-star" style="font-size:9px"></i></sc-if>{{ m.value }}</span>
+<sc-if value="{{ m.isSet }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;color:#97A3B6">{{ m.meta }}</span></sc-if>
+</div>
+<sc-if value="{{ m.canReset }}" hint-placeholder-val="{{ false }}"><span class="dm-mact" title="Reset to automatic" onClick="{{ m.reset }}" style="opacity:0;display:inline-flex;align-items:center;height:24px;padding:0 8px;border-radius:9999px;font-size:11px;font-weight:500;color:#2667D8;border:1px solid #BFD4F7">Reset</span></sc-if>
+<i class="fa-regular fa-chevron-right" style="font-size:10px;color:#97A3B6"></i>
+</div>
+</sc-for>
+</div>
+<div style="padding:8px 16px;background:#F8FAFC;border-top:1px dashed #CDD5E0;display:flex;align-items:center;gap:6px;font-size:11px;color:#677489">Prototype: view as
+<span onClick="{{ viewAdmin }}" style="cursor:pointer;padding:2px 10px;border-radius:9999px;font-weight:500;background:{{ adminBg }};color:{{ adminFg }}">Admin</span>
+<span onClick="{{ viewViewer }}" style="cursor:pointer;padding:2px 10px;border-radius:9999px;font-weight:500;background:{{ viewerBg }};color:{{ viewerFg }}">Viewer</span></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ filterOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:relative;display:flex;flex-direction:column;height:100%;flex:1;min-height:0;background:#fff">
+<div style="padding:12px 16px 8px;display:flex;align-items:center;gap:8px">
+<i onClick="{{ fGoBack }}" title="Back" class="fa-regular fa-chevron-left" style="font-size:12px;color:#677489;cursor:pointer;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:12px"></i>
+<div style="font-size:16px;font-weight:600;flex:1">{{ fTitle }}</div>
+<sc-if value="{{ isViewer }}" hint-placeholder-val="{{ false }}"><i class="fa-regular fa-lock" title="Only users with the Manage Dimension Members, Formulas &amp; Tags permission can change the default" style="font-size:12px;color:#677489"></i></sc-if>
 </div>
 <div style="margin:0 16px 8px;padding:10px 12px;border-radius:12px;background:#F8FAFC;font-size:12px;line-height:18px;color:#4A5567">
-<sc-if value="{{ deptIsSet }}" hint-placeholder-val="{{ false }}"><span>Opens on <b style="color:#173D82">{{ deptDefaultName }}</b>, set for everyone in the company.<sc-if value="{{ deptCanEdit }}" hint-placeholder-val="{{ true }}"> <span onClick="{{ deptAskReset }}" style="color:#2667D8;font-weight:500;cursor:pointer">Reset to automatic</span></sc-if></span></sc-if>
-<sc-if value="{{ deptIsUnset }}" hint-placeholder-val="{{ true }}"><span>Opens on <b>{{ deptAutoName }}</b>, the parent with the most children.<sc-if value="{{ deptCanEdit }}" hint-placeholder-val="{{ true }}"> Hover a member to set a default.</sc-if></span></sc-if>
+<sc-if value="{{ fIsSet }}" hint-placeholder-val="{{ false }}"><span>Opens on <b style="color:#173D82">{{ fDefName }}</b>, set for everyone in the company.<sc-if value="{{ canEdit }}" hint-placeholder-val="{{ true }}"> <span onClick="{{ fAskReset }}" style="color:#2667D8;font-weight:500;cursor:pointer">Reset to automatic</span></sc-if></span></sc-if>
+<sc-if value="{{ fIsUnset }}" hint-placeholder-val="{{ true }}"><span>Opens on <b>{{ fAutoName }}</b>, the parent with the most children.<sc-if value="{{ canEdit }}" hint-placeholder-val="{{ true }}"> Hover a member to set a default.</sc-if></span></sc-if>
 </div>
 <div style="margin:0 16px 8px;position:relative"><i class="fa-regular fa-magnifying-glass" style="position:absolute;left:12px;top:11px;font-size:12px;color:#677489"></i>
-<input value="{{ deptQuery }}" onInput="{{ deptOnQuery }}" placeholder="Search members" style="width:100%;height:34px;border:1px solid #CDD5E0;border-radius:8px;padding:0 12px 0 32px;font:13px 'DM Sans',sans-serif;outline:none;box-sizing:border-box"></div>
+<input value="{{ fQuery }}" onInput="{{ fOnQuery }}" placeholder="Search members" style="width:100%;height:34px;border:1px solid #CDD5E0;border-radius:8px;padding:0 12px 0 32px;font:13px 'DM Sans',sans-serif;outline:none;box-sizing:border-box"></div>
 <div style="flex:1;min-height:0;overflow-y:auto;padding:0 8px">
-<sc-for list="{{ deptRows }}" as="r" hint-placeholder-count="8">
+<sc-for list="{{ fRows }}" as="r" hint-placeholder-count="8">
 <div class="dm-mrow" onClick="{{ r.pick }}" style="display:flex;align-items:center;gap:6px;min-height:36px;padding:0 8px 0 {{ r.pad }}px;border-radius:8px;cursor:pointer;background:{{ r.bg }}">
 <i onClick="{{ r.toggle }}" class="{{ r.caret }}" style="width:14px;font-size:12px;visibility:{{ r.caretVis }}"></i>
 <span style="font-size:13px;flex:1;font-weight:{{ r.weight }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span>
@@ -488,33 +524,33 @@
 </sc-for>
 </div>
 <div style="padding:12px 16px;border-top:1px solid #E3E8EF;display:flex;gap:8px;justify-content:flex-end">
-<x-import component-from-global-scope="FolioDS.Button" variant="ghost-gray" size="small" onClick="{{ deptGoBack }}" hint-size="auto,28px">Cancel</x-import>
-<x-import component-from-global-scope="FolioDS.Button" variant="primary" size="small" onClick="{{ deptApply }}" hint-size="auto,28px">Apply filter</x-import>
+<sc-if value="{{ fShowCancel }}" hint-placeholder-val="{{ true }}"><x-import component-from-global-scope="FolioDS.Button" variant="ghost-gray" size="small" onClick="{{ fGoBack }}" hint-size="auto,28px">Cancel</x-import></sc-if>
+<x-import component-from-global-scope="FolioDS.Button" variant="primary" size="small" onClick="{{ fApply }}" hint-size="auto,28px">{{ fPrimary }}</x-import>
 </div>
 <div style="padding:8px 16px;background:#F8FAFC;border-top:1px dashed #CDD5E0;display:flex;align-items:center;gap:6px;font-size:11px;color:#677489">Prototype: view as
-<span onClick="{{ deptViewAdmin }}" style="cursor:pointer;padding:2px 10px;border-radius:9999px;font-weight:500;background:{{ deptAdminBg }};color:{{ deptAdminFg }}">Admin</span>
-<span onClick="{{ deptViewViewer }}" style="cursor:pointer;padding:2px 10px;border-radius:9999px;font-weight:500;background:{{ deptViewerBg }};color:{{ deptViewerFg }}">Viewer</span></div>
-<sc-if value="{{ deptConfirmOpen }}" hint-placeholder-val="{{ false }}">
+<span onClick="{{ viewAdmin }}" style="cursor:pointer;padding:2px 10px;border-radius:9999px;font-weight:500;background:{{ adminBg }};color:{{ adminFg }}">Admin</span>
+<span onClick="{{ viewViewer }}" style="cursor:pointer;padding:2px 10px;border-radius:9999px;font-weight:500;background:{{ viewerBg }};color:{{ viewerFg }}">Viewer</span></div>
+<sc-if value="{{ confirmOpen }}" hint-placeholder-val="{{ false }}">
 <div style="position:absolute;inset:0;background:rgba(16,24,40,.45);display:flex;align-items:flex-end">
 <div style="background:#fff;width:100%;border-radius:16px 16px 0 0;padding:16px;display:flex;flex-direction:column;gap:12px;box-sizing:border-box">
-<div style="font-size:16px;font-weight:600">{{ deptConfirmTitle }}</div>
-<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#F8FAFC;border-radius:12px;padding:10px 12px;font-size:13px"><span style="color:#677489;text-decoration:line-through">{{ deptPrevName }}</span><i class="fa-solid fa-arrow-right" style="font-size:10px;color:#97A3B6"></i><b style="color:#173D82">{{ deptNextName }}</b></div>
+<div style="font-size:16px;font-weight:600">{{ confirmTitle }}</div>
+<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#F8FAFC;border-radius:12px;padding:10px 12px;font-size:13px"><span style="color:#677489">{{ fLabel }}</span><i class="fa-solid fa-arrow-right" style="font-size:10px;color:#97A3B6"></i><span style="color:#677489;text-decoration:line-through">{{ prevName }}</span><i class="fa-solid fa-arrow-right" style="font-size:10px;color:#97A3B6"></i><b style="color:#173D82">{{ nextName }}</b></div>
 <ul style="margin:0;padding-left:18px;font-size:12px;line-height:18px;color:#353F4F;display:flex;flex-direction:column;gap:4px">
 <li>Applies to everyone in the company, in Excel and Google Sheets.</li>
 <li>Applies to filters opened from now on. Saved ranges are not changed.</li>
 <li>The change is recorded in the audit trail.</li>
 </ul>
 <div style="display:flex;gap:8px;justify-content:flex-end">
-<x-import component-from-global-scope="FolioDS.Button" variant="ghost-gray" onClick="{{ deptCloseConfirm }}" hint-size="auto,32px">Cancel</x-import>
-<x-import component-from-global-scope="FolioDS.Button" variant="primary" onClick="{{ deptCommit }}" hint-size="auto,32px">{{ deptConfirmCta }}</x-import>
+<x-import component-from-global-scope="FolioDS.Button" variant="ghost-gray" onClick="{{ closeConfirm }}" hint-size="auto,32px">Cancel</x-import>
+<x-import component-from-global-scope="FolioDS.Button" variant="primary" onClick="{{ commit }}" hint-size="auto,32px">{{ confirmCta }}</x-import>
 </div>
 </div>
 </div>
 </sc-if>
 </div>
 </sc-if>
-<sc-if value="{{ deptToastOpen }}" hint-placeholder-val="{{ false }}">
-<div style="position:absolute;left:16px;right:16px;top:52px;z-index:10;background:#222B3A;color:#fff;border-radius:12px;padding:10px 12px;font-size:12px;line-height:18px;display:flex;gap:8px;align-items:center"><i class="fa-solid fa-circle-check" style="color:#32D583"></i><span style="flex:1">{{ deptToastText }}</span><i class="fa-solid fa-xmark" onClick="{{ deptCloseToast }}" style="cursor:pointer"></i></div>
+<sc-if value="{{ toastOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:16px;right:16px;top:52px;z-index:10;background:#222B3A;color:#fff;border-radius:12px;padding:10px 12px;font-size:12px;line-height:18px;display:flex;gap:8px;align-items:center"><i class="fa-solid fa-circle-check" style="color:#32D583"></i><span style="flex:1">{{ toastText }}</span><i class="fa-solid fa-xmark" onClick="{{ closeToast }}" style="cursor:pointer"></i></div>
 </sc-if>
 
 <sc-if value="{{ tableDetailOpen }}" hint-placeholder-val="{{ false }}">
@@ -580,8 +616,8 @@ class Component extends DCLogic {
     selectPickerOpen: false, selectedTemplate: null, buildSelectStage: null, selectedReportFile: null,
     dimSlots: { columns: null, rows: null, filters: [] },
     selectedOpenFile: null,
-    deptScreen: false, deptRole: 'admin', deptDef: null, deptApplied: null, deptChosen: null,
-    deptOpen: {}, deptQuery: '', deptConfirm: undefined, deptToast: null
+    menuOpen: false, manageOpen: false, fScreen: null, fFrom: null, fRole: 'admin', fDefs: {}, fMeta: {}, fApplied: {},
+    fChosen: null, fOpen: {}, fQuery: '', fConfirm: undefined, fToast: null
   };
   startSelectFlow = () => this.setState({ hasSource: true, isDrilldown: false, buildOpen: true, buildSelectStage: 'awaitingRange' });
   startNewFlow = () => this.setState({ hasSource: true, isDrilldown: false, buildOpen: true, buildSelectStage: 'dragDrop', dimSlots: { columns: null, rows: null, filters: [] } });
@@ -647,57 +683,85 @@ class Component extends DCLogic {
   closeTableSettings = () => this.setState({ tableDetailStage: 'configured' });
   setTableSettingsTab = () => this.setState({ tableSettingsTab: 'settings' });
   setTableLayoutTab = () => this.setState({ tableSettingsTab: 'layout' });
-  DEPT_NODES = [['all', null, 'All Departments'], ['corp', 'all', 'Corporate'], ['ga', 'corp', 'G&A'], ['fin', 'corp', 'Finance'], ['ppl', 'corp', 'People'], ['gtm', 'all', 'Go-to-Market'], ['sal', 'gtm', 'Sales'], ['mkt', 'gtm', 'Marketing'], ['cs', 'gtm', 'Customer Success'], ['rd', 'all', 'R&D'], ['plat', 'rd', 'Platform'], ['data', 'rd', 'Data'], ['des', 'rd', 'Design'], ['ns', 'all', 'NetSuite Connection'], ['ns1', 'ns', 'NS - Operations'], ['ns2', 'ns', 'NS - Facilities'], ['ns3', 'ns', 'NS - Legal'], ['ns4', 'ns', 'NS - IT'], ['ns5', 'ns', 'NS - Procurement'], ['ns6', 'ns', 'NS - Support']];
-  deptTree() {
-    const nodes = this.DEPT_NODES.map(([id, parent, name]) => ({ id, parent, name, kids: [] })), by = {};
+  DIMS = {
+    time: { label: 'Time', nodes: [['fy', null, 'FY2026'], ['q1', 'fy', 'Q1'], ['jan', 'q1', 'Jan-26'], ['feb', 'q1', 'Feb-26'], ['mar', 'q1', 'Mar-26'], ['q2', 'fy', 'Q2'], ['apr', 'q2', 'Apr-26'], ['may', 'q2', 'May-26'], ['jun', 'q2', 'Jun-26'], ['q3', 'fy', 'Q3'], ['jul', 'q3', 'Jul-26'], ['aug', 'q3', 'Aug-26'], ['sep', 'q3', 'Sep-26'], ['q4', 'fy', 'Q4'], ['oct', 'q4', 'Oct-26'], ['nov', 'q4', 'Nov-26'], ['dec', 'q4', 'Dec-26']] },
+    dept: { label: 'Department', nodes: [['all', null, 'All Departments'], ['corp', 'all', 'Corporate'], ['ga', 'corp', 'G&A'], ['fin', 'corp', 'Finance'], ['ppl', 'corp', 'People'], ['gtm', 'all', 'Go-to-Market'], ['sal', 'gtm', 'Sales'], ['mkt', 'gtm', 'Marketing'], ['cs', 'gtm', 'Customer Success'], ['rd', 'all', 'R&D'], ['plat', 'rd', 'Platform'], ['data', 'rd', 'Data'], ['des', 'rd', 'Design'], ['ns', 'all', 'NetSuite Connection'], ['ns1', 'ns', 'NS - Operations'], ['ns2', 'ns', 'NS - Facilities'], ['ns3', 'ns', 'NS - Legal'], ['ns4', 'ns', 'NS - IT'], ['ns5', 'ns', 'NS - Procurement'], ['ns6', 'ns', 'NS - Support']] },
+    scen: { label: 'Scenario', nodes: [['allsc', null, 'All Scenarios'], ['act', 'allsc', 'Actuals'], ['bud', 'allsc', 'Budget'], ['fc', 'allsc', 'Forecast'], ['fc3', 'fc', 'Q3 Forecast'], ['fc4', 'fc', 'Q4 Forecast']] },
+    ent: { label: 'Entity', nodes: [['glob', null, 'Global Co'], ['am', 'glob', 'Americas'], ['us', 'am', 'US Inc'], ['ca', 'am', 'Canada Ltd'], ['emea', 'glob', 'EMEA'], ['uk', 'emea', 'UK Ltd'], ['de', 'emea', 'DE GmbH'], ['fr', 'emea', 'FR SAS'], ['apac', 'glob', 'APAC'], ['au', 'apac', 'AU Pty'], ['jp', 'apac', 'JP KK']] },
+    prod: { label: 'Product', nodes: [['allp', null, 'All Products'], ['plat', 'allp', 'Platform'], ['core', 'plat', 'Core'], ['ana', 'plat', 'Analytics'], ['ai', 'plat', 'AI'], ['svc', 'allp', 'Services'], ['impl', 'svc', 'Implementation'], ['sup', 'svc', 'Support'], ['add', 'allp', 'Add-ons'], ['conn', 'add', 'Connectors'], ['sheets', 'add', 'Sheets Add-in']] },
+    mkt: { label: 'Market', nodes: [['allm', null, 'All Markets'], ['na', 'allm', 'North America'], ['mus', 'na', 'United States'], ['mca', 'na', 'Canada'], ['eu', 'allm', 'Europe'], ['muk', 'eu', 'United Kingdom'], ['mde', 'eu', 'Germany'], ['mfr', 'eu', 'France'], ['ap', 'allm', 'Asia Pacific'], ['mau', 'ap', 'Australia'], ['mjp', 'ap', 'Japan']] }
+  };
+  fTree(k) {
+    const nodes = this.DIMS[k].nodes.map(([id, parent, name]) => ({ id, parent, name, kids: [] })), by = {};
     nodes.forEach((n) => { by[n.id] = n; }); nodes.forEach((n) => { if (n.parent) by[n.parent].kids.push(n); });
     let auto = nodes[0]; nodes.forEach((n) => { if (n.kids.length > auto.kids.length) auto = n; });
     return { nodes, by, auto };
   }
-  deptShowToast = (text) => { this.setState({ deptToast: text }); clearTimeout(this._deptT); this._deptT = setTimeout(() => this.setState({ deptToast: null }), 5000); };
-  deptCommit = () => {
-    const s = this.state, t = this.deptTree();
-    this.setState({ deptDef: s.deptConfirm, deptConfirm: undefined });
-    this.deptShowToast(s.deptConfirm ? 'Default set to ' + t.by[s.deptConfirm].name + ' for everyone.' : 'Default reset to automatic.');
+  toggleMenu = () => this.setState((s) => ({ menuOpen: !s.menuOpen }));
+  openManage = () => this.setState({ menuOpen: false, manageOpen: true });
+  closeManage = () => this.setState({ manageOpen: false });
+  openFilter = (e) => this.setState({ fScreen: e.currentTarget.getAttribute('data-dim'), fFrom: null, fChosen: null, fQuery: '' });
+  fShowToast = (text) => { this.setState({ fToast: text }); clearTimeout(this._fT); this._fT = setTimeout(() => this.setState({ fToast: null }), 5000); };
+  commit = () => {
+    const s = this.state, k = s.fScreen, t = this.fTree(k);
+    const meta = { ...s.fMeta }; if (s.fConfirm) meta[k] = 'Set by Nina Graham \u00b7 just now'; else delete meta[k];
+    this.setState({ fDefs: { ...s.fDefs, [k]: s.fConfirm }, fMeta: meta, fConfirm: undefined });
+    this.fShowToast(s.fConfirm ? this.DIMS[k].label + ' default set to ' + t.by[s.fConfirm].name + ' for everyone.' : this.DIMS[k].label + ' default reset to automatic.');
   };
-  deptVals() {
-    const s = this.state, t = this.deptTree(), canEdit = s.deptRole === 'admin', isViewer = !canEdit;
-    const cur = s.deptChosen || s.deptApplied || s.deptDef || t.auto.id, q = s.deptQuery.trim().toLowerCase();
+  fVals() {
+    const s = this.state, canEdit = s.fRole === 'admin', isViewer = !canEdit;
+    const value = {}, star = {}, manageRows = []; let manageCount = 0;
+    Object.keys(this.DIMS).forEach((k) => {
+      const t = this.fTree(k), def = s.fDefs[k], shown = s.fApplied[k] || def || t.auto.id;
+      value[k] = t.by[shown].name; star[k] = !!def && shown === def; if (def) manageCount++;
+      manageRows.push({
+        label: this.DIMS[k].label, isSet: !!def, value: def ? t.by[def].name : 'Automatic: ' + t.auto.name, valueColor: def ? '#173D82' : '#677489',
+        meta: s.fMeta[k] || '', canReset: canEdit && !!def,
+        change: () => this.setState({ manageOpen: false, fScreen: k, fFrom: 'manage', fChosen: null, fQuery: '' }),
+        reset: (ev) => { ev.stopPropagation(); this.setState({ manageOpen: false, fScreen: k, fFrom: 'manage', fChosen: null, fQuery: '', fConfirm: null }); }
+      });
+    });
+    const k = s.fScreen || 'dept', t = this.fTree(k), def = s.fDefs[k];
+    const cur = s.fChosen || s.fApplied[k] || def || t.auto.id, q = s.fQuery.trim().toLowerCase();
     const list = [];
-    const walk = (n, d) => { list.push({ n, d }); if (n.kids.length && s.deptOpen[n.id] !== false) n.kids.forEach((c) => walk(c, d + 1)); };
+    const walk = (n, d) => { list.push({ n, d }); if (n.kids.length && s.fOpen[k + n.id] !== false) n.kids.forEach((c) => walk(c, d + 1)); };
     if (q) t.nodes.filter((n) => n.name.toLowerCase().includes(q)).forEach((n) => list.push({ n, d: 0 })); else walk(t.nodes[0], 0);
-    const rows = list.map(({ n, d }) => {
-      const isDefault = n.id === s.deptDef, has = n.kids.length > 0 && !q;
+    const fRows = list.map(({ n, d }) => {
+      const isDefault = n.id === def, has = n.kids.length > 0 && !q;
       return {
         pad: 8 + d * 20, name: n.name, weight: n.id === cur ? 600 : 400, bg: n.id === cur ? '#EFF6FF' : 'transparent', isDefault,
-        caret: 'fa-solid fa-caret-' + (s.deptOpen[n.id] !== false ? 'down' : 'right'), caretVis: has ? 'visible' : 'hidden',
-        toggle: (ev) => { ev.stopPropagation(); this.setState((st) => ({ deptOpen: { ...st.deptOpen, [n.id]: st.deptOpen[n.id] === false } })); },
-        pick: () => this.setState({ deptChosen: n.id }),
+        caret: 'fa-solid fa-caret-' + (s.fOpen[k + n.id] !== false ? 'down' : 'right'), caretVis: has ? 'visible' : 'hidden',
+        toggle: (ev) => { ev.stopPropagation(); this.setState((st) => ({ fOpen: { ...st.fOpen, [k + n.id]: st.fOpen[k + n.id] === false } })); },
+        pick: () => this.setState({ fChosen: n.id }),
         showAct: !isDefault, actLabel: 'Set default', actIcon: canEdit ? 'fa-regular fa-star' : 'fa-regular fa-lock', actColor: canEdit ? '#2667D8' : '#97A3B6', actBorder: canEdit ? '#BFD4F7' : '#E3E8EF', cursor: canEdit ? 'pointer' : 'not-allowed',
         tip: canEdit ? 'Set as default filter member for everyone' : 'Requires the Manage Dimension Members, Formulas & Tags permission',
-        setDefault: (ev) => { ev.stopPropagation(); if (canEdit) this.setState({ deptConfirm: n.id }); }
+        setDefault: (ev) => { ev.stopPropagation(); if (canEdit) this.setState({ fConfirm: n.id }); }
       };
     });
     const nm = (id) => id ? t.by[id].name : 'Automatic (' + t.auto.name + ')';
-    const shown = s.deptApplied || s.deptDef || t.auto.id;
+    const fromManage = s.fFrom === 'manage';
+    const back = (st) => ({ fScreen: null, fFrom: null, manageOpen: st.fFrom === 'manage', fChosen: null, fQuery: '' });
     return {
-      deptFilterOpen: s.deptScreen, deptValue: t.by[shown].name, deptIsDefault: !!s.deptDef && shown === s.deptDef,
-      openDeptFilter: () => this.setState({ deptScreen: true, deptChosen: null, deptQuery: '' }),
-      deptGoBack: () => this.setState({ deptScreen: false, deptChosen: null, deptQuery: '' }),
-      deptApply: () => { this.setState({ deptScreen: false, deptApplied: cur, deptChosen: null, deptQuery: '' }); this.deptShowToast('Filter applied: ' + t.by[cur].name); },
-      deptRows: rows, deptIsViewer: isViewer, deptCanEdit: canEdit, deptIsSet: !!s.deptDef, deptIsUnset: !s.deptDef, deptDefaultName: s.deptDef ? t.by[s.deptDef].name : '', deptAutoName: t.auto.name,
-      deptQuery: s.deptQuery, deptOnQuery: (e) => this.setState({ deptQuery: e.target.value }),
-      deptConfirmOpen: s.deptConfirm !== undefined, deptConfirmTitle: s.deptConfirm ? 'Set as default for everyone?' : 'Reset to automatic?', deptConfirmCta: s.deptConfirm ? 'Set default' : 'Reset to automatic',
-      deptPrevName: nm(s.deptDef), deptNextName: nm(s.deptConfirm || null), deptCommit: this.deptCommit, deptAskReset: () => this.setState({ deptConfirm: null }), deptCloseConfirm: () => this.setState({ deptConfirm: undefined }),
-      deptToastOpen: !!s.deptToast, deptToastText: s.deptToast || '', deptCloseToast: () => this.setState({ deptToast: null }),
-      deptViewAdmin: () => this.setState({ deptRole: 'admin' }), deptViewViewer: () => this.setState({ deptRole: 'viewer' }),
-      deptAdminBg: canEdit ? '#173D82' : 'transparent', deptAdminFg: canEdit ? '#fff' : '#677489', deptViewerBg: isViewer ? '#173D82' : 'transparent', deptViewerFg: isViewer ? '#fff' : '#677489'
+      toggleMenu: this.toggleMenu, openManage: this.openManage, closeManage: this.closeManage, openFilter: this.openFilter, commit: this.commit,
+      mainShown: !s.fScreen && !s.manageOpen, menuOpen: s.menuOpen, manageOpen: s.manageOpen, filterOpen: !!s.fScreen,
+      fValue: value, fStar: star, manageRows, manageCount, isViewer, canEdit,
+      fLabel: this.DIMS[k].label, fTitle: fromManage ? 'Default: ' + this.DIMS[k].label : 'Filter: ' + this.DIMS[k].label,
+      fGoBack: () => this.setState(back),
+      fApply: () => { if (fromManage) { this.setState(back); return; } this.setState((st) => ({ ...back(st), fApplied: { ...st.fApplied, [k]: cur } })); this.fShowToast('Filter applied: ' + t.by[cur].name); },
+      fPrimary: fromManage ? 'Done' : 'Apply filter', fShowCancel: !fromManage,
+      fRows, fIsSet: !!def, fIsUnset: !def, fDefName: def ? t.by[def].name : '', fAutoName: t.auto.name,
+      fQuery: s.fQuery, fOnQuery: (e) => this.setState({ fQuery: e.target.value }), fAskReset: () => this.setState({ fConfirm: null }),
+      confirmOpen: s.fConfirm !== undefined, confirmTitle: s.fConfirm ? 'Set as default for everyone?' : 'Reset to automatic?', confirmCta: s.fConfirm ? 'Set default' : 'Reset to automatic',
+      prevName: nm(def), nextName: nm(s.fConfirm || null), closeConfirm: () => this.setState({ fConfirm: undefined }),
+      toastOpen: !!s.fToast, toastText: s.fToast || '', closeToast: () => this.setState({ fToast: null }),
+      viewAdmin: () => this.setState({ fRole: 'admin' }), viewViewer: () => this.setState({ fRole: 'viewer' }),
+      adminBg: canEdit ? '#173D82' : 'transparent', adminFg: canEdit ? '#fff' : '#677489', viewerBg: isViewer ? '#173D82' : 'transparent', viewerFg: isViewer ? '#fff' : '#677489'
     };
   }
   renderVals() {
     const s = this.state;
     return {
-      ...this.deptVals(),
+      ...this.fVals(),
       buildOpen: s.buildOpen, analyzeOpen: s.analyzeOpen, publishOpen: s.publishOpen, tablesOpen: s.tablesOpen,
       toggleBuild: this.toggleBuild, toggleAnalyze: this.toggleAnalyze, togglePublish: this.togglePublish, toggleTables: this.toggleTables,
       hasSource: s.hasSource, isDrilldown: s.isDrilldown, fetched: s.fetched,

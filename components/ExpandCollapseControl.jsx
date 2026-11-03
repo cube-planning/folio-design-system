@@ -39,7 +39,7 @@ export function ExpandCollapseControl({
         <span style={{ fontSize: 12, fontWeight: 500, color: COLORS.gray900 }}>{label}</span>
         {tooltip && (
           <Tooltip content={tooltip}>
-            <i className="fa-solid fa-circle-question" style={{ fontSize: 14, color: COLORS.gray500 }} aria-hidden="true" />
+            <i className="fa-regular fa-circle-question" style={{ fontSize: 14, color: COLORS.gray500 }} aria-hidden="true" />
           </Tooltip>
         )}
       </div>

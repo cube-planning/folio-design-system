@@ -50,7 +50,7 @@ export function AddonTopNav({
       fontFamily: "'DM Sans', sans-serif",
     }}>
       <Button
-        icon={<i className="fa-solid fa-bars" />}
+        icon={<i className="fa-regular fa-bars" />}
         aria-label="Menu"
         variant="ghost-gray"
         onClick={onMenuClick}
@@ -65,9 +65,9 @@ export function AddonTopNav({
           color: COLORS.white, fontSize: 13, fontWeight: 500, cursor: "pointer", padding: "4px 6px",
         }}
       >
-        <i className="fa-solid fa-database" aria-hidden="true" />
+        <i className="fa-regular fa-database" aria-hidden="true" />
         {dataSource}
-        <i className="fa-solid fa-chevron-down" style={{ fontSize: 10 }} aria-hidden="true" />
+        <i className="fa-regular fa-chevron-down" style={{ fontSize: 10 }} aria-hidden="true" />
       </button>
 
       <button
@@ -79,7 +79,7 @@ export function AddonTopNav({
         }}
       >
         {currency}
-        <i className="fa-solid fa-chevron-down" style={{ fontSize: 10 }} aria-hidden="true" />
+        <i className="fa-regular fa-chevron-down" style={{ fontSize: 10 }} aria-hidden="true" />
       </button>
 
       {hasWarning && (
@@ -89,7 +89,7 @@ export function AddonTopNav({
           aria-label="Unrecognized dimensions warning"
           style={{ background: "none", border: "none", cursor: "pointer", color: COLORS.warn, fontSize: 16, padding: "4px 6px" }}
         >
-          <i className="fa-solid fa-triangle-exclamation" aria-hidden="true" />
+          <i className="fa-regular fa-triangle-exclamation" aria-hidden="true" />
         </button>
       )}
 

@@ -48,11 +48,11 @@ function DataSourceButton({ label, onClick }) {
         fontFamily: "'DM Sans', sans-serif", textAlign: "left", boxSizing: "border-box",
       }}
     >
-      <i className="fa-solid fa-database" style={{ fontSize: 12, color: COLORS.gray600 }} aria-hidden="true" />
+      <i className="fa-regular fa-database" style={{ fontSize: 12, color: COLORS.gray600 }} aria-hidden="true" />
       <span style={{ flex: 1, fontSize: 12, color: label ? COLORS.gray900 : COLORS.gray500 }}>
         {label ?? "Select a data source"}
       </span>
-      <i className="fa-solid fa-chevron-down" style={{ fontSize: 12, color: COLORS.gray600 }} aria-hidden="true" />
+      <i className="fa-regular fa-chevron-down" style={{ fontSize: 12, color: COLORS.gray600 }} aria-hidden="true" />
     </button>
   );
 }
@@ -69,7 +69,7 @@ function TableRow({ name, meta, selected, onSelect, onOpen }) {
         background: selected ? COLORS.cobalt50 : COLORS.white, cursor: "pointer", boxSizing: "border-box",
       }}
     >
-      <i className="fa-solid fa-table" style={{ fontSize: 14, color: COLORS.gray600, flexShrink: 0 }} aria-hidden="true" />
+      <i className="fa-regular fa-table" style={{ fontSize: 14, color: COLORS.gray600, flexShrink: 0 }} aria-hidden="true" />
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontSize: 12, fontWeight: 500, color: COLORS.gray900, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
           {name}
@@ -78,7 +78,7 @@ function TableRow({ name, meta, selected, onSelect, onOpen }) {
       </div>
       {selected && (
         <>
-          <i className="fa-solid fa-check" style={{ fontSize: 12, color: COLORS.cobalt500 }} aria-hidden="true" />
+          <i className="fa-regular fa-check" style={{ fontSize: 12, color: COLORS.cobalt500 }} aria-hidden="true" />
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); onOpen?.(); }}
@@ -128,7 +128,7 @@ function TableDetail({
           >
             Tables
           </button>
-          <i className="fa-solid fa-chevron-right" style={{ fontSize: 10 }} aria-hidden="true" />
+          <i className="fa-regular fa-chevron-right" style={{ fontSize: 10 }} aria-hidden="true" />
           <span style={{ color: COLORS.gray900, fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
             {name}
           </span>
@@ -140,7 +140,7 @@ function TableDetail({
             aria-label="Delete table"
             style={{ background: "none", border: "none", cursor: "pointer", color: COLORS.gray600, padding: 4 }}
           >
-            <i className="fa-solid fa-trash" aria-hidden="true" />
+            <i className="fa-regular fa-trash" aria-hidden="true" />
           </button>
         )}
       </div>
@@ -163,7 +163,7 @@ function TableDetail({
               aria-label="Edit table"
               style={{ background: "none", border: "none", cursor: "pointer", color: COLORS.gray600, padding: 4 }}
             >
-              <i className="fa-solid fa-pencil" aria-hidden="true" />
+              <i className="fa-regular fa-pencil" aria-hidden="true" />
             </button>
           </div>
 

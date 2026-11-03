@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <script src="./ds-base.js"></script>
+  <script src="./_sidebar-icons.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+    .fa-solid::before,.fa-regular::before,.fa-brands::before,.fa-light::before,.fa-thin::before,.fa-duotone::before { content:var(--fa) !important; }
+    body { font-family:'DM Sans',sans-serif; background:#F5F7FA; height:100vh; overflow:hidden; color:#222B3A; }
+    a { text-decoration:none; color:#2667D8; }
+    a:hover { color:#173D82; }
+    .app-shell { display:flex; height:100vh; }
+    .sb { width:255px; min-width:255px; padding:8px; display:flex; flex-direction:column; height:100vh; transition:width .2s ease,min-width .2s ease; overflow:hidden; }
+    .sb.col { width:64px; min-width:64px; }
+    .sb-card { background:#fff; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06); flex:1; display:flex; flex-direction:column; overflow:hidden; }
+    .sb-hdr { height:48px; padding:16px 12px 0 16px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; white-space:nowrap; }
+    .sb.col .sb-hdr { flex-direction:column; height:auto; justify-content:center; align-items:center; gap:8px; padding:12px 0 8px; }
+    .logo-wm { display:flex; align-items:center; }
+    .logo-wm img { height:28px; width:auto; display:block; }
+    .logo-ic { display:none; align-items:center; justify-content:center; }
+    .logo-ic img { height:28px; width:auto; display:block; }
+    .sb.col .logo-wm { display:none; }
+    .sb.col .logo-ic { display:flex; }
+    .col-btn { width:28px; height:28px; border:none; border-radius:4px; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#4A5567; }
+    .col-btn:hover { background:#F1F4F8; }
+    .cc-left,.cc-right { display:inline-flex; align-items:center; justify-content:center; }
+    .cc-right { display:none; }
+    .sb.col .cc-left { display:none; }
+    .sb.col .cc-right { display:inline-flex; }
+    .sb-nav { flex:1; overflow-y:auto; overflow-x:hidden; padding:24px 0; }
+    .sb-nav::-webkit-scrollbar { width:4px; }
+    .sb-nav::-webkit-scrollbar-thumb { background:#CDD5E0; border-radius:2px; }
+    .dv { height:1px; background:#E3E8EF; margin:8px 0; }
+    .nav-section { display:flex; flex-direction:column; gap:4px; padding:8px 0; }
+    .sb.col .nav-section { padding:0; align-items:center; }
+    .sec { display:flex; align-items:center; gap:4px; height:20px; padding:0 16px; font-family:'DM Sans', sans-serif; font-size:12px; font-weight:400; color:#4A5567; white-space:nowrap; cursor:pointer; user-select:none; }
+    .sb.col .sec { justify-content:center; padding:0; }
+    .sb.col .sec-lbl,.sb.col .sec-crt { display:none; }
+    .sec-crt { font-size:8px; color:#677489; transition:transform .15s ease; }
+    .nav-section.collapsed > *:not(.sec) { display:none; }
+    .nav-section.collapsed .sec-crt, .apps-wrap.collapsed .sec-crt { transform:rotate(-90deg); }
+    .apps-wrap.collapsed .apps-grid { display:none; }
+    .ni { height:32px; padding:0 24px 0 29px; border-left:3px solid transparent; display:flex; align-items:center; gap:8px; border-radius:0; cursor:pointer; position:relative; white-space:nowrap; color:inherit; width:100%; }
+    .nav-section .ni:hover, .ni.home:hover { background:#EFF6FF; border-left-color:#2667D8; }
+    .nav-section .ni:hover .ni-lbl, .ni.home:hover .ni-lbl, .nav-section .ni:hover .ni-ic, .ni.home:hover .ni-ic { color:#2667D8; }
+    .ni.active { background:#EFF6FF; border-left-color:#2667D8; }
+    .ni.active .ni-lbl { color:#2667D8; font-weight:500; }
+    .ni.active .ni-ic { color:#2667D8; }
+    .ni-ic { width:22px; height:22px; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#4A5567; font-size:15px; }
+    .ni-lbl { font-size:14px; font-weight:400; color:#222B3A; }
+    .sb.col .ni { padding:0; border-left:none; width:36px; justify-content:center; border-radius:4px; }
+    .sb.col .ni-lbl { display:none; }
+    .sb.col .ni:hover::after { content:attr(data-label); position:absolute; left:calc(100% + 8px); top:50%; transform:translateY(-50%); background:#222B3A; color:#fff; font-size:12px; font-weight:500; padding:4px 10px; border-radius:4px; white-space:nowrap; z-index:300; pointer-events:none; }
+    .ni-sub-wrap { padding-left:34px; display:flex; flex-direction:column; }
+    .ni-sub { display:flex; align-items:center; height:32px; padding:4px 16px 4px 18px; border-left:2px solid #E3E8EF; font-size:14px; font-weight:400; color:#222B3A; cursor:pointer; white-space:nowrap; }
+    .ni-sub:hover { background:#EFF6FF; color:#222B3A; }
+    .sb.col .ni-sub-wrap { display:none; }
+    .apps-wrap { padding:0 8px 16px; }
+    .sb.col .apps-wrap { padding:0 0 8px; }
+    .apps-sec { display:flex; align-items:center; gap:4px; padding:8px 8px 4px; font-size:12px; font-weight:400; color:#4A5567; cursor:pointer; user-select:none; }
+    .sb.col .apps-sec { justify-content:center; padding:8px 0 4px; }
+    .sb.col .apps-sec .sec-lbl,.sb.col .apps-sec .sec-crt { display:none; }
+    .apps-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:4px; padding:4px 0; }
+    .apps-grid .app-tile:nth-child(8) { grid-column:1; }
+    .sb.col .apps-grid { display:flex; flex-direction:column; align-items:center; gap:4px; }
+    .app-tile { display:flex; flex-direction:column; align-items:center; gap:4px; padding:4px 0; border-radius:8px; cursor:pointer; position:relative; }
+    .app-tile:hover { background:#EFF6FF; }
+    .app-circ { width:32px; height:32px; border-radius:50%; background:#EEF0F4; border:1.5px solid #DDE1E8; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#4A5567; font-size:13px; }
+    .app-lbl { font-size:10px; font-weight:500; color:#353F4F; text-align:center; line-height:1.2; }
+    .sb.col .app-lbl { display:none; }
+    .staff-row { display:flex; align-items:center; justify-content:space-between; padding:0 12px 0 24px; height:40px; flex-shrink:0; }
+    .staff-row-left { display:flex; align-items:center; gap:8px; }
+    .staff-label { font-size:14px; font-weight:400; color:#222B3A; }
+    .staff-more-btn { width:28px; height:28px; border:none; background:transparent; border-radius:4px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#677489; font-size:14px; }
+    .staff-more-btn:hover { background:#F2F5F9; }
+    .sb.col .staff-row { padding:0; justify-content:center; }
+    .sb.col .staff-label, .sb.col .staff-more-btn { display:none; }
+    .main { flex:1; display:flex; flex-direction:column; min-width:0; overflow:hidden; }
+    .topnav { height:80px; background:#F5F7FA; border-bottom:1px solid #E3E8EF; display:flex; align-items:center; justify-content:space-between; padding:0 24px; flex-shrink:0; }
+    .tn-company { display:flex; align-items:center; gap:4px; height:32px; padding:0 12px; background:#fff; border-radius:16px; box-shadow:0 2px 2px #E3E8EF; cursor:pointer; white-space:nowrap; }
+    .tn-company:hover { box-shadow:0 2px 4px #CDD5E0; }
+    .tn-company-ic { width:22px; height:22px; display:flex; align-items:center; justify-content:center; color:#173D82; font-size:13px; }
+    .tn-company-name { font-size:12px; font-weight:400; color:#677489; }
+    .tn-chevron { width:22px; height:22px; display:flex; align-items:center; justify-content:center; color:#353F4F; font-size:11px; }
+    .tn-right { display:flex; align-items:center; gap:8px; }
+    .tn-btn { width:32px; height:32px; border-radius:4px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; color:#4A5567; font-size:15px; }
+    .tn-btn:hover { background:#F8FAFC; }
+    .tn-ai-btn { position:relative; width:28px; height:28px; border:none; border-radius:50%; background:linear-gradient(135deg,#7A5AF8 10%,#9B8AFB 50%,#5925DC 100%); padding:0; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; }
+    .tn-ai-btn:hover { opacity:.85; }
+    .tn-user { display:flex; align-items:center; gap:8px; height:32px; padding:0 8px; background:#fff; border-radius:20px; box-shadow:0 2px 2px #E3E8EF; cursor:pointer; white-space:nowrap; }
+    .tn-user:hover { box-shadow:0 2px 4px #CDD5E0; }
+    .tn-user-name { font-size:12px; font-weight:400; color:#677489; }
+    .page-content { flex:1; overflow-y:auto; background:#F5F7FA; padding:24px; }
+    .pg { width:100%; display:flex; flex-direction:column; gap:24px; }
+    .card { background:#fff; border:1px solid #E3E8EF; border-radius:12px; box-shadow:0 1px 2px rgba(16,24,40,.05); }
+    .crumbs { display:flex; align-items:center; gap:8px; font-size:13px; color:#677489; margin-bottom:6px; }
+    .p2 { display:inline-flex; align-items:center; gap:6px; height:20px; padding:0 8px; border-radius:999px; background:#F4F3FF; color:#5925DC; font-size:11px; font-weight:600; letter-spacing:.02em; }
+    .pill { display:inline-flex; align-items:center; height:20px; padding:0 8px; border-radius:999px; background:#F1F4F8; color:#4A5567; font-size:11px; font-weight:600; letter-spacing:.02em; }
+    .dmask { position:fixed; inset:0; background:rgba(16,24,40,.45); z-index:60; }
+    [role=dialog][aria-modal=true] > div:first-child { border-bottom:none !important; }
+    .drawer { position:fixed; top:0; right:0; bottom:0; width:420px; max-width:92vw; background:#fff; box-shadow:-12px 0 32px rgba(16,24,40,.18); z-index:61; display:flex; flex-direction:column; }
+    .dbody { flex:1; overflow-y:auto; padding:24px; display:flex; flex-direction:column; gap:20px; }
+    .dsec { display:flex; align-items:center; gap:8px; min-height:28px; font-size:14px; line-height:20px; font-weight:600; color:var(--color-gray-900); margin-bottom:8px; }
+    .dlbl { font-size:12px; line-height:18px; font-weight:500; color:var(--color-gray-900); margin-bottom:4px; }
+    .flowrow { display:grid; grid-template-columns:minmax(0,1fr) 20px minmax(0,1fr) 20px minmax(0,1fr); align-items:stretch; gap:10px; padding:24px; background:var(--color-gray-100); border:1px solid var(--color-gray-300); border-radius:16px; }
+    .flowcol { display:flex; flex-direction:column; min-width:0; }
+    @media (max-width:1100px) { .flowrow { grid-template-columns:minmax(0,1fr); } .flowarrow { display:none !important; } }
+    .flowlbl { font-size:13px; line-height:17px; font-weight:500; color:var(--color-gray-700); margin-bottom:8px; }
+    .flowcard { padding:16px; display:flex; flex-direction:column; gap:12px; flex:1; min-height:164px; }
+    .flowhd { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .flowttl { font-size:16px; font-weight:500; color:var(--color-gray-900); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .flowsub { font-size:13px; color:var(--color-gray-600); }
+    .flowic { width:40px; height:40px; flex:none; border-radius:50%; display:block; object-fit:cover; }
+    .flowarrow { align-self:center; padding-top:25px; color:var(--color-gray-500); font-size:13px; text-align:center; }
+    .dtab { display:flex; align-items:center; gap:8px; padding:0 2px 10px; font-size:15px; font-weight:500; color:#677489; border-bottom:2px solid transparent; cursor:pointer; }
+    .dtab.on { color:#2667D8; border-bottom-color:#2667D8; }
+    .menu { position:absolute; top:44px; right:0; min-width:280px; background:#fff; border:1px solid #E3E8EF; border-radius:12px; box-shadow:0 12px 24px rgba(16,24,40,.12); padding:8px 0; z-index:20; }
+    .menu-item { padding:9px 20px; font-size:14px; color:#222B3A; cursor:pointer; white-space:nowrap; }
+    .menu-item:hover { background:#F1F4F8; }
+    .createGrid { display:grid; grid-template-columns:minmax(0,1fr) 320px; gap:24px; align-items:start; }
+    @media (max-width:1000px) { .createGrid { grid-template-columns:minmax(0,1fr); } .createGrid > .card:last-child { position:static; } }
+    .opt { border:1px solid #E3E8EF; border-radius:10px; padding:14px 16px; }
+    .nxt { display:flex; align-items:flex-start; gap:10px; padding:10px; border-radius:8px; }
+    .nxt-n { width:20px; height:20px; flex-shrink:0; border-radius:50%; background:#EFF6FF; color:#2667D8; font-size:11px; font-weight:600; display:flex; align-items:center; justify-content:center; margin-top:1px; }
+    .nxt-t { font-size:13px; font-weight:600; }
+    .nxt-s { font-size:12px; color:#677489; margin-top:2px; text-wrap:pretty; }
+    .tabrow { display:flex; gap:0; border-bottom:1px solid #E3E8EF; overflow-x:auto; }
+    .tabrow > div { flex:0 0 auto; }
+    .mapsum { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; padding:16px; background:#F7F9FC; border:1px solid #E9EDF3; border-radius:12px; }
+    .gap-row { display:flex; align-items:flex-start; gap:14px; padding:16px; border:1px solid #E3E8EF; border-radius:10px; background:#fff; }
+    .step-bar { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px 24px; }
+    .tw { overflow-x:auto; }
+    .tw > div { overflow:visible !important; }
+    .tw::-webkit-scrollbar { height:8px; }
+    .tw::-webkit-scrollbar-thumb { background:#CDD5E0; border-radius:4px; }
+    .tv, .tv * { overflow:visible !important; }
+    .tv, .tv > div, .tv > div > div { max-width:100%; }
+    .nob > div { border:0 !important; box-shadow:none !important; }
+    .tv > div { border:0 !important; box-shadow:none !important; }
+    .tv tbody tr:hover { position:relative; z-index:2; }
+    .tv [role="listbox"], .tv ul { z-index:60 !important; }
+    .tv table { width:100% !important; min-width:0 !important; table-layout:auto; }
+    .tv th, .tv td { white-space:normal !important; }
+    .tv-rows tbody td { padding-top:16px !important; padding-bottom:16px !important; vertical-align:top !important; }
+    .intg th, .intg td, .intg a, .intg span { white-space:nowrap !important; }
+    .intg table { min-width:900px; }
+    .grid { width:100%; border-collapse:separate; border-spacing:0; font-size:13px; }
+    .grid th { position:sticky; top:0; z-index:1; background:#F7F9FC; text-align:left; font-weight:500; color:#4A5567; font-size:12px; padding:9px 12px; border-bottom:1px solid #E3E8EF; border-right:1px solid #EEF1F6; white-space:nowrap; }
+    .grid td { padding:8px 12px; border-bottom:1px solid #EEF1F6; border-right:1px solid #EEF1F6; white-space:nowrap; }
+    .grid td.n, .grid th.n { width:44px; text-align:right; color:#8A94A6; background:#FAFBFD; font-variant-numeric:tabular-nums; }
+    .grid td.num { text-align:right; font-variant-numeric:tabular-nums; font-weight:500; }
+    .gridwrap { max-height:420px; overflow:auto; }
+    .grid tbody tr.pickable { cursor:pointer; }
+    .grid tbody tr.pickable:hover td { background:#F5F9FF; }
+    .gridwrap::-webkit-scrollbar { width:8px; height:8px; }
+    .gridwrap::-webkit-scrollbar-thumb { background:#CDD5E0; border-radius:4px; }
+    .dz { border:1.5px dashed #CDD5E0; border-radius:12px; background:#FAFBFD; padding:40px; display:flex; flex-direction:column; align-items:center; gap:12px; text-align:center; cursor:pointer; }
+    .dz:hover { border-color:#2667D8; background:#F5F9FF; }
+    .mrow { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid #EEF1F6; flex-wrap:wrap; }
+    .mrow:last-child { border-bottom:none; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .spin { animation:spin 1s linear infinite; }
+  </style>
+</helmet>
+
+<div class="app-shell">
+  <aside id="sb" class="sb">
+    <div class="sb-card">
+      <div class="sb-hdr">
+        <div class="logo-wm"><img src="./cube-full-logo-mrp7qtfz-2a8j.svg" alt="Cube"></div>
+        <div class="logo-ic"><img src="./cube-icon-logo-mrp7voek-lnif.svg" alt="Cube"></div>
+        <button class="col-btn" data-action="collapse" aria-label="Toggle sidebar"><span class="cc-left">{{ ic.collapseLeft }}</span><span class="cc-right">{{ ic.collapseRight }}</span></button>
+      </div>
+      <div class="sb-nav">
+        <div class="ni home" data-label="Home"><div class="ni-ic">{{ ic.home }}</div><span class="ni-lbl">Home</span></div>
+        <div class="dv"></div>
+        <div class="nav-section">
+          <div class="sec"><i class="fa-solid fa-caret-down sec-crt"></i><span class="sec-lbl">AI</span></div>
+          <div class="ni" data-label="AI Hub"><div class="ni-ic">{{ ic.aiAnalyst }}</div><span class="ni-lbl">AI Hub</span></div>
+          <div class="ni" data-label="Planner"><div class="ni-ic"><i class="fa-regular fa-book-sparkles"></i></div><span class="ni-lbl">Planner</span></div>
+          <div class="ni" data-label="Smart Variance"><div class="ni-ic">{{ ic.smartVariance }}</div><span class="ni-lbl">Smart Variance</span></div>
+        </div>
+        <div class="dv"></div>
+        <div class="nav-section">
+          <div class="sec"><i class="fa-solid fa-caret-down sec-crt"></i><span class="sec-lbl">Reporting &amp; Analytics</span></div>
+          <div class="ni" data-label="Boards"><div class="ni-ic"><i class="fa-regular fa-chart-user"></i></div><span class="ni-lbl">Boards</span></div>
+          <div class="ni" data-label="Cube BI"><div class="ni-ic">{{ ic.cubeBI }}</div><span class="ni-lbl">Cube BI</span></div>
+          <div class="ni" data-label="Builder"><div class="ni-ic"><i class="fa-regular fa-hammer"></i></div><span class="ni-lbl">Builder</span></div>
+          <div class="ni" data-label="Library"><div class="ni-ic">{{ ic.library }}</div><span class="ni-lbl">Library</span></div>
+          <div class="ni-sub-wrap">
+            <a class="ni-sub" data-label="Reports"><span>Reports</span></a>
+            <a class="ni-sub" data-label="Files"><span>Files</span></a>
+          </div>
+        </div>
+        <div class="dv"></div>
+        <div class="nav-section">
+          <div class="sec"><i class="fa-solid fa-caret-down sec-crt"></i><span class="sec-lbl">Planning</span></div>
+          <div class="ni" data-label="Scenarios"><div class="ni-ic">{{ ic.scenarios }}</div><span class="ni-lbl">Scenarios</span></div>
+          <div class="ni" data-label="Workflows"><div class="ni-ic"><i class="fa-regular fa-layer-group"></i></div><span class="ni-lbl">Workflows</span></div>
+          <div class="ni" data-label="Tables"><div class="ni-ic"><i class="fa-regular fa-table"></i></div><span class="ni-lbl">Tables</span></div>
+        </div>
+        <div class="dv"></div>
+        <div class="nav-section">
+          <div class="sec"><i class="fa-solid fa-caret-down sec-crt"></i><span class="sec-lbl">Modeling</span></div>
+          <div class="ni" data-label="Dimensions"><div class="ni-ic">{{ ic.dimensions }}</div><span class="ni-lbl">Dimensions</span></div>
+          <div class="ni" data-label="Formulas"><div class="ni-ic">{{ ic.formulas }}</div><span class="ni-lbl">Formulas</span></div>
+          <div class="ni" data-label="Tags"><div class="ni-ic">{{ ic.tags }}</div><span class="ni-lbl">Tags</span></div>
+        </div>
+        <div class="dv"></div>
+        <div class="nav-section">
+          <div class="sec"><i class="fa-solid fa-caret-down sec-crt"></i><span class="sec-lbl">Data</span></div>
+          <div class="ni active" data-label="Integrations"><div class="ni-ic">{{ ic.integrations }}</div><span class="ni-lbl">Integrations</span></div>
+          <div class="ni" data-label="Data Export"><div class="ni-ic">{{ ic.dataExport }}</div><span class="ni-lbl">Data Export</span></div>
+        </div>
+        <div class="dv"></div>
+        <div class="nav-section">
+          <div class="sec"><i class="fa-solid fa-caret-down sec-crt"></i><span class="sec-lbl">Admin</span></div>
+          <div class="ni" data-label="Users"><div class="ni-ic">{{ ic.users }}</div><span class="ni-lbl">Users</span></div>
+          <div class="ni" data-label="Currencies"><div class="ni-ic">{{ ic.currencies }}</div><span class="ni-lbl">Currencies</span></div>
+          <div class="ni" data-label="Audit Trail"><div class="ni-ic">{{ ic.auditTrail }}</div><span class="ni-lbl">Audit Trail</span></div>
+          <div class="ni" data-label="Usages"><div class="ni-ic"><i class="fa-regular fa-gauge-simple-high"></i></div><span class="ni-lbl">Usages</span></div>
+        </div>
+        <div class="dv"></div>
+        <div class="apps-wrap">
+          <div class="apps-sec"><i class="fa-solid fa-caret-down sec-crt"></i><span class="sec-lbl">Apps</span></div>
+          <div class="apps-grid">
+            <div class="app-tile" data-label="AI Plugin"><div class="app-circ">{{ ic.aiPlugin }}</div><span class="app-lbl">AI Plugin</span></div>
+            <div class="app-tile" data-label="ChatGPT"><div class="app-circ">{{ ic.chatgpt }}</div><span class="app-lbl">ChatGPT</span></div>
+            <div class="app-tile" data-label="Claude"><div class="app-circ">{{ ic.claude }}</div><span class="app-lbl">Claude</span></div>
+            <div class="app-tile" data-label="Excel"><div class="app-circ">{{ ic.excel }}</div><span class="app-lbl">Excel</span></div>
+            <div class="app-tile" data-label="Sheets"><div class="app-circ">{{ ic.sheets }}</div><span class="app-lbl">Sheets</span></div>
+            <div class="app-tile" data-label="Slack"><div class="app-circ">{{ ic.slack }}</div><span class="app-lbl">Slack</span></div>
+            <div class="app-tile" data-label="Teams"><div class="app-circ">{{ ic.teams }}</div><span class="app-lbl">Teams</span></div>
+            <div class="app-tile" data-label="Slides"><div class="app-circ">{{ ic.slides }}</div><span class="app-lbl">Slides</span></div>
+            <div class="app-tile" data-label="PowerPoint"><div class="app-circ">{{ ic.powerpoint }}</div><span class="app-lbl">PowerPoint</span></div>
+          </div>
+        </div>
+      </div>
+      <div style="height:1px;background:#E3E8EF;margin:0"></div>
+      <div class="staff-row">
+        <div class="staff-row-left"><div class="ni-ic" style="color:#4A5567"><i class="fa-regular fa-users"></i></div><span class="staff-label">Cube Staff</span></div>
+        <button class="staff-more-btn" aria-label="More options"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topnav">
+      <div class="tn-company">
+        <div class="tn-company-ic"><i class="fa-solid fa-buildings"></i></div>
+        <span class="tn-company-name">Acme Global Co</span>
+        <div class="tn-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+      </div>
+      <div class="tn-right">
+        <span class="p2">Oct 2</span>
+        <button class="tn-btn" title="Background tasks">{{ ic.backgroundTasks }}</button>
+        <button class="tn-btn" title="Help"><i class="fa-regular fa-circle-question"></i></button>
+        <button class="tn-ai-btn" title="Cube AI">{{ ic.cubeAiAnalyst }}</button>
+        <div class="tn-user">
+          <x-import component-from-global-scope="FolioDS.Avatar" type="initials" size="xs" name="Nina Graham" hint-size="24px,24px"></x-import>
+          <span class="tn-user-name">Nina Graham</span>
+          <div class="tn-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content" data-comment-anchor="27c8fd5665-main">
+      <div class="pg" data-comment-anchor="b9c336ccc0-div">
+        <!-- ============ PAGE −1 · integrations list ============ -->
+        <sc-if value="{{ isIntegrations }}">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap">
+            <div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <span style="font-size:22px;color:#222B3A"><i class="fa-regular fa-database"></i></span>
+                <span style="font-size:24px;line-height:32px;font-weight:600">Integrations</span>
+              </div>
+              <p style="font-size:14px;color:#677489;margin-top:8px">Connect, import, and map your source system data.</p>
+            </div>
+            <div style="position:relative">
+              <div onClick="{{ toggleNewMenu }}">
+                <x-import component-from-global-scope="FolioDS.Button" variant="primary" size="large" hint-size="110px,40px">+ New</x-import>
+              </div>
+              <sc-if value="{{ newMenuOpen }}">
+                <div class="menu">
+                  <sc-for list="{{ newSources }}" as="src" hint-placeholder-count="11">
+                    <div class="menu-item" onClick="{{ src.onPick }}">{{ src.label }}</div>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+            <span style="font-size:14px;font-weight:600">Filter by:</span>
+            <div style="width:230px">{{ filterSource }}</div>
+            <div style="width:290px">{{ filterImport }}</div>
+            <div style="margin-left:auto;width:280px">{{ searchInput }}</div>
+          </div>
+          <div style="overflow:hidden"><div class="tw intg">{{ integrationsTable }}</div></div>
+        </sc-if>
+
+        <sc-if value="{{ inFlow }}" hint-placeholder-val="{{ true }}">
+        <sc-if value="{{ showPageHeader }}" hint-placeholder-val="{{ true }}">
+        <div>
+          <x-import component-from-global-scope="FolioDS.PageHeader" breadcrumbs="{{ flowCrumbs }}" title="{{ pageTitle }}" badges="{{ fileBadge }}" dc-props="{{ phProps }}" hint-size="100%,72px"></x-import>
+          <sc-if value="{{ showPageSub }}" hint-placeholder-val="{{ true }}"><p style="font-size:14px;color:#677489;margin-top:6px;max-width:780px;text-wrap:pretty">{{ pageSub }}</p></sc-if>
+        </div>
+          <sc-if value="{{ showFlowSteps }}" hint-placeholder-val="{{ true }}">
+            <nav aria-label="Smart Upload progress" style="width:504px;max-width:100%;margin:0 auto;padding:4px 0 44px">
+              <ol style="display:flex;align-items:flex-start;list-style:none;margin:0;padding:0;font-family:'DM Sans',sans-serif">
+                <sc-for list="{{ folioSteps }}" as="st" hint-placeholder-count="3">
+                  <li aria-current="{{ st.current }}" style="display:flex;align-items:flex-start;flex:{{ st.grow }}">
+                    <div style="position:relative;flex:0 0 auto;width:32px">
+                      <span style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:9999px;box-sizing:border-box;background:{{ st.nodeBg }};border:{{ st.nodeBorder }};color:#173D82">
+                        <sc-if value="{{ st.isDone }}"><i class="fa-regular fa-check" style="font-size:12px" aria-hidden="true"></i></sc-if>
+                        <sc-if value="{{ st.isActive }}"><span style="width:10px;height:10px;border-radius:9999px;background:#173D82"></span></sc-if>
+                      </span>
+                      <span style="position:absolute;top:53px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:12px;font-weight:500;line-height:1.5;color:#222B3A;text-align:center">{{ st.label }}<sc-if value="{{ st.isDone }}"><span style="position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">, completed</span></sc-if></span>
+                    </div>
+                    <sc-if value="{{ st.hasNext }}"><div aria-hidden="true" style="flex:1;min-width:24px;height:2px;margin-top:15px;border-radius:9999px;background:{{ st.lineColor }}"></div></sc-if>
+                  </li>
+                </sc-for>
+              </ol>
+            </nav>
+            <sc-if value="{{ stepHeading }}"><h2 style="font-size:16px;line-height:24px;font-weight:700;color:#222B3A;margin:0">{{ stepHeading }}</h2></sc-if>
+          </sc-if>
+          <sc-if value="{{ showConfigTabs }}">
+            <div style="display:flex;align-items:center;gap:2px;flex-wrap:wrap;padding:3px;border:1px solid #E3E8EF;border-radius:999px;background:#fff;width:fit-content;max-width:100%;margin-bottom:-8px">
+              <sc-for list="{{ configTabs }}" as="ct" hint-placeholder-count="3">
+                <button type="button" onClick="{{ ct.onClick }}" title="{{ ct.tip }}" style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border-radius:999px;border:none;background:{{ ct.bg }};color:{{ ct.color }};font-family:inherit;font-size:13px;font-weight:{{ ct.weight }};cursor:{{ ct.cursor }};white-space:nowrap">
+                  <i class="{{ ct.icon }}" style="font-size:10px;color:{{ ct.iconColor }}"></i>{{ ct.label }}
+                </button>
+              </sc-for>
+            </div>
+          </sc-if>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:12px 16px;background:#fff;border:1px solid #E3E8EF;border-radius:12px">
+            <span style="flex:1 1 260px;min-width:0;font-size:13px;color:#677489;text-wrap:pretty">{{ footHint }}</span>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <div onClick="{{ backAction }}">
+                <x-import component-from-global-scope="FolioDS.Button" variant="secondary" size="large" disabled="{{ backDisabled }}" hint-size="90px,40px">{{ backLabel }}</x-import>
+              </div>
+              <div onClick="{{ primaryAction }}" title="{{ primaryTip }}">
+                <x-import component-from-global-scope="FolioDS.Button" variant="primary" size="large" disabled="{{ primaryDisabled }}" hint-size="180px,40px">{{ primaryLabel }}</x-import>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ PAGE 0 · create the Smart Upload ============ -->
+        <sc-if value="{{ isCreate }}">
+          <div class="createGrid">
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <div class="card" style="overflow:hidden">
+                <div style="padding:16px 24px;border-bottom:1px solid #E3E8EF">
+                  <div style="font-size:15px;font-weight:600">Smart Upload details</div>
+                  <div style="font-size:13px;color:#677489;margin-top:2px">How this Smart Upload shows up in Integrations and what it accepts.</div>
+                </div>
+                <div style="padding:24px;display:flex;flex-direction:column;gap:20px">
+                  {{ formName }}
+                  {{ formDesc }}
+                </div>
+              </div>
+              <div class="card" style="overflow:hidden">
+                <div style="padding:16px 24px;border-bottom:1px solid #E3E8EF">
+                  <div style="font-size:15px;font-weight:600">Behavior on upload</div>
+                </div>
+                <div style="padding:16px 24px 20px;display:flex;flex-direction:column;gap:10px">
+                  <div class="opt">{{ cbModified }}</div>
+                  <div class="opt">{{ cbOpening }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="card" style="padding:20px;display:flex;flex-direction:column;gap:14px;position:sticky;top:0">
+              <div>
+                <div style="font-size:14px;font-weight:600">Next: upload your transactions</div>
+                <div style="font-size:13px;color:#677489;margin-top:4px;text-wrap:pretty">Creating the Smart Upload gives you somewhere to upload. Everything else is decided from the file itself.</div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:4px">
+                <sc-for list="{{ nextSteps }}" as="ns" hint-placeholder-count="4">
+                  <div class="nxt"><span class="nxt-n">{{ ns.n }}</span><div><div class="nxt-t">{{ ns.title }}</div><div class="nxt-s">{{ ns.sub }}</div></div></div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ============ PAGE 1 · choose the file ============ -->
+        <sc-if value="{{ isPick }}" hint-placeholder-val="{{ true }}">
+          <sc-if value="{{ noFile }}" hint-placeholder-val="{{ true }}">
+            <div class="card" style="padding:20px">
+              <div class="dz" onClick="{{ chooseFile }}" data-comment-anchor="cd8a46eda3-div">
+                <i class="fa-regular fa-cloud-arrow-up" style="font-size:24px;color:#2667D8"></i>
+                <div style="font-size:15px;font-weight:600">Drop your transactions file or browse</div>
+                <p style="font-size:13px;color:#677489;max-width:460px;text-wrap:pretty">CSV or XLSX. After upload, you'll confirm the header row before classifying.</p>
+                <div style="margin-top:4px">
+                  <x-import component-from-global-scope="FolioDS.Button" variant="primary" size="large" hint-size="180px,40px">Choose file</x-import>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ hasFile }}">
+            <div class="card" style="padding:16px 24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+              <span class="flowic"><i class="fa-regular fa-file-csv"></i></span>
+              <div style="flex:1 1 240px;min-width:0">
+                <div style="font-size:14px;font-weight:600">{{ fileName }}</div>
+                <div style="font-size:13px;color:#677489;margin-top:2px">84 KB · ready to upload</div>
+              </div>
+              <div onClick="{{ clearFile }}">
+                <x-import component-from-global-scope="FolioDS.Button" variant="plain-gray" size="small" hint-size="120px,28px">Replace file</x-import>
+              </div>
+            </div>
+          </sc-if>
+        </sc-if>
+
+        <!-- ============ PAGE 1b · preview & header row (after upload) ============ -->
+        <sc-if value="{{ isPreview }}">
+            <div class="card" style="overflow:hidden">
+              <div style="padding:16px 24px;border-bottom:1px solid #E3E8EF;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+                <div>
+                  <div style="font-size:15px;font-weight:600">{{ fileName }} &middot; first 10 rows</div>
+                  <div style="font-size:13px;color:#677489;margin-top:2px">{{ previewNote }}</div>
+                </div>
+                <div onClick="{{ replaceFile }}">
+                  <x-import component-from-global-scope="FolioDS.Button" variant="plain-gray" size="small" hint-size="120px,28px">Replace file</x-import>
+                </div>
+              </div>
+              <div style="padding:14px 24px;border-bottom:1px solid #E3E8EF;display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:#FAFBFD">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <span style="font-size:13px;font-weight:600;white-space:nowrap">Header row</span>
+                  <div style="width:170px">{{ headerSelect }}</div>
+                </div>
+                <div style="flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:2px">
+                  <span style="font-size:13px;color:#4A5567;text-wrap:pretty">{{ headerHint }}</span>
+                  <sc-if value="{{ headerWarn }}">
+                    <span style="font-size:13px;color:#B54708;text-wrap:pretty"><i class="fa-solid fa-triangle-exclamation" style="margin-right:6px"></i>{{ headerWarn }}</span>
+                  </sc-if>
+                </div>
+                <sc-if value="{{ headerChanged }}">
+                  <div onClick="{{ resetHeader }}">
+                    <x-import component-from-global-scope="FolioDS.Button" variant="plain-blue" size="small" hint-size="130px,28px">Use detected row</x-import>
+                  </div>
+                </sc-if>
+              </div>
+              <div class="tw"><div class="gridwrap">{{ previewTable }}</div></div>
+            </div>
+        </sc-if>
+
+
+        <!-- ============ PAGE 2 · classify & import ============ -->
+        <sc-if value="{{ isClassify }}">
+          <div class="card" style="padding:20px 24px">
+            <div style="margin-bottom:12px"><x-import component-from-global-scope="FolioDS.Banner" variant="{{ statusVariant }}" title="{{ statusLine }}" dc-props="{{ bannerProps }}" hint-size="100%,64px">{{ classifyCount }}</x-import></div>
+            <p style="display:flex;align-items:center;gap:6px;font-size:13px;color:#677489;margin-bottom:16px;text-wrap:pretty"><sc-if value="{{ isLocked }}"><i class="fa-solid fa-lock" style="font-size:11px;color:#98A2B3"></i></sc-if>{{ classifyNote }}</p>
+            <div class="tv tv-rows">{{ classifyTable }}</div>
+            <sc-if value="{{ hasSavedToggle }}">
+              <button type="button" onClick="{{ toggleSaved }}" style="margin-top:10px;display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border-radius:8px;border:1px solid #E3E8EF;background:#F7F9FC;font-family:inherit;font-size:13px;font-weight:500;color:#4A5567;cursor:pointer">
+                <i class="{{ savedToggleIcon }}" style="font-size:10px"></i><i class="fa-solid fa-lock" style="font-size:10px;color:#98A2B3"></i>{{ savedToggleLabel }}
+              </button>
+            </sc-if>
+            {{ valueDimPanel }}
+            <sc-if value="{{ showChecks }}">
+              <div style="margin-top:16px;border:1px solid #FEDF89;background:#FFFAEB;border-radius:10px;padding:12px 14px">
+                {{ checkList }}
+              </div>
+            </sc-if>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:16px;align-items:start">
+            <div class="card" style="padding:20px 24px;border-color:#E9E6FF">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+                <span style="font-size:18px;line-height:28px;font-weight:600">Import defaults</span>
+              </div>
+              <p style="font-size:13px;color:#677489;margin-bottom:4px;text-wrap:pretty">When a row carries no value for a top-level dimension, this is the member it lands on.</p>
+              <p style="font-size:12px;color:#8A94A6;margin-bottom:8px">Saved and reused on every upload — revisit under Import Settings.</p>
+              {{ defaultsList }}
+            </div>
+          </div>
+
+        </sc-if>
+
+        <!-- ============ PAGE 3 · add source dimensions ============ -->
+        <sc-if value="{{ isDims }}">
+          <div class="card" style="overflow:hidden">
+            <div style="padding:16px 24px;border-bottom:1px solid #E3E8EF;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+              <div>
+                <div style="font-size:15px;font-weight:600">Source dimensions</div>
+                <div style="font-size:13px;color:#677489;margin-top:2px;text-wrap:pretty">{{ deltaCardNote }}</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px">
+                {{ dimFilter }}
+                <x-import component-from-global-scope="FolioDS.Button" variant="secondary" size="small" icon="{{ flowIc.upload }}" hint-size="150px,28px">Upload dimensions</x-import>
+                <x-import component-from-global-scope="FolioDS.Button" variant="secondary" size="small" icon="{{ flowIc.download }}" hint-size="150px,28px">Export dimensions</x-import>
+                <sc-if value="{{ showDeltaPill }}"><x-import component-from-global-scope="FolioDS.Badge" color="blue" size="sm" hint-size="110px,20px">{{ deltaPill }}</x-import></sc-if>
+              </div>
+            </div>
+            {{ deltaGroups }}
+          </div>
+        </sc-if>
+
+        <!-- ============ PAGE 4 · dimension mapping ============ -->
+        <sc-if value="{{ isMap }}">
+          <sc-if value="{{ hasMultiDims }}"><div class="tabrow">{{ mapTabs }}</div></sc-if>
+          <div class="card" style="overflow:visible">
+            <div style="padding:14px 20px;border-bottom:1px solid #E3E8EF;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+              <span style="font-size:15px;font-weight:600">{{ mapTab }}</span>
+              <span style="font-size:13px;font-weight:500;color:{{ unmappedColor }}">{{ unmappedLabel }}</span>
+            </div>
+            <div class="tv">{{ mapTable }}</div>
+          </div>
+        </sc-if>
+
+        <!-- ============ PAGE 5 · table detail (imports) ============ -->
+        <sc-if value="{{ isHistory }}">
+          <x-import component-from-global-scope="FolioDS.PageHeader" breadcrumbs="{{ historyCrumbs }}" title="{{ tableName }}" badges="{{ healthBadge }}" actions="{{ historyActions }}" dc-props="{{ phProps }}" hint-size="100%,72px"></x-import>
+          <sc-if value="{{ showHistorySteps }}">
+              <nav aria-label="Smart Upload progress" style="width:504px;max-width:100%;margin:0 auto;padding:4px 0 44px">
+                <ol style="display:flex;align-items:flex-start;list-style:none;margin:0;padding:0;font-family:'DM Sans',sans-serif">
+                  <sc-for list="{{ folioSteps }}" as="st" hint-placeholder-count="3">
+                    <li aria-current="{{ st.current }}" style="display:flex;align-items:flex-start;flex:{{ st.grow }}">
+                      <div style="position:relative;flex:0 0 auto;width:32px">
+                        <span style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:9999px;box-sizing:border-box;background:{{ st.nodeBg }};border:{{ st.nodeBorder }};color:#173D82">
+                          <sc-if value="{{ st.isDone }}"><i class="fa-regular fa-check" style="font-size:12px" aria-hidden="true"></i></sc-if>
+                          <sc-if value="{{ st.isActive }}"><span style="width:10px;height:10px;border-radius:9999px;background:#173D82"></span></sc-if>
+                        </span>
+                        <span style="position:absolute;top:53px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:12px;font-weight:500;line-height:1.5;color:#222B3A;text-align:center">{{ st.label }}<sc-if value="{{ st.isDone }}"><span style="position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">, completed</span></sc-if></span>
+                      </div>
+                      <sc-if value="{{ st.hasNext }}"><div aria-hidden="true" style="flex:1;min-width:24px;height:2px;margin-top:15px;border-radius:9999px;background:{{ st.lineColor }}"></div></sc-if>
+                    </li>
+                  </sc-for>
+                </ol>
+              </nav>
+          </sc-if>
+
+          <div class="flowrow">
+            <div class="flowcol">
+              <div class="flowlbl">Source</div>
+              <div class="card flowcard">
+                <div class="flowhd">
+                  <div style="display:flex;align-items:center;gap:10px;min-width:0">
+                    <img src="./source-table.png" alt="" class="flowic">
+                    <span class="flowttl">{{ tableName }}</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:4px;flex-shrink:0">
+                    <x-import component-from-global-scope="FolioDS.Button" variant="ghost-blue" size="small" icon="{{ flowIc.rotate }}" aria-label="Refresh source" hint-size="28px,28px"></x-import>
+                    <x-import component-from-global-scope="FolioDS.Button" variant="ghost-blue" size="small" icon="{{ flowIc.folder }}" aria-label="Open source file" hint-size="28px,28px"></x-import>
+                  </div>
+                </div>
+                <div class="flowsub">{{ sourceSub }}</div>
+                <div style="margin-top:auto" onClick="{{ goDimsPage }}">
+                  <x-import component-from-global-scope="FolioDS.Button" variant="subtle-blue" size="medium" full-width="{{ true }}" hint-size="100%,32px">Source Dimensions</x-import>
+                </div>
+              </div>
+            </div>
+            <i class="fa-solid fa-arrow-right flowarrow"></i>
+            <div class="flowcol">
+              <div class="flowlbl">Connection</div>
+              <div class="card flowcard">
+                <div class="flowhd">
+                  <div style="display:flex;align-items:center;gap:10px;min-width:0">
+                    <img src="./import-icon.png" alt="" class="flowic">
+                    <span class="flowttl">Import Setup</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:4px;flex-shrink:0">
+                    <span style="position:relative;display:inline-flex">
+                      <x-import component-from-global-scope="FolioDS.Button" variant="ghost-gray" size="small" icon="{{ flowIc.rules }}" aria-label="{{ rulesAria }}" on-click="{{ goRulesPage }}" hint-size="28px,28px"></x-import>
+                      <sc-if value="{{ rulesMissing }}"><span style="position:absolute;top:3px;right:3px;width:8px;height:8px;border-radius:50%;background:var(--color-red-500);box-shadow:0 0 0 2px var(--color-white);pointer-events:none"></span></sc-if>
+                    </span>
+                    <x-import component-from-global-scope="FolioDS.Button" variant="ghost-gray" size="small" icon="{{ flowIc.clock }}" aria-label="Schedule import" on-click="{{ openSchedule }}" hint-size="28px,28px"></x-import>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:2px;font-size:12px;color:var(--color-gray-700)">
+                  <span><b style="font-weight:500">Schedule:</b> {{ scheduleSummary }}</span>
+                  <span><b style="font-weight:500">Upload Rules:</b> <span style="color:{{ rulesSummaryColor }}">{{ rulesSummary }}</span></span>
+                </div>
+                <div style="margin-top:auto" onClick="{{ goMapPage }}">
+                  <x-import component-from-global-scope="FolioDS.Button" variant="secondary" size="medium" full-width="{{ true }}" hint-size="100%,32px">Mapping</x-import>
+                </div>
+              </div>
+            </div>
+            <i class="fa-solid fa-arrow-right flowarrow"></i>
+            <div class="flowcol">
+              <div class="flowlbl">Destination</div>
+              <div class="card flowcard">
+                <div class="flowhd">
+                  <div style="display:flex;align-items:center;gap:10px;min-width:0">
+                    <img src="./cube-icon.png" alt="" class="flowic">
+                    <span class="flowttl">Cube Dimensions</span>
+                  </div>
+                  <x-import component-from-global-scope="FolioDS.Button" variant="ghost-gray" size="small" icon="{{ flowIc.upload }}" aria-label="Export Cube dimensions" hint-size="28px,28px"></x-import>
+                </div>
+                <div class="flowsub">{{ destSub }}</div>
+                <div style="margin-top:auto">
+                  <x-import component-from-global-scope="FolioDS.Button" variant="subtle-blue" size="medium" full-width="{{ true }}" hint-size="100%,32px">Cube Dimensions</x-import>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <sc-if value="{{ importing }}">
+            <div class="card" style="padding:18px 24px;display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                <i class="fa-solid fa-arrows-rotate spin" style="color:#2667D8"></i>
+                <span style="font-size:15px;font-weight:600">Importing {{ fileName }}</span>
+                <span style="font-size:13px;color:#677489">{{ progressLabel }}</span>
+              </div>
+              <div style="height:6px;border-radius:999px;background:#EEF1F6;overflow:hidden">
+                <div style="height:100%;border-radius:999px;background:#2667D8;width:{{ progressPct }}"></div>
+              </div>
+              <div style="font-size:13px;color:#677489">Runs in the background — you can leave this page and come back.</div>
+            </div>
+          </sc-if>
+
+          <div style="background:var(--color-white);border:1px solid var(--color-gray-300);border-radius:16px;padding:24px;min-width:0">
+            <div style="margin-bottom:16px">
+              <div style="font-size:18px;font-weight:600;color:var(--color-gray-900);margin-bottom:4px" data-comment-anchor="74876bca25-div">Upload History</div>
+              <div style="font-size:13px;color:var(--color-gray-600)">Overview of data refresh activity from this Smart Upload into Cube.</div>
+            </div>
+            <div style="overflow-x:auto">{{ historyTable }}</div>
+          </div>
+        </sc-if>
+
+        </sc-if>
+
+        <!-- ============ SCHEDULE IMPORT DRAWER ============ -->
+        <sc-if value="{{ scheduleOpen }}">
+          <x-import component-from-global-scope="FolioDS.Drawer" open="{{ true }}" title="Schedule Import" subtitle="{{ scheduleSub }}" on-close="{{ closeSchedule }}" footer="{{ scheduleFooter }}" style="width:400px;max-width:92vw" hint-size="0px,0px">
+              <x-import component-from-global-scope="FolioDS.Banner" variant="warning" title="{{ nextRunLabel }}" dc-props="{{ bannerProps }}" hint-size="100%,48px"></x-import>
+
+              <div style="height:1px;flex-shrink:0;background:var(--color-gray-200)"></div>
+
+              <div>
+                <div class="dsec"><i class="fa-regular fa-calendar"></i>Schedule</div>
+                <div style="display:flex;flex-direction:column;gap:16px">
+                  <div><div class="dlbl">Frequency <span style="color:var(--color-red-500)">*</span></div>{{ freqSelect }}</div>
+                  <div><div class="dlbl">Time <span style="color:var(--color-red-500)">*</span></div>{{ timeSelect }}</div>
+                </div>
+              </div>
+
+              <sc-if value="{{ hasSchedule }}">
+                <div style="height:1px;flex-shrink:0;background:var(--color-gray-200)"></div>
+                <div>
+                  <div class="dsec"><i class="fa-regular fa-table-columns"></i>Unexpected header policy</div>
+                  <p style="font-size:14px;line-height:20px;color:var(--color-gray-600);margin-bottom:12px;text-wrap:pretty">What Cube does when a later file carries a header that isn't in this saved configuration.</p>
+                  {{ policyPicker }}
+                  <p style="font-size:14px;line-height:20px;color:var(--color-gray-700);margin-top:12px;text-wrap:pretty">{{ policyNote }}</p>
+                </div>
+              </sc-if>
+
+              <div style="height:1px;flex-shrink:0;background:var(--color-gray-200)"></div>
+
+              <div>
+                <div class="dsec"><i class="fa-regular fa-file-lines"></i>Upload rules in effect</div>
+                <div style="display:flex;flex-direction:column;gap:16px">
+                <div style="display:flex;flex-direction:column;gap:8px">
+                <div class="dlbl" style="margin-bottom:0">Expected headers</div>
+                <div style="display:flex;flex-direction:column;border:1px solid var(--color-gray-300);border-radius:8px;overflow:hidden">
+                  <sc-for list="{{ ruleSummary }}" as="rs" hint-placeholder-count="6">
+                    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:8px 12px;border-bottom:1px solid var(--color-gray-200);margin-bottom:-1px">
+                      <span style="font-size:14px;line-height:20px;font-weight:500;color:var(--color-gray-900)">{{ rs.k }}</span>
+                      <span style="font-size:14px;line-height:20px;color:var(--color-gray-600);text-align:right">{{ rs.v }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                <div class="dlbl" style="margin-bottom:0">Defaults</div>
+                <div style="display:flex;flex-direction:column;border:1px solid var(--color-gray-300);border-radius:8px;overflow:hidden">
+                  <sc-for list="{{ defaultSummary }}" as="ds" hint-placeholder-count="4">
+                    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:8px 12px;border-bottom:1px solid var(--color-gray-200);margin-bottom:-1px">
+                      <span style="font-size:14px;line-height:20px;font-weight:500;color:var(--color-gray-900)">{{ ds.k }}</span>
+                      <span style="font-size:14px;line-height:20px;color:var(--color-gray-600);text-align:right">{{ ds.v }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+                </div>
+                </div>
+                <div style="margin-top:12px"><x-import component-from-global-scope="FolioDS.Button" variant="plain-blue" size="medium" on-click="{{ goRulesPage }}" hint-size="130px,20px">Open upload rules</x-import></div>
+              </div>
+          </x-import>
+        </sc-if>
+      </div>
+    </main>
+  </div>
+  <sc-if value="{{ resetOpen }}">
+    <x-import component-from-global-scope="FolioDS.Modal" open="{{ true }}" title="Reset isn't available yet" on-close="{{ closeReset }}" footer="{{ resetFooter }}" hint-size="0px,0px">
+      <div style="font-size:14px;color:#4A5567;text-wrap:pretty">{{ tableName }} has imported records that depend on these rules. Delete that imported data first, or duplicate this Smart Upload and set new rules there.</div>
+    </x-import>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;reuploadCase&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;New header&quot;,&quot;Missing header&quot;,&quot;New + missing&quot;],&quot;default&quot;:&quot;New + missing&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Re-upload file&quot;},&quot;startAt&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Integrations list&quot;,&quot;Existing Smart Upload (history)&quot;,&quot;Saved rules (after import)&quot;],&quot;default&quot;:&quot;Integrations list&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Jump to&quot;},&quot;unexpectedPolicy&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Attribute&quot;,&quot;Error&quot;,&quot;Ignore&quot;],&quot;default&quot;:&quot;Attribute&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Configuration&quot;},&quot;autoSuggestMappings&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Configuration&quot;}}">
+const F = () => window.FolioDS || {};
+const h = React.createElement;
+
+const HEADERS = [
+  { col: 'Date', sample: '1/31/26' },
+  { col: 'Shop', sample: 'Shop 1' },
+  { col: 'Sum of Foo', sample: '125,000' },
+  { col: 'Sum of Bar', sample: '118,000' },
+  { col: 'Department', sample: 'Engineering' },
+  { col: 'Invoice #', sample: 'INV-10482' },
+  { col: 'Memo', sample: 'Q1 promo bundle' },
+  { col: 'Row ID', sample: '000001' }
+];
+const RAW_ROWS = [
+  ['1/31/26', 'Shop 1', '125,000', '118,000', 'Engineering', 'INV-10482', 'Q1 promo bundle', '000001'],
+  ['1/31/26', 'Shop 2', '84,500', '90,000', 'Engineering', 'INV-10483', '', '000002'],
+  ['1/31/26', 'Shop 1', '340,000', '325,000', 'Sales', 'INV-10491', 'Enterprise renewal', '000003'],
+  ['1/31/26', 'Shop 2', '175,000', '162,000', 'Sales', 'INV-10492', '', '000004'],
+  ['2/28/26', 'Shop 1', '132,000', '121,500', 'Engineering', 'INV-10577', '', '000005'],
+  ['2/28/26', 'Shop 2', '88,400', '93,000', 'Engineering', 'INV-10578', 'Reorder', '000006'],
+  ['2/28/26', 'Shop 1', '351,000', '333,000', 'Sales', 'INV-10585', '', '000007'],
+  ['2/28/26', 'Shop 2', '181,000', '167,500', 'Sales', 'INV-10586', 'Enterprise renewal', '000008'],
+  ['3/31/26', 'Shop 1', '128,700', '119,000', 'Engineering', 'INV-10660', '', '000009'],
+  ['3/31/26', 'Shop 2', '86,100', '91,200', 'Engineering', 'INV-10661', 'Q1 promo bundle', '000010']
+];
+const COL_TYPES = ['Dimension', 'Attribute', 'Value', 'Time', 'Ignore'];
+const CUBE_TLDS = ['Product', 'Department', 'Account', 'Scenario', 'Entity'];
+const NEW_DIM = '+ Create a new source dimension';
+
+const POLICIES = ['Attribute', 'Error', 'Ignore'];
+const POLICY_NOTE = {
+  Attribute: 'The header is imported as an attribute on every record. Nothing blocks the import.',
+  Error: 'The upload fails validation and nothing imports until someone classifies the header.',
+  Ignore: 'The column is dropped silently and the rest of the file imports as configured.'
+};
+
+const DEFAULTS = [
+  { dim: 'Account', value: 'Account - Other', options: ['Account - Other', 'Unassigned Account', 'Suspense'] },
+  { dim: 'Department', value: 'Department - Other', options: ['Department - Other', 'Unassigned Department'] },
+  { dim: 'Scenario', value: 'Actuals', options: ['Actuals', 'Budget', 'Forecast'] },
+  { dim: 'Product', value: 'Product - Other', options: ['Product - Other', 'Unassigned Product'] }
+];
+
+const ITEM_GROUPS = [
+  { dim: 'Shop', target: 'Product', source: 'column values', items: ['Shop 1', 'Shop 2'] },
+  { dim: 'Department', target: 'Department', source: 'column values', items: ['Engineering', 'Sales'] },
+  { dim: 'Account', target: 'Account', source: 'value headers', items: ['Total', 'Sum of Foo', 'Sum of Bar'] }
+];
+const REUPLOAD_NEW = { Shop: ['Shop 3'] };
+const MAP_OPTIONS = {
+  Shop: ['Product 1', 'Product 2', 'Product - Other', '— Ignore —'],
+  Department: ['Engineering', 'Sales', 'Department - Other', '— Ignore —'],
+  Account: ['Sum of Foo', 'Sum of Bar', 'Account - Other', '— Ignore —']
+};
+const MAP_SUGGEST = {
+  'Shop 1': 'Product 1', 'Shop 2': 'Product 2',
+  Engineering: 'Department - Other', Sales: 'Department - Other',
+  'Sum of Foo': 'Sum of Foo', 'Sum of Bar': 'Sum of Bar'
+};
+const NEW_SOURCES = ['Cube-Hosted File Management', 'Sage Intacct', 'Cube Universal Connect', 'Salesforce', 'Tableau', 'BambooHR', 'NetSuite', 'QuickBooks', 'Xero', 'Externally-Hosted File Management (SFTP)', 'Smart Upload'];
+const INTEGRATIONS = [
+  { kind: 'connector', name: 'Acme Global Co', sched: 'Schedule Now', last: 'Oct 27, 2025', health: 'ok' },
+  { kind: 'table', name: 'Shop Revenue Load', last: 'Jan 04, 2026', health: 'ok', existing: true },
+  { kind: 'table', name: 'Updated Plan Load', last: 'Apr 09, 2025', health: 'ok' },
+  { kind: 'table', name: 'Updated HC Act Load', last: 'Feb 14, 2025', health: 'ok' },
+  { kind: 'table', name: 'Updated Actuals Load', last: 'Oct 17, 2023', health: 'ok' },
+  { kind: 'table', name: '2022 Actuals Load', last: 'Apr 11, 2023', health: 'fail' },
+  { kind: 'table', name: '2023 Actuals Load', last: 'Apr 10, 2023', health: 'ok' },
+  { kind: 'table', name: 'Budget Load', last: 'Sep 20, 2022', health: 'ok' },
+  { kind: 'table', name: 'Actuals Load', last: 'Sep 20, 2022', health: 'ok' }
+];
+const HISTORY = [
+  { file: 'shop-revenue-dec.csv', when: 'Jan 4, 2026', type: 'Manual', range: 'Oct 2025 – Dec 2025', recs: '20', status: 'Complete', by: 'Nina Graham' },
+  { file: 'shop-revenue-nov.csv', when: 'Dec 3, 2025', type: 'Manual', range: 'Sep 2025 – Nov 2025', recs: '20', status: 'Complete', by: 'Marcus Reed' },
+  { file: 'shop-revenue-oct.csv', when: 'Nov 5, 2025', type: 'Manual', range: 'Aug 2025 – Oct 2025', recs: '18', status: 'Failed', by: 'Marcus Reed' }
+];
+const RULES = [
+  { when: 'Header starts with', match: 'Sum of', then: 'Member of Account' },
+  { when: 'Member matches', match: 'Shop <n>', then: 'Product <n>' },
+  { when: 'No match found', match: 'any', then: 'Import default for the dimension' }
+];
+
+const badge = (variant, text, icon) => {
+  const B = F().Badge;
+  if (!B) return h('span', { style: { fontSize: 12 } }, text);
+  return h(B, { variant: variant, leadingIcon: icon ? h('i', { className: icon, style: { fontSize: 10 } }) : undefined }, text);
+};
+
+function TldPick(props) {
+  const [open, setOpen] = React.useState(false);
+  const ref = React.useRef(null);
+  React.useEffect(() => {
+    if (!open) return;
+    const f = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', f);
+    return () => document.removeEventListener('mousedown', f);
+  }, [open]);
+  const h = React.createElement;
+  const err = !props.value;
+  return h('div', { ref: ref, style: { position: 'relative', minWidth: 100 } },
+    h('button', {
+      type: 'button', onClick: () => setOpen(!open),
+      style: { width: '100%', minHeight: 32, display: 'flex', alignItems: 'center', gap: 8, padding: '4px 8px', borderRadius: 8, background: '#fff', border: '1px solid ' + (open ? '#2667D8' : err ? '#F04438' : '#D0D5DD'), fontFamily: 'inherit', fontSize: 14, color: props.value ? '#222B3A' : '#98A2B3', cursor: 'pointer', textAlign: 'left' }
+    },
+      h('span', { style: { flex: '1 1 0', width: 0, minWidth: 0, whiteSpace: 'nowrap', textOverflow: 'ellipsis' }, ref: (el) => { if (el) el.style.setProperty('overflow', 'hidden', 'important'); } }, props.value || 'Choose'),
+      h('i', { className: 'fa-solid fa-chevron-down', style: { fontSize: 11, color: '#98A2B3' } })),
+    open ? h('div', {
+      style: { position: 'absolute', top: 36, left: 0, minWidth: 240, background: '#fff', border: '1px solid #E3E8EF', borderRadius: 8, boxShadow: '0 12px 24px rgba(16,24,40,.12)', padding: '6px 0', zIndex: 70 }
+    }, props.options.map((o) => {
+      const by = props.usedBy[o];
+      const sel = props.value === o;
+      return h('div', {
+        key: o, title: by ? o + ' is already mapped from ' + by + '. Change that row first.' : undefined,
+        onClick: () => { if (by) return; props.onChange(o); setOpen(false); },
+        style: { display: 'flex', alignItems: 'center', gap: 8, height: 34, padding: '0 12px', fontSize: 14, cursor: by ? 'not-allowed' : 'pointer', background: sel ? '#EFF6FF' : 'transparent', color: by ? '#98A2B3' : sel ? '#173D82' : '#222B3A', fontWeight: sel ? 600 : 400 },
+        onMouseEnter: (e) => { if (!by && !sel) e.currentTarget.style.background = '#F7F9FC'; },
+        onMouseLeave: (e) => { if (!by && !sel) e.currentTarget.style.background = 'transparent'; }
+      },
+        h('span', { style: { flex: 1, whiteSpace: 'nowrap' } }, o),
+        by ? h('span', { style: { display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 12, color: '#8A94A6', whiteSpace: 'nowrap' } }, h('i', { className: 'fa-regular fa-link', style: { fontSize: 10 } }), 'Used by ' + by) : null,
+        sel ? h('i', { className: 'fa-solid fa-check', style: { fontSize: 11 } }) : null);
+    })) : null);
+}
+
+class Component extends DCLogic {
+  state = {
+    screen: 'integrations',
+    newMenuOpen: false,
+    scheduleOpen: false,
+    freq: 'Daily',
+    time: '03:00 am EDT',
+    tableName: 'Shop Revenue Load',
+    tableDesc: 'Weekly shop-level revenue extract',
+    opts: { modified: true, opening: false },
+    fileChosen: false,
+    colTypes: {},
+    valueTarget: {},
+    newDim: {},
+    valueDim: '',
+    valueDimOn: false,
+    tldMap: {},
+    locked: false,
+    newHeaders: [],
+    missing: [],
+    missingRes: {},
+    nameMap: {},
+    headerRow: null,
+    lockedOn: '',
+    resetOpen: false,
+    configSaved: false,
+    collapsed: {},
+    policy: null,
+    defaults: {},
+    addOpen: false,
+    mapOpen: false,
+    addedItems: {},
+    membersAdded: false,
+    mapTab: 'Shop',
+    memberMap: {},
+    importing: false,
+    startedAt: null,
+    progress: 0,
+    done: false
+  };
+
+  componentDidMount() {
+    this._shellClick = (e) => {
+      const sec = e.target.closest('.sb .sec, .sb .apps-sec');
+      if (sec) { const ns = sec.closest('.nav-section, .apps-wrap'); if (ns) ns.classList.toggle('collapsed'); return; }
+      if (e.target.closest('[data-action="collapse"]')) { const sb = document.getElementById('sb'); if (sb) sb.classList.toggle('col'); }
+    };
+    document.addEventListener('click', this._shellClick);
+    if (!window.SIDEBAR_ICONS) {
+      this._iconWait = setInterval(() => { if (window.SIDEBAR_ICONS) { clearInterval(this._iconWait); this.forceUpdate(); } }, 60);
+    }
+    this.applyStart(this.props.startAt);
+  }
+  componentWillUnmount() { clearTimeout(this._scan); clearInterval(this._t); clearInterval(this._iconWait); document.removeEventListener('click', this._shellClick); }
+  componentDidUpdate(prev) {
+    if (prev.startAt !== this.props.startAt) this.applyStart(this.props.startAt);
+    if (prev.reuploadCase !== this.props.reuploadCase && this.state.locked) { this._attnKeys = null; this.setState(this.reupload()); }
+  }
+  reupload() {
+    const c = this.props.reuploadCase ?? 'New + missing';
+    const hasNew = c !== 'Missing header', hasMiss = c !== 'New header';
+    const colTypes = { Date: 'Time', Shop: 'Dimension', 'Sum of Foo': 'Value', 'Sum of Bar': 'Value', Department: 'Dimension', 'Invoice #': 'Attribute', Memo: 'Attribute' };
+    if (!hasNew) colTypes['Row ID'] = 'Attribute';
+    return { colTypes: colTypes, newHeaders: hasNew ? ['Row ID'] : [], missing: hasMiss ? ['Department', 'Memo'] : [], missingRes: {} };
+  }
+  startUpload(r) {
+    this.openExisting();
+    this.setState({ dimsFrom: null, screen: 'pick', uploadFrom: 'integrations', tableName: r.name, fileChosen: false, configSaved: false, membersAdded: false, addedItems: {}, memberMap: {}, done: false, progress: 0, headerRow: null, startedAt: null });
+  }
+  openExisting() {
+    clearInterval(this._t);
+    this.setState({
+      screen: 'history', tableName: 'Shop Revenue Load', fileChosen: false, configSaved: true, locked: true, lockedOn: 'Jan 4, 2026',
+      importing: false, done: false, progress: 100, startedAt: new Date(2026, 0, 4, 9, 12),
+      ...this.reupload(),
+      valueDim: 'Account', tldMap: { Shop: 'Product', Department: 'Department', v: 'Account' },
+      membersAdded: true, addedItems: {}, memberMap: {}
+    });
+  }
+  applyStart(v) {
+    if (v === 'Integrations list') { this.setState({ screen: 'integrations', locked: false }); return; }
+    if (v === 'Existing Smart Upload (history)') { this.openExisting(); return; }
+    if (v !== 'Saved rules (after import)') return;
+    clearInterval(this._t);
+    this.setState({
+      screen: 'rules', fileChosen: true, configSaved: false, locked: true, lockedOn: 'Jan 4, 2026', importing: false, done: false, progress: 0,
+      ...this.reupload(),
+      valueDim: 'Account', tldMap: { Shop: 'Product', Department: 'Department', v: 'Account' },
+      membersAdded: false, addedItems: {}, memberMap: {}
+    });
+  }
+
+  pick(key) {
+    return (col) => (val) => {
+      const v = typeof val === 'string' ? val : (val && val.target ? val.target.value : String(val));
+      const resets = (key === 'colTypes' || key === 'valueTarget' || key === 'newDim')
+        ? { configSaved: false, addOpen: false, mapOpen: false, membersAdded: false } : {};
+      this.setState((st) => {
+        const out = Object.assign({ [key]: Object.assign({}, st[key], { [col]: v }) }, resets);
+        return out;
+      });
+    };
+  }
+
+  process() { this.setState({ screen: 'rules', configSaved: false }); }
+
+  runImport() {
+    clearInterval(this._t);
+    this.setState({ screen: 'history', importing: true, done: false, progress: 8, startedAt: new Date() });
+    this._t = setInterval(() => {
+      this.setState((s) => {
+        const p = s.progress + 12;
+        if (p >= 100) { clearInterval(this._t); return { progress: 100, importing: false, done: true, locked: true, lockedOn: s.lockedOn || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) }; }
+        return { progress: p };
+      });
+    }, 220);
+  }
+
+  renderVals() {
+    const s = this.state;
+    const Fd = F();
+    const ICONS = window.SIDEBAR_ICONS || {};
+    const mk = (k) => ICONS[k] ? h('span', { style: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }, dangerouslySetInnerHTML: { __html: ICONS[k] } }) : null;
+    const icons = {};
+    ['home','cubeBI','smartVariance','aiAnalyst','library','scenarios','dimensions','formulas','tags','integrations','dataExport','users','currencies','auditTrail','backgroundTasks','cubeAiAnalyst','aiPlugin','chatgpt','claude','excel','sheets','slack','teams','slides','powerpoint','collapseLeft','collapseRight'].forEach((k) => { icons[k] = mk(k); });
+
+    const onPick = s.screen === 'pick';
+    const onPreview = s.screen === 'preview';
+    const onRules = s.screen === 'rules' || s.screen === 'classify';
+    const onDims = s.screen === 'dims';
+    const onMap = s.screen === 'map';
+    const onHistory = s.screen === 'history';
+    const onCreate = s.screen === 'create';
+    const onIntegrations = s.screen === 'integrations';
+    const policy = s.policy || this.props.unexpectedPolicy || 'Attribute';
+    const autoSuggest = this.props.autoSuggestMappings ?? true;
+
+    const typeOf = (c) => s.colTypes[c] || '';
+    const isMissing = (c) => s.locked && (s.missing || []).indexOf(c) >= 0;
+    const missingOpen = (s.missing || []).filter((c) => s.locked && ['Time', 'Dimension', 'Value'].indexOf(typeOf(c)) >= 0 && !s.missingRes[c]);
+    const valueCols = HEADERS.filter((r) => typeOf(r.col) === 'Value').map((r) => r.col);
+    const tldCols = HEADERS.filter((r) => typeOf(r.col) === 'Dimension').map((r) => r.col);
+    const untyped = HEADERS.filter((r) => !typeOf(r.col));
+    const valueDimActive = valueCols.length > 1;
+    const valueDimName = (s.valueDim || '').trim();
+    const openTargets = valueDimActive && !valueDimName ? valueCols : [];
+    const vTarget = (c) => valueDimActive && typeOf(c) === 'Value' ? valueDimName : '';
+    const tldKey = (r) => typeOf(r.col) === 'Dimension' ? r.col : (typeOf(r.col) === 'Value' && vTarget(r.col) ? 'v' : null);
+    const openTld = HEADERS.filter((r) => { const k = tldKey(r); return k && k !== 'v' && !s.tldMap[k]; }).map((r) => r.col).concat(valueDimName && valueDimActive && !s.tldMap.v ? [valueDimName] : []);
+    const openDecisions = untyped.length + openTargets.length + openTld.length + missingOpen.length;
+    const timeCols = HEADERS.filter((r) => typeOf(r.col) === 'Time').map((r) => r.col);
+    const plural = (n, one, many) => n + ' ' + (n === 1 ? one : many);
+    const rules = [];
+    if (untyped.length) rules.push({ ok: false, text: plural(untyped.length, 'header', 'headers') + ' still need a type: ' + untyped.map((r) => r.col).join(', ') + '.' });
+    rules.push(timeCols.length === 1
+      ? { ok: true, text: 'One Time header · ' + timeCols[0] + '.' }
+      : { ok: false, text: timeCols.length === 0 ? 'Set exactly one header to Time — every record needs a period.' : 'Only one header can be Time. ' + timeCols.join(' and ') + ' are both set to Time.' });
+    rules.push(tldCols.length
+      ? { ok: true, text: plural(tldCols.length, 'Dimension header', 'Dimension headers') + ' · ' + tldCols.join(', ') + '.' }
+      : { ok: false, text: 'At least one header has to be a Dimension.' });
+    rules.push(valueCols.length
+      ? (valueCols.length === 1
+        ? { ok: true, text: 'One Value header · ' + valueCols[0] + '. A single value column needs no source dimension; classify a second one and both will.' }
+        : openTargets.length
+          ? { ok: false, text: 'You classified ' + plural(valueCols.length, 'Value header', 'Value headers') + ', so each one has to be tied to a source dimension. Still missing: ' + openTargets.join(', ') + '.' }
+          : { ok: true, text: plural(valueCols.length, 'Value header', 'Value headers') + ', each a member of ' + valueDimName + '.' })
+      : { ok: false, text: 'At least one header has to be a Value — that is the number being imported.' });
+    if (openTld.length) rules.push({ ok: false, text: plural(openTld.length, 'header still needs', 'headers still need') + ' a Cube dimension: ' + openTld.join(', ') + '.' });
+    if (missingOpen.length) rules.push({ ok: false, text: missingOpen.join(', ') + ' is saved on this Smart Upload but missing from this file. Choose what its records land on, or upload a different file.' });
+    const ruleErrors = rules.filter((r) => !r.ok);
+    const classifyDone = openDecisions === 0 && ruleErrors.length === 0;
+    const records = RAW_ROWS.length * Math.max(1, valueCols.length);
+    const fName = s.locked ? 'shop-revenue-feb.csv' : 'shop-revenue-jan.csv';
+
+    const activeGroups = ITEM_GROUPS.filter((g) => g.dim === 'Account' ? valueCols.length > 0 : tldCols.indexOf(g.dim) >= 0)
+      .map((g) => s.locked ? Object.assign({}, g, { items: REUPLOAD_NEW[g.dim] || [], existing: g.items.filter((m) => (REUPLOAD_NEW[g.dim] || []).indexOf(m) < 0) }) : g)
+      .filter((g) => g.items.length);
+    const allItems = activeGroups.reduce((a, g) => a.concat(g.items.map((m) => ({ m: m, dim: g.dim }))), []);
+    const addedItems = allItems.filter((r) => s.addedItems[r.m]);
+    const effMap = (m) => s.memberMap[m] || (autoSuggest ? MAP_SUGGEST[m] : '');
+    const unmapped = addedItems.filter((r) => !effMap(r.m));
+    const showDelta = classifyDone && s.configSaved && !s.scanning && allItems.length > 0;
+    const canSave = classifyDone && !s.configSaved;
+    const saveConfig = () => {
+      if (!canSave) return;
+      const added = {};
+      allItems.forEach((r) => { added[r.m] = true; });
+      this.setState({ configSaved: true, addedItems: added, scanning: true });
+      clearTimeout(this._scan);
+      this._scan = setTimeout(() => this.setState({ scanning: false }), 2200);
+    };
+
+    // ---------- file preview (page 1, before anything is processed)
+    const fileIdx = HEADERS.map((c, i) => i).filter((i) => !isMissing(HEADERS[i].col));
+    const nCols = fileIdx.length;
+    const blankRow = () => Array(nCols).fill('');
+    const pre = (txt) => { const a = blankRow(); a[0] = txt; return a; };
+    const rawFile = [pre('Acme Global Co — Shop revenue export'), pre('Generated Feb 1, 2026 08:14 · Period Jan–Mar 2026'), blankRow(), fileIdx.map((i) => HEADERS[i].col)].concat(RAW_ROWS.slice(0, 6).map((r) => fileIdx.map((i) => r[i])));
+    const DETECTED = 4;
+    const hdrRow = s.headerRow || DETECTED;
+    const letters = 'ABCDEFGHIJKLMNOP'.split('');
+    const setHdr = (n) => this.setState({ headerRow: n, configSaved: false });
+    const previewTable = h('table', { className: 'grid' },
+      h('thead', null, h('tr', null,
+        h('th', { className: 'n' }, ''),
+        rawFile[0].map((_, j) => h('th', { key: j, style: { color: '#8A94A6' } }, letters[j])))),
+      h('tbody', null, rawFile.map((r, i) => {
+        const n = i + 1;
+        const isHdr = n === hdrRow;
+        const skipped = n < hdrRow;
+        const pickable = n <= 6 && !isHdr;
+        return h('tr', { key: i, className: pickable ? 'pickable' : '', onClick: pickable ? () => setHdr(n) : undefined, title: pickable ? 'Use row ' + n + ' as the header row' : undefined },
+          h('td', { className: 'n', style: isHdr ? { background: '#2667D8', color: '#fff', fontWeight: 600 } : undefined }, n),
+          r.map((v, j) => h('td', {
+            key: j,
+            className: !isHdr && !skipped && (j === 2 || j === 3) ? 'num' : '',
+            style: isHdr ? { background: '#EFF6FF', color: '#173D82', fontWeight: 600, borderBottom: '2px solid #2667D8' }
+              : skipped ? { color: '#A6AFBE', background: '#FAFBFD', fontStyle: v ? 'italic' : 'normal' } : undefined
+          }, v)));
+      })));
+    const hdrCells = rawFile[hdrRow - 1];
+    const hdrBlank = hdrCells.filter((v) => !String(v).trim()).length;
+    const hdrLooksData = hdrCells.some((v) => /^[\d,./-]+$/.test(String(v).trim()) && String(v).trim());
+    const headerWarn = hdrRow === DETECTED ? ''
+      : hdrBlank ? 'Row ' + hdrRow + ' has ' + hdrBlank + ' of ' + nCols + ' columns blank — Cube would name them Column ' + letters[hdrCells.findIndex((v) => !String(v).trim())] + ', and so on.'
+      : hdrLooksData ? 'Row ' + hdrRow + ' looks like data — headers would read "' + hdrCells.slice(0, 2).join('", "') + '"…'
+      : '';
+    const headerSelect = Fd.Select ? h(Fd.Select, { options: [1, 2, 3, 4, 5, 6].map((n) => 'Row ' + n + (n === DETECTED ? ' · detected' : '')), value: 'Row ' + hdrRow + (hdrRow === DETECTED ? ' · detected' : ''), onChange: (v) => { const x = typeof v === 'string' ? v : (v && v.target ? v.target.value : String(v)); setHdr(parseInt(x.replace(/\D+/, ''), 10)); } }) : null;
+
+    // ---------- classification (page 2)
+    const setType = this.pick('colTypes');
+    const setTarget = this.pick('valueTarget');
+    const STRUCT = ['Time', 'Dimension', 'Value'];
+    const lockTip = 'Locked after the first import on ' + s.lockedOn + '. Changing it would break imported data.';
+    const lockedVal = (v, pad) => h('span', { title: lockTip, style: { display: 'inline-flex', alignItems: 'center', gap: 7, minHeight: pad == null ? 32 : undefined, paddingTop: pad == null ? 0 : pad, fontSize: 14, fontWeight: 500, color: '#222B3A', whiteSpace: 'nowrap' } }, v, h('i', { className: 'fa-solid fa-lock', style: { fontSize: 10, color: '#98A2B3' } }));
+    const usedByAll = (skip) => { const u = {}; HEADERS.forEach((o) => { const ok = tldKey(o); if (ok && ok !== skip && s.tldMap[ok] && !u[s.tldMap[ok]]) u[s.tldMap[ok]] = ok === 'v' ? 'Value headers' : o.col; }); return u; };
+    const fieldLbl = (t) => h('span', { style: { fontSize: 13, fontWeight: 500, color: '#4A5567' } }, t);
+    const valueDimPanel = valueDimActive && !(s.locked && valueDimName && s.tldMap.v && !s.showSaved) ? h('div', { style: { marginTop: 16, border: '1px solid #E3E8EF', borderRadius: 12, padding: '16px 18px', display: 'flex', flexDirection: 'column', gap: 14, background: '#FAFBFD' } },
+      h('div', { style: { display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' } },
+        h('div', { style: { minWidth: 0, flex: '1 1 300px' } },
+          h('div', { style: { fontSize: 14, fontWeight: 600 } }, 'Source dimension for Value headers'),
+          h('div', { style: { fontSize: 13, color: '#677489', marginTop: 2, textWrap: 'pretty' } }, 'Value headers are unpivoted on import. Each header name becomes a member of this source dimension.')),
+        null),
+      h('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 14, alignItems: 'start' } },
+        h('div', { style: { display: 'flex', flexDirection: 'column', gap: 6 } }, fieldLbl('Name'),
+          Fd.Input ? h(Fd.Input, { placeholder: 'e.g. Account', value: s.valueDim, state: valueDimName ? 'default' : 'error', onChange: (e) => { const val = e && e.target ? e.target.value : e; this.setState({ valueDim: val, configSaved: false }); } }) : null,
+          s.locked ? h('span', { style: { fontSize: 12, color: '#8A94A6' } }, 'Display name only — renaming doesn’t change imported data.') : null),
+        h('div', { style: { display: 'flex', flexDirection: 'column', gap: 6 } }, fieldLbl('Cube dimension'),
+          s.locked && s.tldMap.v ? lockedVal(s.tldMap.v, 6) : h(TldPick, { options: CUBE_TLDS, usedBy: usedByAll('v'), value: s.tldMap.v || '', onChange: (x) => this.setState((st) => ({ tldMap: Object.assign({}, st.tldMap, { v: x }), configSaved: false })) }))),
+      h('div', { style: { display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', fontSize: 12, color: '#677489' } },
+        h('span', null, 'Members'),
+        valueCols.map((c) => h(Fd.Badge, { key: c, type: 'outlined', size: 'sm' }, c)))) : null;
+    const needsAttention = (r) => !typeOf(r.col) || openTargets.indexOf(r.col) >= 0 || openTld.indexOf(r.col) >= 0 || s.newHeaders.indexOf(r.col) >= 0 || isMissing(r.col);
+    if (!onRules) this._attnKeys = null;
+    else if (!this._attnKeys) this._attnKeys = HEADERS.filter(needsAttention).map((r) => r.col);
+    const pinned = (r) => (this._attnKeys || []).indexOf(r.col) >= 0;
+    const savedRows = s.locked ? HEADERS.filter((r) => !pinned(r)) : [];
+    const classifyRows = s.locked ? HEADERS.filter(pinned).concat(s.showSaved ? savedRows : []) : HEADERS;
+    const missingCell = (r) => {
+      const t = typeOf(r.col);
+      const structural = ['Time', 'Dimension', 'Value'].indexOf(t) >= 0;
+      const blocking = structural && !s.missingRes[r.col];
+      const pill = h('span', { title: 'This header was in the file you imported on ' + s.lockedOn + ' but isn\u2019t in this one.', style: { display: 'inline-flex' } }, Fd.Badge ? h(Fd.Badge, { color: blocking ? 'yellow' : 'gray', size: 'sm', icon: h('i', { className: 'fa-regular fa-file-circle-minus' }) }, 'Missing from this file') : 'Missing from this file');
+      const note = (txt, c) => h('span', { style: { fontSize: 12, color: c || '#677489', textWrap: 'pretty', maxWidth: 220 } }, txt);
+      const wrap = (kids) => h('span', { style: { display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'flex-start' } }, kids);
+      if (!structural) return wrap([pill, note(t === 'Ignore' ? 'Was ignored anyway. Nothing changes.' : 'Records from this file leave this attribute blank. Nothing blocks the import.')]);
+      if (t !== 'Dimension') return wrap([pill, note('Every record needs ' + (t === 'Time' ? 'a period' : 'a value') + '. Upload a file that includes this header.', '#B54708')]);
+      const dflt = s.defaults[s.tldMap[r.col]] || (DEFAULTS.find((d) => d.dim === s.tldMap[r.col]) || {}).value || 'the default member';
+      const opts = ['Fill with ' + dflt, 'Upload a different file'];
+      return wrap([pill,
+        note('Saved as a source dimension mapped to ' + (s.tldMap[r.col] || '—') + '. Choose what this file\u2019s records land on.'),
+        h('div', { key: 'sel', style: { width: '100%', minWidth: 160, maxWidth: 240 } }, h(Fd.Select, { options: opts, value: s.missingRes[r.col] ? opts[0] : undefined, placeholder: 'Choose what to do', state: blocking ? 'error' : 'default', onChange: (v) => {
+          const x = typeof v === 'string' ? v : (v && v.target ? v.target.value : String(v));
+          if (x === opts[1]) { this._attnKeys = null; this.setState({ screen: 'pick', fileChosen: false }); return; }
+          this.setState((st) => ({ missingRes: Object.assign({}, st.missingRes, { [r.col]: 'default' }), configSaved: false }));
+        } })),
+        s.missingRes[r.col] ? note('Mapping and the saved rule stay as they are. The next file with ' + r.col + ' imports normally.') : null]);
+    };
+    const classifyTable = (Fd.Table && Fd.Select) ? h(Fd.Table, {
+      columns: [
+        { key: 'col', label: 'Source header', render: (v, r) => h('span', { style: { display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'flex-start' } }, h('span', { style: { display: 'flex', alignItems: 'center', minHeight: 32, gap: 8, flexWrap: 'wrap' } }, h('strong', null, v), h('span', { style: { fontSize: 12, color: '#8A94A6', fontVariantNumeric: 'tabular-nums' } }, isMissing(v) ? '' : r.sample)),
+          isMissing(v) ? missingCell(r) : null, s.newHeaders.indexOf(v) >= 0 ? h(Fd.Badge, { color: 'blue', size: 'sm' }, 'New in this file') : null, h('span', null, ((r) => {
+            const t = typeOf(r.col);
+            const dot = (color, bg, label) => h(Fd.Badge, { color: 'warning', size: 'sm', dot: true }, label);
+            if (!t) return dot('#B54708', '#FFFAEB', 'Needs type');
+            if (t === 'Value' && openTargets.indexOf(r.col) >= 0) return dot('#B54708', '#FFFAEB', 'Needs dimension');
+            if (openTld.indexOf(r.col) >= 0) return dot('#B54708', '#FFFAEB', 'Needs mapping');
+            return null;
+          })(r))) },
+        {
+          key: '_n', label: h('span', { title: "How this header is named in Cube — the source dimension, member or attribute name.", style: { display: 'inline-flex', alignItems: 'center', gap: 6 } }, "Name in Cube", h('i', { className: 'fa-regular fa-circle-info', style: { fontSize: 11, color: '#98A2B3' } })), sortable: false, render: (v, r) => {
+            const t = typeOf(r.col);
+            if (!t || t === 'Time' || t === 'Ignore') return h('span', { style: { display: 'inline-flex', alignItems: 'center', minHeight: 32, fontSize: 13, color: '#8A94A6' } }, '—');
+            const nm = s.nameMap[r.col] !== undefined ? s.nameMap[r.col] : r.col;
+            const hint = t === 'Dimension' ? 'Source dimension' : t === 'Value' ? (valueDimActive ? 'Member of ' + (valueDimName || 'source dimension') : 'Value column') : 'Attribute';
+            const ro = (s.locked && STRUCT.indexOf(t) >= 0 && s.newHeaders.indexOf(r.col) < 0) || isMissing(r.col);
+            return h('div', { title: hint, ref: (el) => { if (el) el.querySelectorAll('input').forEach((i) => { i.size = 1; i.style.minWidth = '0'; i.style.width = '100%'; }); }, style: { width: 120, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 4 } },
+              ro ? lockedVal(nm) : (Fd.Input ? h(Fd.Input, { value: nm, state: String(nm).trim() ? 'default' : 'error', onChange: (e) => { const val = e && e.target ? e.target.value : e; this.setState((st) => ({ nameMap: Object.assign({}, st.nameMap, { [r.col]: val }) })); } }) : nm));
+          }
+        },
+        {
+          key: '_t', label: h('span', { title: "Time: the period of each record (exactly one). Dimension: becomes a source dimension. Value: the number being imported; 2+ Value headers are unpivoted and become members of one source dimension. Attribute: kept for filtering. Ignore: dropped.", style: { display: 'inline-flex', alignItems: 'center', gap: 6 } }, "Type", h('i', { className: 'fa-regular fa-circle-info', style: { fontSize: 11, color: '#98A2B3' } })), sortable: false, render: (v, r) => {
+            const t = typeOf(r.col);
+            const target = valueDimActive;
+            if (isMissing(r.col)) return h('div', null, lockedVal(t));
+            return h('div', { style: { minWidth: 110, display: 'flex', flexDirection: 'column', gap: t === 'Value' ? 10 : 6 } },
+              s.locked && STRUCT.indexOf(t) >= 0 ? lockedVal(t)
+                : h(Fd.Select, { options: s.locked && t ? ['Attribute', 'Ignore'] : COL_TYPES, value: t || undefined, placeholder: 'Choose a type', state: t ? 'default' : 'error', onChange: setType(r.col) }),
+              t === 'Attribute' ? h('span', { style: { fontSize: 12, color: '#677489', textWrap: 'pretty' } }, 'Kept on each record for filtering. Not mapped.') : null,
+              t === 'Ignore' ? h('span', { style: { fontSize: 12, color: '#677489', textWrap: 'pretty' } }, 'Dropped on import.') : null,
+              t === 'Value' && valueDimActive ? h('span', { style: { fontSize: 12, color: valueDimName ? '#677489' : '#B54708', textWrap: 'pretty' } }, valueDimName ? 'Member of ' + valueDimName : 'Name its source dimension below') : null);
+          }
+        },
+        {
+          key: '_cube', label: h('span', { title: "The Cube dimension each source dimension maps into. Each Cube dimension can be used once. Locked after the first import — changing it would break imported data.", style: { display: 'inline-flex', alignItems: 'center', gap: 6 } }, "Cube dimension", h('i', { className: 'fa-regular fa-circle-info', style: { fontSize: 11, color: '#98A2B3' } })), sortable: false, render: (v, r) => {
+            const k = tldKey(r);
+            const t = typeOf(r.col);
+            if (!k) return h('span', { style: { fontSize: 13, color: '#8A94A6', display: 'inline-flex', alignItems: 'center', minHeight: 32 } }, t === 'Value' ? (valueDimActive ? 'Set below' : 'Not needed') : '—');
+            if (k === 'v') return s.locked && s.tldMap.v ? lockedVal(s.tldMap.v) : h('span', { style: { fontSize: 13, display: 'inline-flex', alignItems: 'center', minHeight: 32, color: s.tldMap.v ? '#222B3A' : '#8A94A6', fontWeight: s.tldMap.v ? 500 : 400 } }, s.tldMap.v || 'Set below');
+            if (s.locked && s.tldMap[k]) return lockedVal(s.tldMap[k]);
+            const shared = [r.col];
+            const first = true;
+            const usedBy = {};
+            HEADERS.forEach((o) => { const ok = tldKey(o); if (ok && ok !== k && s.tldMap[ok]) { if (usedBy[s.tldMap[ok]]) return; if (ok === 'v') { usedBy[s.tldMap[ok]] = 'Value headers'; } else usedBy[s.tldMap[ok]] = o.col; } });
+            return h('div', { style: { minWidth: 120, display: 'flex', flexDirection: 'column', gap: 4 } },
+              first
+                ? h(TldPick, { options: CUBE_TLDS, usedBy: usedBy, value: s.tldMap[k] || '', onChange: (x) => { this.setState((st) => ({ tldMap: Object.assign({}, st.tldMap, { [k]: x }), configSaved: false })); } })
+                : h('span', { style: { fontSize: 13, fontWeight: 500, paddingTop: 8 } }, s.tldMap[k] || 'Set on ' + shared[0]),
+              t === 'Value' ? h('span', { style: { fontSize: 11, color: '#8A94A6', textWrap: 'pretty' } }, 'For source dimension ' + vTarget(r.col) + (shared.length > 1 && first ? ' · applies to ' + shared.slice(1).join(', ') : '')) : null);
+          }
+        }
+      ],
+      rows: classifyRows
+    }) : null;
+
+    const policyPicker = Fd.SegmentedButton ? h(Fd.SegmentedButton, { options: POLICIES.map((p) => ({ value: p, label: p })), value: policy, style: { width: 'fit-content' }, onChange: (v) => this.setState({ policy: v }) }) : null;
+
+    const setDefault = this.pick('defaults');
+    const defaultsList = h('div', null, DEFAULTS.map((d) => h('div', { key: d.dim, className: 'mrow' },
+      h('span', { style: { fontSize: 13, fontWeight: 600, flex: '1 1 120px', minWidth: 0 } }, d.dim),
+      h('span', { style: { flex: '2 1 180px', minWidth: 160 } }, Fd.Select ? h(Fd.Select, { options: d.options, value: s.defaults[d.dim] || d.value, onChange: setDefault(d.dim) }) : null))));
+
+    // ---------- source dimension delta
+    const toggleNode = (k) => () => this.setState((st) => ({ collapsed: Object.assign({}, st.collapsed, { [k]: !st.collapsed[k] }) }));
+    const rowStyle = (depth, first) => ({
+      display: 'flex', alignItems: 'center', gap: 10, padding: '8px 24px', paddingLeft: 24 + depth * 24,
+      borderTop: first ? 'none' : '1px solid #F1F4F8'
+    });
+    const reviewMode = s.dimsFrom === 'history';
+    const shownGroups = ITEM_GROUPS.filter((g) => g.dim === 'Account' ? valueCols.length > 0 : tldCols.indexOf(g.dim) >= 0).map((g) => {
+      const fresh = reviewMode ? [] : (s.locked ? (REUPLOAD_NEW[g.dim] || []) : g.items);
+      const all = s.locked ? g.items.filter((m) => fresh.indexOf(m) < 0).concat(fresh) : g.items;
+      const members = all.map((m) => ({ m: m, isNew: fresh.indexOf(m) >= 0 }));
+      return Object.assign({}, g, { members: s.dimFilter === 'new' && !reviewMode ? members.filter((x) => x.isNew) : members, total: members.length, nNew: fresh.length });
+    }).filter((g) => g.members.length);
+    const newTag = Fd.Badge ? h(Fd.Badge, { color: 'blue', size: 'sm' }, 'New') : badge('blue', 'New');
+    const deltaGroups = h('div', { style: { display: 'flex', flexDirection: 'column' } }, shownGroups.map((g, gi) => {
+      const open = !s.collapsed[g.dim];
+      const head = h('div', { key: 'h', onClick: toggleNode(g.dim), style: { display: 'flex', alignItems: 'center', gap: 10, padding: '12px 24px', cursor: 'pointer', borderTop: gi === 0 ? 'none' : '1px solid #E3E8EF', background: '#F8FAFC' } },
+        h('i', { className: open ? 'fa-solid fa-chevron-down' : 'fa-solid fa-chevron-right', style: { fontSize: 10, color: '#677489', width: 12, textAlign: 'center' } }),
+        h('span', { style: { fontSize: 13, fontWeight: 600 } }, g.dim),
+        h('span', { style: { fontSize: 12, color: '#677489' } }, plural(g.total, 'member', 'members') + (g.nNew && g.nNew < g.total ? ' · ' + g.nNew + ' new' : '')),
+        h('span', { style: { flex: 1 } }),
+        h('span', { style: { fontSize: 12, color: '#677489' } }, 'Maps to ' + g.target));
+      const mapped = (x) => { const v = x.isNew ? (s.addedItems[x.m] ? effMap(x.m) : '') : (s.memberMap[x.m] || MAP_SUGGEST[x.m]); return v ? h('span', { style: { fontSize: 13 } }, v) : h('span', { style: { fontSize: 13, color: '#8A94A6' } }, x.isNew ? 'Mapped after adding' : 'Not mapped'); };
+      const body = open ? (Fd.Table ? h(Fd.Table, { key: 't', columns: [
+          { key: 'm', label: 'Source member', render: (v, x) => h('span', { style: { display: 'inline-flex', alignItems: 'center', gap: 8 } }, h('span', { style: { fontSize: 13, fontWeight: 500 } }, v), x.isNew ? newTag : null) },
+          { key: 'src', label: 'Found in', sortable: false, render: (v, x) => h('span', { style: { fontSize: 13, color: '#4A5567' } }, x.m === 'Total' ? 'Value headers · hierarchy unknown' : g.source === 'value headers' ? 'Value headers' : g.dim + ' column') },
+          { key: 'map', label: 'Mapped to ' + g.target, sortable: false, render: (v, x) => mapped(x) }
+        ], rows: g.members }) : null) : null;
+      return h('div', { key: 'g-' + g.dim }, head, body ? h('div', { className: 'nob', key: 'nb' }, body) : null);
+    }));
+    const dimFilter = !reviewMode && s.locked && Fd.SegmentedButton ? h(Fd.SegmentedButton, { options: [{ value: 'all', label: 'All members' }, { value: 'new', label: 'New only' }], value: s.dimFilter || 'all', onChange: (v) => this.setState({ dimFilter: v }) }) : null;
+
+    const tabDims = activeGroups.map((g) => g.dim);
+    const activeTab = tabDims.indexOf(s.mapTab) >= 0 ? s.mapTab : (tabDims[0] || 'Shop');
+    const mapTabs = h('div', { style: { display: 'flex' } }, tabDims.map((t) => Fd.Tab ? h(Fd.Tab, {
+      key: t, type: 'secondary', active: activeTab === t, onClick: () => this.setState({ mapTab: t })
+    }, t) : null));
+    const setMap = this.pick('memberMap');
+    const mapRows = addedItems.filter((r) => r.dim === activeTab);
+    const mapTable = (Fd.Table && Fd.Select) ? h(Fd.Table, {
+      columns: [
+        { key: 'm', label: 'Source ' + activeTab + ' Dimension', render: (v) => h('a', { href: '#', onClick: (e) => e.preventDefault(), style: { fontWeight: 500 } }, v) },
+        {
+          key: '_c', label: 'Cube Dimension', sortable: false, render: (v, r) => h('div', { style: { minWidth: 150, paddingTop: 2, paddingBottom: 2 } },
+            h(Fd.Select, { options: MAP_OPTIONS[r.dim] || [], value: effMap(r.m) || undefined, placeholder: 'Choose a dimension', state: effMap(r.m) ? 'default' : 'error', onChange: setMap(r.m) }))
+        },
+        { key: '_m', label: 'Last Modified', align: 'right', sortable: false, render: (v, r) => h('span', { style: { color: '#677489' } }, s.memberMap[r.m] ? 'Just now' : 'New in this upload') }
+      ],
+      rows: mapRows
+    }) : null;
+    const rulesBadge = badge('red', 'None');
+    const filterStatus = Fd.Select ? h(Fd.Select, { options: ['Status: All', 'Status: Mapped', 'Status: Unmapped'], value: 'Status: All', onChange: () => {} }) : null;
+    const filterUpdated = Fd.Select ? h(Fd.Select, { options: ['Last Updated: All', 'Last 30 days', 'Last 12 months'], value: 'Last Updated: All', onChange: () => {} }) : null;
+
+    const rulesList = h('div', null, RULES.map((r, i) => h('div', { key: i, className: 'mrow' },
+      h('span', { style: { fontSize: 13, color: '#677489', flex: '1 1 140px' } }, r.when),
+      h('code', { style: { fontFamily: 'ui-monospace,Menlo,monospace', fontSize: 12, background: '#fff', border: '1px solid #E3E8EF', borderRadius: 6, padding: '2px 8px' } }, r.match),
+      h('i', { className: 'fa-solid fa-arrow-right', style: { fontSize: 11, color: '#A6AFBE' } }),
+      h('span', { style: { fontSize: 13, fontWeight: 500, flex: '1 1 180px' } }, r.then))));
+
+    // ---------- normalized preview
+    const resultRows = [];
+    RAW_ROWS.forEach((r) => {
+      valueCols.forEach((c) => {
+        const ci = HEADERS.findIndex((x) => x.col === c);
+        resultRows.push([r[0], effMap(r[1]) || (s.defaults.Product || 'Product - Other'), effMap(isMissing('Department') ? '' : r[4]) || (s.defaults.Department || 'Department - Other'), effMap(c) || (s.defaults.Account || 'Account - Other'), s.defaults.Scenario || 'Actuals', r[ci]]);
+      });
+    });
+    const resultTable = h('table', { className: 'grid' },
+      h('thead', null, h('tr', null, ['Time', 'Product', 'Department', 'Account', 'Scenario', 'Value'].map((c) => h('th', { key: c }, c)))),
+      h('tbody', null, resultRows.slice(0, 6).map((r, i) => h('tr', { key: i },
+        r.map((v, j) => h('td', { key: j, className: j === 5 ? 'num' : '' }, v))))));
+
+    // ---------- integrations list
+    const C = Fd.Cell || {};
+    const srcIcon = (kind) => h('span', {
+      style: { width: 26, height: 26, borderRadius: '50%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: kind === 'connector' ? '#F1F4F8' : 'transparent', color: '#4A5567', fontSize: 13 }
+    }, h('i', { className: kind === 'connector' ? 'fa-solid fa-infinity' : 'fa-regular fa-table' }));
+    const integrationsTable = Fd.Table ? h(Fd.Table, {
+      columns: [
+        { key: 'kind', label: 'Source', sortable: false, render: (v) => srcIcon(v) },
+        { key: 'name', label: 'Name', render: (v, r) => h('a', { href: '#', style: { fontWeight: 500 }, onClick: (e) => { e.preventDefault(); if (r.existing) this.openExisting(); } }, v) },
+        { key: 'sched', label: 'Import Schedule', sortable: false, render: (v) => v ? h('span', { style: { display: 'inline-flex', alignItems: 'center', gap: 8, color: '#2667D8' } }, h('i', { className: 'fa-regular fa-clock' }), v) : null },
+        { key: 'last', label: 'Last Successful Import', align: 'right' },
+        {
+          key: 'health', label: 'Connection Health', sortable: false, render: (v) => h('span', { style: { display: 'inline-flex', alignItems: 'center', gap: 8, color: v === 'ok' ? '#222B3A' : '#B42318' } },
+            h('i', { className: v === 'ok' ? 'fa-solid fa-circle-check' : 'fa-solid fa-triangle-exclamation', style: { color: v === 'ok' ? '#0F9D58' : '#D92D20' } }), v === 'ok' ? 'Last Import Completed' : 'Last Import Failed')
+        },
+        {
+          key: '_a', label: '', sortable: false, align: 'right', render: (v, r) => (C ? h(C.Actions, null,
+            r.kind === 'table' ? h(C.ActionButton, { 'aria-label': 'Upload', title: 'Upload a file', onClick: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.startUpload(r); }, icon: h('i', { className: 'fa-solid fa-arrow-up-from-bracket', style: { fontSize: 12 } }) }) : null,
+            r.kind === 'connector' || r.name === 'Updated Plan Load' ? h(C.ActionButton, { 'aria-label': 'Mapping', icon: h('i', { className: 'fa-solid fa-shuffle', style: { fontSize: 12 } }) }) : null) : null)
+        }
+      ],
+      rows: INTEGRATIONS
+    }) : null;
+    const filterSource = Fd.Select ? h(Fd.Select, { options: ['Source: All', 'Source: Smart Upload', 'Source: Cube Universal Connect'], value: 'Source: All', onChange: () => {} }) : null;
+    const filterImport = Fd.Select ? h(Fd.Select, { options: ['Last Successful Import: All', 'Last 30 days', 'Last 12 months'], value: 'Last Successful Import: All', onChange: () => {} }) : null;
+    const searchInput = Fd.Input ? h(Fd.Input, { placeholder: 'Search', leadingIcon: h('i', { className: 'fa-solid fa-magnifying-glass' }) }) : null;
+
+    // ---------- create form
+    const formName = Fd.Input ? h(Fd.Input, {
+      label: 'Smart Upload name', placeholder: 'e.g. Shop Revenue Load', value: s.tableName,
+      onChange: (e) => this.setState({ tableName: e && e.target ? e.target.value : e })
+    }) : null;
+    const formDesc = Fd.Textarea ? h(Fd.Textarea, {
+      label: 'Description', placeholder: 'What this Smart Upload is for', rows: 3, value: s.tableDesc,
+      onChange: (e) => this.setState({ tableDesc: e && e.target ? e.target.value : e })
+    }) : null;
+    const cb = (key, label, sub) => Fd.Checkbox ? h(Fd.Checkbox, {
+      label: label, description: sub, checked: !!s.opts[key],
+      onChange: () => this.setState((st) => ({ opts: Object.assign({}, st.opts, { [key]: !st.opts[key] }) }))
+    }) : null;
+    const cbModified = cb('modified', 'Replace records on re-upload', 'A later file with the same time and dimensions overwrites what is there.');
+    const cbOpening = cb('opening', 'Allow opening balances', 'Accept records dated before this Smart Upload’s first period.');
+    const nextSteps = [
+      { n: 1, title: 'Upload', sub: 'Pick the file and confirm the header row' },
+      { n: 2, title: 'Configure', sub: 'Classify headers, add new members and map them — saved for later uploads' },
+      { n: 3, title: 'Import', sub: 'Runs in the background, result in Upload History' }
+    ];
+
+    // ---------- upload history
+    const started = s.startedAt ? s.startedAt : null;
+    const clock = (d) => d ? d.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : '—';
+    const statusCell = (st) => {
+      if (!Fd.Badge) return st;
+      if (st.indexOf('Held') === 0) return h('span', { role: 'button', style: { cursor: 'pointer', display: 'inline-flex' }, onClick: (e) => { e.preventDefault(); this.setState({ screen: 'rules', fileChosen: true, configSaved: false, newHeaders: ['Row ID'], colTypes: Object.assign({}, s.colTypes, { 'Row ID': '' }) }); } }, h(Fd.Badge, { color: 'warning', size: 'sm', icon: h('i', { className: 'fa-solid fa-circle-pause' }) }, st));
+      if (st.indexOf('Pending') === 0) { const go = st.indexOf('Configure') > 0 ? { screen: 'rules', fileChosen: true, configSaved: false } : { screen: 'preview', fileChosen: true }; return h('span', { role: 'button', title: 'Continue where you left off', style: { cursor: 'pointer', display: 'inline-flex' }, onClick: (e) => { e.preventDefault(); this.setState(go); } }, h(Fd.Badge, { color: 'warning', size: 'sm', icon: h('i', { className: 'fa-solid fa-clock' }) }, st)); }
+      if (st === 'Importing…') return h(Fd.Badge, { color: 'info', size: 'sm', icon: h('i', { className: 'fa-solid fa-arrows-rotate spin' }) }, st);
+      return h(Fd.Badge, { color: st === 'Failed' ? 'error' : 'success', size: 'sm' }, st);
+    };
+    const historyRows = [{
+      file: fName,
+      when: clock(started),
+      type: 'Manual',
+      range: 'Jan 2026 – Mar 2026',
+      recs: s.importing ? '—' : String(records),
+      status: s.importing ? 'Importing…' : 'Complete',
+      by: 'Nina Graham'
+    }].concat([
+      { file: 'shop-revenue-feb.csv', when: 'Jan 12, 2026', type: 'Manual', range: '—', recs: '—', status: 'Pending · Configure', by: 'Nina Graham' },
+      { file: 'shop-revenue-jan.csv', when: 'Jan 10, 2026', type: 'Manual', range: '—', recs: '—', status: 'Pending · Confirm header row', by: 'Marcus Reed' }
+    ], HISTORY);
+    if (s.locked && policy === 'Error' && s.freq !== 'None') historyRows.unshift({ file: 'shop-revenue-sep.csv', when: 'Sep 29, 3:00 AM', type: 'Scheduled', range: 'Sep 2026', recs: '—', status: 'Held · 1 new header', by: 'SFTP' });
+    const historyTable = Fd.Table ? h(Fd.Table, {
+      columns: [
+        { key: 'when', label: 'Import Date' },
+        { key: 'type', label: 'Type' },
+        { key: 'by', label: 'User' },
+        { key: 'file', label: 'File', render: (v) => C.Icon ? h(C.Icon, { icon: h('i', { className: 'fa-regular fa-file-csv' }) }, v) : v },
+        { key: 'range', label: 'Date Range' },
+        { key: 'recs', label: 'Records Changed', align: 'right', render: (v) => v === '—' || !C.Metric ? v : h(C.Metric, { tone: 'blue' }, v) },
+        { key: 'status', label: 'Status', sortable: false, align: 'right', render: (v) => statusCell(v) }
+      ],
+      rows: historyRows
+    }) : null;
+
+    // ---------- banners
+    const B = Fd.Banner;
+    const pickBanner = B ? h(B, { variant: 'info', title: 'Nothing uploaded yet' }, 'This is a local read of the first 10 rows so you can check you picked the right file. Uploading analyzes the headers and takes you to classification.') : null;
+
+    const topBanner = B ? (s.done
+      ? h(B, { variant: 'success', title: records + ' records imported' }, fName + ' finished importing. The configuration you set here is saved and reused on the next upload.')
+      : s.importing
+        ? h(B, { variant: 'info', title: 'Importing · ' + Math.min(100, s.progress) + '%' }, 'Running in the background — you can leave this page and Upload History will show the result.')
+        : openDecisions
+          ? h(B, { variant: 'warning', title: openDecisions + ' header' + (openDecisions > 1 ? 's' : '') + ' need' + (openDecisions > 1 ? '' : 's') + ' a decision' }, (untyped.length + openTargets.length + openTld.length) === 0 && missingOpen.length ? (missingOpen.join(', ') + ' is saved on this Smart Upload but isn\u2019t in this file. Choose what its records land on, or upload a different file.') : (untyped.length + openTargets.length) === 0 ? 'Map each Dimension header, and the source dimension behind your Value headers, to a Cube dimension.' : 'Pick a type for each header. A Value header is unpivoted at import — if you classify more than one, each also needs the source dimension its name becomes a member of.')
+          : canSave
+            ? (s.locked ? h(B, { variant: 'info', title: (s.missing || []).length ? 'Saved rules apply · ' + plural(s.missing.length, 'header', 'headers') + ' missing' : 'Headers match your saved rules', button: 'Continue with saved rules', onButtonClick: saveConfig }, (s.missing || []).length ? s.missing.join(' and ') + ' aren\u2019t in this file and are handled as you chose. Continuing scans the file for new source members, then you can import.' : 'Nothing needs a decision. Continuing scans the file for new source members, then you can import.') : h(B, { variant: 'info', title: 'Classification ready to save', button: 'Save classification', onButtonClick: saveConfig }, 'Saving stores the configuration and scans the file for unique items, so Cube can tell you which source dimension members this file introduces.'))
+            : s.scanning
+            ? h(B, { variant: 'info', title: 'Scanning file…', icon: h('i', { className: 'fa-solid fa-arrows-rotate spin' }) }, 'Rules saved. Cube is scanning the file in the background for new source dimension members.')
+            : showDelta && (!s.membersAdded || unmapped.length)
+            ? h(B, {
+              variant: 'warning',
+              title: !s.membersAdded ? allItems.length + ' new source dimension member' + (allItems.length === 1 ? '' : 's') + ' in this file' : unmapped.length + ' member' + (unmapped.length > 1 ? 's' : '') + ' still unmapped',
+              button: !s.membersAdded ? (allItems.length === 1 ? 'Add member' : 'Add members') : 'Set up mapping',
+              onButtonClick: () => this.setState({ screen: !s.membersAdded ? 'dims' : 'map' })
+            }, !s.membersAdded
+              ? 'The import is blocked until ' + (allItems.length === 1 ? allItems[0].m + ' exists' : 'these members exist') + ' in your source dimensions · ' + activeGroups.map((g) => g.dim + ': ' + g.items.join(', ')).join(' · ')
+              : 'You can import now — unmapped members land on the import default for their dimension.')
+            : h(B, { variant: 'success', title: 'Everything resolved' }, 'Headers are classified, members exist in your model and mapping is complete. Import whenever you are ready.')) : null;
+
+    const addBanner = (B && !s.membersAdded) ? h(B, {
+      variant: s.membersAdded ? 'success' : 'warning',
+      title: s.membersAdded
+        ? addedItems.length + ' member' + (addedItems.length === 1 ? '' : 's') + ' added to your source dimensions'
+        : 'Add ' + allItems.length + ' new member' + (allItems.length === 1 ? '' : 's') + ' to your source dimensions',
+      button: s.membersAdded ? 'Review members' : 'Add dimensions',
+      onButtonClick: () => this.setState({ screen: 'dims', dimsFrom: null })
+    }, s.membersAdded
+      ? 'Upserted into ' + activeGroups.length + ' dimensions — open the page again to change what is included.'
+      : 'Required before import · ' + activeGroups.map((g) => g.dim + ': ' + g.items.join(', ')).join(' · ')) : null;
+
+    const mapBanner = B ? h(B, {
+      variant: !s.membersAdded ? 'info' : unmapped.length ? 'info' : 'success',
+      title: !s.membersAdded ? 'Mapping not started yet'
+        : unmapped.length ? 'Map ' + unmapped.length + ' source member' + (unmapped.length > 1 ? 's' : '') + ' to Cube members' : 'Mapping is complete',
+      button: s.membersAdded ? 'Set up mapping' : undefined,
+      onButtonClick: s.membersAdded ? (() => this.setState({ screen: 'map' })) : undefined
+    }, s.membersAdded
+      ? (unmapped.length ? 'Optional · unmapped members import onto the dimension default. Auto-mapping rules cover future uploads.' : 'Every added member has a Cube member, and the rules are saved on the Smart Upload.')
+      : 'Available once the members exist in your source dimensions.') : null;
+
+    const dimsPageBanner = B ? h(B, {
+      variant: s.membersAdded ? 'success' : 'warning',
+      title: s.membersAdded ? addedItems.length + ' member' + (addedItems.length === 1 ? '' : 's') + ' will be created' : allItems.length + ' new member' + (allItems.length === 1 ? '' : 's') + ' in this file'
+    }, 'Add them, then map them to Cube dimensions — both are needed before the import can run. Your upload stays loaded the whole time.') : null;
+
+    const mapPageBanner = B ? h(B, {
+      variant: unmapped.length ? 'info' : 'success',
+      title: unmapped.length ? unmapped.length + ' member' + (unmapped.length > 1 ? 's' : '') + ' unmapped' : 'Every member is mapped'
+    }, unmapped.length
+      ? 'Every added member needs a Cube dimension before you can return to the upload rules and import.'
+      : 'Mapping is saved on this Smart Upload and reused on later uploads.') : null;
+
+    // ---------- footer
+    const mappingDone = s.membersAdded && !unmapped.length;
+    const primaryLabel = onCreate ? 'Create Smart Upload'
+      : onPick ? 'Upload file'
+      : onPreview ? 'Confirm header row'
+      : onHistory ? 'Upload another file'
+      : onDims ? (s.dimsFrom === 'history' ? 'Edit mapping' : 'Add ' + plural(addedItems.length, 'member', 'members') + ' & map')
+        : onMap ? (s.mapFrom === 'history' ? 'Save mapping' : 'Save mapping & return to upload rules')
+          : !s.configSaved ? (s.locked ? 'Continue with saved rules' : 'Save upload rules')
+            : s.scanning ? 'Scanning file…'
+            : showDelta && !s.membersAdded ? 'Add ' + plural(allItems.length, 'new member', 'new members')
+            : showDelta && unmapped.length ? 'Map ' + plural(unmapped.length, 'member', 'members')
+            : s.importing ? 'Importing…' : s.done ? 'Import again' : 'Run import · ' + records + ' records';
+    const footHint = onCreate
+      ? 'Creating the Smart Upload takes you straight to the upload.'
+      : onPick
+      ? (s.fileChosen ? 'Uploads the file. Nothing is imported yet.' : 'Choose a file to continue.')
+      : onPreview ? 'Cube reads the header names from row ' + hdrRow + ' and skips anything above it.'
+      : onHistory ? (s.importing ? records + ' records · ' + Math.min(100, s.progress) + '%' : 'Import complete · configuration saved for the next upload.')
+      : onDims && s.dimsFrom === 'history' ? 'Source members saved on this Smart Upload.'
+      : onDims ? plural(addedItems.length, 'member', 'members') + ' from this file · ' + (addedItems.length === 1 ? 'it needs' : 'they need') + ' a Cube dimension before you can return to the upload rules.'
+      : onMap ? (unmapped.length ? unmapped.length + ' member' + (unmapped.length > 1 ? 's' : '') + ' still needs a Cube dimension.' : 'Mapping is saved on this Smart Upload and reused on later uploads.')
+      : s.importing ? records + ' records · ' + Math.min(100, s.progress) + '%'
+        : s.done ? 'Upload History has the run and the saved configuration.'
+          : openDecisions ? openDecisions + ' header decision' + (openDecisions > 1 ? 's' : '') + ' left before you can import.'
+            : ruleErrors.length ? ruleErrors[0].text
+            : s.scanning ? 'Scanning the file for new source members. This takes a moment.'
+      : canSave ? (s.locked ? 'Continuing uses the saved rules and scans the file for new source members.' : 'Saving stores these rules and scans the file for the source dimensions it introduces.')
+            : !s.membersAdded && showDelta ? 'This file introduces ' + allItems.length + ' new source dimension member' + (allItems.length === 1 ? '' : 's') + ' — add them before you can import.'
+              : unmapped.length ? unmapped.length + ' member' + (unmapped.length > 1 ? 's' : '') + ' still needs mapping before you can import.'
+                : 'Runs in the background — you can leave this page.';
+
+    return {
+      ic: icons,
+      crumbLeaf: onCreate ? 'New Smart Upload' : onPick ? 'Upload transactions' : onPreview ? 'Confirm header row' : onDims ? 'Source Dimensions' : onMap ? 'Dimension mapping' : onHistory ? 'Upload history' : (s.locked ? 'Upload rules' : 'Setup upload rules'),
+      pageTitle: onCreate ? 'New Smart Upload' : onPick ? 'Upload transactions' : onPreview ? 'Confirm header row' : onDims ? 'Source Dimensions' : onMap ? 'Dimension mapping' : onHistory ? 'Upload history' : (s.locked ? 'Upload rules' : 'Setup upload rules'),
+      pageSub: onCreate
+        ? 'Name the Smart Upload and say how it should behave on upload. Nothing about your file is decided here.'
+        : onPick
+        ? 'Pick the file for this Smart Upload. Nothing is imported until you run the import.'
+        : onPreview
+        ? 'Uploaded. Check the first 10 rows and confirm which row holds the header names.'
+        : onHistory
+          ? (s.importing ? 'Your import is running in the background. Nothing else is needed from you.' : 'This Smart Upload is up to date. Upload another file whenever you have one.')
+        : onDims
+          ? 'Members this upload introduces that your source dimensions have never seen. Add what belongs in your model and return to the upload rules.'
+          : onMap
+            ? 'Give each newly added source member a Cube member. Saved on the Smart Upload, so later uploads of this shape need no decisions.'
+            : s.locked ? 'Every header in this file matches the rules saved on this Smart Upload. Review them, then continue.'
+            : 'Cube analyzed the headers in this file. Tell it what each one is — everything downstream, including new source dimensions and mapping, follows from these answers.',
+      fileName: fName,
+      isPick: onPick, isPreview: onPreview, replaceFile: () => this.setState({ screen: 'pick', fileChosen: false }), isClassify: onRules, isDims: onDims, isMap: onMap, isHistory: onHistory, isCreate: onCreate,
+      formName, formDesc, cbModified, cbOpening, nextSteps,
+      showPageHeader: !onHistory, showFooter: false, showPageSub: !(onRules || onDims || onMap), showConfigTabs: false, hasMultiDims: tabDims.length > 1,
+      closeMapping: () => this.setState({ screen: s.mapFrom || 'rules', mapFrom: null, dimsFrom: null }),
+      showHistorySteps: onHistory && (s.importing || s.done),
+      showFlowSteps: !onCreate && !(onDims && s.dimsFrom === 'history') && !(onMap && s.mapFrom === 'history'),
+      inConfigure: onRules || onDims || onMap,
+      phProps: { style: { paddingBottom: 0, borderBottom: 'none' } },
+      stepHeading: onPick ? 'Select a file' : '',
+      folioSteps: ['Upload', 'Configure', 'Import'].map((label, i, arr) => {
+        const cur = (onPick || onPreview) ? 0 : (onRules || onDims || onMap) ? 1 : (onHistory && s.done) ? 3 : 2;
+        const isDone = i < cur, isActive = i === cur;
+        return { label, isDone, isActive, hasNext: i < arr.length - 1, grow: i < arr.length - 1 ? '1' : '0 0 auto',
+          current: isActive ? 'step' : 'false',
+          nodeBg: isDone ? '#E6EBF4' : 'transparent',
+          nodeBorder: isActive ? '2px solid #173D82' : isDone ? 'none' : '2px solid #E3E8EF',
+          lineColor: isDone ? '#8EA8E1' : '#E3E8EF' };
+      }),
+      configTabs: [
+        { key: 'rules', label: 'Classify headers', on: onRules, enabled: true, done: s.configSaved },
+        { key: 'dims', label: 'Source dimensions', on: onDims, enabled: showDelta || s.membersAdded, done: s.membersAdded },
+        { key: 'map', label: 'Mapping', on: onMap, enabled: s.membersAdded, done: mappingDone }
+      ].map((t) => ({
+        label: t.label,
+        tip: t.enabled ? '' : (t.key === 'dims' ? 'Save the classification first' : 'Add the new members first'),
+        onClick: () => { if (t.enabled) this.setState({ screen: t.key }); },
+        bg: t.on ? '#EFF6FF' : 'transparent', border: t.on ? '#173D82' : 'transparent',
+        color: t.on ? '#173D82' : t.enabled ? '#222B3A' : '#A6AFBE', weight: t.on ? 600 : 500, cursor: t.enabled ? 'pointer' : 'not-allowed',
+        icon: t.done ? 'fa-solid fa-circle-check' : t.on ? 'fa-solid fa-circle-dot' : 'fa-regular fa-circle',
+        iconColor: t.done ? '#12B76A' : t.on ? '#173D82' : '#CDD5E0'
+      })),
+      exitConfigure: () => this.setState({ screen: s.locked ? 'history' : 'integrations', uploadFrom: null }),
+      healthIcon: s.importing ? 'fa-solid fa-arrows-rotate spin' : 'fa-solid fa-circle-check',
+      healthColor: s.importing ? '#2667D8' : '#0F9D58',
+      healthLabel: s.importing ? 'Import Running' : 'Last Import Completed',
+      sourceSub: fName + ' · ' + RAW_ROWS.length + ' rows · ' + allItems.length + ' source members',
+      destSub: activeGroups.length ? 'Mapped into ' + activeGroups.map((g) => g.dim).join(', ') : 'Cube dimensions this Smart Upload writes into',
+      rulesLinkLabel: s.configSaved ? 'Upload Rules' : 'Set Upload Rules',
+      rulesMissing: !s.configSaved,
+      rulesAria: s.configSaved ? 'Upload rules' : 'Set upload rules',
+      rulesSummary: s.configSaved ? (() => { const n = Object.keys(s.colTypes || {}).filter((k) => s.colTypes[k]).length; return n + ' header' + (n === 1 ? '' : 's') + ' classified'; })() : 'Not set',
+      rulesSummaryColor: s.configSaved ? 'var(--color-gray-700)' : 'var(--color-red-500)',
+      scheduleSummary: s.freq === 'None' || !s.freq ? 'Not scheduled' : s.freq + ', ' + (s.time || '03:00 am EDT'),
+      flowIc: { download: h('i', { className: 'fa-solid fa-arrow-down-to-line' }), rotate: h('i', { className: 'fa-solid fa-arrows-rotate' }), folder: h('i', { className: 'fa-regular fa-folder-open' }), clock: h('i', { className: 'fa-regular fa-clock' }), rules: h('i', { className: 'fa-regular fa-sliders' }), upload: h('i', { className: 'fa-solid fa-arrow-up-from-bracket' }) },
+      goDimsPage: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ screen: 'dims', dimsFrom: onHistory ? 'history' : null }); },
+      goMapPage: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ screen: 'map', mapFrom: onHistory ? 'history' : null }); },
+      goRulesPage: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ screen: 'rules' }); },
+      noop: (e) => { if (e && e.preventDefault) e.preventDefault(); },
+      scheduleOpen: s.scheduleOpen,
+      openSchedule: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ scheduleOpen: true }); },
+      closeSchedule: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ scheduleOpen: false }); },
+      nextRunLabel: s.freq === 'None' ? 'No import scheduled — this Smart Upload imports only when you upload.' : 'Next import scheduled on: Sep 19, 2026 at ' + (s.time || '03:00 am EDT'),
+      freqSelect: Fd.Select ? h(Fd.Select, { options: ['Daily', 'Weekly', 'Monthly', 'None'], value: s.freq || 'Daily', onChange: (v) => this.setState({ freq: typeof v === 'string' ? v : (v && v.target ? v.target.value : v) }) }) : null,
+      timeSelect: Fd.Select ? h(Fd.Select, { options: ['12:00 am EDT', '03:00 am EDT', '06:00 am EDT', '09:00 pm EDT'], value: s.time || '03:00 am EDT', onChange: (v) => this.setState({ time: typeof v === 'string' ? v : (v && v.target ? v.target.value : v) }) }) : null,
+      valueDimPanel,
+      isLocked: onRules && s.locked, lockedOn: s.lockedOn,
+      resetOpen: s.resetOpen,
+      openReset: () => this.setState({ resetOpen: true }),
+      closeReset: () => this.setState({ resetOpen: false }),
+      ruleSummary: HEADERS.filter((r) => typeOf(r.col)).map((r) => {
+        const t = typeOf(r.col);
+        const v = t === 'Dimension' ? 'Dimension → ' + (s.tldMap[r.col] || '—')
+          : t === 'Value' ? 'Value' + (vTarget(r.col) ? ' · member of ' + vTarget(r.col) + (s.tldMap.v ? ' → ' + s.tldMap.v : '') : '')
+          : t;
+        return { k: r.col, v: v };
+      }),
+      defaultSummary: DEFAULTS.map((d) => ({ k: d.dim, v: s.defaults[d.dim] || d.value })),
+      importIcon: h('i', { className: 'fa-regular fa-cloud-arrow-up', style: { fontSize: 12 } }),
+      uploadAgain: () => { const name = s.tableName; this.startUpload({ name: name }); this.setState({ uploadFrom: 'history' }); },
+
+      isIntegrations: onIntegrations, inFlow: !onIntegrations,
+      integrationsTable, filterSource, filterImport, searchInput,
+      newMenuOpen: s.newMenuOpen,
+      toggleNewMenu: () => this.setState((st) => ({ newMenuOpen: !st.newMenuOpen })),
+      newSources: NEW_SOURCES.map((label) => ({
+        label: label,
+        onPick: () => this.setState(label === 'Smart Upload' ? { screen: 'create', newMenuOpen: false } : { newMenuOpen: false })
+      })),
+      goIntegrationsLink: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ screen: 'integrations' }); },
+      showTableCrumb: !onCreate,
+      tableName: s.tableName || 'Untitled table',
+      historyTable,
+      importing: s.importing,
+      progressPct: Math.min(100, s.progress) + '%',
+      progressLabel: records + ' records · ' + Math.min(100, s.progress) + '%',
+      historyBanner: Fd.Banner ? h(Fd.Banner, {
+        variant: s.importing ? 'info' : 'success',
+        title: s.importing ? 'Import started' : records + ' records imported'
+      }, s.importing
+        ? fName + ' was accepted and is importing now. This row refreshes to Complete when it finishes.'
+        : fName + ' finished. The classification, dimensions and mapping you set are saved and reused on the next upload.') : null,
+      addBanner, mapBanner, dimsPageBanner, mapPageBanner,
+      hasFile: s.fileChosen, noFile: !s.fileChosen, rowCount: RAW_ROWS.length,
+      chooseFile: () => this.setState({ fileChosen: true }),
+      clearFile: () => this.setState({ fileChosen: false }),
+      previewNote: 'Uploaded · header row ' + hdrRow + ' · ' + nCols + ' headers · nothing imported yet',
+      headerSelect, headerWarn,
+      headerHint: hdrRow === DETECTED ? 'Cube picked row ' + DETECTED + ' — the first row where every column has a name. Rows above it are skipped. Click any row to change it.' : (hdrRow === 1 ? 'No rows skipped.' : hdrRow === 2 ? 'Row 1 is skipped.' : 'Rows 1–' + (hdrRow - 1) + ' are skipped.') + ' Row ' + hdrRow + ' supplies the header names.',
+      headerChanged: hdrRow !== DETECTED,
+      resetHeader: () => setHdr(DETECTED),
+      previewTable, pickBanner,
+
+      topBanner, classifyTable, classifyDone,
+      canSave, saveConfig, configSaved: s.configSaved, saveDisabled: !canSave,
+      saveLabel: s.configSaved ? 'Classification saved' : 'Save classification',
+      saveVariant: canSave ? 'primary' : 'ghost-gray',
+      saveNote: s.configSaved
+        ? 'Saved. Change a header above and you will be asked to save again.'
+        : classifyDone ? 'Saves the configuration and scans the file for the source dimension members it introduces.'
+          : 'Classify every header to save this configuration.',
+      statusLine: openDecisions ? plural(openDecisions, 'header needs a decision', 'headers need a decision') : ruleErrors.length ? ruleErrors[0].text : s.configSaved ? 'Rules saved' : 'Every header is classified',
+      statusColor: openDecisions || ruleErrors.length ? '#B54708' : '#087443',
+      statusVariant: openDecisions || ruleErrors.length ? 'warning' : 'success',
+      bannerProps: { style: { boxShadow: 'none' } },
+      statusIcon: openDecisions || ruleErrors.length ? 'fa-solid fa-circle-exclamation' : 'fa-solid fa-circle-check',
+      showChecks: untyped.length === 0 && ruleErrors.length > 0,
+      hasSavedToggle: s.locked && (savedRows.length > 0 || (valueDimActive && valueDimName && s.tldMap.v)),
+      savedToggleLabel: (s.showSaved ? 'Hide ' : 'Show ') + plural(savedRows.length, 'saved header', 'saved headers') + (valueDimActive && valueDimName && s.tldMap.v ? ' and the ' + valueDimName + ' source dimension' : ''),
+      savedToggleIcon: s.showSaved ? 'fa-solid fa-chevron-up' : 'fa-solid fa-chevron-down',
+      toggleSaved: () => this.setState((st) => ({ showSaved: !st.showSaved })),
+      classifyTitle: 'Classify the headers in this file',
+      classifyCount: (HEADERS.length - openDecisions) + ' of ' + HEADERS.length + ' classified',
+      classifyNote: s.locked ? 'Saved ' + s.lockedOn + ' · structure locked' : 'Pick a type for each header. Saved for later uploads.',
+      _oldNote: 'Nothing has been uploaded to this Smart Upload before, so each of the ' + HEADERS.length + ' headers needs a classification. Value headers are unpivoted at import; once there is more than one, each needs the source dimension its name becomes a member of. Answers are saved and reused on every later upload.',
+      policyPicker, policyNote: POLICY_NOTE[policy], defaultsList, hasSchedule: s.freq !== 'None',
+      checkTitle: ruleErrors.length ? plural(ruleErrors.length, 'rule not met yet', 'rules not met yet') : 'Shape checks passed',
+      checkTint: ruleErrors.length ? '#FFFAEB' : '#ECFDF3',
+      checkBorder: ruleErrors.length ? '#FEDF89' : '#C6E9D4',
+      checkColor: ruleErrors.length ? '#B54708' : '#087443',
+      checkList: h('div', { style: { display: 'flex', flexDirection: 'column', gap: 7 } }, rules.filter((r) => !r.ok).map((r, i) => h('div', {
+        key: i, style: { display: 'flex', alignItems: 'flex-start', gap: 9, fontSize: 13, color: r.ok ? '#4A5567' : '#B54708' }
+      },
+        h('i', { className: r.ok ? 'fa-solid fa-circle-check' : 'fa-solid fa-circle-exclamation', style: { fontSize: 12, marginTop: 2, color: r.ok ? '#12B76A' : '#DC6803' } }),
+        h('span', { style: { textWrap: 'pretty' } }, r.text)))),
+
+      showDelta,
+      deltaTitle: 'Source dimensions this file introduces',
+      deltaNote: 'Cube scanned the upload for unique items under every header you classified. New members have to be added before the import can run; mapping them is optional.',
+      deltaPill: allItems.length + ' new member' + (allItems.length === 1 ? '' : 's'),
+      deltaCardNote: s.dimsFrom === 'history' ? 'Every source member on this Smart Upload and the Cube member it maps to.' : s.locked
+        ? 'Every source member in this file. Members tagged New aren’t in your source dimensions yet and are added before mapping; the rest already exist from earlier uploads.'
+        : 'This is the first upload, so every member is New. Members arrive flat; arrange rollups in Dimensions later.',
+      addTitle: s.membersAdded ? addedItems.length + ' member' + (addedItems.length === 1 ? '' : 's') + ' added to your source dimensions' : 'Add ' + allItems.length + ' new member' + (allItems.length === 1 ? '' : 's') + ' to your source dimensions',
+      addSub: s.membersAdded ? 'Upserted into ' + activeGroups.length + ' dimensions. Reopen to change what is included.' : 'Required before import · ' + activeGroups.map((g) => g.dim + ': ' + g.items.join(', ')).join(' · '),
+      addVariant: s.membersAdded ? 'ghost-gray' : 'primary',
+      addBtnLabel: s.membersAdded ? 'Review members' : 'Add dimensions',
+      toggleAdd: () => this.setState({ screen: 'dims', dimsFrom: null }),
+      deltaGroups, dimFilter, showDeltaPill: !reviewMode,
+
+      mapTitle: unmapped.length ? 'Map ' + unmapped.length + ' source member' + (unmapped.length > 1 ? 's' : '') + ' to Cube members' : 'Mapping is complete',
+      mapSub: s.membersAdded
+        ? (unmapped.length ? 'Unmapped members import onto the dimension default. Auto-mapping rules cover future uploads.' : 'Every added member has a Cube member, and the rules are saved on the Smart Upload.')
+        : 'Available once the members exist in your source dimensions.',
+      mapVariant: 'secondary',
+      mapBtnLabel: 'Set up mapping',
+      mapDisabled: addedItems.length === 0,
+      toggleMap: () => { if (addedItems.length) this.setState({ membersAdded: true, screen: 'map' }); },
+      mapTable, rulesBadge, filterStatus, filterUpdated,
+      pencilIcon: h('i', { className: 'fa-solid fa-pen', style: { fontSize: 12 } }),
+      mapTabs, mapTab: activeTab,
+      unmappedCount: mapRows.filter((r) => !effMap(r.m)).length,
+      unmappedLabel: mapRows.filter((r) => !effMap(r.m)).length ? mapRows.filter((r) => !effMap(r.m)).length + ' unmapped' : 'All mapped',
+      unmappedColor: mapRows.filter((r) => !effMap(r.m)).length ? '#B42318' : '#173D82',
+      applySuggestions: () => this.setState((st) => {
+        const next = Object.assign({}, st.memberMap);
+        addedItems.forEach((r) => { if (MAP_SUGGEST[r.m]) next[r.m] = MAP_SUGGEST[r.m]; });
+        return { memberMap: next };
+      }),
+
+      unpivotNote: valueCols.length ? valueCols.join(' and ') + ' are Value headers — each source row becomes ' + valueCols.length + ' records, ' + records + ' in total.' : 'No value headers classified yet.',
+      resultTable, recordCount: records,
+
+      backLabel: onCreate ? 'Cancel' : onPick ? 'Cancel' : onPreview ? 'Back' : onHistory ? 'Back to upload rules' : onDims ? (s.dimsFrom === 'history' ? 'Back to upload history' : 'Back to upload rules') : onMap ? 'Back to dimensions' : 'Back to file',
+      backDisabled: onDims && s.dimsFrom !== 'history' && !mappingDone,
+      backAction: () => {
+        if (onCreate) { this.setState({ screen: 'integrations' }); return; }
+        if (onPick) { this.setState({ screen: s.uploadFrom === 'integrations' ? 'integrations' : s.locked ? 'history' : 'create', fileChosen: false, uploadFrom: null }); return; }
+        if (onPreview) { this.setState({ screen: 'pick' }); return; }
+        if (onHistory) { this.setState({ screen: 'rules' }); return; }
+        if (onDims) { if (s.dimsFrom === 'history') { this.setState({ screen: 'history', dimsFrom: null }); return; } if (mappingDone) this.setState({ screen: 'rules' }); return; }
+        if (onMap) { this.setState({ screen: 'dims', dimsFrom: s.mapFrom === 'history' ? 'history' : null }); return; }
+        this.setState({ screen: 'pick' });
+      },
+      footHint,
+      primaryTip: footHint,
+      primaryLabel,
+      primaryDisabled: (onDims && s.dimsFrom === 'history') ? false : onCreate ? !String(s.tableName || '').trim()
+        : onPick ? !s.fileChosen
+        : onPreview ? false
+        : onHistory ? s.importing
+        : onDims ? addedItems.length === 0
+          : onMap ? unmapped.length > 0
+            : !s.configSaved ? !classifyDone
+              : s.scanning || s.importing,
+      primaryAction: () => {
+        if (onCreate) { if (String(s.tableName || '').trim()) this.setState({ screen: 'pick' }); return; }
+        if (onPick) { if (s.fileChosen) this.setState({ screen: 'preview' }); return; }
+        if (onPreview) { this.process(); return; }
+        if (onDims && s.dimsFrom === 'history') { this.setState({ screen: 'map', mapFrom: 'history' }); return; }
+        if (onHistory) {
+          if (s.importing) return;
+          this.startUpload({ name: s.tableName }); this.setState({ uploadFrom: 'history' });
+          return;
+        }
+        if (onDims) { if (addedItems.length) this.setState({ membersAdded: true, screen: 'map' }); return; }
+        if (onMap) { if (s.mapFrom === 'history') { this.setState({ screen: 'history', mapFrom: null, dimsFrom: null }); return; } if (!unmapped.length) this.setState({ screen: 'rules' }); return; }
+        if (!s.configSaved) { saveConfig(); return; }
+        if (showDelta && !s.membersAdded) { this.setState({ screen: 'dims' }); return; }
+        if (showDelta && unmapped.length) { this.setState({ screen: 'map' }); return; }
+        if (!s.importing && classifyDone) this.runImport();
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

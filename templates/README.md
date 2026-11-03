@@ -18,9 +18,13 @@ sidebar, header, or shell structure.
 
 `cube-addon-sidebar/` ("Cube Add-on Sidebar") and `cube-addon-sidebar-sheets-host/`
 ("Cube Add-on — Google Sheets Host") are the two hand-authored add-on prototypes. They were
-remote-only until 2026-10-27, when both were exported into the repo with the **Department
-default filter member** feature added (filter screen, admin "Set default", confirm sheet,
-toast, viewer lock; reference source in `prototypes/default-filter-member/`). **The repo
+remote-only until 2026-10-27, when both were exported into the repo with **default filter
+members** added for all six filter dimensions (Time, Department, Scenario, Entity, Product,
+Market): each filter row opens a member-tree screen pre-filled with the default, admins hover
+a member to "Set default" (confirm sheet, toast, Default badge), and the header hamburger
+menu opens a **Default filter members** screen that lists every dimension's default with a
+Change button (viewers see View). Reference source for the original Department-only version
+is in `prototypes/default-filter-member/`. Account stays static (it is a row axis). **The repo
 copies are now ahead of the design project**, which still holds the pre-feature versions.
 Patch both folders' `CubeAddonSidebar.dc.html` in the same pass; they differ only in the
 card layout (fixed 320px vs 100%-height flex) and the filter list's `max-height`.

@@ -24,7 +24,7 @@
 //   theme   : "blue" (default) | "purple"
 //   open    : controlled expanded state
 //   onToggle: (nextOpen) => void — fires on header click
-//   badge   : optional trailing node before the chevron (e.g. an info icon)
+//   badge   : optional node beside the title (e.g. an info icon, or the add-on's "Drilldown" chip)
 //
 // A section with no `children` never renders as open, even when `open` is
 // true: an expanded body wrapper with nothing in it reads as a tall blank
@@ -85,12 +85,12 @@ export function AccordionSection({ icon, title, theme = "blue", open = false, on
             {icon}
           </span>
         )}
-        <span style={{ flex: 1, fontSize: 14, fontWeight: 600, color: t.text }}>
+        <span style={{ flex: 1, display: "flex", alignItems: "center", gap: 8, minWidth: 0, fontSize: 14, fontWeight: 600, color: t.text }}>
           {title}
+          {badge}
         </span>
-        {badge}
         <i
-          className={`fa-solid fa-chevron-${isOpen ? "up" : "down"}`}
+          className={`fa-regular fa-chevron-${isOpen ? "up" : "down"}`}
           style={{ fontSize: 12, color: COLORS.gray900, flexShrink: 0 }}
           aria-hidden="true"
         />

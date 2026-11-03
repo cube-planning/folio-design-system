@@ -59,7 +59,7 @@ export function AnalyzePanel({
         variant="secondary"
         size="small"
         style={{ width: "100%" }}
-        leadingIcon={<i className="fa-solid fa-magnifying-glass-chart" />}
+        leadingIcon={<i className="fa-regular fa-magnifying-glass-chart" />}
         onClick={onDrilldown}
       >
         Drilldown
