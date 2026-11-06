@@ -1,0 +1,76 @@
+<!doctype html>
+<!-- @dsCard group="Brand" name="FP&Agents suite" subtitle="Four named agents, each with an IconBadge" viewport="700x200" -->
+<html><head><meta charset="utf-8"><title>FP&Agents suite</title>
+<link rel="stylesheet" href="_shared.css">
+<link rel="stylesheet" href="../vendor/fontawesome/css/all.min.css">
+<style>
+  body { padding: 18px; }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
+  /* Card containers are 16px (--radius-2xl). No top-stroke accent — the
+     edge-pair treatment was retired 2026-09-09. */
+  .a { background: #fff; border-radius: var(--radius-2xl); box-shadow: 0 2px 6px rgba(10,18,41,.06); padding: 14px; }
+
+  /* IconBadge, size md (40px) — mirrors components/IconBadge.jsx: soft-tint
+     circle (offset) -> rotated tinted chip -> white icon chip on top.
+     Geometry is the .jsx values scaled by s = 40/48.
+
+     Slots are named tint / chip / glyph, NOT by stop number (aligned
+     2026-09-16 with the .jsx, whose hue axis became dynamic). Which ramp
+     stop fills each slot is per-ramp: accent ramps use 50/300/600, the
+     darker brand ramps step one lighter — cobalt is 50/200/500. The old
+     --ib-50/300/600 names hardcoded the accent assumption into the variable
+     itself, so cobalt could not be expressed. Never purple (AI only). */
+  .ib   { position: relative; width: 40px; height: 40px; flex-shrink: 0; }
+  .ib i { font-size: 13.33px; color: var(--ib-glyph); }
+  .ib::before {
+    content: ""; position: absolute; top: -1.67px; left: -1.67px;
+    width: 40px; height: 40px; border-radius: 50%; background: var(--ib-tint);
+  }
+  .ib .chip {
+    position: absolute; top: 10.83px; left: 7.5px; width: 21.67px; height: 21.67px;
+    border-radius: 3.33px; background: var(--ib-chip); transform: rotate(-10deg);
+  }
+  .ib .face {
+    position: absolute; top: 10px; left: 10px; width: 20px; height: 20px;
+    border-radius: 3.33px; background: #fff;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* Accent ramps — 50 / 300 / 600 */
+  .ib.teal   { --ib-tint: var(--color-teal-50);    --ib-chip: var(--color-teal-300);    --ib-glyph: var(--color-teal-600); }
+  .ib.indigo { --ib-tint: var(--color-indigo-50);  --ib-chip: var(--color-indigo-300);  --ib-glyph: var(--color-indigo-600); }
+  .ib.orange { --ib-tint: var(--color-orange-50);  --ib-chip: var(--color-orange-300);  --ib-glyph: var(--color-orange-600); }
+  .ib.cyan   { --ib-tint: var(--color-cyan-50);    --ib-chip: var(--color-cyan-300);    --ib-glyph: var(--color-cyan-600); }
+  /* Brand ramp — 50 / 200 / 500, one stop lighter at chip and glyph */
+  .ib.cobalt { --ib-tint: var(--color-cobalt-50);  --ib-chip: var(--color-cobalt-200);  --ib-glyph: var(--color-cobalt-500); }
+
+  .name { font-family: var(--font-display); font-weight: 700; font-size: 14px; color: var(--new-blue); margin-top: 14px; }
+  .desc { font-family: var(--font-body); font-size: 12px; color: var(--gray-600); margin-top: 4px; line-height: 1.45; }
+</style>
+</head><body>
+  <div class="grid">
+    <!-- Icons are fa-regular only, each name verified against the vendored
+         Font Awesome 7.3.1 metadata/icons.json before use. -->
+    <div class="a">
+      <div class="ib indigo"><span class="chip"></span><span class="face"><i class="fa-regular fa-presentation-screen"></i></span></div>
+      <div class="name">The Business Partner</div>
+      <div class="desc">Board decks, investor narratives, cross-functional collaboration.</div>
+    </div>
+    <div class="a">
+      <div class="ib teal"><span class="chip"></span><span class="face"><i class="fa-regular fa-calendar-days"></i></span></div>
+      <div class="name">The Planner</div>
+      <div class="desc">Budgets, forecasts, rolling plans, variance tracking.</div>
+    </div>
+    <div class="a">
+      <div class="ib orange"><span class="chip"></span><span class="face"><i class="fa-regular fa-magnifying-glass-chart"></i></span></div>
+      <div class="name">The Analyst</div>
+      <div class="desc">Ad-hoc analysis, trend detection, anomaly flagging.</div>
+    </div>
+    <div class="a">
+      <div class="ib cyan"><span class="chip"></span><span class="face"><i class="fa-regular fa-database"></i></span></div>
+      <div class="name">The Data Manager</div>
+      <div class="desc">Governance, integrations, reconciliation, data quality.</div>
+    </div>
+  </div>
+</body></html>

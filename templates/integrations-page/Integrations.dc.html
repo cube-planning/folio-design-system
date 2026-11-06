@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<!-- @template name="Workspace Template: Integrations" description="Integrations screen — connected & available source systems with an add-connection flow, built on the App Shell." -->
+<!-- @built-against design-sync 2026-08-19 (see github.md); last verified 2026-08-25 -->
+<helmet>
+  <script src="./ds-base.js"></script>
+  <script src="./_sidebar-icons.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+    .fa-solid::before,.fa-regular::before,.fa-brands::before,.fa-light::before,.fa-thin::before,.fa-duotone::before { content:var(--fa) !important; }
+    body { font-family:'DM Sans',sans-serif; background:#F5F7FA; height:100vh; overflow:hidden; color:#222B3A; }
+    a { text-decoration:none; color:inherit; }
+    .app-shell { display:flex; height:100vh; }
+    /* Sidebar */
+    .sb { width:255px; min-width:255px; padding:8px; display:flex; flex-direction:column; height:100vh; transition:width .2s ease,min-width .2s ease; overflow:hidden; }
+    .sb.col { width:64px; min-width:64px; }
+    .sb-card { background:#fff; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06); flex:1; display:flex; flex-direction:column; overflow:hidden; }
+    .sb-hdr { height:48px; padding:16px 12px 0 16px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; white-space:nowrap; }
+    .sb.col .sb-hdr { flex-direction:column; height:auto; justify-content:center; align-items:center; gap:8px; padding:12px 0 8px; }
+    .logo-wm { display:flex; align-items:center; }
+    .logo-wm img { height:28px; width:auto; display:block; }
+    .logo-ic { display:none; align-items:center; justify-content:center; }
+    .logo-ic img { height:28px; width:auto; display:block; }
+    .sb.col .logo-wm { display:none; }
+    .sb.col .logo-ic { display:flex; }
+    .col-btn { width:28px; height:28px; border:none; border-radius:4px; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#4A5567; }
+    .col-btn:hover { background:#F1F4F8; }
+    .cc-left,.cc-right { display:inline-flex; align-items:center; justify-content:center; }
+    .cc-right { display:none; }
+    .sb.col .cc-left { display:none; }
+    .sb.col .cc-right { display:inline-flex; }
+    .sb-nav { flex:1; overflow-y:auto; overflow-x:hidden; padding:24px 0; }
+    .sb-nav::-webkit-scrollbar { width:4px; }
+    .sb-nav::-webkit-scrollbar-thumb { background:#CDD5E0; border-radius:2px; }
+    .dv { height:1px; background:#E3E8EF; margin:8px 0; }
+    .nav-section { display:flex; flex-direction:column; gap:4px; padding:8px 0; }
+    .sb.col .nav-section { padding:0; align-items:center; }
+    .sec { display:flex; align-items:center; gap:4px; height:20px; padding:0 16px; font-family:'DM Sans', sans-serif; font-size:12px; font-weight:400; color:#4A5567; white-space:nowrap; }
+    .sb.col .sec { justify-content:center; padding:0; }
+    .sb.col .sec-lbl,.sb.col .sec-crt { display:none; }
+    .sec-crt { font-size:8px; color:#677489; transition:transform .15s ease; }
+    .sec { cursor:pointer; user-select:none; }
+    .nav-section.collapsed > *:not(.sec) { display:none; }
+    .nav-section.collapsed .sec-crt { transform:rotate(-90deg); }
+    .ni { height:32px; padding:0 24px 0 29px; border-left:3px solid transparent; display:flex; align-items:center; gap:8px; border-radius:0; cursor:pointer; position:relative; white-space:nowrap; color:inherit; width:100%; }
+    .ni.home { padding:0 24px 0 29px; border-left:3px solid transparent; }
+    .nav-section .ni:hover { background:#EFF6FF; border-left-color:#2667D8; }
+    .nav-section .ni:hover .ni-lbl { color:#2667D8; }
+    .nav-section .ni:hover .ni-ic { color:#2667D8; }
+    .ni.home:hover { background:#EFF6FF; border-left-color:#2667D8; }
+    .ni.home:hover .ni-lbl { color:#2667D8; }
+    .ni.home:hover .ni-ic { color:#2667D8; }
+    .nav-section .ni.active { background:#EFF6FF; border-left-color:#2667D8; }
+    .ni.home.active { background:#EFF6FF; border-left-color:#2667D8; }
+    .ni.active .ni-lbl { color:#2667D8; font-weight:500; }
+    .ni.active .ni-ic { color:#2667D8; }
+    .ni-ic { width:22px; height:22px; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#4A5567; font-size:15px; }
+    .ni-lbl { font-size:14px; font-weight:400; color:#222B3A; }
+    .sb.col .ni { padding:0; border-left:none; width:36px; justify-content:center; border-radius:4px; }
+    .sb.col .ni.home { padding:0; border-radius:4px; }
+    .sb.col .ni-lbl { display:none; }
+    .sb.col .ni:hover::after { content:attr(data-label); position:absolute; left:calc(100% + 8px); top:50%; transform:translateY(-50%); background:#222B3A; color:#fff; font-size:12px; font-weight:500; padding:4px 10px; border-radius:4px; white-space:nowrap; z-index:300; pointer-events:none; }
+    .ni-sub-wrap { padding-left:34px; display:flex; flex-direction:column; }
+    .ni-sub { display:flex; align-items:center; height:32px; padding:4px 16px 4px 18px; border-left:2px solid #E3E8EF; font-size:14px; font-weight:400; color:#222B3A; cursor:pointer; white-space:nowrap; }
+    .ni-sub:hover { background:#EFF6FF; }
+    .ni-sub.active { color:#2667D8; font-weight:600; border-left-color:#2667D8; }
+    .sb.col .ni-sub-wrap { display:none; }
+    .apps-wrap { padding:0 8px 16px; }
+    .sb.col .apps-wrap { padding:0 0 8px; }
+    .apps-sec { display:flex; align-items:center; gap:4px; padding:8px 8px 4px; font-family:'DM Sans', sans-serif; font-size:12px; font-weight:400; color:#4A5567; }
+    .sb.col .apps-sec { justify-content:center; padding:8px 0 4px; }
+    .sb.col .apps-sec .sec-lbl,.sb.col .apps-sec .sec-crt { display:none; }
+    .apps-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:4px; padding:4px 0; }
+    .apps-grid .app-tile:nth-child(8) { grid-column:1; }
+    .sb.col .apps-grid { display:flex; flex-direction:column; align-items:center; gap:4px; }
+    .app-tile { display:flex; flex-direction:column; align-items:center; gap:4px; padding:4px 0; border-radius:8px; cursor:pointer; position:relative; }
+    .app-tile:hover { background:#EFF6FF; }
+    .app-circ { width:32px; height:32px; border-radius:50%; background:#EEF0F4; border:1.5px solid #DDE1E8; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#4A5567; font-size:13px; }
+    .app-lbl { font-size:10px; font-weight:500; color:#353F4F; text-align:center; line-height:1.2; }
+    .sb.col .app-lbl { display:none; }
+    .sb.col .app-tile:hover::after { content:attr(data-label); position:absolute; left:calc(100% + 8px); top:50%; transform:translateY(-50%); background:#222B3A; color:#fff; font-size:12px; font-weight:500; padding:4px 10px; border-radius:4px; white-space:nowrap; z-index:300; pointer-events:none; }
+    /* Main */
+    .staff-row { display:flex; align-items:center; justify-content:space-between; padding:0 12px 0 24px; height:40px; flex-shrink:0; }
+    .staff-row-left { display:flex; align-items:center; gap:8px; }
+    .staff-label { font-size:14px; font-weight:400; color:#222B3A; }
+    .staff-more-btn { width:28px; height:28px; border:none; background:transparent; border-radius:4px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#677489; font-size:14px; }
+    .staff-more-btn:hover { background:#F2F5F9; }
+    .sb.col .staff-row { padding:0; justify-content:center; }
+    .sb.col .staff-label { display:none; }
+    .sb.col .staff-more-btn { display:none; }
+    .main { flex:1; display:flex; flex-direction:column; min-width:0; overflow:hidden; }
+    .topnav { height:80px; background:#F5F7FA; border-bottom:1px solid #E3E8EF; display:flex; align-items:center; justify-content:space-between; padding:0 24px; flex-shrink:0; }
+    .tn-company { display:flex; align-items:center; gap:4px; height:32px; padding:0 12px; background:#fff; border-radius:16px; box-shadow:0 2px 2px #E3E8EF; cursor:pointer; white-space:nowrap; }
+    .tn-company:hover { box-shadow:0 2px 4px #CDD5E0; }
+    .tn-company-ic { width:22px; height:22px; display:flex; align-items:center; justify-content:center; color:#173D82; font-size:13px; }
+    .tn-company-name { font-size:12px; font-weight:400; color:#677489; }
+    .tn-chevron { width:22px; height:22px; display:flex; align-items:center; justify-content:center; color:#353F4F; font-size:11px; }
+    .tn-right { display:flex; align-items:center; gap:8px; }
+    .tn-btn { width:32px; height:32px; border-radius:4px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; color:#4A5567; font-size:15px; }
+    .tn-btn:hover { background:#F8FAFC; }
+    .tn-ai-btn { width:28px; height:28px; border:none; border-radius:50%; background:linear-gradient(135deg,#7A5AF8 10%,#9B8AFB 50%,#5925DC 100%); padding:0; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; }
+    .tn-ai-btn { position:relative; }
+    .tn-ai-btn:hover { opacity:.85; }
+    .tn-ai-btn:hover::after { content:attr(data-tip); position:absolute; top:calc(100% + 8px); left:50%; transform:translateX(-50%); background:#222B3A; color:#fff; font-size:12px; font-weight:500; padding:4px 10px; border-radius:4px; white-space:nowrap; z-index:300; pointer-events:none; }
+    .tn-user { display:flex; align-items:center; gap:8px; height:32px; padding:0 8px; background:#fff; border-radius:20px; box-shadow:0 2px 2px #E3E8EF; cursor:pointer; white-space:nowrap; }
+    .tn-user:hover { box-shadow:0 2px 4px #CDD5E0; }
+    .tn-avatar { width:24px; height:24px; border-radius:12px; background:#E3E8EF; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:#4A5567; flex-shrink:0; }
+    .tn-user-name { font-size:12px; font-weight:400; color:#677489; }
+    .page-content { flex:1; overflow-y:auto; background:#F5F7FA; padding:24px; }
+    /* Placeholder for empty slot */
+    .slot-hint { border:1px dashed #CDD5E0; border-radius:12px; background:#fff; padding:48px; text-align:center; color:#97A3B6; }
+    .slot-hint h3 { font-size:16px; font-weight:600; color:#677489; margin-bottom:6px; }
+    .slot-hint p { font-size:13px; }
+
+    .pg { width:100%; }
+    .pg-head { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:16px; }
+    .pg-sub { font-size:14px; color:#677489; }
+    .pg-btn-primary { height:32px; padding:0 16px; border-radius:9999px; background:#173D82; color:#fff; border:none; font-family:'DM Sans',sans-serif; font-weight:500; font-size:14px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 1px 3px rgba(16,24,40,.1); }
+    .pg-btn-primary:hover { background:#122E64; }
+    .sec-hd { font-size:12px; font-weight:700; color:#4A5567; text-transform:uppercase; letter-spacing:.05em; margin:28px 0 14px; display:flex; align-items:center; gap:8px; }
+    .sec-hd .count { font-size:11px; font-weight:600; color:#677489; background:#EEF2FA; border-radius:99px; padding:1px 8px; }
+    .conn-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:16px; }
+    .conn-card { background:#fff; border:1px solid #E3E8EF; border-radius:12px; padding:20px; display:flex; flex-direction:column; gap:14px; }
+    .conn-top { display:flex; align-items:center; gap:12px; }
+    .conn-logo { width:40px; height:40px; border-radius:10px; background:#F1F4F8; display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:700; color:#173D82; flex-shrink:0; }
+    .conn-name { font-size:15px; font-weight:600; color:#222B3A; }
+    .conn-cat { font-size:12px; color:#677489; }
+    .conn-foot { display:flex; align-items:center; justify-content:space-between; }
+    .badge-ok { display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:600; color:#067647; background:#ECFDF3; border-radius:99px; padding:3px 10px; }
+    .badge-ok::before { content:''; width:6px; height:6px; border-radius:50%; background:#17B26A; }
+    .conn-sync { font-size:12px; color:#97A3B6; }
+    .btn-ghost { height:30px; padding:0 12px; border-radius:9999px; background:#fff; border:1.5px solid #173D82; color:#173D82; font-family:'DM Sans',sans-serif; font-weight:500; font-size:13px; cursor:pointer; }
+    .btn-ghost:hover { background:#EEF2FA; }
+    .btn-connect { height:30px; padding:0 14px; border-radius:9999px; background:#173D82; border:none; color:#fff; font-family:'DM Sans',sans-serif; font-weight:500; font-size:13px; cursor:pointer; }
+    .btn-connect:hover { background:#122E64; }
+    .new-dd-wrap { position:relative; }
+    .new-dd-wrap .new-dd { top:40px; }
+    .new-dd { position:absolute; top:calc(100% + 8px); right:0; width:280px; background:#fff; border:1px solid #E3E8EF; border-radius:12px; box-shadow:0 12px 32px rgba(16,24,40,.14); padding:8px; display:none; z-index:300; }
+    .new-dd.open { display:block; }
+    .new-dd-item { padding:10px 12px; border-radius:8px; font-size:14px; color:#222B3A; cursor:pointer; }
+    .new-dd-item:hover { background:#F1F4F8; }
+    .modal-scrim { position:fixed; inset:0; background:rgba(17,24,40,.48); display:none; align-items:center; justify-content:center; z-index:400; }
+    .modal-scrim.open { display:flex; }
+    .modal { background:#fff; border-radius:16px; width:560px; max-width:90vw; box-shadow:0 24px 48px rgba(16,24,40,.12); overflow:hidden; }
+    .modal-hd { display:flex; align-items:center; justify-content:space-between; padding:20px 24px; border-bottom:1px solid #E3E8EF; }
+    .modal-hd h3 { font-size:18px; font-weight:600; color:#081121; }
+    .modal-x { border:none; background:none; cursor:pointer; color:#677489; font-size:15px; width:28px; height:28px; border-radius:6px; }
+    .modal-x:hover { background:#F1F4F8; }
+    .modal-bd { padding:20px 24px; display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .pick { display:flex; align-items:center; gap:10px; border:1px solid #E3E8EF; border-radius:10px; padding:12px; cursor:pointer; }
+    .pick:hover { border-color:#173D82; background:#F7FAFF; }
+    .pick .conn-logo { width:32px; height:32px; font-size:14px; border-radius:8px; }
+    .modal-ft { padding:16px 24px; border-top:1px solid #E3E8EF; display:flex; justify-content:flex-end; gap:10px; }
+    .pg-title-row { display:flex; align-items:center; gap:8px; }
+    .pg-title-ic { color:#222B3A; font-size:24px; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; }
+    .pg-title { font-size:24px; line-height:32px; font-weight:600; color:#222B3A; }
+    .pg-sub { font-size:14px; color:#677489; margin-top:8px; margin-left:0; }
+    .filter-bar { display:flex; align-items:center; gap:10px; margin:20px 0 16px; }
+    .filter-lbl { font-size:13px; color:#677489; }
+    .filter-pill { display:inline-flex; align-items:center; gap:8px; height:32px; padding:0 12px; border:1px solid #E3E8EF; border-radius:8px; background:#fff; font-size:13px; color:#222B3A; cursor:pointer; }
+    .filter-pill:hover { border-color:#CDD5E0; }
+    .filter-search { margin-left:auto; display:flex; align-items:center; gap:8px; height:36px; padding:0 12px; border:1px solid #E3E8EF; border-radius:8px; background:#fff; width:280px; color:#97A3B6; }
+    .filter-search input { border:none; outline:none; font-family:'DM Sans',sans-serif; font-size:13px; color:#222B3A; width:100%; background:transparent; }
+    .tbl-card { background:#fff; border:1px solid #E3E8EF; border-radius:12px; overflow:hidden; }
+    .tbl { width:100%; border-collapse:collapse; }
+    .tbl thead th { background:#F8FAFC; text-align:left; font-size:11px; font-weight:700; color:#677489; text-transform:uppercase; letter-spacing:.04em; padding:12px 16px; border-bottom:1px solid #E3E8EF; white-space:nowrap; }
+    .th-sort { display:inline-flex; align-items:center; gap:6px; }
+    .th-sort .fa-sort { color:#CDD5E0; font-size:10px; }
+    .tbl tbody td { padding:11px 16px; border-bottom:1px solid #F2F5F9; font-size:14px; color:#222B3A; vertical-align:middle; }
+    .tbl tbody tr:last-child td { border-bottom:none; }
+    .tbl tbody tr:hover { background:#FCFCFD; }
+    .src-logo { width:26px; height:26px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; }
+    .cell-name { color:#2667D8; font-weight:500; cursor:pointer; }
+    .cell-name:hover { text-decoration:underline; }
+    .cell-sched { display:inline-flex; align-items:center; gap:8px; color:#2667D8; cursor:pointer; }
+    .cell-sched .fa-clock { color:#97A3B6; font-size:13px; }
+    .cell-date { color:#4A5567; }
+    .st { display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:500; white-space:nowrap; }
+    .st-ok { color:#067647; }
+    .st-err { color:#B42318; }
+    .st-warn { color:#B54708; }
+    .st-muted { color:#677489; }
+    .row-acts { display:flex; align-items:center; gap:4px; justify-content:flex-end; }
+    .row-acts button { border:none; background:none; cursor:pointer; color:#677489; width:26px; height:26px; border-radius:5px; font-size:13px; }
+    .row-acts button:hover { background:#F1F4F8; }
+    .ov-crumb { display:flex; align-items:center; gap:8px; font-size:14px; color:#97A3B6; margin-bottom:12px; }
+    .ov-crumb a { color:#173D82; font-weight:500; display:inline-flex; align-items:center; gap:6px; }
+    .ov-crumb span:last-child { color:var(--color-gray-900); }
+    .ov-title-row { display:flex; align-items:center; gap:12px; margin-bottom:24px; }
+    .ov-title { font-size:24px; font-weight:600; letter-spacing:-.01em; color:#222B3A; }
+    .ov-pill { display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 14px; border-radius:9999px; font-size:13px; font-weight:600; cursor:pointer; border:none; }
+    .ov-pill.err { background:#FEF3F2; color:#B42318; }
+    .ov-pill.ai { background:#F4F3FF; color:#5925DC; }
+    .ov-flow { display:grid; grid-template-columns:1fr 40px 1fr 40px 1fr; align-items:center; margin-bottom:24px; background:#F8FAFC; border:1px solid #E3E8EF; border-radius:16px; padding:24px; }
+    .ov-card { background:#fff; border:1px solid #E3E8EF; border-radius:12px; padding:16px; display:flex; flex-direction:column; gap:16px; width:300px; height:164px; box-sizing:border-box; }
+    .ov-card-lbl { font-size:13px; color:#97A3B6; margin-bottom:12px; }
+    .ov-card-hd { display:flex; align-items:center; gap:12px; }
+    .ov-card-ic { width:40px; height:40px; border-radius:8px; background:#F2F5F9; display:flex; align-items:center; justify-content:center; font-size:16px; color:#173D82; flex-shrink:0; }
+    .ov-card-name { font-size:16px; font-weight:500; color:#2667D8; }
+    .ov-card-acts { margin-left:auto; display:flex; gap:4px; color:#97A3B6; font-size:13px; }
+    .ov-card-acts i { cursor:pointer; padding:4px; }
+    .ov-btn-pill { height:36px; border-radius:9999px; background:#EFF6FF; color:#2667D8; font-size:13px; font-weight:600; border:none; cursor:pointer; }
+    .ov-arrow { display:flex; align-items:center; justify-content:center; color:#CDD5E0; font-size:16px; }
+    .ov-tabs { display:flex; align-items:center; gap:24px; border-bottom:1px solid #E3E8EF; margin-bottom:20px; }
+    .ov-tab { display:flex; align-items:center; gap:8px; height:40px; font-size:14px; font-weight:500; color:#677489; cursor:pointer; border-bottom:2px solid transparent; background:none; border-left:none; border-right:none; border-top:none; }
+    .ov-tab.active { color:#173D82; border-bottom-color:#173D82; }
+    .ov-history { background:#fff; border:1px solid #E3E8EF; border-radius:16px; padding:20px; }
+    .ov-hist-hd { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:16px; }
+    .ov-hist-title { font-size:20px; font-weight:500; color:#222B3A; margin-bottom:4px; }
+    .ov-hist-sub { font-size:13px; color:#97A3B6; }
+    .ov-search { display:flex; align-items:center; gap:8px; height:36px; padding:0 12px; border:1px solid #E3E8EF; border-radius:8px; width:220px; color:#97A3B6; flex-shrink:0; }
+    .td-tabs { display:flex; align-items:center; gap:24px; border-bottom:1px solid #E3E8EF; margin:20px 0 24px; }
+    .td-tab { display:flex; align-items:center; gap:8px; height:40px; font-size:14px; font-weight:400; color:#677489; cursor:pointer; border-bottom:2px solid transparent; background:none; border-left:none; border-right:none; border-top:none; font-family:'DM Sans',sans-serif; }
+    .td-tab.active { color:var(--color-cobalt-500); border-bottom-color:var(--color-cobalt-500); font-weight:600; }
+    .td-tab i { font-size:13px; }
+    .td-grid { display:grid; grid-template-columns:1fr 340px; gap:20px; align-items:start; }
+    .td-card { background:#fff; border:1px solid #E3E8EF; border-radius:12px; padding:24px; }
+    .td-field { margin-bottom:18px; }
+    .td-field label { display:block; font-size:13px; font-weight:500; color:#222B3A; margin-bottom:6px; }
+    .td-input,.td-textarea { width:100%; border:1px solid #E3E8EF; border-radius:8px; padding:9px 12px; font-family:'DM Sans',sans-serif; font-size:14px; color:#222B3A; outline:none; }
+    .td-input::placeholder,.td-textarea::placeholder { color:#97A3B6; }
+    .td-input.muted { background:#F8FAFC; color:#97A3B6; }
+    .td-textarea { resize:vertical; min-height:70px; }
+    .td-check { display:flex; align-items:center; gap:8px; font-size:14px; color:#222B3A; margin-bottom:10px; cursor:pointer; }
+    .td-check input { width:16px; height:16px; accent-color:var(--color-cobalt-500); cursor:pointer; }
+    .td-subhead { font-size:13px; font-weight:700; color:#222B3A; margin:18px 0 10px; }
+    .td-card-foot { display:flex; justify-content:flex-end; margin-top:8px; }
+    .td-danger-card { background:var(--color-gray-50); border:1px solid #E3E8EF; border-radius:12px; padding:20px; display:flex; flex-direction:column; height:100%; }
+    .td-danger-hd { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+    .td-danger-hd i { color:#B42318; font-size:16px; }
+    .td-danger-hd h3 { font-size:16px; font-weight:600; color:#222B3A; }
+    .td-danger-card p { font-size:13px; color:#4A5567; line-height:1.5; margin-bottom:14px; }
+    .td-danger-card a { color:var(--color-cobalt-500); text-decoration:underline; }
+    .td-danger-foot { display:flex; justify-content:flex-end; border-top:1px solid #E3E8EF; padding-top:14px; margin-top:auto; }
+    .td-sec-hd { margin-bottom:20px; }
+    .td-sec-hd h2 { font-size:18px; font-weight:600; color:#222B3A; margin-bottom:4px; }
+    .td-sec-hd p { font-size:13px; color:#677489; }
+    .td-sec-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:16px; }
+    .td-attr-table { width:100%; border-collapse:collapse; border:1px solid #E3E8EF; border-radius:10px; overflow:hidden; }
+    .td-attr-table th { background:#F8FAFC; text-align:left; font-size:11px; font-weight:700; color:#677489; text-transform:uppercase; letter-spacing:.04em; padding:10px 16px; border-bottom:1px solid #E3E8EF; }
+    .td-attr-table td { padding:12px 16px; }
+    .td-sample { font-family:ui-monospace,monospace; font-size:13px; color:#9E3FB0; line-height:1.6; margin:12px 0 16px; }
+    .td-drop { border:1.5px dashed var(--color-gray-400); border-radius:12px; padding:40px; text-align:center; background:var(--color-gray-50); }
+    .td-drop-title { font-size:14px; font-weight:600; color:#222B3A; margin-bottom:6px; }
+    .td-drop-sub { font-size:12px; color:#97A3B6; margin-bottom:18px; }
+    .td-upload-hdrs { font-size:14px; color:#222B3A; margin-top:10px; }
+    .td-upload-hdrs b { font-weight:700; }
+    .td-tree { border:1px solid #E3E8EF; border-radius:10px; overflow:hidden; }
+    .td-tree-row { display:flex; align-items:center; justify-content:space-between; height:44px; padding:0 16px; font-size:14px; color:#4A5567; border-bottom:1px solid #F2F5F9; }
+    .td-tree-row:last-child { border-bottom:none; }
+    .td-tree-row.alt { background:var(--color-gray-50); }
+    .td-tree-group { background:var(--color-gray-50); color:var(--color-cobalt-500); font-weight:500; gap:8px; }
+    .td-tree-group i { color:var(--color-cobalt-500); font-size:14px; }
+    .td-tree-child { padding-left:26px; }
+    .td-tree-val { font-size:12px; font-weight:600; letter-spacing:.04em; color:#677489; }
+    .td-tree-note { font-size:13px; color:#222B3A; margin-top:14px; }
+    .mp-pg { width:100%; display:flex; flex-direction:column; gap:16px; }
+    .mp-sel { position:relative; }
+    .mp-sel div[style*="z-index: 50"] { left:0 !important; right:0 !important; top:calc(100% + 4px) !important; margin-top:0 !important; min-width:0 !important; box-sizing:border-box; max-height:240px; overflow-y:auto !important; }
+    .mp-tabs { margin-top:0; }
+    .mp-summary { background:var(--color-gray-100); border:1px solid var(--color-gray-300); border-radius:16px; padding:16px; display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:0; }
+    .mp-card { background:#fff; border:1px solid var(--color-gray-300); border-radius:16px; padding:16px; height:100px; display:flex; flex-direction:column; justify-content:space-between; }
+    .mp-card-hd { display:flex; align-items:flex-start; justify-content:space-between; height:28px; }
+    .mp-card-lbl { font-size:12px; line-height:18px; font-weight:500; color:var(--color-gray-600); }
+    .mp-count { font-size:24px; line-height:32px; font-weight:700; color:var(--color-blue-500); text-decoration:underline; cursor:pointer; align-self:flex-start; }
+    .mp-filter { margin-top:0; }
+    .mp-table { margin-top:0; }
+    .mp-row { display:grid; grid-template-columns:300px 270px 270px 1fr; align-items:center; }
+    .mp-row > div { min-height:48px; padding:10px 8px; display:flex; align-items:center; border-bottom:1px solid var(--color-gray-200); font-size:14px; line-height:20px; color:var(--color-gray-900); }
+    .mp-row.mp-last > div { border-bottom:none; }
+    .mp-row.mp-hd > div { min-height:40px; background:var(--color-gray-200); border-bottom:none; font-weight:600; color:var(--color-gray-700); text-transform:uppercase; gap:4px; cursor:pointer; user-select:none; }
+    .mp-row.mp-hd > div i { color:var(--color-gray-500); font-size:14px; width:22px; text-align:center; }
+    .mp-name { gap:8px; white-space:nowrap; }
+    .mp-leaf { width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; font-size:14px; color:var(--color-blue-500); flex-shrink:0; }
+    .mp-link { color:var(--color-cobalt-500); cursor:pointer; }
+    .mp-link:hover { text-decoration:underline; }
+    .mp-empty { padding:32px 8px; text-align:center; font-size:14px; color:var(--color-gray-600); }
+    .mp-editbar { height:64px; margin:-24px -24px 0; padding:0 24px; background:#EFF6FF; border-bottom:1px solid #E3E8EF; display:flex; align-items:center; justify-content:space-between; position:sticky; top:-24px; z-index:20; }
+    .mp-editbar-title { font-size:18px; font-weight:600; line-height:28px; color:#222B3A; }
+  </style>
+</helmet>
+
+<div class="app-shell">
+  <aside id="sb" class="sb">
+    <div class="sb-card">
+      <div class="sb-hdr">
+        <div class="logo-wm"><img src="./cube-full-logo-mrp7qtfz-2a8j.svg" alt="Cube"></div>
+        <div class="logo-ic"><img src="./cube-icon-logo-mrp7voek-lnif.svg" alt="Cube"></div>
+        <button class="col-btn" data-action="collapse" aria-label="Toggle sidebar">
+          <span class="cc-left">{{ ic.collapseLeft }}</span><span class="cc-right">{{ ic.collapseRight }}</span>
+        </button>
+      </div>
+      <div class="sb-nav">
+        <div class="ni home" data-label="Home"><div class="ni-ic">{{ ic.home }}</div><span class="ni-lbl">Home</span></div>
+        <div class="dv"></div>
+        {{ sideNavEl }}
+      </div>
+      <div style="height:1px;background:#E3E8EF;margin:0"></div>
+      <div class="staff-row">
+        <div class="staff-row-left">
+          <div class="ni-ic" style="color:#4A5567"><i class="fa-regular fa-users"></i></div>
+          <span class="staff-label">Cube Staff</span>
+        </div>
+        <button class="staff-more-btn" aria-label="More options">
+          <i class="fa-solid fa-ellipsis-vertical"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topnav">
+      <div class="tn-company">
+        <div class="tn-company-ic"><i class="fa-solid fa-buildings"></i></div>
+        <span class="tn-company-name">{{ companyName }}</span>
+        <div class="tn-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+      </div>
+      <div class="tn-right">
+        <button class="tn-btn" title="Background tasks">{{ ic.backgroundTasks }}</button>
+        <button class="tn-btn" title="Help"><i class="fa-regular fa-circle-question"></i></button>
+        <button class="tn-ai-btn" data-tip="Cube AI">{{ ic.cubeAiAnalyst }}</button>
+        <div class="tn-user">
+          <x-import component-from-global-scope="FolioDS.Avatar" type="initials" size="xs" name="{{ userName }}" hint-size="24px,24px"></x-import>
+          <span class="tn-user-name">{{ userName }}</span>
+          <div class="tn-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+        </div>
+      </div>
+    </header>
+    <main class="page-content">
+      <div class="pg">
+        <sc-if value="{{ showList }}" hint-placeholder-val="{{ true }}">
+          <div class="new-dd-wrap">
+            {{ headerEl }}
+            <div class="new-dd" id="newDd">
+              <div class="new-dd-item" data-action="close-newdd">Cube-Hosted File Management</div>
+              <div class="new-dd-item" data-action="close-newdd">Sage Intacct</div>
+              <div class="new-dd-item" data-action="close-newdd">Cube Universal Connect</div>
+              <div class="new-dd-item" data-action="close-newdd">Salesforce</div>
+              <div class="new-dd-item" data-action="close-newdd">Tableau</div>
+              <div class="new-dd-item" data-action="close-newdd">BambooHR</div>
+              <div class="new-dd-item" data-action="close-newdd">NetSuite</div>
+              <div class="new-dd-item" data-action="close-newdd">QuickBooks</div>
+              <div class="new-dd-item" data-action="close-newdd">Xero</div>
+              <div class="new-dd-item" data-action="close-newdd">Externally-Hosted File Management (SFTP)</div>
+              <div class="new-dd-item" data-action="close-newdd">Data Table</div>
+            </div>
+          </div>
+          <p class="pg-sub">Connect, import, and map your source system data.</p>
+          <div class="filter-bar">
+            <span class="filter-lbl">Filter by:</span>
+            <div class="filter-pill">Source: All <i class="fa-solid fa-chevron-down" style="font-size:10px;color:#97A3B6"></i></div>
+            <div class="filter-pill">Last Import: All <i class="fa-solid fa-chevron-down" style="font-size:10px;color:#97A3B6"></i></div>
+            <div class="filter-search"><i class="fa-solid fa-magnifying-glass" style="font-size:13px"></i><input placeholder="Search"></div>
+          </div>
+          {{ tableEl }}
+        </sc-if>
+        <sc-if value="{{ showOverview }}" hint-placeholder-val="{{ false }}">
+          {{ overviewEl }}
+        </sc-if>
+      </div>
+    </main>
+  </div>
+  <div class="modal-scrim" id="connectModal">
+    <div class="modal">
+      <div class="modal-hd"><h3>Add connection</h3><button class="modal-x" data-action="close-connect"><i class="fa-solid fa-xmark"></i></button></div>
+      <div class="modal-bd">
+        <div class="pick"><div class="conn-logo">QB</div><div><div class="conn-name">QuickBooks</div><div class="conn-cat">Accounting</div></div></div>
+        <div class="pick"><div class="conn-logo">WD</div><div><div class="conn-name">Workday</div><div class="conn-cat">HRIS</div></div></div>
+        <div class="pick"><div class="conn-logo"><i class="fa-brands fa-stripe-s"></i></div><div><div class="conn-name">Stripe</div><div class="conn-cat">Payments</div></div></div>
+        <div class="pick"><div class="conn-logo">XO</div><div><div class="conn-name">Xero</div><div class="conn-cat">Accounting</div></div></div>
+        <div class="pick"><div class="conn-logo">RP</div><div><div class="conn-name">Rippling</div><div class="conn-cat">HRIS</div></div></div>
+        <div class="pick"><div class="conn-logo">SG</div><div><div class="conn-name">Snowflake</div><div class="conn-cat">Data warehouse</div></div></div>
+      </div>
+      <div class="modal-ft"><button class="btn-ghost" data-action="close-connect">Cancel</button><button class="btn-connect">Continue</button></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1440px&quot;,&quot;height&quot;:&quot;900px&quot;},&quot;companyName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Accuplanner Inc&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;userName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Nina Graham&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;startCollapsed&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Layout&quot;}}">
+class Component extends DCLogic {
+  state = { selectedRow: null, ovTab: 'import', detailTab: 'details', sbCollapsed: false, mapping: false, mTab: 0, mOpen: {}, mQuery: '', mOnly: false, mDrawer: false, mRules: {}, mDraft: {}, mEdit: false, mEdits: {}, mEditDraft: {} };
+  buildTableDetailOverview(F, row) {
+    const e = React.createElement;
+    const tabs = [
+      { key:'details', label:'Table Details', icon:'fa-regular fa-table' },
+      { key:'attributes', label:'Attributes', icon:'fa-regular fa-table-columns' },
+      { key:'dimensions', label:'Source Dimensions', icon:'fa-regular fa-file-lines' },
+      { key:'upload', label:'Upload', icon:'fa-regular fa-arrow-up-from-bracket' }
+    ];
+    const tab = this.state.detailTab;
+    const check = (checked, label) => e('label', { className:'td-check' }, e('input', { type:'checkbox', defaultChecked:checked, readOnly:true }), label);
+    let content = null;
+    if (tab === 'details') {
+      content = e('div', { className:'td-grid' },
+        e('div', { className:'td-card' },
+          e('div', { className:'td-field' }, e('label', null, 'Name'), e('input', { className:'td-input' })),
+          e('div', { className:'td-field' }, e('label', null, 'Description'), e('textarea', { className:'td-textarea', placeholder:'Placeholder text' })),
+          e('div', { className:'td-field' }, e('label', null, 'Type Employee Name'), e('input', { className:'td-input muted', defaultValue:'Table Managers Only', readOnly:true })),
+          check(true, 'Employee Name'),
+          check(false, 'Create opening balances on upload'),
+          e('div', { className:'td-subhead' }, 'Cube staff only:'),
+          check(true, 'Show data table (unselecting this will hide the data table from the UI)'),
+          e('div', { className:'td-card-foot' }, e(F.Button, { variant:'primary', size:'medium', leadingIcon:e('i', { className:'fa-regular fa-arrow-up-from-bracket' }) }, 'Export Dimensions'))
+        ),
+        e('div', { className:'td-danger-card' },
+          e('div', { className:'td-danger-hd' }, e('i', { className:'fa-regular fa-trash-can' }), e('h3', null, 'Clear import data')),
+          e('p', null, "Clears all Cube values imported from this table. Your underlying transactions stay intact, but this can't be undone. ", e('a', { href:'#' }, 'Read more before clearing')),
+          e('p', null, "Only use this if you no longer need the imported Cube values, they can't be recovered once cleared."),
+          e('div', { className:'td-danger-foot' }, e(F.Button, { variant:'destructive-secondary', size:'medium', disabled:true, leadingIcon:e('i', { className:'fa-regular fa-arrow-up-from-bracket' }) }, 'Clear all Imported Data'))
+        )
+      );
+    } else if (tab === 'attributes') {
+      const attrColumns = [ { key:'name', label:'Name' }, { key:'description', label:'Description' }, { key:'actions', label:'Actions', align:'right' } ];
+      content = e('div', { className:'td-card' },
+        e('div', { className:'td-sec-top' },
+          e('div', { className:'td-sec-hd' }, e('h2', null, 'Attributes'), e('p', null, 'Manage metadata associated with items in this table')),
+          e(F.Button, { variant:'primary', size:'medium', leadingIcon:e('i', { className:'fa-regular fa-plus' }) }, 'Add New')
+        ),
+        e('div', { className:'td-attr-table' }, e(F.Table, { columns:attrColumns, rows:[] }))
+      );
+    } else if (tab === 'dimensions') {
+      if (row.dimensionsTree) {
+        const treeRows = [];
+        row.dimensionsTree.forEach((grp) => {
+          treeRows.push(e('div', { key:'g-'+grp.label, className:'td-tree-row td-tree-group' }, e('i', { className:'fa-regular fa-square-minus' }), grp.label));
+          (grp.children || []).forEach((c, i) => {
+            treeRows.push(e('div', { key:'c-'+grp.label+i, className:'td-tree-row' + (i % 2 === 1 ? ' alt' : '') }, e('span', { className:'td-tree-child' }, c.label), c.value ? e('span', { className:'td-tree-val' }, c.value) : null));
+          });
+        });
+        content = e('div', { className:'td-card' },
+          e('div', { className:'td-sec-top', style:{ justifyContent:'flex-end', marginBottom:0 } },
+            e('div', { style:{ display:'flex', gap:8 } }, e(F.Button, { variant:'secondary', size:'medium' }, 'Map Dimensions'), e(F.Button, { variant:'secondary', size:'medium' }, 'Export Dimensions'))
+          ),
+          e('div', { className:'td-tree', style:{ marginTop:16 } }, treeRows),
+          e('p', { className:'td-tree-note' }, e('b', null, '*'), ' ', e('i', null, 'Dimension was deleted or deactivated from your source'))
+        );
+      } else {
+      content = e('div', { className:'td-card' },
+        e('div', { className:'td-sec-top' },
+          e('div', { className:'td-sec-hd' }, e('h2', null, 'Source Dimensions'), e('p', null, 'Use source dimensions to map data in the table to the hierarchy in Cube')),
+          e('div', { style:{ display:'flex', gap:8, flexShrink:0 } }, e(F.Button, { variant:'secondary', size:'medium', leadingIcon:e('i', { className:'fa-regular fa-shuffle' }) }, 'Map Dimensions'), e(F.Button, { variant:'primary', size:'medium', leadingIcon:e('i', { className:'fa-regular fa-arrow-up-from-bracket' }) }, 'Export Dimensions'))
+        ),
+        e('p', { style:{ fontSize:13, color:'#4A5567' } }, 'These outline how your data is structured at your source. The uploaded file is expected to be in a format like:'),
+        e('div', { className:'td-sample' }, e('div', null, 'Parent 1: Child 1:Child 2'), e('div', null, 'Parent 1: Child 1:Child 3'), e('div', null, 'Parent 2: Child 4')),
+        e('div', { className:'td-drop' },
+          e('div', { className:'td-drop-title' }, 'Drag and drop files to upload, or browse'),
+          e('div', { className:'td-drop-sub' }, 'PNG or SVG, at least 500\u00d7500px for a clear image.'),
+          e(F.Button, { variant:'subtle-blue', size:'medium', leadingIcon:e('i', { className:'fa-regular fa-arrow-up-from-bracket' }) }, 'Upload Dimensions')
+        )
+      );
+      }
+    } else {
+      content = e('div', { className:'td-card' },
+        e('div', { className:'td-sec-top' },
+          e('div', { className:'td-sec-hd' }, e('h2', null, 'Uploads'), e('p', null, 'Upload files to import data from this source')),
+          e(F.Button, { variant:'primary', size:'medium', leadingIcon:e('i', { className:'fa-regular fa-arrow-up-from-bracket' }) }, 'Upload')
+        ),
+        e('p', { style:{ fontSize:13, color:'#4A5567', lineHeight:1.6 } }, 'The uploaded CSV file should have values associated to your dimensions and attributes. The dimensions will determine where in the cube to store the data, and the attributes will be stored for use when drilling down into the data later.'),
+        e('p', { style:{ fontSize:13, color:'#4A5567', margin:'14px 0 4px' } }, 'For this data table, the headers should be:'),
+        e('div', { className:'td-upload-hdrs' }, e('b', null, 'Value | Account | Department | Scenario | Time | Entity | Product | Market'))
+      );
+    }
+    return e('div', null,
+      e(F.PageHeader, { title:row.name + ' via Manual Data Upload', style:{ borderBottom:'none', paddingBottom:0 }, breadcrumbs:[
+        { label:'Integrations', icon:e('i', { className:'fa-regular fa-database' }), onClick:()=> this.setState({ selectedRow:null }) },
+        { label:row.name }
+      ] }),
+      e('div', { className:'td-tabs' }, tabs.map((t) => e('button', { key:t.key, className:'td-tab' + (tab === t.key ? ' active' : ''), 'data-action':'detail-tab', 'data-tab':t.key }, e('i', { className:t.icon }), t.label))),
+      content
+    );
+  }
+  // Mapping data per tab. A leaf with cube:null is unmapped. Dates are the last edit to the mapping.
+  getMapDataBase(src) {
+    const L = (name, cube, flip, date) => ({ name, cube, flip, date });
+    return [
+      { label:'Account', icon:'fa-regular fa-clipboard', rule:{ text:'Map to Existing', color:'green' }, tree:[
+        { id:'a-income', name:'Income', children:[
+          L('Sales of Product Income', 'Product Revenue', false, 'Oct 14, 2026'),
+          L('Services', 'Service Revenue', false, 'Oct 14, 2026'),
+          L('Billable Expense Income', 'Reimbursed Expenses', false, 'Oct 9, 2026'),
+          L('Discounts Given', 'Contra Revenue', true, 'Oct 9, 2026'),
+          { id:'a-subs', name:'Subscription Revenue', children:[
+            L('Annual Plans', 'Subscription Revenue', false, 'Oct 2, 2026'),
+            L('Monthly Plans', 'Subscription Revenue', false, 'Oct 2, 2026')
+          ] },
+          L('Unapplied Cash Payment Income', null),
+          L('Uncategorized Income', null)
+        ] },
+        { id:'a-cogs', name:'Cost of Goods Sold', open:false, children:[
+          L('Hosting & Infrastructure', 'Cost of Revenue', false, 'Sep 28, 2026'),
+          L('Customer Support Labor', 'Cost of Revenue', false, 'Sep 28, 2026'),
+          L('Merchant Fees', null)
+        ] },
+        { id:'a-exp', name:'Expenses', open:false, children:[
+          L('Payroll Expenses', 'Salaries & Wages', false, 'Oct 2, 2026'),
+          L('Rent & Lease', 'Facilities', false, 'Sep 21, 2026'),
+          L('Software Subscriptions', 'Software & Tools', false, 'Sep 21, 2026'),
+          L('Travel & Meals', 'Travel & Entertainment', false, 'Sep 21, 2026'),
+          L('Ask My Accountant', null)
+        ] }
+      ] },
+      { label:'Class', icon:'fa-regular fa-briefcase', rule:{ text:'Map to Existing', color:'green' }, tree:[
+        { id:'c-dept', name:'Departments', children:[
+          L('Sales', 'Sales', false, 'Oct 12, 2026'),
+          L('Marketing', 'Marketing', false, 'Oct 12, 2026'),
+          L('Engineering', 'Research & Development', false, 'Oct 5, 2026'),
+          L('Customer Success', 'Customer Success', false, 'Oct 5, 2026'),
+          L('General & Administrative', 'G&A', false, 'Oct 5, 2026')
+        ] },
+        { id:'c-region', name:'Regions', children:[
+          L('North America', 'North America', false, 'Sep 30, 2026'),
+          L('EMEA', 'EMEA', false, 'Sep 30, 2026'),
+          L('APAC', null),
+          L('Unassigned', null)
+        ] }
+      ] },
+      { label:'Customer', icon:'fa-regular fa-briefcase', rule:{ text:'Create New', color:'blue' }, tree:[
+        { id:'u-ent', name:'Enterprise', children:[
+          L('Acme Corporation', 'Acme Corporation', false, 'Oct 13, 2026'),
+          L('Globex Inc.', 'Globex', false, 'Oct 13, 2026'),
+          L('Initech', 'Initech', false, 'Oct 6, 2026')
+        ] },
+        { id:'u-mm', name:'Mid-Market', children:[
+          L('Umbrella Co.', 'Umbrella', false, 'Oct 6, 2026'),
+          L('Hooli', 'Hooli', false, 'Sep 29, 2026'),
+          L('Wayne Enterprises', null)
+        ] },
+        { id:'u-smb', name:'SMB', open:false, children:[
+          L('Pied Piper', 'Pied Piper', false, 'Sep 29, 2026'),
+          L('Vandelay Industries', null)
+        ] }
+      ] }
+    ];
+  }
+  // Edit Mapping keeps changes as overrides keyed by tab + source name, so the sample data stays the baseline.
+  // While editing, the draft is shown; Cancel drops it and Save promotes it to mEdits.
+  getMapData(src) {
+    const ov = this.state.mEdit ? this.state.mEditDraft : this.state.mEdits;
+    const apply = (label, nodes) => nodes.map((n) => n.children
+      ? { ...n, children: apply(label, n.children) }
+      : (ov[label + '|' + n.name] ? { ...n, ...ov[label + '|' + n.name] } : n));
+    return this.getMapDataBase(src).map((t) => ({ ...t, tree: apply(t.label, t.tree) }));
+  }
+  // Cube dimension members offered in the edit-mode select: what the tab already maps to, plus a few unused members.
+  mapOptions(tab) {
+    const extra = {
+      Account: ['Marketing Expense', 'Professional Fees', 'Insurance', 'Other Income', 'Depreciation'],
+      Class: ['Operations', 'Finance', 'People'],
+      Customer: ['Stark Industries', 'Soylent Corp', 'Other Customers']
+    }[tab.label] || [];
+    const seen = [];
+    const walk = (nodes) => nodes.forEach((n) => n.children ? walk(n.children) : (n.cube && !seen.includes(n.cube) && seen.push(n.cube)));
+    walk(tab.tree);
+    return seen.concat(extra.filter((x) => !seen.includes(x))).sort();
+  }
+  enterMapEdit() { this.setState((st) => ({ mEdit: true, mEditDraft: { ...st.mEdits }, mQuery: '', mOnly: false })); }
+  cancelMapEdit() { this.setState({ mEdit: false, mEditDraft: {} }); }
+  saveMapEdit() { this.setState((st) => ({ mEdit: false, mEdits: { ...st.mEditDraft }, mEditDraft: {} })); }
+  setMapCell(label, name, patch) {
+    const key = label + '|' + name;
+    this.setState((st) => ({ mEditDraft: { ...st.mEditDraft, [key]: { ...(st.mEditDraft[key] || {}), ...patch, date: 'Oct 15, 2026' } } }));
+  }
+  // Filters one tab's tree by the search text and unmapped toggle; returns flat visible rows.
+  // Search / unmapped filter: prunes the tree to matching leaves (and the groups above them). The Table keeps the
+  // hierarchy, so rows come back nested and carry an id for expansion state.
+  pruneMap(tab) {
+    const q = this.state.mQuery.trim().toLowerCase();
+    const onlyUnmapped = this.state.mOnly;
+    const build = (nodes) => nodes.reduce((out, n) => {
+      if (n.children) {
+        const kids = build(n.children);
+        if (kids.length) out.push({ ...n, id:n.id, children:kids });
+      } else if ((!q || n.name.toLowerCase().includes(q) || (n.cube || '').toLowerCase().includes(q)) && (!onlyUnmapped || !n.cube)) {
+        out.push({ ...n, id:tab.label + '|' + n.name });
+      }
+      return out;
+    }, []);
+    return build(tab.tree);
+  }
+  countUnmapped(tab) {
+    const c = (nodes) => nodes.reduce((t, n) => t + (n.children ? c(n.children) : (n.cube ? 0 : 1)), 0);
+    return c(tab.tree);
+  }
+  buildMapTable(tab, rows, source) {
+    const e = React.createElement;
+    const F = window.FolioDS;
+    const filtering = !!this.state.mQuery.trim() || this.state.mOnly;
+    const editing = this.state.mEdit;
+    const opts = editing ? this.mapOptions(tab) : [];
+    // Group ids across the whole tab: expansion is stored per id and forced open while filtering.
+    const groupIds = [];
+    const collect = (nodes) => nodes.forEach((n) => n.children && (groupIds.push(n.id), collect(n.children)));
+    collect(tab.tree);
+    const openOf = (id) => { const n = (function find(ns) { for (const x of ns) { if (x.id === id) return x; const f = x.children && find(x.children); if (f) return f; } return null; })(tab.tree); return this.state.mOpen[id] ?? n?.open ?? true; };
+    const expandedIds = filtering ? groupIds : groupIds.filter(openOf);
+    const columns = [
+      { key:'name', label:source + ' Dimension', sortable:false, render:(v, r, m) => m.isGroup ? r.name
+        : e('span', { className:'mp-name' }, e('span', { className:'mp-leaf' }, e('i', { className:'fa-regular fa-file' })), e('span', { className:'mp-link' }, r.name)) },
+      { key:'cube', label:'Cube Dimension', sortable:false, render:(v, r, m) => editing && !m.isGroup
+        ? e('div', { className:'mp-sel', style:{ width:'100%', maxWidth:280 } }, e(F.Select, { size:'large', placeholder:'Select dimension', options:opts, value:r.cube || undefined, onChange:(val) => this.setMapCell(tab.label, r.name, { cube:val, flip:!!r.flip }) }))
+        : !m.isGroup ? (r.cube || e(F.Badge, { type:'solid', color:'yellow', size:'sm' }, 'Unmapped')) : '--' },
+      { key:'flip', label:'Flip Sign', sortable:false, render:(v, r, m) => editing && !m.isGroup && r.cube
+        ? e(F.Toggle, { checked:!!r.flip, onChange:(val) => this.setMapCell(tab.label, r.name, { cube:r.cube, flip:val }) })
+        : !m.isGroup && r.cube ? e(F.Badge, { type:'solid', color:r.flip ? 'green' : 'red', size:'sm' }, r.flip ? 'Yes' : 'No') : '--' },
+      { key:'date', label:'Last Modified', sortable:false, render:(v, r, m) => !m.isGroup && r.cube ? r.date : '--' }
+    ];
+    if (!rows.length) return e('div', { className:'mp-table' }, e('div', { className:'mp-empty' }, 'No dimensions match your filters.'));
+    return e('div', { className:'mp-table' }, e(F.Table, { columns, rows, expandedIds,
+      onExpandedChange:(ids) => this.setState({ mOpen:Object.fromEntries(groupIds.map((id) => [id, ids.includes(id)])) }) }));
+  }
+  mapSourceName(row) {
+    const img = (row && row.sourceImg) || '';
+    return img.includes('quickbook') ? 'QuickBooks' : img.includes('xero') ? 'Xero' : img.includes('netsuite') ? 'NetSuite' : img.includes('sage') ? 'Sage Intacct' : img.includes('salesforce') ? 'Salesforce' : 'Source';
+  }
+  buildMapping(F, row) {
+    const e = React.createElement;
+    const fa = (cls) => e('i', { className:cls });
+    const source = this.mapSourceName(row);
+    const tabs = this.getMapData(source);
+    const RULES = { 'Map to Existing':'green', 'Create New':'blue', 'None':'gray' };
+    const ruleOf = (t) => { const r = this.state.mRules[t.label]; return r ? { text:r.rule, color:RULES[r.rule] } : t.rule; };
+    const dimsOf = (t) => { const out = []; const w = (ns) => ns.forEach((n) => n.children ? w(n.children) : n.cube && !out.includes(n.cube) && out.push(n.cube)); w(t.tree); return out; };
+    tabs.forEach((t) => { t.rule = ruleOf(t); });
+    const tab = tabs[this.state.mTab];
+    const rows = this.pruneMap(tab);
+    const draft = this.state.mDraft;
+    const getD = (t) => draft[t.label] || this.state.mRules[t.label] || { rule:t.rule.text, dim:t.rule.text === 'Map to Existing' ? (dimsOf(t)[0] || '') : '' };
+    const setD = (t, patch) => this.setState((st) => ({ mDraft:{ ...st.mDraft, [t.label]:{ ...getD(t), ...patch } } }));
+    const req = (txt) => e('span', null, txt, e('span', { style:{ color:'var(--color-red-500)', marginLeft:2 } }, '*'));
+    const closeDrawer = () => this.setState({ mDrawer:false, mDraft:{} });
+    const saveDrawer = () => this.setState((st) => ({ mDrawer:false, mDraft:{}, mRules:{ ...st.mRules, ...Object.fromEntries(tabs.map((t) => [t.label, { ...getD(t) }])) } }));
+    const drawer = this.state.mDrawer ? e(F.Drawer, { title:'Mapping Rules', onClose:closeDrawer, style:{ width:408 },
+      footer:e('div', { style:{ display:'flex', gap:8 } }, e(F.Button, { variant:'primary', size:'large', onClick:saveDrawer }, 'Save'), e(F.Button, { variant:'secondary', size:'large', onClick:closeDrawer }, 'Cancel')) },
+      e('div', { style:{ display:'flex', flexDirection:'column', gap:24, padding:'0 16px 16px' } }, tabs.map((t, i) => {
+        const d = getD(t);
+        return e('div', { key:t.label, style:{ display:'flex', flexDirection:'column', gap:16, paddingTop:i ? 24 : 0, borderTop:i ? '1px solid var(--color-gray-300)' : 'none' } },
+          e('h3', { style:{ margin:0, fontSize:16, fontWeight:600, color:'var(--color-gray-900)', lineHeight:'24px' } }, t.label),
+          e('div', { className:'mp-sel' }, e(F.Select, { label:req('Rule'), value:d.rule, options:Object.keys(RULES), onChange:(v) => setD(t, { rule:v, dim:v === 'Map to Existing' ? (d.dim || dimsOf(t)[0] || '') : '' }) })),
+          d.rule === 'Map to Existing' ? e('div', { className:'mp-sel' }, e(F.Select, { label:req('Dimension'), value:d.dim, options:dimsOf(t), onChange:(v) => setD(t, { dim:v }) })) : null,
+          d.rule === 'None' ? e('span', { style:{ fontSize:12, lineHeight:'18px', color:'var(--color-gray-700)' } }, 'Manual mapping of new dimensions required before import.') : null);
+      }))) : null;
+    const editing = this.state.mEdit;
+    const goList = () => this.setState({ selectedRow:null, mapping:false, mEdit:false, mEditDraft:{} });
+    const goOverview = () => this.setState({ mapping:false, mEdit:false, mEditDraft:{} });
+    const editBar = editing ? e('div', { className:'mp-editbar' },
+      e('span', { className:'mp-editbar-title' }, 'Edit Mapping'),
+      e('div', { style:{ display:'flex', gap:8 } },
+        e(F.Button, { variant:'secondary', onClick:() => this.cancelMapEdit() }, 'Cancel'),
+        e(F.Button, { variant:'primary', onClick:() => this.saveMapEdit() }, 'Save Mapping'))) : null;
+    return e('div', { className:'mp-pg' },
+      editBar,
+      e(F.PageHeader, { title:'Mapping', style:{ borderBottom:'none', paddingBottom:0 }, breadcrumbs:[
+          { label:'Integrations', icon:fa('fa-regular fa-database'), onClick:goList },
+          { label:row.name, onClick:goOverview },
+          { label:'Mapping' }
+        ],
+        topActions:editing ? null : e(React.Fragment, null, e(F.Button, { variant:'secondary', size:'large', leadingIcon:fa('fa-regular fa-pen'), onClick:() => this.enterMapEdit() }, 'Edit Mapping'), e(F.Button, { variant:'secondary', size:'large', icon:fa('fa-regular fa-bell'), 'aria-label':'Notifications' }), e(F.Button, { variant:'primary', size:'large', leadingIcon:fa('fa-regular fa-file-import') }, 'Import')) }),
+      e('div', { className:'mp-tabs' }, e(F.TabGroup, { type:'secondary', activeIndex:this.state.mTab, onChange:(i) => this.setState({ mTab:i, mQuery:'', mOnly:false }), tabs:tabs.map((t) => ({ label:t.label, icon:fa(t.icon) })) })),
+      e('div', { className:'mp-summary' },
+        e('div', { className:'mp-card' },
+          e('div', { className:'mp-card-hd' }, e('span', { className:'mp-card-lbl' }, 'Mapping Rules'), e(F.Button, { variant:'ghost-gray', size:'small', icon:fa('fa-regular fa-pen'), 'aria-label':'Edit mapping rules', onClick:() => this.setState({ mDrawer:true, mDraft:{} }) })),
+          e('span', { style:{ alignSelf:'flex-start' } }, e(F.Badge, { type:'solid', color:tab.rule.color, size:'md' }, tab.rule.text))),
+        e('div', { className:'mp-card' },
+          e('div', { className:'mp-card-hd' }, e('span', { className:'mp-card-lbl' }, 'Unmapped ' + tab.label + ' Dimensions')),
+          e('span', { className:'mp-count', 'data-action':'unmapped' }, this.countUnmapped(tab)))),
+      e('div', { className:'mp-filter' }, e(F.SearchAndFilter, { searchPlaceholder:'Find', searchValue:this.state.mQuery, onSearchChange:(ev) => this.setState({ mQuery:ev.target.value }), filters:[
+        { label:'Status', value:'All' }, { label:'Last Updated', value:'All' }, { label:'Flip Sign', value:'All' }
+      ] })),
+      this.buildMapTable(tab, rows, source),
+      drawer);
+  }
+  buildOverview(F, row) {
+    if (row.detailType === 'table') return this.buildTableDetailOverview(F, row);
+    const e = React.createElement;
+    const C = F.Cell;
+    const STI = { success:'fa-solid fa-check', error:'fa-solid fa-xmark', warning:'fa-solid fa-xmark' };
+    const statusColor = { success:'success', error:'error', warning:'warning' }[row.status.c] || 'neutral';
+    const history = [
+      { period:"Jul '25 – Dec '25", date:'Dec 25, 2025', type:'Manual', user:'Jame Curtis', scenario:'Actuals', changed:'-', status:{c:'warning',t:'Partially 5/6'}, exp:true },
+      { period:"Jan '25 – Jun '25", date:'Jun 29, 2025', type:'Scheduled', user:'System', scenario:'Actuals', changed:'-', status:{c:'warning',t:'Partially 5/6'}, exp:true },
+      { period:'May 31, 2025', date:'May 29, 2025', type:'Scheduled', user:'System', scenario:'Actuals', changed:'-', status:{c:'success',t:'Complete'} },
+      { period:'May 30, 2025', date:'May 29, 2025', type:'Manual', user:'Nina Graham', scenario:'Actuals', changed:'2,324', status:{c:'success',t:'Complete'} },
+      { period:'May 29, 2025', date:'May 25, 2023', type:'Manual', user:'Nina Graham', scenario:'Actuals', changed:'3,243', status:{c:'success',t:'Complete'} }
+    ];
+    const histColumns = [
+      { key:'period', label:'Data Period', render:(v, r)=> e('span', { style:{ display:'flex', alignItems:'center', gap:8 } }, r.exp ? e('i', { className:'fa-solid fa-caret-right', style:{ fontSize:11, color:'#4A5567' } }) : e('span', { style:{ display:'inline-block', width:11 } }), v) },
+      { key:'date', label:'Import Date' },
+      { key:'type', label:'Type' },
+      { key:'user', label:'User' },
+      { key:'scenario', label:'Scenario' },
+      { key:'changed', label:'Values Changed', align:'right', render:(v)=> v === '-' ? v : e(C.Metric, { tone:'blue' }, v) },
+      { key:'status', label:'Status', render:(v)=> e(C.Status, { color: v.c === 'success' ? 'success' : v.c === 'warning' ? 'warning' : 'error', size:'sm' }, v.t) }
+    ];
+    const histTable = e(F.Table, { columns:histColumns, rows:history });
+    return e('div', null,
+      e(F.PageHeader, { title:row.name, style:{ borderBottom:'none', paddingBottom:0 }, breadcrumbs:[
+          { label:'Integrations', icon:e('i', { className:'fa-regular fa-database' }), onClick:()=> this.setState({ selectedRow:null }) },
+          { label:row.name }
+        ],
+        badges:e(React.Fragment, null,
+          e(F.Badge, { type:'solid', color:'red', size:'md', icon:e('i', { className:'fa-solid fa-xmark', style:{ fontSize:11 } }) }, 'Update Mapping'),
+          e(F.Badge, { type:'solid', color:'purple', size:'md', icon:e('i', { className:'fa-solid fa-sparkles', style:{ fontSize:11 } }) }, 'Mapping Assistant')),
+        topActions:e(React.Fragment, null,
+          e(F.Button, { variant:'secondary', size:'large', icon:e('i', { className:'fa-regular fa-bell' }), 'aria-label':'Notifications' }),
+          e(F.Button, { variant:'primary', size:'large', leadingIcon:e('i', { className:'fa-regular fa-file-import' }) }, 'Import')) }),
+      e('div', { style:{ marginTop:16 } }, e(F.FlowRow, null,
+        e(F.FlowCard, { label:'Source', icon:{ img: row.sourceImg || './sage-logo.png' }, iconShape:'circle', title:row.name, titleColor:'var(--color-cobalt-500)',
+          actions:[{ icon:'fa-arrows-rotate', label:'Sync dimensions', tooltip:'Sync Dimensions Now' }, { icon:'fa-pen', label:'Edit connection', tooltip:'Edit connection' }],
+          button:{ label:'Source Dimensions' } }),
+        e(F.FlowCard, { label:'Connection', icon:{ img:'./import-icon.png' }, title:'Import Setup',
+          actions:[{ icon:'fa-clock', label:'Schedule' }],
+          body:e('div', { style:{ fontSize:12, color:'var(--color-gray-700)', display:'flex', flexDirection:'column', gap:2, marginTop:-8 } }, e('span', null, e('b', { style:{ fontWeight:500 } }, 'Schedule: '), 'Weekly, Monday, 7 am'), e('span', null, e('b', { style:{ fontWeight:500 } }, 'Date Range: '), 'Last 3 months')),
+          button:{ label:'Mapping', onClick:() => this.setState({ mapping:true, mTab:0, mOpen:{}, mQuery:'', mOnly:false, mEdit:false, mEditDraft:{} }) } }),
+        e(F.FlowCard, { label:'Destination', icon:{ img:'./cube-icon.png' }, title:'Cube Dimensions',
+          actions:[{ icon:'fa-arrow-up-from-bracket', label:'Export', tooltip:'Data Exporter' }],
+          button:{ label:'Cube Dimensions' } })
+      )),
+      e('div', { className:'ov-tabs' },
+        e('button', { className:'ov-tab active' }, e('i', { className:'fa-solid fa-arrow-down-to-line', style:{ fontSize:13 } }), 'Import'),
+        e('button', { className:'ov-tab' }, e('i', { className:'fa-regular fa-file-lines', style:{ fontSize:13 } }), 'Transactions')
+      ),
+      e('div', { className:'ov-history' },
+        e('div', { className:'ov-hist-hd' },
+          e('div', null, e('div', { className:'ov-hist-title' }, 'Import History'), e('div', { className:'ov-hist-sub' }, 'Overview of data refresh activity from transaction table into Cube')),
+          e('div', { className:'ov-search' }, e('i', { className:'fa-solid fa-magnifying-glass', style:{ fontSize:13 } }), e('input', { placeholder:'Search', style:{ border:'none', outline:'none', fontSize:13, width:'100%', fontFamily:"'DM Sans',sans-serif" } }))
+        ),
+        histTable
+      )
+    );
+  }
+  componentDidMount() {
+    this._onClick = (e) => {
+      const secEl = e.target.closest('.sec');
+      if (secEl) { const ns = secEl.closest('.nav-section'); if (ns) ns.classList.toggle('collapsed'); return; }
+      if (e.target.closest('[data-action="unmapped"]')) { this.setState((st) => ({ mOnly: !st.mOnly })); return; }
+      const dTab = e.target.closest('[data-action="detail-tab"]');
+      if (dTab) { this.setState({ detailTab: dTab.getAttribute('data-tab') }); return; }
+      const openC = e.target.closest('[data-action="open-connect"]');
+      if (openC) { const m = document.getElementById('connectModal'); if (m) m.classList.add('open'); return; }
+      const closeC = e.target.closest('[data-action="close-connect"]');
+      if (closeC) { const m = document.getElementById('connectModal'); if (m) m.classList.remove('open'); return; }
+      if (e.target.id === 'connectModal') { e.target.classList.remove('open'); return; }
+      const ddItem = e.target.closest('[data-action="close-newdd"]');
+      const dd = document.getElementById('newDd');
+      if (dd && !e.target.closest('.new-dd-wrap')) { dd.classList.remove('open'); }
+      else if (ddItem && dd) { dd.classList.remove('open'); return; }
+      const collapse = e.target.closest('[data-action="collapse"]');
+      if (collapse) {
+        const sb = document.getElementById('sb');
+        if (sb) sb.classList.toggle('col');
+        this.setState((st) => ({ sbCollapsed: !st.sbCollapsed }));
+        return;
+      }
+      const ni = e.target.closest('.ni');
+      if (ni) {
+        document.querySelectorAll('.ni').forEach((i) => i.classList.remove('active'));
+        ni.classList.add('active');
+        return;
+      }
+      const sub = e.target.closest('.ni-sub');
+      if (sub) {
+        document.querySelectorAll('.ni-sub').forEach((i) => i.classList.remove('active'));
+        sub.classList.add('active');
+      }
+    };
+    document.addEventListener('click', this._onClick);
+    if (this.props.startCollapsed) {
+      const sb = document.getElementById('sb');
+      if (sb) sb.classList.add('col');
+      this.setState({ sbCollapsed: true });
+    }
+    if (!window.SIDEBAR_ICONS || !window.FolioDS) {
+      this._iconWait = setInterval(() => {
+        if (window.SIDEBAR_ICONS && window.FolioDS) { clearInterval(this._iconWait); this.forceUpdate(); }
+      }, 60);
+    }
+  }
+  componentWillUnmount() {
+    document.removeEventListener('click', this._onClick);
+    if (this._iconWait) clearInterval(this._iconWait);
+  }
+  renderVals() {
+    const companyName = this.props.companyName ?? 'Accuplanner Inc';
+    const userName = this.props.userName ?? 'Nina Graham';
+    const initials = userName.trim().split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase();
+    const ICONS = window.SIDEBAR_ICONS || {};
+    const mk = (k) => ICONS[k]
+      ? React.createElement('span', { style: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }, dangerouslySetInnerHTML: { __html: ICONS[k] } })
+      : null;
+    const ic = {};
+    ['home','cubeBI','smartVariance','aiAnalyst','library','scenarios','dimensions','formulas','tags','integrations','dataExport','users','currencies','auditTrail','backgroundTasks','cubeAiAnalyst','aiPlugin','chatgpt','claude','excel','sheets','slack','teams','slides','powerpoint','collapseLeft','collapseRight'].forEach((k) => { ic[k] = mk(k); });
+    const F = window.FolioDS;
+    let tableEl = null;
+    if (F) {
+      const C = F.Cell;
+      const clock = React.createElement('i', { className:'fa-regular fa-clock', style:{ color:'#2667D8' } });
+      const fa = (cls) => React.createElement('i', { className:cls });
+      const tile = (bg, col, content, fs) => React.createElement('span', { style:{ width:32, height:32, borderRadius:9999, display:'inline-flex', alignItems:'center', justifyContent:'center', background:bg, color:col, fontSize:fs||12, fontWeight:700, flexShrink:0, boxShadow:'inset 0 0 0 1px #FFFFFF' } }, content);
+      const avatarTile = (name, colorIndex) => React.createElement(F.Avatar, { type:'initials', size:'sm', name, colorIndex, border:true });
+      const imgTile = (src) => React.createElement('img', { src, style:{ width:24, height:24, borderRadius:9999, display:'block', margin:'0 auto', objectFit:'cover' } });
+      const abtn = (label, cls) => React.createElement(C.ActionButton, { 'aria-label':label, icon:React.createElement('i', { className:cls, style:{ fontSize:14, color:'#677489' } }) });
+      const acts = (t) => t==='pubRemap' ? React.createElement(C.Actions, null, abtn('Publish','fa-solid fa-arrow-up-from-bracket'), abtn('Remap','fa-solid fa-shuffle')) : t==='pub' ? React.createElement(C.Actions, null, abtn('Publish','fa-solid fa-arrow-up-from-bracket')) : React.createElement(C.Actions, null, abtn('More','fa-solid fa-ellipsis-vertical'));
+      const STI = { success:'fa-solid fa-check', error:'fa-solid fa-xmark', warning:'fa-solid fa-xmark' };
+      const columns = [
+        { key:'source', label:'Source', sortable:false, align:'center', render:(v)=> v },
+        { key:'name', label:'Name', render:(v, row)=> React.createElement(C.Link, { onClick:()=> this.setState({ selectedRow: row, detailTab:'details' }) }, v) },
+        { key:'schedule', label:'Import Schedule', render:(v)=> v ? React.createElement(C.Icon, { icon:clock, tone:'link' }, v) : '' },
+        { key:'last', label:'Last Import', render:(v)=> React.createElement(C.Text, null, v || '') },
+        { key:'status', label:'Status', sortable:false, render:(v)=> React.createElement(C.Status, { color:v.c, size:'sm', icon: STI[v.c] ? React.createElement('i', { className:STI[v.c], style:{ fontSize:10 } }) : undefined }, v.t) },
+        { key:'acts', label:'', sortable:false, align:'right', render:(v)=> acts(v) }
+      ];
+      const rows = [
+        { id:1, source:imgTile('./sage-logo.png'), sourceImg:'./sage-logo.png', name:'Teal Plantations', schedule:'Daily', last:'May 25, 2023', status:{c:'warning',t:'Partial Success'}, acts:'more' },
+        { id:2, source:imgTile('./sage-logo.png'), sourceImg:'./sage-logo.png', name:'Red Plantations', schedule:'Weekly Mon', last:'May 25, 2023', status:{c:'success',t:'Last Import Completed'}, acts:'more' },
+        { id:3, source:imgTile('./quickbook.png'), sourceImg:'./quickbook.png', name:'Green Plantations', schedule:'Weekly Mon', last:'', status:{c:'error',t:'Update Mapping'}, acts:'more' },
+        { id:4, source:imgTile('./xero.png'), sourceImg:'./xero.png', name:'Orange Plantations', schedule:'Weekly Tue', last:'May 25, 2023', status:{c:'success',t:'Last Import Completed'}, acts:'more' },
+        { id:5, source:imgTile('./source-table.png'), sourceImg:'./source-table.png', name:'Payroll Upload', schedule:'', last:'May 25, 2023', status:{c:'success',t:'Last Import Completed'}, acts:'pubRemap', detailType:'table', dimensionsTree:[
+          { label:'Account', group:true, children:[
+            { label:'Base Salary' },
+            { label:'FTE Headcount', value:'FULL' },
+            { label:'Total Headcount' }
+          ] }
+        ] },
+        { id:6, source:imgTile('./source-table.png'), sourceImg:'./source-table.png', name:'Updated Plan', schedule:'', last:'', status:{c:'error',t:'Last Import Failed'}, acts:'pub', detailType:'table' },
+        { id:7, source:imgTile('./netsuite.png'), sourceImg:'./netsuite.png', name:'Yellow Plantations', schedule:'Schedule Now', last:'', status:{c:'error',t:'Adjust Netsuite Settings'}, acts:'more' },
+        { id:8, source:imgTile('./salesforce.png'), sourceImg:'./salesforce.png', name:'Purple Plantations', schedule:'Weekly Mon', last:'May 25, 2023', status:{c:'neutral',t:'Last Import Cancelled'}, acts:'more' },
+        { id:9, source:imgTile('./salesforce.png'), sourceImg:'./salesforce.png', name:'Mariner Global Co', schedule:'Daily', last:'May 25, 2023', status:{c:'success',t:'Last Import Completed'}, acts:'more' },
+        { id:10, source:imgTile('./cube-custom.png'), sourceImg:'./cube-custom.png', name:'Sales Targets', schedule:'Weekly Mon', last:'May 25, 2023', status:{c:'error',t:'Enable Boomi Atom'}, acts:'more' }
+      ];
+      tableEl = React.createElement(F.Table, { columns, rows });
+    }
+    const sideNavEl = F ? React.createElement(F.PortalSideBarNav, { expanded: !this.state.sbCollapsed, activeItemId: 'integrations', style: { width: '100%' } }) : null;
+    const selectedRow = this.state.selectedRow;
+    const overviewEl = (F && selectedRow) ? (this.state.mapping ? this.buildMapping(F, selectedRow) : this.buildOverview(F, selectedRow)) : null;
+    const newBtn = F ? React.createElement(F.Button, { variant:'primary', size:'small', leadingIcon:React.createElement('i', { className:'fa-regular fa-plus' }), trailingIcon:React.createElement('i', { className:'fa-regular fa-chevron-down', style:{ fontSize:11 } }), onClick:() => { const d = document.getElementById('newDd'); if (d) d.classList.toggle('open'); } }, 'New') : null;
+
+    const headerEl = F ? React.createElement(F.PageHeader, {
+      icon: React.createElement('i', { className:'fa-regular fa-database' }),
+      title: 'Integrations',
+      style: { borderBottom:'none', paddingBottom:0 },
+      actions: newBtn
+    }) : null;
+    return { headerEl, companyName, userName, initials, ic, tableEl, newBtn, overviewEl, sideNavEl, showList: !selectedRow, showOverview: !!selectedRow };
+  }
+}
+
+</script>
+</body>
+</html>

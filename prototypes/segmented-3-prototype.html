@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Segmented 3.0 — Folio DS Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="vendor/fontawesome/css/all.min.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'Nunito Sans', BlinkMacSystemFont, sans-serif; background: #F0F2F5; display: flex; justify-content: center; padding: 2rem; min-height: 100vh; }
+.wrap { width: 960px; }
+.header { padding: 1.5rem 0 1rem; }
+.header h1 { font-size: 22px; font-weight: 700; color: #0E2349; margin-bottom: 4px; }
+.header p { font-size: 13px; color: #677489; }
+.sb { background: white; border: 1px solid #E0E5EC; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(16,24,40,.06); }
+.sb-bar { background: white; border-bottom: 1px solid #E5E5E5; display: flex; align-items: center; gap: 4px; padding: 0 14px; height: 42px; }
+.sb-icon { width: 30px; height: 30px; border: none; background: none; cursor: pointer; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: #666; font-size: 14px; }
+.sb-icon:hover { background: #F3F3F3; }
+.sb-sep { width: 1px; height: 18px; background: #E5E5E5; margin: 0 4px; }
+.sb-logo { display: flex; align-items: center; gap: 8px; }
+.sb-logo-mark { display: flex; align-items: center; justify-content: center; }
+.sb-logo-mark svg { display: block; height: 22px; width: auto; }
+.sb-logo-text { font-size: 13px; font-weight: 700; color: #163D83; }
+.sb-bar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.sb-badge { font-size: 11px; font-weight: 600; color: #677489; background: #F1F4F8; padding: 2px 8px; border-radius: 99px; }
+.sb-canvas { background: white; min-height: 140px; display: flex; align-items: center; justify-content: center; padding: 2.5rem; border-bottom: 1px solid #E5E5E5; background-image: radial-gradient(#DEE3EC 1px, transparent 1px); background-size: 20px 20px; }
+.sb-canvas.no-dots { background-image: none; }
+.sb-codebar { background: white; display: flex; align-items: center; gap: 16px; padding: 8px 16px; border-bottom: 1px solid #E5E5E5; }
+.sb-cbtn { font-size: 12px; color: #888; border: none; background: none; cursor: pointer; display: flex; align-items: center; gap: 5px; padding: 4px 0; }
+.sb-cbtn:hover { color: #333; }
+.code-snippet { display: none; background: #F6F8FA; border: 1px solid #E5E5E5; border-radius: 6px; padding: 10px 14px; font-family: 'SFMono-Regular', monospace; font-size: 12px; color: #333; margin: 0 16px 12px; line-height: 1.6; white-space: pre-wrap; }
+.code-snippet.visible { display: block; }
+#copied-msg { font-size: 12px; color: #229E66; margin-left: auto; opacity: 0; transition: opacity 200ms; }
+#copied-msg.show { opacity: 1; }
+.sb-tabs { background: white; display: flex; padding: 0 16px; border-bottom: 1px solid #E5E5E5; }
+.sb-tab { padding: 10px 14px; font-size: 12px; font-weight: 600; color: #999; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px; }
+.sb-tab.on { color: #163D83; border-bottom-color: #163D83; }
+.ctl-head { display: grid; grid-template-columns: 160px 1fr 90px 1fr 32px; padding: 8px 16px; background: white; border-bottom: 1px solid #E5E5E5; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #aaa; }
+.ctl-row { display: grid; grid-template-columns: 160px 1fr 90px 1fr 32px; padding: 10px 16px; background: white; border-bottom: 1px solid #F2F2F2; align-items: center; min-height: 48px; }
+.ctl-row:hover { background: #FAFAFA; }
+.ctl-name { font-family: 'SFMono-Regular', 'Menlo', monospace; font-size: 12px; font-weight: 700; color: #333; }
+.ctl-desc { font-family: 'SFMono-Regular', monospace; font-size: 10px; color: #bbb; line-height: 1.5; padding-right: 12px; }
+.ctl-def { font-size: 11px; color: #ccc; }
+select.ctrl { width: 100%; border: 1px solid #E0E0E0; border-radius: 5px; padding: 5px 8px; font-size: 12px; background: white; color: #333; cursor: pointer; }
+select.ctrl:focus { outline: none; border-color: #A6BEEB; }
+.bool-wrap { display: flex; }
+.bool-btn { flex: 1; padding: 4px 8px; font-size: 12px; border: 1px solid #E0E0E0; background: white; cursor: pointer; color: #777; }
+.bool-btn:not(:last-child) { border-right: none; }
+.bool-btn:first-child { border-radius: 5px 0 0 5px; }
+.bool-btn:last-child { border-radius: 0 5px 5px 0; }
+.bool-btn.on { background: #EBEBEB; font-weight: 700; color: #333; }
+.rst { width: 28px; height: 28px; border: none; background: none; cursor: pointer; color: #ccc; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+.rst:hover { background: #F0F0F0; color: #888; }
+.strip-divider { height: 1px; background: #EBEEF2; }
+.strip-wrap { padding: 20px; background: #FAFAFA; }
+.strip-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.strip-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #aaa; }
+.strip-variant { font-size: 11px; font-weight: 600; color: #677489; background: #EEF2FA; padding: 2px 8px; border-radius: 99px; }
+.strip-row { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+.strip-cell { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.strip-name { font-size: 10px; color: #aaa; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+.overview-wrap { padding: 20px; background: #FAFAFA; }
+.overview-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #aaa; margin-bottom: 16px; }
+.overview-grid { display: flex; flex-direction: column; gap: 20px; }
+.overview-cell { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; cursor: pointer; }
+.overview-cell:hover .overview-name { color: #163D83; }
+.overview-name { font-size: 10px; color: #aaa; font-weight: 600; letter-spacing: .03em; transition: color 100ms; }
+
+/* ── THE SEGMENTED CONTROL ─────────────────── */
+.fseg { display: inline-flex; gap: 4px; background: #F2F5F9; border-radius: 4px; font-family: 'DM Sans', sans-serif; }
+.fseg-item {
+  display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+  box-sizing: border-box; border: 1px solid transparent; background: transparent;
+  color: #222B3A; font-family: 'DM Sans', sans-serif; font-weight: 500;
+  line-height: 1; cursor: pointer; white-space: nowrap; border-radius: 4px;
+  transition: background 100ms, color 100ms, border-color 100ms;
+}
+.fseg-item.on { background: #E6EBF4; border-color: #173D82; color: #173D82; border-radius: 8px; }
+.fseg-item .fseg-ico { display: inline-flex; align-items: center; justify-content: center; line-height: 1; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <h1>Segmented 3.0 — Folio DS Prototype</h1>
+    <p>Single-select toggle group. Click a segment to select · Text / Icon / Icon+Text · large &amp; small · 2–5 segments.</p>
+  </div>
+  <div class="sb">
+    <div class="sb-bar">
+      <div class="sb-logo">
+        <span class="sb-logo-mark">
+          <svg width="20" height="22" viewBox="0 0 29 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11.2464 5.30427L13.5369 4L13.5282 15.7556L11.229 17.0598L11.2464 5.30427Z" fill="#163D83"></path>
+            <path d="M24.6057 21.23L14.8688 15.747V4L24.6057 9.5603V21.23Z" fill="#163D83"></path>
+            <path d="M23.935 22.3624L14.2678 27.9999L4.68762 22.3109L14.1894 16.8622L23.935 22.3624Z" fill="#163D83"></path>
+            <path d="M7.6318 9.67221L9.93103 8.35936L9.9136 17.8153L7.61438 19.1195L7.6318 9.67221Z" fill="#163D83"></path>
+            <path d="M4.01742 14.4599L6.31665 13.1471L6.29923 19.8744L4 21.1786L4.01742 14.4599Z" fill="#163D83"></path>
+          </svg>
+        </span>
+        <span class="sb-logo-text">Folio</span>
+      </div>
+      <div class="sb-sep"></div>
+      <button class="sb-icon" onclick="document.getElementById('canvas').classList.toggle('no-dots')" title="Toggle dots"><i class="fa-solid fa-table-cells"></i></button>
+      <div class="sb-bar-right"><span class="sb-badge">Segmented · Figma naming · 3.0</span></div>
+    </div>
+
+    <div class="sb-canvas" id="canvas"><div id="preview"></div></div>
+
+    <div class="sb-codebar">
+      <button class="sb-cbtn" onclick="window.__toggleCode()"><i class="fa-solid fa-code" style="font-size:13px"></i> Show code</button>
+      <button class="sb-cbtn" onclick="window.__copyCode()"><i class="fa-regular fa-copy" style="font-size:13px"></i> Copy code</button>
+      <span id="copied-msg">Copied!</span>
+    </div>
+    <div class="code-snippet" id="code-block"></div>
+
+    <div class="sb-tabs"><div class="sb-tab on">Controls</div><div class="sb-tab">Variants</div></div>
+    <div class="ctl-head"><span>Name</span><span>Description</span><span>Default</span><span>Control</span><span></span></div>
+
+    <div class="ctl-row">
+      <span class="ctl-name">type</span>
+      <span class="ctl-desc">Text only | Icon only | Icon+Text</span>
+      <span class="ctl-def">icon-text</span>
+      <div class="bool-wrap" id="type-wrap">
+        <button class="bool-btn" onclick="setType('text',this)">Text</button>
+        <button class="bool-btn" onclick="setType('icon',this)">Icon</button>
+        <button class="bool-btn on" onclick="setType('icon-text',this)">Icon+Text</button>
+      </div>
+      <button class="rst" onclick="setType('icon-text',document.querySelectorAll('#type-wrap .bool-btn')[2])" title="Reset">↺</button>
+    </div>
+    <div class="ctl-row">
+      <span class="ctl-name">size</span>
+      <span class="ctl-desc">"large" (32) | "small" (28)</span>
+      <span class="ctl-def">large</span>
+      <div class="bool-wrap" id="size-wrap">
+        <button class="bool-btn on" onclick="setSize('large',this)">large</button>
+        <button class="bool-btn" onclick="setSize('small',this)">small</button>
+      </div>
+      <button class="rst" onclick="setSize('large',document.querySelector('#size-wrap .bool-btn'))" title="Reset">↺</button>
+    </div>
+    <div class="ctl-row">
+      <span class="ctl-name">segments</span>
+      <span class="ctl-desc">2–5</span>
+      <span class="ctl-def">3</span>
+      <select class="ctrl" id="ctl-count" onchange="render()">
+        <option value="2">2</option>
+        <option value="3" selected>3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+      <button class="rst" onclick="resetSel('ctl-count','3')" title="Reset">↺</button>
+    </div>
+
+    <div class="strip-divider"></div>
+    <div class="strip-wrap">
+      <div class="strip-header"><span class="strip-label">All sizes</span><span class="strip-variant" id="strip-variant-lbl">Icon+Text</span></div>
+      <div class="strip-row" id="strip"></div>
+    </div>
+
+    <div class="strip-divider"></div>
+    <div class="overview-wrap">
+      <div class="overview-label">All types — click to select</div>
+      <div class="overview-grid" id="overview"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var S = { type: "icon-text", size: "large", count: 3, selected: 0 };
+
+var SEGMENTS = [
+  { value: "table", label: "Table", icon: "fa-table" },
+  { value: "chart", label: "Chart", icon: "fa-chart-simple" },
+  { value: "board", label: "Board", icon: "fa-table-columns" },
+  { value: "list",  label: "List",  icon: "fa-list" },
+  { value: "grid",  label: "Grid",  icon: "fa-table-cells" },
+];
+
+var SIZE = {
+  large: { height: 32, fontSize: 14, icon: 16, iconWrap: 24, padX: 8, padIT: 4, padIcon: 4 },
+  small: { height: 28, fontSize: 12, icon: 14, iconWrap: 22, padX: 8, padIT: 3, padIcon: 3 },
+};
+
+var codeVisible = false;
+
+function buildSegmented(type, size, count, selected, onSelect) {
+  var s = SIZE[size] || SIZE.large;
+  var el = document.createElement("div");
+  el.className = "fseg";
+  for (var i = 0; i < count; i++) {
+    var seg = SEGMENTS[i];
+    var active = i === selected;
+    var hasIcon = type === "icon" || type === "icon-text";
+    var hasLabel = type === "text" || type === "icon-text";
+    var b = document.createElement("button");
+    b.className = "fseg-item" + (active ? " on" : "");
+    b.style.height = s.height + "px";
+    b.style.fontSize = s.fontSize + "px";
+    if (hasIcon && !hasLabel) b.style.padding = s.padIcon + "px";
+    else if (hasIcon && hasLabel) { b.style.paddingLeft = s.padIT + "px"; b.style.paddingRight = s.padX + "px"; b.style.paddingTop = s.padIT + "px"; b.style.paddingBottom = s.padIT + "px"; }
+    else { b.style.paddingLeft = s.padX + "px"; b.style.paddingRight = s.padX + "px"; }
+    var html = "";
+    if (hasIcon) html += '<span class="fseg-ico" style="width:' + s.iconWrap + 'px;height:' + s.iconWrap + 'px;font-size:' + s.icon + 'px"><i class="fa-solid ' + seg.icon + '"></i></span>';
+    if (hasLabel) html += "<span>" + seg.label + "</span>";
+    b.innerHTML = html;
+    if (!hasLabel) b.setAttribute("aria-label", seg.label);
+    (function (idx) { b.addEventListener("click", function () { onSelect(idx); }); })(i);
+    el.appendChild(b);
+  }
+  return el;
+}
+
+var TYPE_LABEL = { text: "Text only", icon: "Icon only", "icon-text": "Icon+Text" };
+
+function render() {
+  S.count = parseInt(document.getElementById("ctl-count").value, 10);
+  if (S.selected >= S.count) S.selected = 0;
+  var preview = document.getElementById("preview");
+  preview.innerHTML = "";
+  preview.appendChild(buildSegmented(S.type, S.size, S.count, S.selected, function (i) { S.selected = i; render(); }));
+  document.getElementById("strip-variant-lbl").textContent = TYPE_LABEL[S.type];
+  updateCode();
+  renderStrip();
+  renderOverview();
+}
+
+function renderStrip() {
+  var strip = document.getElementById("strip");
+  strip.innerHTML = "";
+  ["large", "small"].forEach(function (sz) {
+    var cell = document.createElement("div");
+    cell.className = "strip-cell";
+    cell.appendChild(buildSegmented(S.type, sz, S.count, S.selected, function (i) { S.selected = i; render(); }));
+    var nm = document.createElement("span");
+    nm.className = "strip-name";
+    nm.textContent = sz;
+    cell.appendChild(nm);
+    strip.appendChild(cell);
+  });
+}
+
+function renderOverview() {
+  var grid = document.getElementById("overview");
+  grid.innerHTML = "";
+  ["text", "icon", "icon-text"].forEach(function (tp) {
+    var cell = document.createElement("div");
+    cell.className = "overview-cell";
+    cell.appendChild(buildSegmented(tp, S.size, S.count, S.selected, function () {
+      document.querySelectorAll("#type-wrap .bool-btn").forEach(function (b) { b.classList.remove("on"); });
+      var idx = { text: 0, icon: 1, "icon-text": 2 }[tp];
+      document.querySelectorAll("#type-wrap .bool-btn")[idx].classList.add("on");
+      S.type = tp; render();
+    }));
+    var nm = document.createElement("span");
+    nm.className = "overview-name";
+    nm.textContent = TYPE_LABEL[tp];
+    cell.appendChild(nm);
+    grid.appendChild(cell);
+  });
+}
+
+function setType(t, btn) {
+  S.type = t;
+  document.querySelectorAll("#type-wrap .bool-btn").forEach(function (b) { b.classList.remove("on"); });
+  btn.classList.add("on");
+  render();
+}
+function setSize(sz, btn) {
+  S.size = sz;
+  document.querySelectorAll("#size-wrap .bool-btn").forEach(function (b) { b.classList.remove("on"); });
+  btn.classList.add("on");
+  render();
+}
+function resetSel(id, v) { document.getElementById(id).value = v; render(); }
+
+function updateCode() {
+  var opts = SEGMENTS.slice(0, S.count).map(function (seg) {
+    if (S.type === "text") return '    { value: "' + seg.value + '", label: "' + seg.label + '" },';
+    if (S.type === "icon") return '    { value: "' + seg.value + '", "aria-label": "' + seg.label + '", icon: <i className="fa-solid ' + seg.icon + '" /> },';
+    return '    { value: "' + seg.value + '", label: "' + seg.label + '", icon: <i className="fa-solid ' + seg.icon + '" /> },';
+  }).join("\n");
+  var code = "const { Segmented } = window.FolioDS;\n\n<Segmented\n  size=\"" + S.size + "\"\n  value={value}\n  onChange={setValue}\n  options={[\n" + opts + "\n  ]}\n/>";
+  document.getElementById("code-block").textContent = code;
+}
+
+window.__toggleCode = function () { codeVisible = !codeVisible; document.getElementById("code-block").classList.toggle("visible", codeVisible); };
+window.__copyCode = function () {
+  updateCode();
+  var t = document.getElementById("code-block").textContent;
+  navigator.clipboard && navigator.clipboard.writeText(t);
+  var m = document.getElementById("copied-msg"); m.classList.add("show");
+  if (!codeVisible) { document.getElementById("code-block").classList.add("visible"); codeVisible = true; }
+  setTimeout(function () { m.classList.remove("show"); }, 2000);
+};
+
+render();
+</script>
+</body>
+</html>

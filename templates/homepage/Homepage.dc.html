@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<!-- @template name="Workspace Template: Homepage" description="Cube Workspace home — welcome hero, getting-started tasks, data health, fireside chat, agent apps, and highlights/resources rows, built on the App Shell." -->
+<!-- @built-against design-sync 2026-08-19 (see github.md); last verified 2026-09-09 -->
+<helmet>
+  <script src="./ds-base.js"></script>
+  <script src="./_sidebar-icons.js"></script>
+  <script src="./image-slot.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:'DM Sans',sans-serif; background:#F5F7FA; height:100vh; overflow:hidden; color:#222B3A; }
+    a { text-decoration:none; color:#173D82; }
+    a:hover { color:#122E64; }
+    .app-shell { display:flex; height:100vh; }
+    .sb { width:255px; min-width:255px; padding:8px; display:flex; flex-direction:column; height:100vh; transition:width .2s ease,min-width .2s ease; overflow:hidden; }
+    .sb.col { width:64px; min-width:64px; }
+    .sb-card { background:#fff; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06); flex:1; display:flex; flex-direction:column; overflow:hidden; }
+    .sb-hdr { height:48px; padding:16px 12px 0 16px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; white-space:nowrap; }
+    .sb.col .sb-hdr { flex-direction:column; height:auto; justify-content:center; align-items:center; gap:8px; padding:12px 0 8px; }
+    .logo-wm { display:flex; align-items:center; }
+    .logo-wm img { height:28px; width:auto; display:block; }
+    .logo-ic { display:none; align-items:center; justify-content:center; }
+    .logo-ic img { height:28px; width:auto; display:block; }
+    .sb.col .logo-wm { display:none; }
+    .sb.col .logo-ic { display:flex; }
+    .col-btn { width:28px; height:28px; border:none; border-radius:4px; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#4A5567; }
+    .col-btn:hover { background:#F1F4F8; }
+    .cc-left,.cc-right { display:inline-flex; align-items:center; justify-content:center; }
+    .cc-right { display:none; }
+    .sb.col .cc-left { display:none; }
+    .sb.col .cc-right { display:inline-flex; }
+    .sb-nav { flex:1; overflow-y:auto; overflow-x:hidden; padding:24px 0; }
+    .sb-nav::-webkit-scrollbar { width:4px; }
+    .sb-nav::-webkit-scrollbar-thumb { background:#CDD5E0; border-radius:2px; }
+    .dv { height:1px; background:#E3E8EF; margin:8px 0; }
+    .nav-section { display:flex; flex-direction:column; gap:4px; padding:8px 0; }
+    .sb.col .nav-section { padding:0; align-items:center; }
+    .sec { display:flex; align-items:center; gap:4px; height:20px; padding:0 16px; font-family:'DM Sans', sans-serif; font-size:12px; font-weight:400; color:#4A5567; white-space:nowrap; }
+    .sb.col .sec { justify-content:center; padding:0; }
+    .sb.col .sec-lbl,.sb.col .sec-crt { display:none; }
+    .sec-crt { font-size:8px; color:#677489; transition:transform .15s ease; }
+    .sec { cursor:pointer; user-select:none; }
+    .nav-section.collapsed > *:not(.sec) { display:none; }
+    .nav-section.collapsed .sec-crt { transform:rotate(-90deg); }
+    .ni { height:32px; padding:0 24px 0 29px; border-left:3px solid transparent; display:flex; align-items:center; gap:8px; border-radius:0; cursor:pointer; position:relative; white-space:nowrap; color:inherit; width:100%; }
+    .ni.home { padding:0 24px 0 29px; border-left:3px solid transparent; }
+    .nav-section .ni:hover { background:#EFF6FF; border-left-color:#2667D8; }
+    .nav-section .ni:hover .ni-lbl { color:#2667D8; }
+    .nav-section .ni:hover .ni-ic { color:#2667D8; }
+    .ni.home:hover { background:#EFF6FF; border-left-color:#2667D8; }
+    .ni.home:hover .ni-lbl { color:#2667D8; }
+    .ni.home:hover .ni-ic { color:#2667D8; }
+    .nav-section .ni.active { background:#EFF6FF; border-left-color:#2667D8; }
+    .ni.home.active { background:#EFF6FF; border-left-color:#2667D8; }
+    .ni.active .ni-lbl { color:#2667D8; font-weight:500; }
+    .ni.active .ni-ic { color:#2667D8; }
+    .ni-ic { width:22px; height:22px; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#4A5567; font-size:15px; }
+    .ni-lbl { font-size:14px; font-weight:400; color:#222B3A; }
+    .sb.col .ni { padding:0; border-left:none; width:36px; justify-content:center; border-radius:4px; }
+    .sb.col .ni.home { padding:0; border-radius:4px; }
+    .sb.col .ni-lbl { display:none; }
+    .sb.col .ni:hover::after { content:attr(data-label); position:absolute; left:calc(100% + 8px); top:50%; transform:translateY(-50%); background:#222B3A; color:#fff; font-size:12px; font-weight:500; padding:4px 10px; border-radius:4px; white-space:nowrap; z-index:300; pointer-events:none; }
+    .ni-sub-wrap { padding-left:34px; display:flex; flex-direction:column; }
+    .ni-sub { display:flex; align-items:center; height:32px; padding:4px 16px 4px 18px; border-left:2px solid #E3E8EF; font-size:14px; font-weight:400; color:#222B3A; cursor:pointer; white-space:nowrap; }
+    .ni-sub:hover { background:#EFF6FF; }
+    .ni-sub.active { color:#2667D8; font-weight:600; border-left-color:#2667D8; }
+    .sb.col .ni-sub-wrap { display:none; }
+    .apps-wrap { padding:0 8px 16px; }
+    .sb.col .apps-wrap { padding:0 0 8px; }
+    .apps-sec { display:flex; align-items:center; gap:4px; padding:8px 8px 4px; font-family:'DM Sans', sans-serif; font-size:12px; font-weight:400; color:#4A5567; }
+    .sb.col .apps-sec { justify-content:center; padding:8px 0 4px; }
+    .sb.col .apps-sec .sec-lbl,.sb.col .apps-sec .sec-crt { display:none; }
+    .apps-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:4px; padding:4px 0; }
+    .apps-grid .app-tile:nth-child(8) { grid-column:1; }
+    .sb.col .apps-grid { display:flex; flex-direction:column; align-items:center; gap:4px; }
+    .app-tile { display:flex; flex-direction:column; align-items:center; gap:4px; padding:4px 0; border-radius:8px; cursor:pointer; position:relative; }
+    .app-tile:hover { background:#EFF6FF; }
+    .app-circ { width:32px; height:32px; border-radius:50%; background:#EEF0F4; border:1.5px solid #DDE1E8; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#4A5567; font-size:13px; }
+    .app-lbl { font-size:10px; font-weight:500; color:#353F4F; text-align:center; line-height:1.2; }
+    .sb.col .app-lbl { display:none; }
+    .sb.col .app-tile:hover::after { content:attr(data-label); position:absolute; left:calc(100% + 8px); top:50%; transform:translateY(-50%); background:#222B3A; color:#fff; font-size:12px; font-weight:500; padding:4px 10px; border-radius:4px; white-space:nowrap; z-index:300; pointer-events:none; }
+    .staff-row { display:flex; align-items:center; justify-content:space-between; padding:0 12px 0 24px; height:40px; flex-shrink:0; }
+    .staff-row-left { display:flex; align-items:center; gap:8px; }
+    .staff-label { font-size:14px; font-weight:400; color:#222B3A; }
+    .staff-more-btn { width:28px; height:28px; border:none; background:transparent; border-radius:4px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#677489; font-size:14px; }
+    .staff-more-btn:hover { background:#F2F5F9; }
+    .sb.col .staff-row { padding:0; justify-content:center; }
+    .sb.col .staff-label { display:none; }
+    .sb.col .staff-more-btn { display:none; }
+    .main { flex:1; display:flex; flex-direction:column; min-width:0; overflow:hidden; }
+    .topnav { height:80px; background:#F5F7FA; border-bottom:1px solid #E3E8EF; display:flex; align-items:center; justify-content:space-between; padding:0 24px; flex-shrink:0; }
+    .tn-company { display:flex; align-items:center; gap:4px; height:32px; padding:0 12px; background:#fff; border-radius:16px; box-shadow:0 2px 2px #E3E8EF; cursor:pointer; white-space:nowrap; }
+    .tn-company:hover { box-shadow:0 2px 4px #CDD5E0; }
+    .tn-company-ic { width:22px; height:22px; display:flex; align-items:center; justify-content:center; color:#173D82; font-size:13px; }
+    .tn-company-name { font-size:12px; font-weight:400; color:#677489; }
+    .tn-chevron { width:22px; height:22px; display:flex; align-items:center; justify-content:center; color:#353F4F; font-size:11px; }
+    .tn-right { display:flex; align-items:center; gap:8px; }
+    .tn-btn { width:32px; height:32px; border-radius:4px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; color:#4A5567; font-size:15px; }
+    .tn-btn:hover { background:#F8FAFC; }
+    .tn-ai-btn { width:28px; height:28px; border:none; border-radius:50%; background:linear-gradient(135deg,#7A5AF8 10%,#9B8AFB 50%,#5925DC 100%); padding:0; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; }
+    .tn-ai-btn:hover { opacity:.85; }
+    .tn-user { display:flex; align-items:center; gap:8px; height:32px; padding:0 8px; background:#fff; border-radius:20px; box-shadow:0 2px 2px #E3E8EF; cursor:pointer; white-space:nowrap; }
+    .tn-user:hover { box-shadow:0 2px 4px #CDD5E0; }
+    .tn-user-name { font-size:12px; font-weight:400; color:#677489; }
+    .page-content { flex:1; overflow-y:auto; background:#F5F7FA; padding:24px; }
+    .pg { display:flex; flex-direction:column; gap:32px; }
+
+    .hero { display:flex; flex-direction:column; align-items:center; gap:20px; }
+    .hero-title { font-size:26px; font-weight:700; color:#173D82; text-align:center; }
+    .hero-pill { width:100%; max-width:600px; height:52px; border-radius:9999px; border:1px solid #DCD6FB; background:#fff; display:flex; align-items:center; gap:10px; padding:0 20px; box-shadow:0 2px 8px rgba(89,37,220,.08); }
+    .hero-pill i { color:#7A5AF8; font-size:15px; }
+    .hero-pill input { border:none; outline:none; flex:1; font-family:'DM Sans',sans-serif; font-size:14px; color:#222B3A; background:transparent; }
+    .hero-pill input::placeholder { color:#97A3B6; }
+
+    .progress-row { display:flex; align-items:center; gap:16px; }
+    .prog-ring { width:44px; height:44px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; background:conic-gradient(#2667D8 0deg,#E3E8EF 0deg); }
+    .prog-ring-inner { width:34px; height:34px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#173D82; }
+    .progress-text { flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+    .progress-title { font-size:17px; font-weight:600; color:#222B3A; }
+    .progress-sub { font-size:13px; color:#677489; }
+    .progress-sub a { font-weight:600; }
+
+    .onboard-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; }
+    .onboard-card { background:#fff; border:1px solid #E3E8EF; border-radius:14px; overflow:hidden; display:flex; flex-direction:column; }
+    .onboard-graphic { height:130px; background:#EEF0F4; position:relative; display:flex; align-items:center; justify-content:center; color:#B7C0CE; font-size:32px; }
+    .onboard-badge { position:absolute; top:10px; right:10px; }
+    .onboard-body { padding:16px; display:flex; flex-direction:column; gap:6px; }
+    .onboard-title { font-size:15px; font-weight:600; color:#222B3A; }
+    .onboard-desc { font-size:13px; color:#677489; line-height:1.5; }
+
+    .two-col { display:grid; grid-template-columns:minmax(0,1.65fr) minmax(280px,1fr); gap:20px; align-items:stretch; }
+    .card { background:#fff; border:1px solid #E3E8EF; border-radius:16px; padding:24px; display:flex; flex-direction:column; gap:16px; }
+    .card-title { font-size:18px; font-weight:600; color:#222B3A; }
+    .table-wrap { min-width:0; overflow-x:auto; }
+    .table-nav-row { display:flex; align-items:center; justify-content:center; gap:16px; }
+    .table-nav-btn { width:28px; height:28px; border-radius:50%; border:1px solid #E3E8EF; background:#fff; color:#4A5567; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+    .table-nav-btn:hover { background:#F8FAFC; }
+    .table-dots { display:flex; align-items:center; gap:6px; }
+    .table-dot { width:6px; height:6px; border-radius:50%; background:#DCE1E9; }
+    .table-dot.on { background:#173D82; }
+
+    .fireside { background:#12275C; border-radius:16px; padding:24px; display:flex; flex-direction:column; gap:14px; color:#fff; }
+    .fireside-tag { align-self:flex-start; }
+    .fireside-title { font-size:19px; font-weight:700; line-height:1.35; }
+    .fireside-body { font-size:13px; line-height:1.6; color:#C7D0E8; display:flex; flex-direction:column; gap:10px; }
+    .fireside-cta { align-self:flex-start; margin-top:auto; }
+
+    .agent-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; }
+    .agent-app-card { border:1px solid #DCD6FB; border-radius:12px; background:#fff; padding:16px; display:flex; flex-direction:column; gap:8px; cursor:pointer; }
+    .agent-app-card:hover { background:#FAF9FF; border-color:#B9A9FA; }
+    .agent-app-card i { color:#7A5AF8; font-size:14px; }
+    .agent-app-title { font-size:14px; font-weight:600; color:#222B3A; }
+    .agent-app-desc { font-size:13px; color:#677489; line-height:1.5; }
+
+    .bottom-two-col { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:20px; }
+    .card-hdr-row { display:flex; align-items:center; justify-content:space-between; }
+    .row-list { display:flex; flex-direction:column; }
+    .highlight-row { display:flex; align-items:center; gap:14px; padding:12px 0; border-bottom:1px solid #EDF0F4; }
+    .row-list > .highlight-row:last-child { border-bottom:none; }
+    .highlight-thumb { width:64px; height:48px; border-radius:8px; background:#E9ECF1; flex-shrink:0; display:flex; align-items:center; justify-content:center; color:#B7C0CE; font-size:16px; }
+    .highlight-title { font-size:14px; font-weight:600; color:#222B3A; }
+    .learn-row { display:flex; align-items:center; gap:14px; padding:12px 0; border-bottom:1px solid #EDF0F4; }
+    .row-list > .learn-row:last-child { border-bottom:none; }
+    .learn-text { display:flex; flex-direction:column; gap:3px; min-width:0; }
+    .learn-tag { font-size:10px; font-weight:700; letter-spacing:.06em; color:#97A3B6; text-transform:uppercase; }
+    .learn-title { font-size:14px; font-weight:600; color:#222B3A; }
+  </style>
+</helmet>
+
+<div class="app-shell">
+  <aside id="sb" class="sb">
+    <div class="sb-card">
+      <div class="sb-hdr">
+        <div class="logo-wm"><img src="./cube-full-logo-mrp7qtfz-2a8j.svg" alt="Cube"></div>
+        <div class="logo-ic"><img src="./cube-icon-logo-mrp7voek-lnif.svg" alt="Cube"></div>
+        <button class="col-btn" data-action="collapse" aria-label="Toggle sidebar">
+          <span class="cc-left">{{ ic.collapseLeft }}</span><span class="cc-right">{{ ic.collapseRight }}</span>
+        </button>
+      </div>
+      <div class="sb-nav">
+        <div class="ni home active" data-label="Home"><div class="ni-ic">{{ ic.home }}</div><span class="ni-lbl">Home</span></div>
+        <div class="dv"></div>
+        {{ sideNavEl }}
+      </div>
+      <div style="height:1px;background:#E3E8EF;margin:0"></div>
+      <div class="staff-row">
+        <div class="staff-row-left">
+          <div class="ni-ic" style="color:#4A5567"><i class="fa-regular fa-users"></i></div>
+          <span class="staff-label">Cube Staff</span>
+        </div>
+        <button class="staff-more-btn" aria-label="More options">
+          <i class="fa-solid fa-ellipsis-vertical"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topnav">
+      <div class="tn-company">
+        <div class="tn-company-ic"><i class="fa-solid fa-buildings"></i></div>
+        <span class="tn-company-name">{{ companyName }}</span>
+        <div class="tn-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+      </div>
+      <div class="tn-right">
+        <button class="tn-btn" title="Background tasks">{{ ic.backgroundTasks }}</button>
+        <button class="tn-btn" title="Help"><i class="fa-regular fa-circle-question"></i></button>
+        <button class="tn-ai-btn" data-tip="Cube AI">{{ ic.cubeAiAnalyst }}</button>
+        <div class="tn-user">
+          <x-import component-from-global-scope="FolioDS.Avatar" type="initials" size="xs" name="{{ userName }}" hint-size="24px,24px"></x-import>
+          <span class="tn-user-name">{{ userName }}</span>
+          <div class="tn-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <div class="pg">
+
+        <div class="hero">
+          <div class="hero-title">Welcome back, {{ firstName }}</div>
+          <div class="hero-pill"><i class="fa-solid fa-sparkles"></i><input type="text" placeholder="What can we help you with today?"></div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div class="progress-row">
+            <div class="prog-ring"><div class="prog-ring-inner">0%</div></div>
+            <div class="progress-text">
+              <span class="progress-title">Get the most out of Cube</span>
+              <span class="progress-sub"><a href="#">Jane Smith</a> is your account manager</span>
+            </div>
+            <x-import component-from-global-scope="FolioDS.Button" variant="secondary" leadingIcon="{{ playIcon }}" hint-size="200px,36px">Browse Video Library</x-import>
+          </div>
+          <div class="onboard-grid">
+            <sc-for list="{{ onboardCards }}" as="c" hint-placeholder-count="4">
+              <div class="onboard-card">
+                <div class="onboard-graphic">
+                  <i class="{{ c.icon }}"></i>
+                  <div class="onboard-badge"><x-import component-from-global-scope="FolioDS.Badge" color="{{ c.badgeColor }}" type="solid" hint-size="70px,22px">{{ c.badgeLabel }}</x-import></div>
+                </div>
+                <div class="onboard-body">
+                  <div class="onboard-title">{{ c.title }}</div>
+                  <div class="onboard-desc">{{ c.desc }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-title">Data Health</div>
+            <div class="table-wrap" id="dataHealthTable"></div>
+            <div class="table-nav-row">
+              <button class="table-nav-btn" aria-label="Previous"><i class="fa-solid fa-arrow-left"></i></button>
+              <div class="table-dots"><span class="table-dot on"></span><span class="table-dot"></span><span class="table-dot"></span></div>
+              <button class="table-nav-btn" aria-label="Next"><i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+          </div>
+          <div class="fireside">
+            <div class="fireside-tag"><x-import component-from-global-scope="FolioDS.Badge" color="yellow" type="solid" hint-size="110px,22px">FIRESIDE CHAT</x-import></div>
+            <div class="fireside-title">AI-POWERED COLLABORATION:<br>HOW FINANCE PLAYS A KEY ROLE IN DRIVING GROWTH</div>
+            <div class="fireside-body">
+              <p>Finance plays a key role—not just in operations, but in driving growth.</p>
+              <p>We regularly hear from CFOs that the real shift in their careers didn't come from mastering a metric. It came when they started showing up as business leaders.</p>
+            </div>
+            <div class="fireside-cta"><x-import component-from-global-scope="FolioDS.Button" variant="primary" hint-size="110px,36px">Learn More</x-import></div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div class="card-title">Agent Apps</div>
+          <div class="agent-grid">
+            <sc-for list="{{ agentApps }}" as="a" hint-placeholder-count="4">
+              <div class="agent-app-card">
+                <i class="fa-solid fa-sparkles"></i>
+                <div class="agent-app-title">{{ a.title }}</div>
+                <div class="agent-app-desc">{{ a.desc }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div class="bottom-two-col">
+          <div class="card">
+            <div class="card-title">Product Highlights</div>
+            <div class="row-list">
+              <sc-for list="{{ highlights }}" as="h" hint-placeholder-count="3">
+                <div class="highlight-row">
+                  <div class="highlight-thumb"><i class="fa-regular fa-image"></i></div>
+                  <div class="highlight-title">{{ h.title }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hdr-row">
+              <div class="card-title">Learning Resources</div>
+              <a href="#" style="font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px">Explore Finance Templates<i class="fa-solid fa-arrow-up-right-from-square" style="font-size:11px"></i></a>
+            </div>
+            <div class="row-list">
+              <sc-for list="{{ resources }}" as="r" hint-placeholder-count="3">
+                <div class="learn-row">
+                  <x-import component-from-global-scope="FolioDS.IconBadge" icon="{{ r.icon }}" hue="{{ r.hue }}" size="sm" hint-size="32px,32px"></x-import>
+                  <div class="learn-text"><span class="learn-tag">{{ r.tag }}</span><span class="learn-title">{{ r.title }}</span></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1600px&quot;,&quot;height&quot;:&quot;1000px&quot;},&quot;companyName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Accuplanner Inc&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;userName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Nina Graham&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+class Component extends DCLogic {
+  componentDidMount() {
+    this._onClick = (e) => {
+      const secEl = e.target.closest('.sec');
+      if (secEl) { const ns = secEl.closest('.nav-section'); if (ns) ns.classList.toggle('collapsed'); return; }
+      const collapse = e.target.closest('[data-action="collapse"]');
+      if (collapse) { const sb = document.getElementById('sb'); if (sb) sb.classList.toggle('col'); this.setState((st) => ({ sbCollapsed: !(st && st.sbCollapsed) })); return; }
+      const ni = e.target.closest('.ni');
+      if (ni) { document.querySelectorAll('.ni').forEach((i) => i.classList.remove('active')); ni.classList.add('active'); }
+    };
+    document.addEventListener('click', this._onClick);
+    if (!window.SIDEBAR_ICONS || !window.FolioDS) {
+      this._waitTimer = setInterval(() => {
+        if (window.SIDEBAR_ICONS && window.FolioDS) { clearInterval(this._waitTimer); this.forceUpdate(); this.mountTable(); }
+      }, 60);
+    } else {
+      this.mountTable();
+    }
+  }
+  componentDidUpdate() { this.mountTable(); }
+  componentWillUnmount() {
+    document.removeEventListener('click', this._onClick);
+    if (this._waitTimer) clearInterval(this._waitTimer);
+    if (this._tableRoot) { try { this._tableRoot.unmount(); } catch (e) {} }
+  }
+  mountTable() {
+    const host = document.getElementById('dataHealthTable');
+    const FDS = window.FolioDS;
+    if (!host || !FDS || !FDS.Table || host.dataset.mounted) return;
+    host.dataset.mounted = '1';
+    const h = React.createElement;
+    const Cell = FDS.Cell;
+    const healthBadge = (row) => h(FDS.Badge, { color: row.healthColor, type: 'outlined', icon: h('i', { className: row.healthIcon }) }, row.healthLabel);
+    const columns = [
+      { key: 'source', label: 'SOURCE', render: (v, row) => h('div', { style: { display: 'flex', alignItems: 'center', gap: 8 } }, h('div', { style: { width: 24, height: 24, flexShrink: 0 } }, h('image-slot', { id: row.logoId, shape: 'circle', placeholder: row.logoPlaceholder })), h(Cell.Link, {}, v)) },
+      { key: 'name', label: 'NAME', render: (v) => h(Cell.Link, {}, v) },
+      { key: 'lastImport', label: 'LAST SUCCESSFUL IMPORT', sortable: false, render: (v) => h(Cell.Text, {}, v) },
+      { key: 'health', label: 'CONNECTION HEALTH', sortable: false, render: (v, row) => healthBadge(row) },
+      { key: 'actions', label: '', sortable: false, align: 'right', render: () => h(Cell.Actions, {}, h(Cell.ActionButton, { icon: h('i', { className: 'fa-solid fa-shuffle' }), 'aria-label': 'Sync' })) }
+    ];
+    const rows = [
+      { id: 1, source: 'Teal Plantations', logoId: 'logo-teal', logoPlaceholder: 'Sage logo', name: 'Teal Plantations', lastImport: 'Aug 25, 2025', healthColor: 'red', healthIcon: 'fa-solid fa-xmark', healthLabel: 'Update Mapping' },
+      { id: 2, source: 'Red Plantations', logoId: 'logo-red', logoPlaceholder: 'Sage logo', name: 'Red Plantations', lastImport: 'Aug 25, 2025', healthColor: 'red', healthIcon: 'fa-solid fa-xmark', healthLabel: 'Last Import Failed' },
+      { id: 3, source: 'Green Plantations', logoId: 'logo-green', logoPlaceholder: 'QuickBooks logo', name: 'Green Plantations', lastImport: 'Aug 25, 2025', healthColor: 'yellow', healthIcon: 'fa-solid fa-xmark', healthLabel: 'Enable Boomi Atom' },
+      { id: 4, source: 'Orange Plantations', logoId: 'logo-orange', logoPlaceholder: 'Xero logo', name: 'Orange Plantations', lastImport: 'Aug 25, 2025', healthColor: 'red', healthIcon: 'fa-solid fa-xmark', healthLabel: 'Reauthenticate' },
+      { id: 5, source: 'Payroll Upload', logoId: 'logo-payroll', logoPlaceholder: 'Spreadsheet icon', name: 'Payroll Upload', lastImport: 'Sep 10, 2025', healthColor: 'green', healthIcon: 'fa-solid fa-circle-check', healthLabel: 'Last Import Completed' }
+    ];
+    this._tableRoot = ReactDOM.createRoot(host);
+    this._tableRoot.render(h(FDS.Table, { columns, rows }));
+  }
+  renderVals() {
+    const sideNavEl = window.FolioDS ? React.createElement(window.FolioDS.PortalSideBarNav, { expanded: !(this.state && this.state.sbCollapsed), activeItemId: undefined, style: { width: '100%' } }) : null;
+    const companyName = this.props.companyName ?? 'Accuplanner Inc';
+    const userName = this.props.userName ?? 'Nina Graham';
+    const firstName = userName.trim().split(/\s+/)[0];
+    const ICONS = window.SIDEBAR_ICONS || {};
+    const mk = (k) => ICONS[k] ? React.createElement('span', { style: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }, dangerouslySetInnerHTML: { __html: ICONS[k] } }) : null;
+    const ic = {};
+    ['home','cubeBI','smartVariance','aiAnalyst','library','scenarios','dimensions','formulas','tags','integrations','dataExport','users','currencies','auditTrail','backgroundTasks','cubeAiAnalyst','aiPlugin','chatgpt','claude','excel','sheets','slack','teams','slides','powerpoint','collapseLeft','collapseRight'].forEach((k) => { ic[k] = mk(k); });
+    const playIcon = React.createElement('i', { className: 'fa-regular fa-circle-play' });
+    const onboardCards = [
+      { icon: 'fa-regular fa-image', badgeColor: 'blue', badgeLabel: 'Get Start', title: 'Add your company logo', desc: 'Brand your workspace. Find it under your name, top-right.' },
+      { icon: 'fa-solid fa-sparkles', badgeColor: 'blue', badgeLabel: 'Get Start', title: 'Prompt AI Analyst', desc: 'Ask a question in plain English and get a traceable answer.' },
+      { icon: 'fa-regular fa-file-lines', badgeColor: 'blue', badgeLabel: 'Get Start', title: 'Create a board', desc: 'Assemble a live dashboard from widgets. No syncs needed.' },
+      { icon: 'fa-regular fa-diagram-project', badgeColor: 'blue', badgeLabel: 'Get Start', title: 'Create a workflow', desc: 'Orchestrate a finance-led process like month-end close.' }
+    ];
+    const agentApps = [
+      { title: 'Variance Insights', desc: "Summarize the key variances between actuals vs. budget for previous quarter." },
+      { title: 'Profitability Insights', desc: "Highlight the top drivers impacting gross margin in last month's actuals." },
+      { title: 'Operating Insights', desc: 'Show operating margin trends year-to-date compared with the prior year.' },
+      { title: 'Spend Insights', desc: 'Break down departmental spend this quarter and highlight the largest cost overruns.' }
+    ];
+    const highlights = [
+      { title: 'Planning and Analysis in Cube Workspace' },
+      { title: 'Cube collaboration suite' },
+      { title: 'Cube is now available in Microsoft Teams!' }
+    ];
+    const resources = [
+      { tag: 'AI', icon: 'fa-regular fa-sparkles', hue: 'indigo', title: 'Use Cube AI Analyst on Workspace' },
+      { tag: 'Data Management', icon: 'fa-regular fa-database', hue: 'emerald', title: 'Best practices for managing dimensions' },
+      { tag: 'Reporting & Analysis', icon: 'fa-regular fa-chart-line', hue: 'cyan', title: 'Automate reports by linking them to Cube' }
+    ];
+    return { sideNavEl, companyName, userName, firstName, ic, playIcon, onboardCards, agentApps, highlights, resources };
+  }
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+<!-- COPY — DO NOT EDIT HERE.
+     Canonical source: brand/glass-ui-style.md.
+     This copy exists because the brand package uploads as a standalone
+     skill and cannot read files elsewhere in the repo. Re-sync with:
+         npm run style-guide:sync      (copy brand/ -> here)
+         npm run style-guide:check     (fail if they differ)
+-->
+

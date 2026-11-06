@@ -1,0 +1,27 @@
+node_modules/
+.DS_Store
+*.log
+dist/
+.env
+.env.local
+.ds-sync/
+ds-bundle/
+.design-sync/.cache/
+.design-sync/learnings/
+.design-sync/node_modules
+.npmrc
+
+Cube Design System.zip
+Cube Design System/
+designing-data-intensive-applications-book_excerpt.pdf
+templates/Nan Design Prompt Process.pdf
+fontawesome-pro-7.3.1-web/
+
+# Vendored Font Awesome copy inside the archived brand package. Same licensed
+# Pro distribution as fontawesome-pro-7.3.1-web/ (also ignored), so it stays out
+# of git. The remote design project already has it; to restore it locally for
+# previewing that package's cards:
+#   mkdir -p "archive/cube-brand-design-system/vendor/fontawesome"/{css,webfonts}
+#   cp fontawesome-pro-7.3.1-web/css/all.min.css "archive/cube-brand-design-system/vendor/fontawesome/css/"
+#   cp fontawesome-pro-7.3.1-web/webfonts/*.woff2 "archive/cube-brand-design-system/vendor/fontawesome/webfonts/"
+archive/cube-brand-design-system/vendor/

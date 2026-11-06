@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<!-- @template name="PageHeader Demo" description="Interactive PageHeader patterns — Workflow/secondary page level and Integration Overview — built entirely from the real PageHeader, Button, Badge, and SegmentedButton components." -->
+<helmet>
+  <script src="./ds-base.js"></script>
+  <style>
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:'DM Sans',sans-serif; background:#fff; padding:40px; min-height:100vh; }
+    .section-label { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#98A2B3; margin:32px 0 10px; }
+    .section-label:first-of-type { margin-top:0; }
+    .canvas { width:640px; background:#F5F7FA; border-radius:16px; border:1px solid #E4E7EC; padding:24px; }
+    .switcher-row { margin-top:16px; }
+  </style>
+</helmet>
+
+<p class="section-label">Workflow / secondary page level — actions on title row, owner + status below</p>
+<div class="canvas">{{ workflowHeaderEl }}</div>
+<div class="switcher-row">{{ statusSwitcherEl }}</div>
+
+<p class="section-label">Integration overview — actions on breadcrumb row, badges inline with title</p>
+<div class="canvas">{{ integrationHeaderEl }}</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;760px&quot;,&quot;height&quot;:&quot;760px&quot;}}">
+const STATUS_OPTIONS = [
+  { value: 'In Progress', color: 'blue' },
+  { value: 'Completed', color: 'green' },
+  { value: 'Not Started', color: 'yellow' },
+];
+
+class Component extends DCLogic {
+  state = { status: 'In Progress' };
+
+  setStatus(value) {
+    this.setState({ status: value });
+  }
+
+  componentDidMount() {
+    if (!window.FolioDS) {
+      this._dsWait = setInterval(() => {
+        if (window.FolioDS) { clearInterval(this._dsWait); this.forceUpdate(); }
+      }, 60);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this._dsWait) clearInterval(this._dsWait);
+  }
+
+  renderVals() {
+    const F = window.FolioDS;
+    if (!F) return {};
+    const { PageHeader, Button, Badge, SegmentedButton } = F;
+    const statusColor = (STATUS_OPTIONS.find((o) => o.value === this.state.status) || STATUS_OPTIONS[0]).color;
+
+    const workflowHeaderEl = React.createElement(PageHeader, {
+      breadcrumbs: [
+        { label: 'Workflows', icon: React.createElement('i', { className: 'fa-regular fa-list-check' }), onClick: () => {} },
+        { label: 'Close checklist' },
+      ],
+      title: 'Close checklist',
+      owner: 'Nina Graham',
+      status: { label: this.state.status, color: statusColor },
+      actions: React.createElement(React.Fragment, null,
+        React.createElement(Button, { icon: React.createElement('i', { className: 'fa-regular fa-pen' }), 'aria-label': 'Edit', variant: 'ghost-gray' }),
+        React.createElement(Button, { variant: 'primary' }, 'Mark Complete')
+      ),
+    });
+
+    const statusSwitcherEl = React.createElement(SegmentedButton, {
+      options: STATUS_OPTIONS.map((o) => ({ value: o.value, label: o.value })),
+      value: this.state.status,
+      onChange: (v) => this.setStatus(v),
+      size: 'small',
+    });
+
+    const integrationHeaderEl = React.createElement(PageHeader, {
+      breadcrumbs: [
+        { label: 'Integrations', icon: React.createElement('i', { className: 'fa-regular fa-database' }), onClick: () => {} },
+        { label: 'Teal Plantations' },
+      ],
+      title: 'Teal Plantations',
+      badges: React.createElement(React.Fragment, null,
+        React.createElement(Badge, { color: 'red', icon: React.createElement('i', { className: 'fa-regular fa-xmark' }), size: 'md' }, 'Update Mapping'),
+        React.createElement(Badge, { color: 'purple', icon: React.createElement('i', { className: 'fa-solid fa-sparkles' }), size: 'md' }, 'Mapping Assistant')
+      ),
+      topActions: React.createElement(React.Fragment, null,
+        React.createElement(Button, { icon: React.createElement('i', { className: 'fa-regular fa-bell' }), 'aria-label': 'Notifications', variant: 'secondary' }),
+        React.createElement(Button, { variant: 'primary', leadingIcon: React.createElement('i', { className: 'fa-regular fa-file-import' }) }, 'Import')
+      ),
+    });
+
+    return { workflowHeaderEl, statusSwitcherEl, integrationHeaderEl };
+  }
+}
+</script>
+</body>
+</html>

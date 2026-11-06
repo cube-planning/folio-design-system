@@ -1,0 +1,25 @@
+<!doctype html>
+<!-- @dsCard group="Spacing" name="Corner radii" subtitle="xs 2 · sm 4 · md 6 · lg 8 · xl 12 · 2xl 16 · full — aligned to Folio" viewport="700x140" -->
+<html><head><meta charset="utf-8"><title>Radii</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  body { padding: 20px; }
+  .row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px; }
+  .r { background: #fff; box-shadow: 0 2px 6px rgba(10,18,41,.06), inset 0 0 0 1px #E3E8EF; height: 76px; display:flex; flex-direction: column; align-items:center; justify-content:center; gap: 4px; }
+  .n { font-family: var(--font-body); font-weight: 700; font-size: 12px; color: var(--new-blue); }
+  .v { font-family: var(--font-mono); font-size: 10px; color: var(--gray-500); }
+</style>
+</head><body>
+  <div class="row">
+    <!-- Values pulled from the tokens rather than hardcoded, so this card
+         can't drift from colors_and_type.css the way it did before the
+         2026-09-08 realignment. -->
+    <div class="r" style="border-radius: var(--radius-xs)"><span class="n">xs</span><span class="v">2px</span></div>
+    <div class="r" style="border-radius: var(--radius-sm)"><span class="n">sm</span><span class="v">4px</span></div>
+    <div class="r" style="border-radius: var(--radius-md)"><span class="n">md</span><span class="v">6px</span></div>
+    <div class="r" style="border-radius: var(--radius-lg)"><span class="n">lg</span><span class="v">8px</span></div>
+    <div class="r" style="border-radius: var(--radius-xl)"><span class="n">xl</span><span class="v">12px</span></div>
+    <div class="r" style="border-radius: var(--radius-2xl)"><span class="n">2xl</span><span class="v">16px</span></div>
+    <div class="r" style="border-radius: var(--radius-full)"><span class="n">full</span><span class="v">9999px</span></div>
+  </div>
+</body></html>

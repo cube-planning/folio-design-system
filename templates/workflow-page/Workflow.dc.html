@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<!-- @template name="Workspace Template: Workflow" description="Workflows list — stat cards, filter bar, and a shared table with User/Progress/Status cells on the App Shell." -->
+<!-- @built-against design-sync 2026-08-19 (see github.md); last verified 2026-08-25 -->
+<helmet>
+  <script src="./ds-base.js"></script>
+  <script src="./_sidebar-icons.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+    .fa-solid::before,.fa-regular::before,.fa-brands::before,.fa-light::before,.fa-thin::before,.fa-duotone::before { content:var(--fa) !important; }
+    body { font-family:'DM Sans',sans-serif; background:#F5F7FA; height:100vh; overflow:hidden; color:#222B3A; }
+    a { text-decoration:none; color:inherit; }
+    .app-shell { display:flex; height:100vh; }
+    .sb { width:255px; min-width:255px; padding:8px; display:flex; flex-direction:column; height:100vh; transition:width .2s ease,min-width .2s ease; overflow:hidden; }
+    .sb.col { width:64px; min-width:64px; }
+    .sb-card { background:#fff; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06); flex:1; display:flex; flex-direction:column; overflow:hidden; }
+    .sb-hdr { height:48px; padding:16px 12px 0 16px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; white-space:nowrap; }
+    .sb.col .sb-hdr { flex-direction:column; height:auto; justify-content:center; align-items:center; gap:8px; padding:12px 0 8px; }
+    .logo-wm { display:flex; align-items:center; }
+    .logo-wm img { height:28px; width:auto; display:block; }
+    .logo-ic { display:none; align-items:center; justify-content:center; }
+    .logo-ic img { height:28px; width:auto; display:block; }
+    .sb.col .logo-wm { display:none; }
+    .sb.col .logo-ic { display:flex; }
+    .col-btn { width:28px; height:28px; border:none; border-radius:4px; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#4A5567; }
+    .col-btn:hover { background:#F1F4F8; }
+    .cc-left,.cc-right { display:inline-flex; align-items:center; justify-content:center; }
+    .cc-right { display:none; }
+    .sb.col .cc-left { display:none; }
+    .sb.col .cc-right { display:inline-flex; }
+    .sb-nav { flex:1; overflow-y:auto; overflow-x:hidden; padding:24px 0; }
+    .sb-nav::-webkit-scrollbar { width:4px; }
+    .sb-nav::-webkit-scrollbar-thumb { background:#CDD5E0; border-radius:2px; }
+    .dv { height:1px; background:#E3E8EF; margin:8px 0; }
+    .nav-section { display:flex; flex-direction:column; gap:4px; padding:8px 0; }
+    .sb.col .nav-section { padding:0; align-items:center; }
+    .sec { display:flex; align-items:center; gap:4px; height:20px; padding:0 16px; font-family:'DM Sans', sans-serif; font-size:12px; font-weight:400; color:#4A5567; white-space:nowrap; }
+    .sb.col .sec { justify-content:center; padding:0; }
+    .sb.col .sec-lbl,.sb.col .sec-crt { display:none; }
+    .sec-crt { font-size:8px; color:#677489; transition:transform .15s ease; }
+    .sec { cursor:pointer; user-select:none; }
+    .nav-section.collapsed > *:not(.sec) { display:none; }
+    .nav-section.collapsed .sec-crt { transform:rotate(-90deg); }
+    .ni { height:32px; padding:0 24px 0 29px; border-left:3px solid transparent; display:flex; align-items:center; gap:8px; border-radius:0; cursor:pointer; position:relative; white-space:nowrap; color:inherit; width:100%; }
+    .ni.home { padding:0 24px 0 29px; }
+    .nav-section .ni:hover { background:#EFF6FF; border-left-color:#2667D8; }
+    .nav-section .ni:hover .ni-lbl { color:#2667D8; }
+    .nav-section .ni:hover .ni-ic { color:#2667D8; }
+    .nav-section .ni.active { background:#EFF6FF; border-left-color:#2667D8; }
+    .ni.active .ni-lbl { color:#2667D8; font-weight:500; }
+    .ni.active .ni-ic { color:#2667D8; }
+    .ni-ic { width:22px; height:22px; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#4A5567; font-size:15px; }
+    .ni-lbl { font-size:14px; font-weight:400; color:#222B3A; }
+    .sb.col .ni { padding:0; border-left:none; width:36px; justify-content:center; border-radius:4px; }
+    .sb.col .ni-lbl { display:none; }
+    .sb.col .ni:hover::after { content:attr(data-label); position:absolute; left:calc(100% + 8px); top:50%; transform:translateY(-50%); background:#222B3A; color:#fff; font-size:12px; font-weight:500; padding:4px 10px; border-radius:4px; white-space:nowrap; z-index:300; pointer-events:none; }
+    .ni-sub-wrap { padding-left:34px; display:flex; flex-direction:column; }
+    .ni-sub { display:flex; align-items:center; height:32px; padding:4px 16px 4px 18px; border-left:2px solid #E3E8EF; font-size:14px; font-weight:400; color:#222B3A; cursor:pointer; white-space:nowrap; }
+    .ni-sub:hover { background:#EFF6FF; }
+    .sb.col .ni-sub-wrap { display:none; }
+    .apps-wrap { padding:0 8px 16px; }
+    .sb.col .apps-wrap { padding:0 0 8px; }
+    .apps-sec { display:flex; align-items:center; gap:4px; padding:8px 8px 4px; font-family:'DM Sans', sans-serif; font-size:12px; font-weight:400; color:#4A5567; }
+    .sb.col .apps-sec { justify-content:center; padding:8px 0 4px; }
+    .sb.col .apps-sec .sec-lbl,.sb.col .apps-sec .sec-crt { display:none; }
+    .apps-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:4px; padding:4px 0; }
+    .sb.col .apps-grid { display:flex; flex-direction:column; align-items:center; gap:4px; }
+    .app-tile { display:flex; flex-direction:column; align-items:center; gap:4px; padding:4px 0; border-radius:8px; cursor:pointer; position:relative; }
+    .app-tile:hover { background:#EFF6FF; }
+    .app-circ { width:32px; height:32px; border-radius:50%; background:#EEF0F4; border:1.5px solid #DDE1E8; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#4A5567; font-size:13px; }
+    .app-lbl { font-size:10px; font-weight:500; color:#353F4F; text-align:center; line-height:1.2; }
+    .sb.col .app-lbl { display:none; }
+    .main { flex:1; display:flex; flex-direction:column; min-width:0; overflow:hidden; }
+    .topnav { height:80px; background:#F5F7FA; border-bottom:1px solid #E3E8EF; display:flex; align-items:center; justify-content:space-between; padding:0 24px; flex-shrink:0; }
+    .tn-company { display:flex; align-items:center; gap:4px; height:32px; padding:0 12px; background:#fff; border-radius:16px; box-shadow:0 2px 2px #E3E8EF; cursor:pointer; white-space:nowrap; }
+    .tn-company-ic { width:22px; height:22px; display:flex; align-items:center; justify-content:center; color:#173D82; font-size:13px; }
+    .tn-company-name { font-size:12px; font-weight:400; color:#677489; }
+    .tn-chevron { width:22px; height:22px; display:flex; align-items:center; justify-content:center; color:#353F4F; font-size:11px; }
+    .tn-right { display:flex; align-items:center; gap:8px; }
+    .tn-btn { width:32px; height:32px; border-radius:4px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; color:#4A5567; font-size:15px; }
+    .tn-btn:hover { background:#F8FAFC; }
+    .tn-ai-btn { width:28px; height:28px; border:none; border-radius:50%; background:linear-gradient(135deg,#7A5AF8 10%,#9B8AFB 50%,#5925DC 100%); padding:0; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; }
+    .tn-user { display:flex; align-items:center; gap:8px; height:32px; padding:0 8px; background:#fff; border-radius:20px; box-shadow:0 2px 2px #E3E8EF; cursor:pointer; white-space:nowrap; }
+    .tn-user-name { font-size:12px; font-weight:400; color:#677489; }
+    .page-content { flex:1; overflow-y:auto; background:#F5F7FA; padding:24px; }
+    .pg { display:flex; flex-direction:column; gap:8px; }
+    .pg-head { display:flex; align-items:flex-start; justify-content:space-between; }
+    .pg-title-row { display:flex; align-items:center; gap:8px; }
+    .pg-title-ic { color:#222B3A; font-size:24px; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; }
+    .pg-title-ic svg { width:24px; height:24px; }
+    .pg-title { font-size:24px; line-height:32px; font-weight:700; color:#222B3A; }
+    .pg-sub { font-size:14px; color:#677489; margin-top:8px; }
+    .stat-row { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:16px 0; }
+    .stat-card { background:#fff; border:1px solid #E3E8EF; border-radius:12px; box-shadow:0px 1px 2px rgba(16,24,40,.05); padding:16px; display:flex; flex-direction:column; gap:8px; }
+    .stat-lbl { font-size:13px; color:#677489; }
+    .stat-val-row { display:flex; align-items:baseline; gap:4px; }
+    .stat-val { font-size:28px; font-weight:700; color:#222B3A; letter-spacing:-0.01em; }
+    .stat-max { font-size:14px; color:#677489; }
+    .stat-bar { height:6px; border-radius:3px; background:#F2F5F9; overflow:hidden; margin-top:4px; }
+    .stat-bar-fill { height:100%; border-radius:3px; background:#10B283; }
+    .filter-bar { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:8px 0 16px; }
+    .filter-left { display:flex; align-items:center; gap:10px; }
+    .filter-lbl { font-size:13px; color:#677489; font-weight:500; }
+    .filter-pill { display:inline-flex; align-items:center; gap:8px; height:36px; padding:0 12px; border:1px solid #E3E8EF; border-radius:8px; background:#fff; font-size:13px; color:#222B3A; cursor:pointer; }
+    .search-box { display:flex; align-items:center; gap:8px; height:36px; padding:0 12px; border:1px solid #E3E8EF; border-radius:8px; background:#fff; width:280px; color:#97A3B6; font-size:13px; }
+    .search-box input { border:none; outline:none; font-size:13px; color:#222B3A; flex:1; font-family:inherit; }
+    .tbl-name { display:flex; align-items:center; gap:8px; }
+    .tbl-name a { color:#173D82; font-weight:400; font-size:14px; }
+    .tbl-name a:hover { text-decoration:underline; }
+    .apps-grid .app-tile:nth-child(8) { grid-column: 1; }
+    .staff-row { display:flex; align-items:center; justify-content:space-between; padding:0 12px 0 24px; height:40px; flex-shrink:0; }
+    .staff-row-left { display:flex; align-items:center; gap:8px; }
+    .staff-label { font-size:14px; font-weight:400; color:#222B3A; }
+    .staff-more-btn { width:28px; height:28px; border:none; background:transparent; border-radius:4px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#677489; font-size:14px; }
+    .staff-more-btn:hover { background:#F2F5F9; }
+    .sb.col .staff-row { padding:0; justify-content:center; }
+    .sb.col .staff-label { display:none; }
+    .sb.col .staff-more-btn { display:none; }
+    .pg > .pg-sub, .pg-wrap > .pg-sub { margin-top:8px; }
+  </style>
+</helmet>
+
+<div class="app-shell">
+  <aside id="sb" class="sb">
+    <div class="sb-card">
+      <div class="sb-hdr">
+        <div class="logo-wm"><img src="./cube-full-logo-mrp7qtfz-2a8j.svg" alt="Cube"></div>
+        <div class="logo-ic"><img src="./cube-icon-logo-mrp7voek-lnif.svg" alt="Cube"></div>
+        <button class="col-btn" data-action="collapse" aria-label="Toggle sidebar">
+          <span class="cc-left">{{ ic.collapseLeft }}</span><span class="cc-right">{{ ic.collapseRight }}</span>
+        </button>
+      </div>
+      <div class="sb-nav">
+        <div class="ni home" data-label="Home"><div class="ni-ic">{{ ic.home }}</div><span class="ni-lbl">Home</span></div>
+
+        <div class="dv"></div>
+        {{ sideNavEl }}
+      </div>
+      <div style="height:1px;background:#E3E8EF;margin:0"></div>
+      <div class="staff-row">
+        <div class="staff-row-left">
+          <div class="ni-ic" style="color:#4A5567"><i class="fa-regular fa-users"></i></div>
+          <span class="staff-label">Cube Staff</span>
+        </div>
+        <button class="staff-more-btn" aria-label="More options">
+          <i class="fa-solid fa-ellipsis-vertical"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topnav">
+      <div class="tn-company">
+        <div class="tn-company-ic"><i class="fa-solid fa-buildings"></i></div>
+        <span class="tn-company-name">{{ companyName }}</span>
+        <div class="tn-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+      </div>
+      <div class="tn-right">
+        <button class="tn-btn" title="Background tasks">{{ ic.backgroundTasks }}</button>
+        <button class="tn-btn" title="Help"><i class="fa-regular fa-circle-question"></i></button>
+        <button class="tn-ai-btn" data-tip="Cube AI">{{ ic.cubeAiAnalyst }}</button>
+        <div class="tn-user">
+          <x-import component-from-global-scope="FolioDS.Avatar" type="initials" size="xs" name="{{ userName }}" hint-size="24px,24px"></x-import>
+          <span class="tn-user-name">{{ userName }}</span>
+          <div class="tn-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <div class="pg">
+
+        {{ headerEl }}
+        <p class="pg-sub">Orchestrate finance-led processes to keep them structured, visible, and on track.</p>
+
+        <div class="stat-row">
+          <div class="stat-card">
+            <span class="stat-lbl">Total Workflows</span>
+            <div class="stat-val-row"><span class="stat-val">5</span></div>
+            <span class="stat-max" style="margin-top:-4px">across all statuses</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-lbl">In Progress</span>
+            <div class="stat-val-row"><span class="stat-val">3</span><span class="stat-max">/5</span></div>
+            <div class="stat-bar"><div class="stat-bar-fill" style="width:60%"></div></div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-lbl">Complete</span>
+            <div class="stat-val-row"><span class="stat-val">0</span><span class="stat-max">/5</span></div>
+            <div class="stat-bar"><div class="stat-bar-fill" style="width:0%"></div></div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-lbl">Not started</span>
+            <div class="stat-val-row"><span class="stat-val">2</span><span class="stat-max">/5</span></div>
+            <div class="stat-bar"><div class="stat-bar-fill" style="width:40%"></div></div>
+          </div>
+        </div>
+
+        <div class="filter-bar">
+          <div class="filter-left">
+            <span class="filter-lbl">Filter by:</span>
+            <div class="filter-pill">Status: All <i class="fa-solid fa-chevron-down" style="font-size:10px;color:#97A3B6"></i></div>
+          </div>
+          <div class="search-box"><i class="fa-regular fa-search" style="font-size:12px"></i><input type="text" placeholder="Search"></div>
+        </div>
+
+        {{ tableEl }}
+
+      </div>
+    </main>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1600px&quot;,&quot;height&quot;:&quot;1000px&quot;},&quot;companyName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Accuplanner Inc&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;userName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Nina Graham&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+const WF_STATUS_CYCLE = ['Not Started', 'In Progress', 'Completed'];
+const WF_STATUS_COLOR = { 'Not Started': 'neutral', 'In Progress': 'info', 'Completed': 'success' };
+class Component extends DCLogic {
+  state = { workflows: [
+    { id: 1, name: 'FY 2026 Planning', owner: 'Jessica White', tasks: [0, 3], status: 'Not Started' },
+    { id: 2, name: 'Quarter Forecasting Q2 2025', owner: 'Andrew Miller', tasks: [6, 6], status: 'In Progress' },
+    { id: 3, name: 'Scenario Planning', owner: 'Karen Lee', tasks: [2, 7], status: 'In Progress' },
+    { id: 4, name: 'Resource Allocation Strategies', owner: 'Thomas Davis', tasks: [4, 5], status: 'In Progress' },
+    { id: 5, name: 'Risk Assessment and Mitigation', owner: 'Samantha Nelson', tasks: [0, 3], status: 'Not Started' }
+  ] };
+  cycleStatus(id) {
+    this.setState((s) => ({ workflows: s.workflows.map((w) => w.id === id ? { ...w, status: WF_STATUS_CYCLE[(WF_STATUS_CYCLE.indexOf(w.status) + 1) % WF_STATUS_CYCLE.length] } : w) }));
+  }
+  componentDidMount() {
+    this._onClick = (e) => {
+      const secEl = e.target.closest('.sec');
+      if (secEl) { const ns = secEl.closest('.nav-section'); if (ns) ns.classList.toggle('collapsed'); return; }
+      const collapse = e.target.closest('[data-action="collapse"]');
+      if (collapse) { const sb = document.getElementById('sb'); if (sb) sb.classList.toggle('col'); this.setState((st) => ({ sbCollapsed: !(st && st.sbCollapsed) })); }
+    };
+    document.addEventListener('click', this._onClick);
+    if (!window.SIDEBAR_ICONS || !window.FolioDS) {
+      this._iconWait = setInterval(() => { if (window.SIDEBAR_ICONS && window.FolioDS) { clearInterval(this._iconWait); this.forceUpdate(); } }, 60);
+    }
+  }
+  componentWillUnmount() {
+    document.removeEventListener('click', this._onClick);
+    if (this._iconWait) clearInterval(this._iconWait);
+  }
+  get WORKFLOWS() {
+    return this.state.workflows;
+  }
+  renderVals() {
+    const sideNavEl = window.FolioDS ? React.createElement(window.FolioDS.PortalSideBarNav, { expanded: !(this.state && this.state.sbCollapsed), activeItemId: 'workflows', style: { width: '100%' } }) : null;
+    const F = window.FolioDS;
+    const C = F ? F.Cell : null;
+    let tableEl = null;
+    if (F && C) {
+      const nameRender = (v) => React.createElement('div', { className: 'tbl-name' }, React.createElement('i', { className: 'fa-regular fa-layer-group', style: { fontSize: 13, color: '#2667D8' } }), React.createElement('a', { href: './WorkflowTask.dc.html?name=' + encodeURIComponent(v) }, v));
+      const columns = [
+        { key: 'name', label: 'Name', render: nameRender },
+        { key: 'owner', label: 'Owner', render: (v) => React.createElement(C.User, { name: v }) },
+        { key: 'tasks', label: 'Tasks', render: (v) => React.createElement(C.Progress, { value: v[0], max: v[1] }) },
+        { key: 'status', label: 'Status', render: (v, row) => React.createElement('div', { onClick: () => this.cycleStatus(row.id), style: { cursor: 'pointer' } }, React.createElement(C.Status, { color: WF_STATUS_COLOR[v] || 'neutral' }, v)) },
+        { key: '_a', label: '', sortable: false, align: 'right', render: () => React.createElement(C.Actions, null, React.createElement(C.ActionButton, { 'aria-label': 'Duplicate', icon: React.createElement('i', { className: 'fa-regular fa-copy', style: { fontSize: 13 } }) })) }
+      ];
+      tableEl = React.createElement(F.Table, { columns, rows: this.WORKFLOWS });
+    }
+    const ICONS = window.SIDEBAR_ICONS || {};
+    const mk = (k, size) => ICONS[k] ? React.createElement('span', { style: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: size, height: size }, dangerouslySetInnerHTML: { __html: ICONS[k] } }) : null;
+    const ic = { workflowsLg: mk('workflows', 24) };
+    ['home','cubeBI','boards','smartVariance','aiAnalyst','library','scenarios','workflows','dimensions','formulas','tags','integrations','dataExport','users','currencies','auditTrail','tables','backgroundTasks','cubeAiAnalyst','aiPlugin','chatgpt','claude','excel','sheets','slack','teams','slides','powerpoint','collapseLeft','collapseRight'].forEach((k) => { ic[k] = mk(k, 14); });
+    const companyName = this.props.companyName ?? 'Accuplanner Inc';
+    const userName = this.props.userName ?? 'Nina Graham';
+    const initials = userName.trim().split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase();
+    const FH = window.FolioDS;
+    const headerEl = FH ? React.createElement(FH.PageHeader, {
+      icon: React.createElement('i', { className: 'fa-regular fa-layer-group' }),
+      title: 'Workflows',
+      style: { borderBottom: 'none', paddingBottom: 0 },
+      actions: FH ? React.createElement(FH.Button, { variant: 'primary', size: 'large', leadingIcon: React.createElement('i', { className: 'fa-regular fa-plus' }) }, 'Workflow') : null,
+    }) : null;
+
+    return { headerEl, sideNavEl, companyName, userName, initials, ic, tableEl };
+  }
+}
+</script>
+</body>
+</html>

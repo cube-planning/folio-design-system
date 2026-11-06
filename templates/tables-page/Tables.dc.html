@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<!-- @template name="Workspace Template: Tables" description="Tables list screen — Created By/Access filters and a shared-tables list on the App Shell and the real DS Table." -->
+<!-- @built-against design-sync 2026-08-19 (see github.md); last verified 2026-08-25 -->
+<helmet>
+  <script src="./ds-base.js"></script>
+  <script src="./_sidebar-icons.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+    .fa-solid::before,.fa-regular::before,.fa-brands::before,.fa-light::before,.fa-thin::before,.fa-duotone::before { content:var(--fa) !important; }
+    body { font-family:'DM Sans',sans-serif; background:#F5F7FA; height:100vh; overflow:hidden; color:#222B3A; }
+    a { text-decoration:none; color:inherit; }
+    .app-shell { display:flex; height:100vh; }
+    .sb { width:255px; min-width:255px; padding:8px; display:flex; flex-direction:column; height:100vh; transition:width .2s ease,min-width .2s ease; overflow:hidden; }
+    .sb.col { width:64px; min-width:64px; }
+    .sb-card { background:#fff; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06); flex:1; display:flex; flex-direction:column; overflow:hidden; }
+    .sb-hdr { height:48px; padding:16px 12px 0 16px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; white-space:nowrap; }
+    .sb.col .sb-hdr { flex-direction:column; height:auto; justify-content:center; align-items:center; gap:8px; padding:12px 0 8px; }
+    .logo-wm { display:flex; align-items:center; }
+    .logo-wm img { height:28px; width:auto; display:block; }
+    .logo-ic { display:none; align-items:center; justify-content:center; }
+    .logo-ic img { height:28px; width:auto; display:block; }
+    .sb.col .logo-wm { display:none; }
+    .sb.col .logo-ic { display:flex; }
+    .col-btn { width:28px; height:28px; border:none; border-radius:4px; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#4A5567; }
+    .col-btn:hover { background:#F1F4F8; }
+    .cc-left,.cc-right { display:inline-flex; align-items:center; justify-content:center; }
+    .cc-right { display:none; }
+    .sb.col .cc-left { display:none; }
+    .sb.col .cc-right { display:inline-flex; }
+    .sb-nav { flex:1; overflow-y:auto; overflow-x:hidden; padding:24px 0; }
+    .sb-nav::-webkit-scrollbar { width:4px; }
+    .sb-nav::-webkit-scrollbar-thumb { background:#CDD5E0; border-radius:2px; }
+    .dv { height:1px; background:#E3E8EF; margin:8px 0; }
+    .nav-section { display:flex; flex-direction:column; gap:4px; padding:8px 0; }
+    .sb.col .nav-section { padding:0; align-items:center; }
+    .sec { display:flex; align-items:center; gap:4px; height:20px; padding:0 16px; font-family:'DM Sans', sans-serif; font-size:12px; font-weight:400; color:#4A5567; white-space:nowrap; }
+    .sb.col .sec { justify-content:center; padding:0; }
+    .sb.col .sec-lbl,.sb.col .sec-crt { display:none; }
+    .sec-crt { font-size:8px; color:#677489; transition:transform .15s ease; }
+    .sec { cursor:pointer; user-select:none; }
+    .nav-section.collapsed > *:not(.sec) { display:none; }
+    .nav-section.collapsed .sec-crt { transform:rotate(-90deg); }
+    .ni { height:32px; padding:0 24px 0 29px; border-left:3px solid transparent; display:flex; align-items:center; gap:8px; border-radius:0; cursor:pointer; position:relative; white-space:nowrap; color:inherit; width:100%; }
+    .ni.home { padding:0 24px 0 29px; }
+    .nav-section .ni:hover { background:#EFF6FF; border-left-color:#2667D8; }
+    .nav-section .ni:hover .ni-lbl { color:#2667D8; }
+    .nav-section .ni:hover .ni-ic { color:#2667D8; }
+    .nav-section .ni.active { background:#EFF6FF; border-left-color:#2667D8; }
+    .ni.active .ni-lbl { color:#2667D8; font-weight:500; }
+    .ni.active .ni-ic { color:#2667D8; }
+    .ni-ic { width:22px; height:22px; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#4A5567; font-size:15px; }
+    .ni-lbl { font-size:14px; font-weight:400; color:#222B3A; }
+    .sb.col .ni { padding:0; border-left:none; width:36px; justify-content:center; border-radius:4px; }
+    .sb.col .ni-lbl { display:none; }
+    .sb.col .ni:hover::after { content:attr(data-label); position:absolute; left:calc(100% + 8px); top:50%; transform:translateY(-50%); background:#222B3A; color:#fff; font-size:12px; font-weight:500; padding:4px 10px; border-radius:4px; white-space:nowrap; z-index:300; pointer-events:none; }
+    .ni-sub-wrap { padding-left:42px; display:flex; flex-direction:column; }
+    .ni-sub { display:flex; align-items:center; height:32px; padding:4px 16px 4px 16px; border-left:2px solid #E3E8EF; font-size:14px; font-weight:400; color:#222B3A; cursor:pointer; white-space:nowrap; }
+    .ni-sub:hover { background:#EFF6FF; }
+    .sb.col .ni-sub-wrap { display:none; }
+    .apps-wrap { padding:0 8px 16px; }
+    .sb.col .apps-wrap { padding:0 0 8px; }
+    .apps-sec { display:flex; align-items:center; gap:4px; padding:8px 8px 4px; font-family:'DM Sans', sans-serif; font-size:12px; font-weight:400; color:#4A5567; }
+    .sb.col .apps-sec { justify-content:center; padding:8px 0 4px; }
+    .sb.col .apps-sec .sec-lbl,.sb.col .apps-sec .sec-crt { display:none; }
+    .apps-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:4px; padding:4px 0; }
+    .apps-grid .app-tile:nth-child(8) { grid-column:1; }
+    .sb.col .apps-grid { display:flex; flex-direction:column; align-items:center; gap:4px; }
+    .app-tile { display:flex; flex-direction:column; align-items:center; gap:4px; padding:4px 0; border-radius:8px; cursor:pointer; position:relative; }
+    .app-tile:hover { background:#EFF6FF; }
+    .app-circ { width:32px; height:32px; border-radius:50%; background:#EEF0F4; border:1.5px solid #DDE1E8; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#4A5567; font-size:13px; }
+    .app-lbl { font-size:10px; font-weight:500; color:#353F4F; text-align:center; line-height:1.2; }
+    .sb.col .app-lbl { display:none; }
+    .staff-row { display:flex; align-items:center; justify-content:space-between; padding:0 12px 0 24px; height:40px; flex-shrink:0; }
+    .staff-row-left { display:flex; align-items:center; gap:8px; }
+    .staff-label { font-size:14px; font-weight:400; color:#222B3A; }
+    .staff-more-btn { width:28px; height:28px; border:none; background:transparent; border-radius:4px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#677489; font-size:14px; }
+    .staff-more-btn:hover { background:#F2F5F9; }
+    .sb.col .staff-row { padding:0; justify-content:center; }
+    .sb.col .staff-label { display:none; }
+    .sb.col .staff-more-btn { display:none; }
+    .main { flex:1; display:flex; flex-direction:column; min-width:0; overflow:hidden; }
+    .topnav { height:80px; background:#F5F7FA; border-bottom:1px solid #E3E8EF; display:flex; align-items:center; justify-content:space-between; padding:0 24px; flex-shrink:0; }
+    .tn-company { display:flex; align-items:center; gap:4px; height:32px; padding:0 12px; background:#fff; border-radius:16px; box-shadow:0 2px 2px #E3E8EF; cursor:pointer; white-space:nowrap; }
+    .tn-company-ic { width:22px; height:22px; display:flex; align-items:center; justify-content:center; color:#173D82; font-size:13px; }
+    .tn-company-name { font-size:12px; font-weight:400; color:#677489; }
+    .tn-chevron { width:22px; height:22px; display:flex; align-items:center; justify-content:center; color:#353F4F; font-size:11px; }
+    .tn-right { display:flex; align-items:center; gap:8px; }
+    .tn-btn { width:32px; height:32px; border-radius:4px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; color:#4A5567; font-size:15px; }
+    .tn-btn:hover { background:#F8FAFC; }
+    .tn-ai-btn { width:28px; height:28px; border:none; border-radius:50%; background:linear-gradient(135deg,#7A5AF8 10%,#9B8AFB 50%,#5925DC 100%); padding:0; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; }
+    .tn-user { display:flex; align-items:center; gap:8px; height:32px; padding:0 8px; background:#fff; border-radius:20px; box-shadow:0 2px 2px #E3E8EF; cursor:pointer; white-space:nowrap; }
+    .tn-avatar { width:24px; height:24px; border-radius:12px; background:#10B283; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:#fff; flex-shrink:0; }
+    .tn-user-name { font-size:12px; font-weight:400; color:#677489; }
+    .page-content { flex:1; overflow-y:auto; background:#F5F7FA; padding:24px; }
+    .pg { width:100%; display:flex; flex-direction:column; gap:8px; }
+    .pg-head { display:flex; align-items:flex-start; justify-content:space-between; }
+    .pg-title-row { display:flex; align-items:center; gap:8px; }
+    .pg-title-ic { color:#222B3A; font-size:24px; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; }
+    .pg-title-ic svg { width:24px; height:24px; }
+    .pg-title { font-size:24px; line-height:32px; font-weight:600; color:#222B3A; }
+    .pg-sub { font-size:14px; color:#677489; margin-top:8px; }
+    .filter-bar { display:flex; align-items:center; gap:10px; margin:16px 0; }
+    .filter-lbl { font-size:13px; color:#677489; font-weight:500; }
+    .filter-pill { display:inline-flex; align-items:center; gap:8px; height:36px; padding:0 12px; border:1px solid #E3E8EF; border-radius:8px; background:#fff; font-size:13px; color:#222B3A; cursor:pointer; }
+    .tbl-name a { color:#173D82; font-weight:400; font-size:14px; }
+    .tbl-name a:hover { text-decoration:underline; }
+    .pager { display:flex; align-items:center; justify-content:center; gap:6px; margin-top:8px; }
+    .pager button { width:32px; height:32px; border:1px solid #E3E8EF; background:#fff; border-radius:8px; color:#4A5567; font-size:13px; font-weight:500; cursor:pointer; }
+    .pager button.pg-active { color:#173D82; border-color:#173D82; }
+    .pager button.pg-nav { color:#97A3B6; }
+    .crumbs { display:flex; align-items:center; gap:8px; font-size:13px; color:#4A5567; margin-bottom:8px; }
+    .crumbs a { color:#173D82; }
+    .crumbs a:hover { text-decoration:underline; }
+    .crumbs .sep { color:#97A3B6; font-size:11px; }
+    .crumbs .cur { color:#4A5567; }
+    .detail-head { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:8px; }
+    .detail-title { font-size:24px; line-height:32px; font-weight:600; color:#222B3A; letter-spacing:0; }
+    .detail-meta { display:flex; align-items:center; gap:8px; margin-top:8px; font-size:13px; color:#677489; }
+    .detail-meta b { font-weight:500; color:#4A5567; }
+    .detail-actions { display:flex; align-items:flex-end; gap:8px; align-self:flex-end; }
+    .scen-field { display:flex; flex-direction:column; gap:4px; }
+    .scen-lbl { font-size:12px; font-weight:500; color:#222B3A; }
+    .kebab-btn { width:32px; height:32px; border-radius:8px; border:1px solid #E3E8EF; background:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; color:#4A5567; }
+    .avatar-img { width:20px; height:20px; border-radius:50%; object-fit:cover; flex-shrink:0; }
+    /* ── Scenario bar (Flow 4) ─────────────────────────────────────────── */
+    .scen-bar { display:flex; align-items:center; gap:12px; background:#fff; border:1px solid #E3E8EF; border-radius:12px; padding:11px 16px; margin-bottom:16px; }
+    .scen-bar.scen-locked { background:#FAFAFA; }
+    .scen-bar-lbl { font-size:13px; font-weight:500; color:#4A5567; white-space:nowrap; flex-shrink:0; }
+    .scen-bar-select { flex-shrink:0; width:180px; }
+    .scen-bar-status-wrap { flex:1; min-width:0; display:flex; align-items:center; }
+    .scen-bar-status { display:flex; align-items:center; gap:7px; font-size:13px; white-space:nowrap; overflow:hidden; }
+    .scen-bar-status.up-to-date { color:#027A48; }
+    .scen-bar-status.scen-locked-st { color:#677489; }
+    .scen-bar-acts { display:flex; align-items:center; gap:8px; }
+    /* ── Inline title rename (Flow 4) ───────────────────────────────────── */
+    .detail-title-wrap { display:flex; align-items:center; gap:8px; }
+    .detail-title-edit { cursor:pointer; }
+    .detail-title-edit:hover { text-decoration:underline dotted #97A3B6; }
+    .detail-title-pen { color:#97A3B6; font-size:14px; cursor:pointer; opacity:0; transition:opacity .15s; }
+    .detail-title-wrap:hover .detail-title-pen { opacity:1; }
+    .detail-title-input { font-size:24px; line-height:32px; font-weight:600; color:#222B3A; border:none; border-bottom:2px solid #173D82; outline:none; background:transparent; padding:0; font-family:inherit; min-width:200px; }
+    .edit-overlay { position:fixed; inset:0; background:#94A3B8; z-index:200; display:flex; flex-direction:column; padding:14px; }
+    .edit-card { width:100%; height:100%; background:#fff; border-radius:16px; display:flex; flex-direction:column; overflow:hidden; }
+    .edit-hdr { display:flex; align-items:center; justify-content:space-between; padding:20px 28px; flex-shrink:0; background:#F5F7FA; border-bottom:1px solid #E3E8EF; }
+    .edit-hdr-title { font-size:16px; line-height:24px; font-weight:600; color:#222B3A; }
+    .edit-body { flex:1; overflow:auto; padding:0 28px 28px; }
+    .edit-title-row { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:8px; padding-top:20px; }
+    .edit-fields { display:flex; gap:24px; }
+    .edit-filter-bar { display:flex; align-items:center; gap:12px; margin:16px 0; }
+    .grid-outer { background:#F8FAFC; border-radius:16px; padding:16px; }
+    .grid-wrap { border-radius:8px; overflow:auto; max-height:60vh; }
+    .grid { border-collapse:collapse; width:100%; font-size:13px; }
+    .grid th { background:#F5F7FA; border:1px solid #E3E8EF; padding:8px 10px; text-align:left; font-weight:600; color:#4A5567; white-space:nowrap; position:sticky; top:0; z-index:1; }
+    .grid th.grid-letter-row { top:0; z-index:2; }
+    .grid th.grid-label-row { top:33px; z-index:1; }
+    .grid th .col-letter { font-size:13px; color:#4A5567; font-weight:600; }
+    .grid th .col-label-cell { display:flex; align-items:center; justify-content:space-between; gap:6px; }
+    .grid .type-pill { display:inline-flex; align-items:center; gap:4px; background:#F2F5F9; border:1px solid #E3E8EF; border-radius:9999px; padding:2px 8px; font-size:11px; color:#4A5567; font-weight:600; }
+    .grid td { border:1px solid #E3E8EF; padding:8px 10px; color:#222B3A; white-space:nowrap; background:#fff; }
+    .grid tr:nth-child(1) td { background:#FAFBFC; }
+    .row-num { color:#222B3A; text-align:center; background:#fff; width:32px; }
+    .grid th.row-num { background:#fff; color:#222B3A; text-align:center; }
+    .row-flag { text-align:center; background:#fff; width:28px; color:#97A3B6; cursor:pointer; }
+    .row-flag:hover { color:#D92D20; }
+    .row-flag.disabled { cursor:not-allowed; color:#CDD5E0; }
+    .grid tr.row-flagged td { background:#FFFAEB; }
+    .grid tr.row-flagged td.col-manual { background:#fff; }
+    .grid tr.row-flagged .row-num { background:#fff; color:#222B3A; }
+    .grid tr.row-readonly td { background:#F2F5F9; color:#677489; }
+    .grid tr.row-readonly td.col-manual { background:#fff; color:#222B3A; }
+    .grid tr.row-readonly .row-num { background:#fff; color:#222B3A; }
+    .corner-cell { width:28px; background:#F5F7FA; position:relative; }
+    .corner-cell::after { content:''; position:absolute; inset:0; background:linear-gradient(to top left, transparent calc(50% - .5px), #E3E8EF, transparent calc(50% + .5px)); }
+    .jump-btn { position:absolute; width:20px; height:20px; border-radius:50%; background:#fff; border:1px solid #E3E8EF; color:#4A5567; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:9px; z-index:3; box-shadow:0 1px 2px rgba(16,24,40,.06); }
+    .jump-btn:hover { background:#EFF6FF; color:#173D82; border-color:#C6D3EC; }
+    .jump-btn-col { top:6px; right:6px; }
+    .jump-btn-row { top:6px; left:6px; }
+    .grid th.col-add-btn { display:flex; align-items:center; justify-content:center; gap:6px; height:32px; margin:2px 6px; padding:0 16px; border-radius:8px; font-size:14px; color:#173D82; font-weight:500; cursor:pointer; white-space:nowrap; background:#E6EBF4; box-shadow:0px 1px 3px rgba(16,24,40,.10),0px 1px 2px rgba(16,24,40,.06); position:sticky; right:0; z-index:2; }
+    .grid-add-row { display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 16px; margin-top:12px; color:#173D82; font-size:14px; font-weight:500; cursor:pointer; background:#E6EBF4; border-radius:8px; box-shadow:0px 1px 3px rgba(16,24,40,.10),0px 1px 2px rgba(16,24,40,.06); width:fit-content; }
+    .nt-choice-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; width:100%; margin-top:12px; }
+    .nt-choice-card { border:1px solid #E3E8EF; border-radius:8px; padding:14px; cursor:pointer; background:#fff; }
+    .nt-choice-card.nt-card-selected { border-color:#173D82; background:#EFF6FF; box-shadow:0 0 0 1px #173D82; }
+    .nt-choice-desc { font-size:13px; color:#677489; margin-top:6px; margin-left:28px; line-height:1.4; }
+    .nt-conn-list { display:flex; flex-direction:column; gap:16px; margin-top:20px; }
+    .nt-conn-card { background:#fff; border:1px solid #E3E8EF; border-radius:12px; padding:20px 24px; display:flex; align-items:center; gap:16px; }
+    .nt-conn-avatar { width:44px; height:44px; border-radius:50%; overflow:hidden; flex-shrink:0; background:#F8FAFC; display:flex; align-items:center; justify-content:center; }
+    .nt-conn-avatar img { width:100%; height:100%; object-fit:cover; }
+    .nt-conn-body { flex:1; min-width:0; }
+    .nt-conn-name-row { display:flex; align-items:center; gap:10px; }
+    .nt-conn-name { font-size:16px; font-weight:600; color:#222B3A; }
+    .nt-conn-sub { font-size:13px; color:#677489; margin-top:4px; }
+    .nt-fields-panel { background:#fff; border:1px solid #E3E8EF; border-radius:12px; padding:24px; margin-top:20px; }
+    .nt-fields-panel-hdr { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:16px; gap:16px; }
+    .nt-fields-panel-title { font-size:18px; font-weight:600; color:#222B3A; }
+    .nt-fields-panel-sub { font-size:13px; color:#677489; margin-top:4px; }
+    .map-sub-title { font-size:18px; font-weight:700; color:#222B3A; }
+    .map-sub-desc { font-size:13px; color:#677489; margin:4px 0 20px; }
+    .map-table-wrap { border:1px solid #E3E8EF; border-radius:12px; overflow:hidden; }
+    .map-table { width:100%; border-collapse:collapse; font-size:14px; }
+    .map-table th { background:#F5F7FA; text-align:left; padding:10px 16px; font-size:12px; font-weight:600; color:#4A5567; text-transform:uppercase; border-bottom:1px solid #E3E8EF; }
+    .map-table td { padding:10px 16px; border-bottom:1px solid #F2F5F9; vertical-align:middle; }
+    .map-table tr:last-child td { border-bottom:none; }
+    .map-type-pill { display:inline-flex; align-items:center; gap:6px; border:1px solid #E3E8EF; border-radius:8px; padding:6px 10px; color:#97A3B6; font-size:13px; background:#F8FAFC; width:130px; }
+    .map-del-btn { color:#97A3B6; cursor:pointer; border:none; background:none; font-size:14px; }
+    .map-del-btn:hover { color:#D92D20; }
+  </style>
+</helmet>
+
+<div class="app-shell">
+  <aside id="sb" class="sb">
+    <div class="sb-card">
+      <div class="sb-hdr">
+        <div class="logo-wm"><img src="./cube-full-logo-mrp7qtfz-2a8j.svg" alt="Cube"></div>
+        <div class="logo-ic"><img src="./cube-icon-logo-mrp7voek-lnif.svg" alt="Cube"></div>
+        <button class="col-btn" data-action="collapse" aria-label="Toggle sidebar">
+          <span class="cc-left">{{ ic.collapseLeft }}</span><span class="cc-right">{{ ic.collapseRight }}</span>
+        </button>
+      </div>
+      <div class="sb-nav">
+        <div class="ni home" data-label="Home"><div class="ni-ic">{{ ic.home }}</div><span class="ni-lbl">Home</span></div>
+        <div class="dv"></div>
+        {{ sideNavEl }}
+      </div>
+      <div style="height:1px;background:#E3E8EF;margin:0"></div>
+      <div class="staff-row">
+        <div class="staff-row-left">
+          <div class="ni-ic" style="color:#4A5567"><i class="fa-regular fa-users"></i></div>
+          <span class="staff-label">Cube Staff</span>
+        </div>
+        <button class="staff-more-btn" aria-label="More options">
+          <i class="fa-solid fa-ellipsis-vertical"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topnav">
+      <div class="tn-company">
+        <div class="tn-company-ic"><i class="fa-solid fa-buildings"></i></div>
+        <span class="tn-company-name">{{ companyName }}</span>
+        <div class="tn-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+      </div>
+      <div class="tn-right">
+        <button class="tn-btn" title="Background tasks">{{ ic.backgroundTasks }}</button>
+        <button class="tn-btn" title="Help"><i class="fa-regular fa-circle-question"></i></button>
+        <button class="tn-ai-btn" data-tip="Cube AI">{{ ic.cubeAiAnalyst }}</button>
+        <div class="tn-user">
+          <x-import component-from-global-scope="FolioDS.Avatar" type="initials" size="xs" name="{{ userName }}" hint-size="24px,24px"></x-import>
+          <span class="tn-user-name">{{ userName }}</span>
+          <div class="tn-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <sc-if value="{{ isListView }}" hint-placeholder-val="{{ true }}">
+      <div class="pg">
+
+        {{ headerListEl }}
+        <p class="pg-sub"><span style="color: rgb(74, 85, 103); font-family: &quot;DM Sans&quot;, Arial, sans-serif; font-size: 16px; background-color: #FFFFFF00">Keep line-item detail like rosters, contracts, and projects connected to your models.</span></p>
+
+        <div class="filter-bar">
+          <span class="filter-lbl">Filter by:</span>
+          <div class="filter-pill">Created By: All <i class="fa-solid fa-chevron-down" style="font-size:10px;color:#97A3B6"></i></div>
+          <div class="filter-pill">Access: All <i class="fa-solid fa-chevron-down" style="font-size:10px;color:#97A3B6"></i></div>
+        </div>
+
+        {{ tableEl }}
+
+        <div class="pager">
+          <button class="pg-nav"><i class="fa-solid fa-chevron-left" style="font-size:11px"></i></button>
+          <button class="pg-active">1</button>
+          <button>2</button>
+          <button>3</button>
+          <button class="pg-nav"><i class="fa-solid fa-chevron-right" style="font-size:11px"></i></button>
+        </div>
+
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ isDetailView }}" hint-placeholder-val="{{ false }}">
+      <div class="pg">
+        {{ headerDetailEl }}
+        <div class="detail-meta">
+          <sc-if value="{{ activeTable.isSynced }}" hint-placeholder-val="{{ true }}"><img class="avatar-img" src="{{ activeTable.logo }}" alt="{{ activeTable.by }}"></sc-if>
+          <sc-if value="{{ activeTable.notSynced }}" hint-placeholder-val="{{ false }}"><x-import component-from-global-scope="FolioDS.Avatar" type="initials" size="xs" name="{{ activeTable.by }}" hint-size="20px,20px"></x-import></sc-if>
+          <sc-if value="{{ activeTable.isSynced }}" hint-placeholder-val="{{ true }}"><span><b>{{ activeTable.source }}</b> · Last Import {{ activeTable.imported }}</span></sc-if>
+          <sc-if value="{{ activeTable.notSynced }}" hint-placeholder-val="{{ false }}"><span>Created by <b>{{ activeTable.by }}</b> · Last modified {{ activeTable.modified }}</span></sc-if>
+        </div>
+
+        <div class="{{ scenarioBarClass }}">
+          <span class="scen-bar-lbl">Scenario</span>
+          <div class="scen-bar-select">
+            <x-import component-from-global-scope="FolioDS.Select" size="large" options="{{ scenarioOptions }}" value="{{ activeTable.scenario }}" hint-size="180px,36px"></x-import>
+          </div>
+          <div class="scen-bar-status-wrap">
+            <sc-if value="{{ isScenarioLocked }}" hint-placeholder-val="{{ true }}">
+              <div class="scen-bar-status scen-locked-st">
+                <i class="fa-solid fa-lock" style="font-size:12px"></i>
+                <span>Locked by Liam Bennett · May 06, 2024 at 12:05 pm</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{ isScenarioUnlocked }}" hint-placeholder-val="{{ false }}">
+              <div class="scen-bar-status up-to-date">
+                <i class="fa-solid fa-circle-check" style="font-size:13px"></i>
+                <span>Up to date · Last Import May 06, 2024 at 12:05 pm</span>
+              </div>
+            </sc-if>
+          </div>
+          <div class="scen-bar-acts">
+            <x-import component-from-global-scope="FolioDS.Button" variant="secondary" size="large" onClick="{{ openEdit }}" hint-size="80px,32px"><i class="fa-regular fa-pen" style="margin-right:6px"></i>Edit</x-import>
+            <x-import component-from-global-scope="FolioDS.Button" variant="ghost-gray" size="large" aria-label="Toggle lock" icon="{{ kebabIcon }}" onClick="{{ toggleScenarioLock }}" hint-size="32px,32px"></x-import>
+          </div>
+        </div>
+
+        {{ detailTableEl }}
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ isSourceView }}" hint-placeholder-val="{{ false }}">
+      <div class="pg">
+        {{ headerSourceEl }}
+        <div class="nt-conn-list">
+          <sc-for list="{{ ntConnections }}" as="conn" hint-placeholder-count="2">
+          <div class="nt-conn-card">
+            <div class="nt-conn-avatar"><img src="{{ conn.logo }}" alt="{{ conn.name }}"></div>
+            <div class="nt-conn-body">
+              <div class="nt-conn-name-row">
+                <span class="nt-conn-name">{{ conn.name }}</span>
+                <x-import component-from-global-scope="FolioDS.Badge" color="green" type="soft" size="sm" hint-size="140px,22px"><i class="fa-solid fa-circle-check" style="font-size:10px;margin-right:4px"></i>Last Import complete</x-import>
+              </div>
+              <div class="nt-conn-sub">{{ conn.sub }}</div>
+            </div>
+            <x-import component-from-global-scope="FolioDS.Button" variant="primary" size="large" onClick="{{ conn.onConnect }}" hint-size="100px,36px">Connect</x-import>
+          </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ isNewTableView }}" hint-placeholder-val="{{ false }}">
+      <div class="pg">
+        {{ headerNewEl }}
+
+        <x-import component-from-global-scope="FolioDS.Stepper" steps="{{ ntSteps }}" pitch="{{ ntStepperPitch }}" align="center" hint-size="568px,71px"></x-import>
+
+        <div class="nt-conn-card">
+          <div class="nt-conn-avatar"><img src="{{ ntSelectedSource.logo }}" alt="{{ ntSelectedSource.name }}"></div>
+          <div class="nt-conn-body">
+            <div class="nt-conn-name-row">
+              <span class="nt-conn-name">{{ ntSelectedSource.name }}</span>
+              <x-import component-from-global-scope="FolioDS.Badge" color="green" type="soft" size="sm" hint-size="140px,22px"><i class="fa-solid fa-circle-check" style="font-size:10px;margin-right:4px"></i>Last Import complete</x-import>
+            </div>
+            <div class="nt-conn-sub">{{ ntSelectedSource.sub }}</div>
+          </div>
+        </div>
+
+        <div class="nt-fields-panel">
+          <div class="nt-fields-panel-hdr">
+            <div>
+              <div class="nt-fields-panel-title">Select source system fields</div>
+              <div class="nt-fields-panel-sub">Choose which fields to bring into this table. You'll map them to columns in the next step.</div>
+            </div>
+            <x-import component-from-global-scope="FolioDS.Button" variant="primary" size="large" disabled="{{ ntNextDisabled }}" onClick="{{ ntOpenMapping }}" hint-size="90px,36px">Next<i class="fa-regular fa-arrow-right" style="margin-left:6px"></i></x-import>
+          </div>
+          {{ ntFieldsTableEl }}
+        </div>
+      </div>
+      </sc-if>
+    </main>
+  </div>
+</div>
+
+<sc-if value="{{ ntChooseOpen }}" hint-placeholder-val="{{ false }}">
+<x-import component-from-global-scope="FolioDS.Modal" open="{{ true }}" title="New Table" subtitle="How do you want to start" onClose="{{ ntCancel }}" footer="{{ ntChooseFooter }}" hint-size="600px,300px">
+  <div class="nt-choice-grid">
+    <div class="nt-choice-card {{ ntBankCardClass }}" onClick="{{ ntPickBank }}">
+      <x-import component-from-global-scope="FolioDS.Radio" name="nt-start" value="bank" selected="{{ ntIsBank }}" label="Blank table" hint-size="120px,20px"></x-import>
+      <p class="nt-choice-desc">View columns and roll manually in cube</p>
+    </div>
+    <div class="nt-choice-card {{ ntSourceCardClass }}" onClick="{{ ntPickSource }}">
+      <x-import component-from-global-scope="FolioDS.Radio" name="nt-start" value="source" selected="{{ ntIsSource }}" label="From a data source" hint-size="180px,20px"></x-import>
+      <p class="nt-choice-desc">Create the table from a live connection here. Rows and columns come from the source.</p>
+    </div>
+  </div>
+</x-import>
+</sc-if>
+
+<sc-if value="{{ mapOpen }}" hint-placeholder-val="{{ false }}">
+<div class="edit-overlay">
+  <div class="edit-card">
+    <div class="edit-hdr">
+      <span class="edit-hdr-title">Edit Mode</span>
+      <div style="display:flex;gap:8px">
+        <x-import component-from-global-scope="FolioDS.Button" variant="secondary" size="large" onClick="{{ closeMapping }}" hint-size="90px,32px">Cancel</x-import>
+        <x-import component-from-global-scope="FolioDS.Button" variant="primary" size="large" onClick="{{ reviewMapping }}" hint-size="150px,32px">Review Mapping<i class="fa-regular fa-arrow-right" style="margin-left:6px"></i></x-import>
+      </div>
+    </div>
+    <div class="edit-body">
+      <div style="padding-top:20px">
+        <div class="map-sub-title">Optional: Adjust Table Column Name</div>
+        <div class="map-sub-desc">Column names and types are pre-filled based on the source field. Edit any that need adjusting.</div>
+        <div class="map-table-wrap">
+          <table class="map-table">
+            <thead><tr><th>Source Field Name</th><th>Table Column Name</th><th>Column Type</th><th></th></tr></thead>
+            <tbody>
+              <sc-for list="{{ ntSelectedFields }}" as="f" hint-placeholder-count="6">
+              <tr>
+                <td>{{ f.label }}</td>
+                <td><x-import component-from-global-scope="FolioDS.Input" value="{{ f.colName }}" onChange="{{ f.onColNameChange }}" hint-size="220px,40px"></x-import></td>
+                <td><span class="map-type-pill">{{ f.typeIcon }} {{ f.typeLabel }}<i class="fa-solid fa-chevron-down" style="font-size:10px;margin-left:auto"></i></span></td>
+                <td><button class="map-del-btn" onClick="{{ f.onRemove }}"><i class="fa-regular fa-trash-can"></i></button></td>
+              </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ editOpen }}" hint-placeholder-val="{{ false }}">
+<div class="edit-overlay">
+  <div class="edit-card">
+    <div class="edit-hdr">
+      <span class="edit-hdr-title">Edit Mode</span>
+      <div style="display:flex;gap:8px">
+        <x-import component-from-global-scope="FolioDS.Button" variant="secondary" size="large" onClick="{{ closeEdit }}" hint-size="90px,32px">Cancel</x-import>
+        <x-import component-from-global-scope="FolioDS.Button" variant="primary" size="large" onClick="{{ closeEdit }}" hint-size="80px,32px">Save</x-import>
+      </div>
+    </div>
+    <div class="edit-body">
+      <div class="edit-title-row">
+        <div>
+          <div class="detail-title">{{ activeTable.name }}</div>
+          <div class="detail-meta">
+            <sc-if value="{{ activeTable.isSynced }}" hint-placeholder-val="{{ true }}"><img class="avatar-img" src="{{ activeTable.logo }}" alt="{{ activeTable.by }}"></sc-if>
+            <sc-if value="{{ activeTable.notSynced }}" hint-placeholder-val="{{ false }}"><x-import component-from-global-scope="FolioDS.Avatar" type="initials" size="xs" name="{{ activeTable.by }}" hint-size="20px,20px"></x-import></sc-if>
+            <sc-if value="{{ activeTable.isSynced }}" hint-placeholder-val="{{ true }}"><span><b>{{ activeTable.source }}</b> · Last Import {{ activeTable.imported }}</span></sc-if>
+            <sc-if value="{{ activeTable.notSynced }}" hint-placeholder-val="{{ false }}"><span>Created by <b>{{ activeTable.by }}</b> · Last modified {{ activeTable.modified }}</span></sc-if>
+            <sc-if value="{{ activeTable.isSynced }}" hint-placeholder-val="{{ true }}"><x-import component-from-global-scope="FolioDS.Button" variant="subtle-blue" size="small" hint-size="110px,28px"><i class="fa-regular fa-arrows-rotate" style="margin-right:6px"></i>Get Latest Data</x-import></sc-if>
+          </div>
+        </div>
+        <div class="edit-fields">
+          <div class="scen-field" style="width:220px">
+            <span class="scen-lbl">Save to Scenarios<span style="color:#D92D20">*</span></span>
+            <div class="filter-pill" style="width:100%;justify-content:space-between;height:36px">{{ activeTable.scenariosText }} <i class="fa-solid fa-chevron-down" style="font-size:10px;color:#97A3B6"></i></div>
+          </div>
+          <div class="scen-field" style="width:200px">
+            <span class="scen-lbl">Access<span style="color:#D92D20">*</span></span>
+            <x-import component-from-global-scope="FolioDS.Select" size="large" options="{{ accessOptions }}" value="{{ activeTable.access }}" hint-size="200px,36px"></x-import>
+          </div>
+        </div>
+      </div>
+
+      <div class="edit-filter-bar">
+        <span class="filter-lbl">Filter by:</span>
+        <div class="filter-pill">Source Status: All <i class="fa-solid fa-chevron-down" style="font-size:10px;color:#97A3B6"></i></div>
+        <x-import component-from-global-scope="FolioDS.Button" variant="ghost-blue" size="large" disabled="{{ true }}" hint-size="110px,32px"><i class="fa-regular fa-trash-can" style="margin-right:6px"></i>Delete Row</x-import>
+      </div>
+
+      {{ editGridEl }}
+    </div>
+  </div>
+</div>
+</sc-if>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1600px&quot;,&quot;height&quot;:&quot;1000px&quot;},&quot;companyName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Accuplanner Inc&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;userName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Nina Graham&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+class Component extends DCLogic {
+  state = { view: 'list', editOpen: false, activeIdx: 0, rows: null, customTables: [],
+    scenarioLocked: false, titleEditing: false, titleDraft: '', customTitles: {},
+    nt: { chooseOpen: false, start: 'source', sourceId: null, mapOpen: false, fields: {}, colNames: {} } };
+  NT_SOURCES = [
+    { id: 'paylocity', name: 'Paylocity', logo: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44"%3E%3Ccircle cx="22" cy="22" r="22" fill="%23005C87"/%3E%3Ctext x="22" y="28" font-family="DM Sans,Arial,sans-serif" font-size="20" font-weight="700" fill="%23fff" text-anchor="middle"%3EP%3C/text%3E%3C/svg%3E', sub: 'Cube Universal Connect \u2022 Last Import Sep 20, 2026 at 09:15 am' },
+    { id: 'quickbooks', name: 'QuickBooks', logo: './quickbooks-logo.png', sub: 'Cube Universal Connect \u2022 Last Import May 06, 2024 at 12:05 pm' }
+  ];
+  NT_FIELDS = [
+    { key: 'id', label: 'Employee ID', type: 'text' },
+    { key: 'name', label: 'Employee Name', type: 'text' },
+    { key: 'dept', label: 'Department', type: 'text' },
+    { key: 'title', label: 'Title', type: 'text' },
+    { key: 'salary', label: 'Annual Salary', type: 'numeric' },
+    { key: 'start', label: 'Start Dates', type: 'date' },
+    { key: 'status', label: 'Status', type: 'text' }
+  ];
+  updateNt(patch) { this.setState((s) => ({ nt: { ...s.nt, ...patch } })); }
+  ntOpenChoose() { this.setState({ nt: { chooseOpen: true, start: 'source', sourceId: null, mapOpen: false, fields: {}, colNames: {} } }); }
+  ntCancel() { this.updateNt({ chooseOpen: false }); }
+  ntPickBank() { this.updateNt({ start: 'bank' }); }
+  ntPickSource() { this.updateNt({ start: 'source' }); }
+  ntChooseNext() {
+    if (this.state.nt.start !== 'source') return;
+    this.updateNt({ chooseOpen: false });
+    this.setState({ view: 'source' });
+  }
+  ntConnectSource(id) {
+    this.updateNt({ sourceId: id });
+    this.setState({ view: 'newtable' });
+  }
+  ntToggleField(key) {
+    this.setState((s) => ({ nt: { ...s.nt, fields: { ...s.nt.fields, [key]: !s.nt.fields[key] } } }));
+  }
+  ntOpenMapping() {
+    this.setState((s) => {
+      const colNames = { ...s.nt.colNames };
+      this.NT_FIELDS.forEach((f) => { if (s.nt.fields[f.key] && colNames[f.key] === undefined) colNames[f.key] = f.label; });
+      return { nt: { ...s.nt, mapOpen: true, colNames } };
+    });
+  }
+  closeMapping() { this.updateNt({ mapOpen: false }); }
+  ntSetColName(key, v) { this.setState((s) => ({ nt: { ...s.nt, colNames: { ...s.nt.colNames, [key]: v } } })); }
+  ntRemoveField(key) { this.setState((s) => ({ nt: { ...s.nt, fields: { ...s.nt.fields, [key]: false } } })); }
+  reviewMapping() {
+    const nt = this.state.nt;
+    const selected = this.NT_FIELDS.filter((f) => nt.fields[f.key]);
+    const cols = selected.map((f) => ({ key: f.key, label: nt.colNames[f.key] || f.label, align: f.type === 'numeric' ? 'right' : undefined, mono: f.type === 'numeric' }));
+    const source = this.NT_SOURCES.find((s) => s.id === nt.sourceId);
+    const name = source ? source.name + ' Table' : 'New Table';
+    const table = { name, access: 'Table Managers Only', modified: 'Just now', by: this.props.userName ?? 'Nina Graham', cols, rows: [], isSynced: true, source: source ? source.name + ' • Cube Universal Connect' : '', imported: 'Just now', logo: source ? source.logo : '' };
+    this.setState((s) => ({ customTables: [...s.customTables, table], view: 'detail', activeName: name, rows: null,
+      nt: { chooseOpen: false, start: 'source', sourceId: null, mapOpen: false, fields: {}, colNames: {} } }));
+  }
+  componentDidMount() {
+    this._onClick = (e) => {
+      const secEl = e.target.closest('.sec');
+      if (secEl) { const ns = secEl.closest('.nav-section'); if (ns) ns.classList.toggle('collapsed'); return; }
+      const collapse = e.target.closest('[data-action="collapse"]');
+      if (collapse) { const sb = document.getElementById('sb'); if (sb) sb.classList.toggle('col'); this.setState((st) => ({ sbCollapsed: !(st && st.sbCollapsed) })); return; }
+      const goList = e.target.closest('[data-action="go-list"]');
+      if (goList) { e.preventDefault(); this.setState({ view: 'list' }); return; }
+    };
+    this._onKeyDown = (e) => {
+      if (!this.state.titleEditing) return;
+      if (e.key === 'Enter') { e.preventDefault(); this.saveTitleRename(); }
+      if (e.key === 'Escape') { e.preventDefault(); this.setState({ titleEditing: false }); }
+    };
+    document.addEventListener('click', this._onClick);
+    document.addEventListener('keydown', this._onKeyDown);
+    if (!window.SIDEBAR_ICONS || !window.FolioDS) {
+      this._iconWait = setInterval(() => { if (window.SIDEBAR_ICONS && window.FolioDS) { clearInterval(this._iconWait); this.forceUpdate(); } }, 60);
+    }
+  }
+  componentWillUnmount() {
+    document.removeEventListener('click', this._onClick);
+    document.removeEventListener('keydown', this._onKeyDown);
+    if (this._iconWait) clearInterval(this._iconWait);
+  }
+  get TABLES() {
+    return [
+      { name: 'Employee Roster', access: 'Table Owners Only', modified: 'Mar 31, 2026 at 05:41 pm', by: 'Olivia Harper' },
+      { name: 'Compensation Assumptions', access: 'Table Owners Only', modified: 'Mar 27, 2026 at 10:41 am', by: 'Liam Bennett' },
+      { name: 'Opportunities', access: 'All Users', modified: 'Jan 08, 2026 at 01:02 pm', by: 'Sophia Clarke' },
+      { name: 'Project Deadlines', access: 'All Users', modified: 'Jan 06, 2026 at 11:02 am', by: 'Ethan Foster' },
+      { name: 'Budget Allocations', access: 'Table Owners Only', modified: 'Jan 02, 2026 at 2:30 pm', by: 'Ava Morgan' },
+      { name: 'Client Feedback', access: 'All Users', modified: 'Jan 02, 2026 at 9:45 am', by: 'Noah Mitchell' },
+      { name: 'Marketing Strategies', access: 'All Users', modified: 'Dec 30, 2025 at 6:00 pm', by: 'Isabella Reynolds' },
+      { name: 'Training Sessions', access: 'All Users', modified: 'Dec 29, 2025 at 8:20 am', by: 'Mason Hayes' },
+      { name: 'Performance Metrics', access: 'Table Owners Only', modified: 'Dec 17, 2025 at 1:10 pm', by: 'Mia Simmons' },
+      { name: 'Risk Assessments', access: 'Table Owners Only', modified: 'Dec 08, 2025 at 4:50 pm', by: 'Lucas Turner' },
+      { name: 'Resource Management', access: 'All Users', modified: 'Dec 04, 2025 at 7:35 am', by: 'Amelia Cooper' },
+      { name: 'Sales Forecasts', access: 'Table Owners Only', modified: 'Dec 01, 2025 at 12:05 pm', by: 'Alexander Reed' },
+      { name: 'Product Roadmap', access: 'All Users', modified: 'Nov 30, 2025 at 10:14 am', by: 'Charlotte Brooks' }
+    ];
+  }
+  get DATASETS() {
+    return {
+      'Employee Roster': {
+        title: 'Paylocity Employee Roster', isSynced: true, source: 'Paylocity \u2022 Cube Universal Connect', imported: 'Jun 24, 2026 at 11:10 am', by: 'Paylocity', logo: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44"%3E%3Ccircle cx="22" cy="22" r="22" fill="%23005C87"/%3E%3Ctext x="22" y="28" font-family="DM Sans,Arial,sans-serif" font-size="20" font-weight="700" fill="%23fff" text-anchor="middle"%3EP%3C/text%3E%3C/svg%3E',
+        cols: [
+          { key: 'sourceStatus', label: 'Source Status', badge: 'sync' }, { key: 'id', label: 'Employee ID' }, { key: 'name', label: 'Employee Name' },
+          { key: 'dept', label: 'Department' }, { key: 'title', label: 'Title' }, { key: 'salary', label: 'Annual Salary', align: 'right', mono: true },
+          { key: 'start', label: 'Start Date' }, { key: 'status', label: 'Status', badge: true }, { key: 'bonus', label: 'Bonus %', align: 'right', mono: true }
+        ],
+        rows: [
+          { sourceStatus: 'Synced', id: 'A002', name: 'John Osborne', dept: 'Engineering', title: 'Software Engineer', salary: '115,000.00', start: '01/29/2016', status: 'Active', bonus: '7.2%' },
+          { sourceStatus: 'Synced', id: 'A003', name: 'Emily Chen', dept: 'Sales', title: 'Product Manager', salary: '92,500.00', start: '03/18/2016', status: 'Active', bonus: '0.0%' },
+          { sourceStatus: 'Synced', id: 'A004', name: 'Carlos Ramirez', dept: 'Marketing', title: 'Financial Analyst', salary: '145,750.00', start: '11/04/2016', status: 'Active', bonus: '5.5%' },
+          { sourceStatus: 'Synced', id: 'A005', name: 'Aisha Patel', dept: 'Human Resources', title: 'Sales Director', salary: '67,300.00', start: '02/23/2017', status: 'Active', bonus: '12.3%' },
+          { sourceStatus: 'Synced', id: 'A006', name: 'Liam O\'Connor', dept: 'Finance', title: 'HR Specialist', salary: '180,000.00', start: '08/15/2017', status: 'Inactive', bonus: '4.6%' },
+          { sourceStatus: 'Synced', id: 'A007', name: 'Nina Kovalenko', dept: 'Customer Support', title: 'Marketing Coordinator', salary: '58,000.00', start: '05/30/2018', status: 'Active', bonus: '10.0%' },
+          { sourceStatus: 'Synced', id: 'A008', name: 'Mohamed Ali', dept: 'Product', title: 'VP of Operations', salary: '133,200.00', start: '10/22/2018', status: 'Active', bonus: '2.2%' },
+          { sourceStatus: 'Synced', id: 'A009', name: 'Sofia Diaz', dept: 'Operations', title: 'Data Analyst', salary: '99,800.00', start: '12/10/2018', status: 'Inactive', bonus: '1.5%' },
+          { sourceStatus: 'Synced', id: 'A010', name: 'Jacob Stein', dept: 'Legal', title: 'Account Executive', salary: '220,000.00', start: '07/07/2019', status: 'Active', bonus: '3.9%' },
+          { sourceStatus: 'Synced', id: 'A011', name: 'Hana Takahashi', dept: 'IT', title: 'Customer Success Manager', salary: '75,000.00', start: '04/19/2019', status: 'Active', bonus: '6.7%' },
+          { sourceStatus: 'Synced', id: 'A012', name: 'Ethan Brooks', dept: 'Research and Development', title: 'UX Designer', salary: '105,500.00', start: '06/16/2019', status: 'Active', bonus: '0.0%' },
+          { sourceStatus: 'Synced', id: 'A013', name: 'Amira Hassan', dept: 'Quality Assurance', title: 'Business Development Representative', salary: '145,000.00', start: '01/03/2020', status: 'Active', bonus: '13.8%' },
+          { sourceStatus: 'Synced', id: 'A014', name: 'Oliver Grant', dept: 'Business Development', title: 'Operations Manager', salary: '82,600.00', start: '03/25/2020', status: 'Active', bonus: '11.1%' },
+          { sourceStatus: 'Synced', id: 'A015', name: 'Maya Singh', dept: 'Supply Chain', title: 'IT Support Specialist', salary: '160,400.00', start: '08/11/2020', status: 'Active', bonus: '9.4%' },
+          { sourceStatus: 'Synced', id: 'A016', name: 'Dmitri Volkov', dept: 'Data Analytics', title: 'Content Strategist', salary: '67,500.00', start: '02/02/2021', status: 'Active', bonus: '0.5%' },
+          { sourceStatus: 'Synced', id: 'A017', name: 'Chloe Martin', dept: 'Public Relations', title: 'Quality Assurance Engineer', salary: '138,300.00', start: '11/30/2021', status: 'Active', bonus: '15.0%' },
+          { sourceStatus: 'Synced', id: 'A018', name: 'Ravi Desai', dept: 'Creative Services', title: 'Graphic Designer', salary: '54,900.00', start: '06/28/2022', status: 'Inactive', bonus: '14.2%' },
+          { sourceStatus: 'Synced', id: 'A019', name: 'Isabella Cruz', dept: 'Compliance', title: 'Digital Marketing Manager', salary: '145,000.00', start: '04/14/2022', status: 'Active', bonus: '0.0%' },
+          { sourceStatus: 'Synced', id: 'A020', name: 'Noah Bennett', dept: 'Technical Support', title: 'Supply Chain Analyst', salary: '110,000.00', start: '09/01/2022', status: 'Active', bonus: '2.8%' },
+          { sourceStatus: 'Synced', id: 'A021', name: 'Fatima Noor', dept: 'Training and Development', title: 'Research Scientist', salary: '75,900.00', start: '10/19/2022', status: 'Active', bonus: '7.9%' },
+          { sourceStatus: 'Manually added', id: 'E-1042', name: 'Marcus Chen', dept: 'Engineering', title: 'UX Designer', salary: '142,500.00', start: '03/15/2021', status: 'Active', bonus: '9.4%' },
+          { sourceStatus: 'Manually added', id: 'E-2087', name: 'Priya Sharma', dept: 'Brand Manager', title: 'Social Media Manager', salary: '98,000.00', start: '11/02/2023', status: 'Active', bonus: '5.0%' }
+        ]
+      },
+      'Compensation Assumptions': {
+        cols: [
+          { key: 'role', label: 'Role' }, { key: 'level', label: 'Level' }, { key: 'base', label: 'Base Salary', align: 'right', mono: true },
+          { key: 'merit', label: 'Merit Increase %', align: 'right', mono: true }, { key: 'bonusTarget', label: 'Bonus Target %', align: 'right', mono: true }, { key: 'effective', label: 'Effective Date' }
+        ],
+        rows: [
+          { role: 'Software Engineer', level: 'L3', base: '110,000.00', merit: '4.0%', bonusTarget: '10%', effective: '01/01/2026' },
+          { role: 'Product Manager', level: 'L4', base: '135,000.00', merit: '3.5%', bonusTarget: '15%', effective: '01/01/2026' },
+          { role: 'Financial Analyst', level: 'L2', base: '85,000.00', merit: '3.0%', bonusTarget: '8%', effective: '01/01/2026' },
+          { role: 'Sales Director', level: 'L5', base: '160,000.00', merit: '5.0%', bonusTarget: '25%', effective: '01/01/2026' },
+          { role: 'HR Specialist', level: 'L2', base: '72,000.00', merit: '3.0%', bonusTarget: '8%', effective: '01/01/2026' },
+          { role: 'Data Analyst', level: 'L3', base: '98,000.00', merit: '4.0%', bonusTarget: '10%', effective: '01/01/2026' }
+        ]
+      },
+      'Opportunities': {
+        cols: [
+          { key: 'deal', label: 'Deal Name' }, { key: 'account', label: 'Account' }, { key: 'stage', label: 'Stage', badge: true },
+          { key: 'amount', label: 'Amount', align: 'right', mono: true }, { key: 'close', label: 'Close Date' }, { key: 'owner', label: 'Owner' }
+        ],
+        rows: [
+          { deal: 'Enterprise Expansion', account: 'Northwind Traders', stage: 'Closed Won', amount: '245,000.00', close: '01/15/2026', owner: 'Sophia Clarke' },
+          { deal: 'Platform Renewal', account: 'Atlas Logistics', stage: 'Negotiation', amount: '88,500.00', close: '02/28/2026', owner: 'Marcus Webb' },
+          { deal: 'Analytics Add-on', account: 'Fenwick Retail', stage: 'Proposal', amount: '42,000.00', close: '03/10/2026', owner: 'Priya Anand' },
+          { deal: 'New Market Pilot', account: 'Bright Harbor', stage: 'Qualified', amount: '120,000.00', close: '04/05/2026', owner: 'Sophia Clarke' },
+          { deal: 'Support Upgrade', account: 'Lindgren & Co', stage: 'Closed Lost', amount: '15,000.00', close: '12/20/2025', owner: 'Marcus Webb' },
+          { deal: 'Multi-year Contract', account: 'Cedar Peak Inc', stage: 'Negotiation', amount: '310,000.00', close: '05/01/2026', owner: 'Priya Anand' }
+        ]
+      },
+      'Project Deadlines': {
+        cols: [
+          { key: 'project', label: 'Project' }, { key: 'owner', label: 'Owner' }, { key: 'dept', label: 'Department' },
+          { key: 'deadline', label: 'Deadline' }, { key: 'priority', label: 'Priority', badge: true }, { key: 'status', label: 'Status', badge: true }
+        ],
+        rows: [
+          { project: 'FY27 Budget Model', owner: 'Ethan Foster', dept: 'Finance', deadline: '09/30/2026', priority: 'High', status: 'In Progress' },
+          { project: 'Headcount Plan Refresh', owner: 'Dana Kim', dept: 'People', deadline: '08/28/2026', priority: 'Medium', status: 'On Track' },
+          { project: 'Vendor Contract Review', owner: 'Marcus Chen', dept: 'Procurement', deadline: '09/15/2026', priority: 'High', status: 'At Risk' },
+          { project: 'Quarterly Board Deck', owner: 'Ethan Foster', dept: 'Finance', deadline: '10/05/2026', priority: 'High', status: 'Not Started' },
+          { project: 'Systems Migration', owner: 'Alex Ferro', dept: 'IT', deadline: '11/01/2026', priority: 'Medium', status: 'On Track' },
+          { project: 'Expense Policy Update', owner: 'Dana Kim', dept: 'People', deadline: '08/20/2026', priority: 'Low', status: 'Completed' }
+        ]
+      },
+      'Budget Allocations': {
+        cols: [
+          { key: 'dept', label: 'Department' }, { key: 'category', label: 'Category' }, { key: 'budget', label: 'Budget', align: 'right', mono: true },
+          { key: 'actual', label: 'Actual', align: 'right', mono: true }, { key: 'variance', label: 'Variance', align: 'right', mono: true }, { key: 'owner', label: 'Owner' }
+        ],
+        rows: [
+          { dept: 'Engineering', category: 'Headcount', budget: '4,200,000.00', actual: '4,050,000.00', variance: '+150,000.00', owner: 'Ava Morgan' },
+          { dept: 'Sales', category: 'Travel & Entertainment', budget: '380,000.00', actual: '410,500.00', variance: '-30,500.00', owner: 'Marcus Webb' },
+          { dept: 'Marketing', category: 'Paid Media', budget: '900,000.00', actual: '875,000.00', variance: '+25,000.00', owner: 'Isabella Reynolds' },
+          { dept: 'G&A', category: 'Software', budget: '210,000.00', actual: '234,000.00', variance: '-24,000.00', owner: 'Ava Morgan' },
+          { dept: 'Product', category: 'Contractors', budget: '150,000.00', actual: '128,000.00', variance: '+22,000.00', owner: 'Mohamed Ali' },
+          { dept: 'Support', category: 'Tools', budget: '60,000.00', actual: '58,200.00', variance: '+1,800.00', owner: 'Noah Bennett' }
+        ]
+      },
+      'Client Feedback': {
+        cols: [
+          { key: 'client', label: 'Client' }, { key: 'date', label: 'Date' }, { key: 'score', label: 'Score', align: 'right', mono: true },
+          { key: 'category', label: 'Category' }, { key: 'status', label: 'Status', badge: true }
+        ],
+        rows: [
+          { client: 'Northwind Traders', date: '01/10/2026', score: '9.2', category: 'Onboarding', status: 'Completed' },
+          { client: 'Atlas Logistics', date: '01/22/2026', score: '6.5', category: 'Reporting', status: 'In Progress' },
+          { client: 'Fenwick Retail', date: '02/03/2026', score: '8.0', category: 'Support', status: 'Completed' },
+          { client: 'Bright Harbor', date: '02/14/2026', score: '4.8', category: 'Integrations', status: 'Overdue' },
+          { client: 'Lindgren & Co', date: '02/27/2026', score: '7.4', category: 'Pricing', status: 'Completed' },
+          { client: 'Cedar Peak Inc', date: '03/05/2026', score: '9.5', category: 'Onboarding', status: 'Completed' }
+        ]
+      },
+      'Marketing Strategies': {
+        cols: [
+          { key: 'campaign', label: 'Campaign' }, { key: 'channel', label: 'Channel' }, { key: 'budget', label: 'Budget', align: 'right', mono: true },
+          { key: 'spend', label: 'Spend', align: 'right', mono: true }, { key: 'roi', label: 'ROI', align: 'right', mono: true }, { key: 'status', label: 'Status', badge: true }
+        ],
+        rows: [
+          { campaign: 'Q1 Demand Gen', channel: 'Paid Search', budget: '120,000.00', spend: '98,400.00', roi: '3.2x', status: 'Completed' },
+          { campaign: 'Analyst Webinar Series', channel: 'Email', budget: '25,000.00', spend: '24,100.00', roi: '2.1x', status: 'Completed' },
+          { campaign: 'Brand Refresh', channel: 'Social', budget: '60,000.00', spend: '45,000.00', roi: '1.4x', status: 'In Progress' },
+          { campaign: 'Partner Co-marketing', channel: 'Events', budget: '80,000.00', spend: '82,300.00', roi: '2.8x', status: 'Completed' },
+          { campaign: 'Retargeting Push', channel: 'Display', budget: '15,000.00', spend: '9,800.00', roi: '1.1x', status: 'Paused' },
+          { campaign: 'Content Hub Launch', channel: 'Organic', budget: '30,000.00', spend: '18,500.00', roi: '4.0x', status: 'In Progress' }
+        ]
+      },
+      'Training Sessions': {
+        cols: [
+          { key: 'session', label: 'Session' }, { key: 'dept', label: 'Department' }, { key: 'date', label: 'Date' },
+          { key: 'attendees', label: 'Attendees', align: 'right', mono: true }, { key: 'status', label: 'Status', badge: true }
+        ],
+        rows: [
+          { session: 'FP&A Fundamentals', dept: 'Finance', date: '01/12/2026', attendees: '18', status: 'Completed' },
+          { session: 'Manager Onboarding', dept: 'People', date: '02/02/2026', attendees: '12', status: 'Completed' },
+          { session: 'Cube Platform Deep Dive', dept: 'All Hands', date: '02/20/2026', attendees: '64', status: 'Completed' },
+          { session: 'Data Privacy Refresher', dept: 'Legal', date: '03/01/2026', attendees: '40', status: 'Not Started' },
+          { session: 'Sales Methodology', dept: 'Sales', date: '03/18/2026', attendees: '22', status: 'Not Started' },
+          { session: 'Leadership Workshop', dept: 'Exec', date: '04/02/2026', attendees: '8', status: 'Not Started' }
+        ]
+      },
+      'Performance Metrics': {
+        cols: [
+          { key: 'metric', label: 'Metric' }, { key: 'dept', label: 'Department' }, { key: 'target', label: 'Target', align: 'right', mono: true },
+          { key: 'actual', label: 'Actual', align: 'right', mono: true }, { key: 'variance', label: 'Variance', align: 'right', mono: true }, { key: 'period', label: 'Period' }
+        ],
+        rows: [
+          { metric: 'Gross Margin', dept: 'Finance', target: '62.0%', actual: '63.4%', variance: '+1.4pp', period: 'Q1 2026' },
+          { metric: 'Net Revenue Retention', dept: 'Sales', target: '110%', actual: '106%', variance: '-4pp', period: 'Q1 2026' },
+          { metric: 'CAC Payback', dept: 'Marketing', target: '14 mo', actual: '16 mo', variance: '-2 mo', period: 'Q1 2026' },
+          { metric: 'Employee Attrition', dept: 'People', target: '8.0%', actual: '6.5%', variance: '+1.5pp', period: 'Q1 2026' },
+          { metric: 'On-time Delivery', dept: 'Operations', target: '95.0%', actual: '92.0%', variance: '-3pp', period: 'Q1 2026' },
+          { metric: 'NPS', dept: 'Support', target: '45', actual: '51', variance: '+6', period: 'Q1 2026' }
+        ]
+      },
+      'Risk Assessments': {
+        cols: [
+          { key: 'risk', label: 'Risk' }, { key: 'category', label: 'Category' }, { key: 'likelihood', label: 'Likelihood', badge: true },
+          { key: 'impact', label: 'Impact', badge: true }, { key: 'owner', label: 'Owner' }, { key: 'status', label: 'Status', badge: true }
+        ],
+        rows: [
+          { risk: 'Key Vendor Concentration', category: 'Operational', likelihood: 'Medium', impact: 'High', owner: 'Lucas Turner', status: 'In Progress' },
+          { risk: 'FX Exposure', category: 'Financial', likelihood: 'High', impact: 'Medium', owner: 'Aisha Patel', status: 'In Progress' },
+          { risk: 'Data Breach', category: 'Security', likelihood: 'Low', impact: 'Critical', owner: 'Alex Ferro', status: 'On Track' },
+          { risk: 'Key Person Dependency', category: 'People', likelihood: 'Medium', impact: 'High', owner: 'Dana Kim', status: 'In Progress' },
+          { risk: 'Customer Concentration', category: 'Commercial', likelihood: 'High', impact: 'High', owner: 'Sophia Clarke', status: 'In Progress' },
+          { risk: 'Regulatory Change', category: 'Compliance', likelihood: 'Medium', impact: 'Medium', owner: 'Isabella Cruz', status: 'On Track' }
+        ]
+      },
+      'Resource Management': {
+        cols: [
+          { key: 'resource', label: 'Resource' }, { key: 'dept', label: 'Department' }, { key: 'allocation', label: 'Allocation %', align: 'right', mono: true },
+          { key: 'project', label: 'Project' }, { key: 'status', label: 'Status', badge: true }
+        ],
+        rows: [
+          { resource: 'Ethan Brooks', dept: 'Product', allocation: '80%', project: 'Analytics Add-on', status: 'Active' },
+          { resource: 'Hana Takahashi', dept: 'IT', allocation: '60%', project: 'Systems Migration', status: 'Active' },
+          { resource: 'Chloe Martin', dept: 'Public Relations', allocation: '40%', project: 'Brand Refresh', status: 'Active' },
+          { resource: 'Jacob Stein', dept: 'Legal', allocation: '25%', project: 'Vendor Contract Review', status: 'Active' },
+          { resource: 'Maya Singh', dept: 'Supply Chain', allocation: '100%', project: 'FY27 Budget Model', status: 'Active' },
+          { resource: 'Noah Bennett', dept: 'Technical Support', allocation: '50%', project: 'Client Feedback Program', status: 'Active' }
+        ]
+      },
+      'Sales Forecasts': {
+        cols: [
+          { key: 'rep', label: 'Rep' }, { key: 'region', label: 'Region' }, { key: 'forecast', label: 'Forecast', align: 'right', mono: true },
+          { key: 'quarter', label: 'Quarter' }, { key: 'confidence', label: 'Confidence', badge: true }, { key: 'status', label: 'Status', badge: true }
+        ],
+        rows: [
+          { rep: 'Marcus Webb', region: 'West', forecast: '1,250,000.00', quarter: 'Q2 2026', confidence: 'High', status: 'Completed' },
+          { rep: 'Priya Anand', region: 'East', forecast: '980,000.00', quarter: 'Q2 2026', confidence: 'Medium', status: 'In Progress' },
+          { rep: 'Sophia Clarke', region: 'North', forecast: '1,600,000.00', quarter: 'Q2 2026', confidence: 'High', status: 'Completed' },
+          { rep: 'Dana Kim', region: 'South', forecast: '720,000.00', quarter: 'Q2 2026', confidence: 'Low', status: 'Not Started' },
+          { rep: 'Alexander Reed', region: 'West', forecast: '1,100,000.00', quarter: 'Q2 2026', confidence: 'Medium', status: 'In Progress' },
+          { rep: 'Noah Mitchell', region: 'East', forecast: '860,000.00', quarter: 'Q2 2026', confidence: 'High', status: 'Completed' }
+        ]
+      },
+      'Product Roadmap': {
+        cols: [
+          { key: 'feature', label: 'Feature' }, { key: 'team', label: 'Team' }, { key: 'quarter', label: 'Quarter' },
+          { key: 'priority', label: 'Priority', badge: true }, { key: 'status', label: 'Status', badge: true }
+        ],
+        rows: [
+          { feature: 'AI Variance Explanations', team: 'Cube AI', quarter: 'Q2 2026', priority: 'High', status: 'In Progress' },
+          { feature: 'Scenario Comparison View', team: 'Planning', quarter: 'Q2 2026', priority: 'High', status: 'In Progress' },
+          { feature: 'Bulk Table Import', team: 'Data', quarter: 'Q3 2026', priority: 'Medium', status: 'Not Started' },
+          { feature: 'Mobile Approvals', team: 'Workflow', quarter: 'Q3 2026', priority: 'Medium', status: 'Not Started' },
+          { feature: 'Custom Badge Colors', team: 'Design System', quarter: 'Q2 2026', priority: 'Low', status: 'In Progress' },
+          { feature: 'Audit Trail Export', team: 'Admin', quarter: 'Q3 2026', priority: 'Medium', status: 'Not Started' }
+        ]
+      }
+    };
+  }
+  openTable(row) {
+    const locked = row.name === 'Employee Roster';
+    this.setState({ view: 'detail', activeName: row.name, rows: null, scenarioLocked: locked, titleEditing: false });
+  }
+  openEdit() { this.setState({ editOpen: true }); }
+  closeEdit() { this.setState({ editOpen: false }); }
+  toggleScenarioLock() { this.setState((s) => ({ scenarioLocked: !s.scenarioLocked })); }
+  startTitleRename() {
+    const activeName = this.state.activeName || 'Employee Roster';
+    const name = this.state.customTitles[activeName] || (this.DATASETS[activeName] ? (this.DATASETS[activeName].title || activeName) : activeName);
+    this.setState({ titleEditing: true, titleDraft: name }, () => {
+      const inp = document.querySelector('.detail-title-input');
+      if (inp) { inp.focus(); inp.select(); }
+    });
+  }
+  saveTitleRename() {
+    const draft = this.state.titleDraft.trim();
+    if (draft) {
+      const activeName = this.state.activeName || 'Employee Roster';
+      this.setState((s) => ({ customTitles: { ...s.customTitles, [activeName]: draft }, titleEditing: false }));
+    } else {
+      this.setState({ titleEditing: false });
+    }
+  }
+  onTitleDraftChange(v) { this.setState({ titleDraft: v }); }
+  deleteRow(i) {
+    this.setState((s) => {
+      const dataset = this.DATASETS[s.activeName || 'Employee Roster'] || this.DATASETS['Employee Roster'];
+      const rows = s.rows || dataset.rows;
+      return { rows: rows.filter((_, idx) => idx !== i) };
+    });
+  }
+  addRow() {
+    this.setState((s) => {
+      const dataset = this.DATASETS[s.activeName || 'Employee Roster'] || this.DATASETS['Employee Roster'];
+      const blank = {}; dataset.cols.forEach((c) => { blank[c.key] = ''; }); if (dataset.cols.some((c) => c.key === 'sourceStatus')) blank.sourceStatus = 'Manually added';
+      return { rows: [...(s.rows || dataset.rows), blank] };
+    });
+  }
+  renderVals() {
+    const sideNavEl = window.FolioDS ? React.createElement(window.FolioDS.PortalSideBarNav, { expanded: !(this.state && this.state.sbCollapsed), activeItemId: 'tables', style: { width: '100%' } }) : null;
+    const F = window.FolioDS;
+    const C = F ? F.Cell : null;
+    let tableEl = null;
+    if (F && C) {
+      const nameRender = (v, row) => React.createElement('div', { className: 'tbl-name' }, React.createElement('a', { href: '#', onClick: (e) => { e.preventDefault(); this.openTable(row); } }, v));
+      const columns = [
+        { key: 'name', label: 'Name', render: nameRender },
+        { key: 'access', label: 'Access' },
+        { key: 'modified', label: 'Last Modified' },
+        { key: 'by', label: 'Created By' },
+        { key: '_a', label: '', sortable: false, align: 'right', render: () => React.createElement(C.Actions, null, React.createElement(C.ActionButton, { 'aria-label': 'Mapping', icon: React.createElement('i', { className: 'fa-solid fa-shuffle', style: { fontSize: 13 } }) })) }
+      ];
+      tableEl = React.createElement(F.Table, { columns, rows: [...this.TABLES, ...this.state.customTables] });
+    }
+    const BADGE_COLORS = {
+      Active: 'green', Completed: 'green', 'On Track': 'green', 'Closed Won': 'green', High: 'green', Synced: 'green',
+      Inactive: 'gray', 'Not Started': 'gray', Low: 'gray', Draft: 'gray',
+      Medium: 'yellow', Pending: 'yellow', 'In Progress': 'yellow', 'At Risk': 'yellow', 'Not in sync': 'yellow', 'Manually added': 'gray',
+      Overdue: 'red', 'Closed Lost': 'red', Critical: 'red', Blocked: 'red'
+    };
+    const badgeFor = (v) => F ? React.createElement(F.Badge, { color: BADGE_COLORS[v] || 'gray', type: 'soft' }, v) : v;
+    const syncBadge = (v) => {
+      if (!F) return v;
+      if (v === 'Synced') return React.createElement(F.Badge, { color: 'green', type: 'soft', size: 'sm', icon: React.createElement('i', { className: 'fa-solid fa-arrows-rotate', style: { fontSize: 10 } }) }, v);
+      if (v === 'Not in sync') return React.createElement(F.Badge, { color: 'yellow', type: 'soft', size: 'sm', icon: React.createElement('i', { className: 'fa-solid fa-triangle-exclamation', style: { fontSize: 10 } }) }, v);
+      return React.createElement(F.Badge, { color: 'gray', type: 'soft', size: 'sm' }, v);
+    };
+    const buildColumns = (specs) => specs.map((s) => ({
+      key: s.key, label: s.label, align: s.align,
+      style: s.mono ? { fontFamily: "'DM Sans', sans-serif", fontVariantNumeric: 'tabular-nums' } : undefined,
+      render: s.badge === 'sync' ? syncBadge : (s.badge && s.key !== 'status') ? badgeFor : undefined
+    }));
+    const activeName = this.state.activeName || 'Employee Roster';
+    const customTable = this.state.customTables.find((t) => t.name === activeName);
+    const dataset = customTable || this.DATASETS[activeName] || this.DATASETS['Employee Roster'];
+    const tableRow = customTable || this.TABLES.find((t) => t.name === activeName) || this.TABLES[0];
+    let detailTableEl = null;
+    if (F && C) {
+      detailTableEl = React.createElement(F.Table, { columns: buildColumns(dataset.cols), rows: dataset.rows });
+    }
+    const editRows = this.state.rows || dataset.rows;
+    const editCols = dataset.cols.map((c, i) => ({ key: c.key, label: c.label.toUpperCase(), letter: String.fromCharCode(65 + i), type: c.mono ? '#' : c.badge ? null : 'T', badge: c.badge }));
+    const typeIcon = (t) => t === 'T' ? 'T' : t === '#' ? '#' : t === 'cal' ? React.createElement('i', { className: 'fa-regular fa-calendar', style: { fontSize: 11 } }) : null;
+    const letterCells = editCols.map((c) => React.createElement('th', { key: c.letter, className: 'grid-letter-row', style: { textAlign: 'center' } },
+      React.createElement('span', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6 } },
+        React.createElement('span', { className: 'col-letter' }, c.letter),
+        React.createElement('i', { className: 'fa-solid fa-filter', style: { fontSize: 9, color: '#97A3B6' } })
+      )
+    ));
+    const labelCells = editCols.map((c) => React.createElement('th', { key: c.letter, className: 'grid-label-row' },
+      React.createElement('span', { className: 'col-label-cell' },
+        c.label,
+        c.type && React.createElement('span', { className: 'type-pill' }, typeIcon(c.type), React.createElement('i', { className: 'fa-solid fa-caret-down', style: { fontSize: 10 } }))
+      )
+    ));
+    const bodyRows = editRows.map((row, i) => {
+      const notInSync = row.sourceStatus === 'Not in sync';
+      const manuallyAdded = row.sourceStatus === 'Manually added';
+      const readonly = row.sourceStatus === 'Synced';
+      const rowClass = [readonly ? 'row-readonly' : '', notInSync ? 'row-flagged' : ''].filter(Boolean).join(' ');
+      const flagIcon = manuallyAdded
+        ? React.createElement('i', { className: 'fa-solid fa-trash-can', style: { fontSize: 11 } })
+        : notInSync
+        ? React.createElement('i', { className: 'fa-solid fa-trash-can-slash', style: { fontSize: 11 } })
+        : '';
+      return React.createElement('tr', { key: i, className: rowClass },
+        React.createElement('td', { className: 'row-flag' + (notInSync ? ' disabled' : ''), onClick: manuallyAdded ? () => this.deleteRow(i) : undefined }, flagIcon),
+        React.createElement('td', { className: 'row-num' }, i + 2),
+        ...editCols.map((c) => React.createElement('td', { key: c.key, className: c.key === 'bonus' ? 'col-manual' : '' }, c.badge === 'sync' ? syncBadge(row[c.key]) : (c.badge && c.key !== 'status') ? badgeFor(row[c.key]) : row[c.key]))
+      );
+    });
+    const editGridEl = F ? React.createElement('div', { className: 'grid-outer' },
+      React.createElement('div', { className: 'grid-wrap' },
+      React.createElement('table', { className: 'grid' },
+        React.createElement('thead', null,
+          React.createElement('tr', null,
+            React.createElement('th', { className: 'corner-cell', rowSpan: 2 },
+              React.createElement('span', { className: 'jump-btn jump-btn-row', title: 'Go to last row', onClick: (e) => { const w = e.currentTarget.closest('.grid-wrap'); if (w) w.scrollTop = w.scrollHeight; } }, React.createElement('i', { className: 'fa-solid fa-arrow-down' })),
+              React.createElement('span', { className: 'jump-btn jump-btn-col', title: 'Go to last column', onClick: (e) => { const w = e.currentTarget.closest('.grid-wrap'); if (w) w.scrollLeft = w.scrollWidth; } }, React.createElement('i', { className: 'fa-solid fa-arrow-right' }))
+            ),
+            React.createElement('th', { className: 'grid-letter-row', style: { width: 32 } }, ''),
+            ...letterCells,
+            React.createElement('th', { className: 'col-add-btn grid-letter-row' }, React.createElement('i', { className: 'fa-solid fa-plus', style: { fontSize: 11 } }), ' Column')
+          ),
+          React.createElement('tr', null,
+            React.createElement('th', { className: 'row-num grid-label-row' }, '1'),
+            ...labelCells,
+            React.createElement('th', { className: 'grid-label-row' })
+          )
+        ),
+        React.createElement('tbody', null, ...bodyRows)
+      )
+      ),
+      React.createElement('div', { className: 'grid-add-row', onClick: () => this.addRow() }, React.createElement('i', { className: 'fa-solid fa-plus' }), ' Row')
+    ) : null;
+    const ICONS = window.SIDEBAR_ICONS || {};
+    const mk = (k, size) => ICONS[k] ? React.createElement('span', { style: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: size, height: size }, dangerouslySetInnerHTML: { __html: ICONS[k] } }) : null;
+    const ic = { tablesLg: mk('tables', 24) };
+    ['home','cubeBI','smartVariance','aiAnalyst','library','scenarios','dimensions','formulas','tags','integrations','dataExport','users','currencies','auditTrail','backgroundTasks','cubeAiAnalyst','aiPlugin','chatgpt','claude','excel','sheets','slack','teams','slides','powerpoint','collapseLeft','collapseRight'].forEach((k) => { ic[k] = mk(k, 14); });
+    const companyName = this.props.companyName ?? 'Accuplanner Inc';
+    const userName = this.props.userName ?? 'Nina Graham';
+    const initials = userName.trim().split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase();
+    const customTitle = this.state.customTitles[activeName];
+    const activeTable = {
+      name: customTitle || dataset.title || activeName, by: dataset.by || tableRow.by, modified: tableRow.modified,
+      isSynced: !!dataset.isSynced, notSynced: !dataset.isSynced, source: dataset.source, imported: dataset.imported,
+      scenario: 'Actuals', scenarios: ['Forecast B', 'Actuals'], scenariosText: 'Forecast B, Actuals', access: 'Table Managers Only'
+    };
+    const nt = this.state.nt;
+    const ntSelectedSourceObj = this.NT_SOURCES.find((s) => s.id === nt.sourceId) || this.NT_SOURCES[0];
+    const ntConnections = this.NT_SOURCES.map((s) => ({ ...s, onConnect: () => this.ntConnectSource(s.id) }));
+    const NT_STEP_LABELS = ['Data Source', 'Table Configuration', 'Mapping'];
+    const ntStepIndex = nt.mapOpen ? 2 : 1;
+    const ntSteps = NT_STEP_LABELS.map((label, i) => ({
+      key: label,
+      label,
+      status: i < ntStepIndex ? 'done' : i === ntStepIndex ? 'active' : 'inactive'
+    }));
+    const ntSelectedKeys = this.NT_FIELDS.filter((f) => nt.fields[f.key]);
+    const TYPE_META = { text: { icon: 'T', label: 'Text' }, numeric: { icon: '#', label: 'Numeric' }, date: { icon: React.createElement('i', { className: 'fa-regular fa-calendar', style: { fontSize: 11 } }), label: 'Date' } };
+    const ntSelectedFields = ntSelectedKeys.map((f) => ({
+      key: f.key, label: f.label,
+      colName: nt.colNames[f.key] !== undefined ? nt.colNames[f.key] : f.label,
+      onColNameChange: (v) => this.ntSetColName(f.key, v),
+      onRemove: () => this.ntRemoveField(f.key),
+      typeIcon: TYPE_META[f.type].icon, typeLabel: TYPE_META[f.type].label
+    }));
+    const ntFieldsTableEl = F && C ? React.createElement(F.Table, {
+      columns: [
+        { key: 'sel', label: '', sortable: false, render: (_, row) => React.createElement(F.Checkbox, { checked: !!nt.fields[row.key], onChange: () => this.ntToggleField(row.key) }) },
+        { key: 'label', label: 'Source Field Name' }
+      ],
+      rows: this.NT_FIELDS
+    }) : null;
+    const ntChooseFooter = F ? React.createElement(React.Fragment, null,
+      React.createElement(F.Button, { variant: 'ghost-gray', size: 'large', onClick: () => this.ntCancel() }, 'Cancel'),
+      React.createElement(F.Button, { variant: 'primary', size: 'large', disabled: nt.start !== 'source', onClick: () => this.ntChooseNext() }, 'Next')
+    ) : null;
+    // Icon-only Button needs the icon through the `icon` prop, not as children:
+    // `isIconOnly` gates on it, and without it the button loses its 32x32 square
+    // and Button drops the aria-label entirely (CLAUDE.md s 6, Icon-Only Buttons).
+    const hdrE = React.createElement;
+    const hdrIcon = (cls) => hdrE('i', { className: cls });
+    const hdrStyle = { borderBottom: 'none', paddingBottom: 0 };
+    const hdrGoList = () => this.setState({ view: 'list' });
+    const hdrCrumbs = (last) => [
+      { label: 'Tables', icon: hdrIcon('fa-regular fa-table'), onClick: hdrGoList },
+      { label: last }
+    ];
+    let headerListEl = null, headerDetailEl = null, headerSourceEl = null, headerNewEl = null;
+    if (F) {
+      headerListEl = hdrE(F.PageHeader, {
+        icon: hdrIcon('fa-regular fa-table'), title: 'Tables', style: hdrStyle,
+        actions: hdrE(F.Button, { variant: 'primary', size: 'large', leadingIcon: hdrIcon('fa-regular fa-plus'), onClick: () => this.ntOpenChoose() }, 'Table')
+      });
+      const titleNode = this.state.titleEditing
+        ? hdrE('input', { className: 'detail-title-input', value: this.state.titleDraft, onChange: (ev) => this.onTitleDraftChange(ev.target.value), onBlur: () => this.saveTitleRename() })
+        : hdrE('div', { className: 'detail-title-wrap' },
+            hdrE('div', { className: 'detail-title detail-title-edit', onClick: () => this.startTitleRename() }, activeTable.name),
+            hdrE('i', { className: 'fa-regular fa-pen detail-title-pen', onClick: () => this.startTitleRename() }));
+      headerDetailEl = hdrE(F.PageHeader, {
+        breadcrumbs: hdrCrumbs(activeTable.name), title: titleNode, style: hdrStyle,
+        actions: hdrE(React.Fragment, null,
+          activeTable.isSynced ? hdrE(F.Button, { variant: 'subtle-blue', size: 'large', leadingIcon: hdrIcon('fa-regular fa-arrows-rotate') }, 'Get Latest Data') : null,
+          hdrE(F.Button, { variant: 'primary', size: 'large', leadingIcon: hdrIcon('fa-regular fa-users') }, 'Share'))
+      });
+      headerSourceEl = hdrE(F.PageHeader, { breadcrumbs: hdrCrumbs('Data Source'), title: 'Create a table from a data source', style: hdrStyle });
+      headerNewEl = hdrE(F.PageHeader, { breadcrumbs: hdrCrumbs('New Table'), title: 'New Table', style: hdrStyle });
+    }
+    const kebabIcon = React.createElement('i', { className: 'fa-regular fa-ellipsis-vertical' });
+    return {
+      sideNavEl,
+      companyName, userName, initials, ic, tableEl, kebabIcon,
+      headerListEl, headerDetailEl, headerSourceEl, headerNewEl,
+      isListView: this.state.view === 'list',
+      isDetailView: this.state.view === 'detail',
+      isScenarioLocked: this.state.scenarioLocked,
+      isScenarioUnlocked: !this.state.scenarioLocked,
+      scenarioBarClass: this.state.scenarioLocked ? 'scen-bar scen-locked' : 'scen-bar',
+      isTitleEditing: this.state.titleEditing,
+      isNotTitleEditing: !this.state.titleEditing,
+      titleDraft: this.state.titleDraft,
+      startTitleRename: () => this.startTitleRename(),
+      saveTitleRename: () => this.saveTitleRename(),
+      onTitleDraftChange: (v) => this.onTitleDraftChange(v),
+      toggleScenarioLock: () => this.toggleScenarioLock(),
+      isSourceView: this.state.view === 'source',
+      isNewTableView: this.state.view === 'newtable',
+      editOpen: this.state.editOpen,
+      activeTable,
+      scenarioOptions: ['Actuals', 'Forecast A', 'Forecast B', 'Budget'],
+      accessOptions: ['Table Managers Only', 'All Users', 'Private'],
+      detailTableEl,
+      editGridEl,
+      openEdit: () => this.openEdit(),
+      closeEdit: () => this.closeEdit(),
+      ntOpenChoose: () => this.ntOpenChoose(),
+      ntChooseOpen: nt.chooseOpen,
+      ntCancel: () => this.ntCancel(),
+      ntPickBank: () => this.ntPickBank(),
+      ntPickSource: () => this.ntPickSource(),
+      ntIsBank: nt.start === 'bank',
+      ntIsSource: nt.start === 'source',
+      ntBankCardClass: nt.start === 'bank' ? 'nt-card-selected' : '',
+      ntSourceCardClass: nt.start === 'source' ? 'nt-card-selected' : '',
+      ntChooseFooter,
+      ntConnections,
+      ntSelectedSource: ntSelectedSourceObj,
+      ntSteps,
+      ntStepperPitch: 236,
+      ntNextDisabled: ntSelectedKeys.length === 0,
+      ntFieldsTableEl,
+      ntOpenMapping: () => this.ntOpenMapping(),
+      mapOpen: nt.mapOpen,
+      closeMapping: () => this.closeMapping(),
+      reviewMapping: () => this.reviewMapping(),
+      ntSelectedFields
+    };
+  }
+}
+
+</script>
+</body>
+</html>

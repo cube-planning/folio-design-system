@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<script src="./ds-base.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#F5F7FA;height:100vh;overflow:hidden;color:#222B3A}
+a{color:#2667D8;text-decoration:none}a:hover{text-decoration:underline}
+.fa-solid::before,.fa-regular::before{content:var(--fa) !important}
+.dm-btn button{padding-left:12px !important;padding-right:12px !important}
+.row:hover{background:#EFF6FF !important}
+.row:hover .rowact{opacity:1 !important}
+</style>
+</helmet>
+<div style="display:flex;height:100vh">
+  <aside style="width:255px;min-width:255px;padding:8px;height:100vh">
+    <div style="background:#fff;border-radius:8px;box-shadow:0 4px 8px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06);height:100%;display:flex;flex-direction:column;overflow:hidden">
+      <div style="height:56px;padding:16px 16px 0;display:flex;align-items:center"><img src="./cube-full-logo.svg" alt="Cube" style="height:28px"></div>
+      <div style="flex:1;overflow-y:auto;padding:24px 0">{{ sideNavEl }}</div>
+    </div>
+  </aside>
+  <div style="flex:1;display:flex;flex-direction:column;min-width:0">
+    <header style="height:80px;border-bottom:1px solid #E3E8EF;display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0">
+      <div style="display:flex;align-items:center;gap:8px;height:32px;padding:0 12px;background:#fff;border-radius:16px;box-shadow:0 2px 2px #E3E8EF;font-size:12px;color:#677489"><i class="fa-solid fa-buildings" style="color:#173D82"></i>Accuplanner Inc<i class="fa-solid fa-chevron-down" style="font-size:10px"></i></div>
+      <div style="display:flex;align-items:center;gap:8px;height:32px;padding:0 8px;background:#fff;border-radius:20px;box-shadow:0 2px 2px #E3E8EF;font-size:12px;color:#677489">
+        <x-import component-from-global-scope="FolioDS.Avatar" type="initials" size="xs" name="Nina Graham" hint-size="24px,24px"></x-import>Nina Graham<i class="fa-solid fa-chevron-down" style="font-size:10px"></i>
+      </div>
+    </header>
+    <main style="flex:1;overflow-y:auto;padding:24px 24px 96px">
+      {{ headerEl }}
+      <p style="font-size:14px;color:#677489;margin-top:8px">Manage your data structure in Cube.</p>
+      <div style="padding-top:16px;border-bottom:1px solid #E3E8EF">{{ tabsEl }}</div>
+
+
+      <div style="padding:24px 0 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <div style="flex:1 1 420px;min-width:0">{{ searchFilterEl }}</div>
+        <div style="position:relative;flex-shrink:0;margin-left:auto">
+          <span class="dm-btn" title="{{ btnTip }}"><x-import component-from-global-scope="FolioDS.Button" variant="secondary" leading-icon="{{ btnIcon }}" trailing-icon="{{ btnChevron }}" disabled="{{ isViewer }}" onClick="{{ openPicker }}" hint-size="auto,32px">{{ btnLabel }}</x-import></span>
+          <sc-if value="{{ popOpen }}" hint-placeholder-val="{{ false }}">
+            <div onClick="{{ closeAll }}" style="position:fixed;inset:0;z-index:199"></div>
+            <div style="position:absolute;right:0;top:40px;width:400px;z-index:200;background:#fff;border:1px solid #E3E8EF;border-radius:16px;box-shadow:0 12px 32px rgba(34,43,58,.16);display:flex;flex-direction:column;overflow:hidden">
+              <sc-if value="{{ showPick }}" hint-placeholder-val="{{ true }}">
+                <div style="padding:16px 16px 8px"><div style="font-size:14px;font-weight:600">Default filter member · {{ dimName }}</div><div style="font-size:12px;color:#677489;margin-top:2px">Where the add-in filter opens. Any member works, parent or leaf.</div></div>
+                <div style="padding:0 16px 8px;position:relative"><i class="fa-regular fa-magnifying-glass" style="position:absolute;left:28px;top:11px;font-size:12px;color:#677489"></i>
+                  <input value="{{ query }}" onInput="{{ onQuery }}" placeholder="Search members" style="width:100%;height:34px;border:1px solid #CDD5E0;border-radius:8px;padding:0 12px 0 32px;font:13px 'DM Sans',sans-serif;outline:none"></div>
+                <div style="max-height:280px;overflow-y:auto;padding:0 8px">
+                  <sc-for list="{{ pickRows }}" as="p" hint-placeholder-count="5">
+                    <div onClick="{{ p.select }}" class="row" style="display:flex;align-items:center;gap:8px;height:36px;padding:0 8px 0 {{ p.pad }}px;border-radius:8px;cursor:pointer;background:{{ p.bg }}">
+                      <i onClick="{{ p.toggle }}" class="{{ p.caret }}" style="width:14px;font-size:12px;color:#222B3A;visibility:{{ p.caretVis }}"></i>
+                      <span style="width:16px;height:16px;border-radius:50%;border:2px solid {{ p.ring }};display:inline-flex;align-items:center;justify-content:center;flex-shrink:0"><span style="width:8px;height:8px;border-radius:50%;background:{{ p.dot }}"></span></span>
+                      <span style="font-size:13px;flex:1;font-weight:{{ p.weight }}">{{ p.name }}</span>
+                      <span style="font-size:11px;color:#677489">{{ p.hint }}</span>
+                    </div>
+                  </sc-for>
+                  <sc-if value="{{ noMatches }}" hint-placeholder-val="{{ false }}"><div style="padding:20px;text-align:center;font-size:13px;color:#677489">No members match "{{ query }}"</div></sc-if>
+                </div>
+                <div style="padding:12px 16px;border-top:1px solid #E3E8EF;display:flex;align-items:center;gap:8px;margin-top:8px">
+                  <sc-if value="{{ isSet }}" hint-placeholder-val="{{ false }}"><x-import component-from-global-scope="FolioDS.Button" variant="ghost-destructive" size="small" onClick="{{ askReset }}" hint-size="auto,28px">Reset to automatic</x-import></sc-if>
+                  <span style="flex:1"></span>
+                  <x-import component-from-global-scope="FolioDS.Button" variant="ghost-gray" size="small" onClick="{{ closeAll }}" hint-size="auto,28px">Cancel</x-import>
+                  <x-import component-from-global-scope="FolioDS.Button" variant="primary" size="small" disabled="{{ cantContinue }}" onClick="{{ goConfirm }}" hint-size="auto,28px">Set default</x-import>
+                </div>
+              </sc-if>
+              <sc-if value="{{ confirmOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:16px;display:flex;flex-direction:column;gap:12px">
+                  <div style="font-size:14px;font-weight:600">{{ confirmTitle }}</div>
+                  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#F8FAFC;border-radius:12px;padding:10px 12px;font-size:13px"><span style="color:#677489">{{ dimName }}</span><i class="fa-solid fa-arrow-right" style="font-size:10px;color:#97A3B6"></i><span style="color:#677489;text-decoration:line-through">{{ prevName }}</span><i class="fa-solid fa-arrow-right" style="font-size:10px;color:#97A3B6"></i><b style="color:#173D82">{{ nextName }}</b></div>
+                  <ul style="padding-left:18px;display:flex;flex-direction:column;gap:4px;font-size:12px;line-height:18px;color:#353F4F">
+                    <li>Applies to every user, in the Excel add-in and Google Sheets add-on.</li>
+                    <li>Applies only to filters opened from now on. Saved ranges are not changed.</li>
+                    <li>Users whose Data Access Scope excludes this member see the highest member they can access.</li>
+                    <li>The change is recorded in the audit trail.</li>
+                  </ul>
+                  <div style="display:flex;gap:8px;justify-content:flex-end">
+                    <x-import component-from-global-scope="FolioDS.Button" variant="ghost-gray" size="small" onClick="{{ closeAll }}" hint-size="auto,28px">Cancel</x-import>
+                    <x-import component-from-global-scope="FolioDS.Button" variant="primary" size="small" onClick="{{ commit }}" hint-size="auto,28px">{{ confirmCta }}</x-import>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+
+      <div style="border:1px solid #E3E8EF;border-radius:16px;padding:16px;background:#fff">
+        <div style="display:grid;grid-template-columns:1fr 160px 120px;height:40px;align-items:center;background:#F2F5F9;border-radius:8px;padding:0 8px;font-size:12px;font-weight:600;color:#4A5567;text-transform:uppercase"><span>Name</span><span>Type</span><span></span></div>
+        <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
+          <div class="row" style="display:grid;grid-template-columns:1fr 160px 120px;height:48px;align-items:center;padding:0 8px;border-bottom:1px solid #F2F5F9;background:{{ r.bg }}">
+            <span style="display:inline-flex;align-items:center;gap:8px;min-width:0;padding-left:{{ r.pad }}px">
+              <i onClick="{{ r.toggle }}" class="{{ r.caret }}" style="width:14px;font-size:14px;color:#222B3A;cursor:pointer;flex-shrink:0;visibility:{{ r.caretVis }}"></i>
+              <span style="font-size:14px;font-weight:{{ r.weight }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span>
+              <sc-if value="{{ r.isDefault }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 8px;border-radius:9999px;background:#DBEAFE;color:#173D82;font-size:12px;font-weight:600;flex-shrink:0"><i class="fa-solid fa-star" style="font-size:10px"></i>Default filter</span></sc-if>
+            </span>
+            <span style="font-size:14px;color:#97A3B6">{{ r.type }}</span>
+            <span style="display:flex;justify-content:flex-end;gap:4px">
+              <span class="rowact" title="{{ r.tip }}" onClick="{{ r.setDefault }}" style="display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:9999px;font-size:12px;font-weight:500;cursor:{{ r.cursor }};color:{{ r.actColor }};opacity:{{ r.actOpacity }};white-space:nowrap"><i class="fa-regular fa-star"></i>{{ r.actLabel }}</span>
+            </span>
+          </div>
+        </sc-for>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div style="position:fixed;left:272px;bottom:16px;z-index:50;display:flex;align-items:center;gap:8px;white-space:nowrap;background:#222B3A;color:#fff;border-radius:9999px;padding:6px 8px 6px 14px;font-size:12px;box-shadow:0 4px 12px rgba(0,0,0,.2)">
+  Prototype: view as
+  <span onClick="{{ viewAdmin }}" style="cursor:pointer;padding:4px 12px;border-radius:9999px;font-weight:500;background:{{ adminBg }};color:{{ adminFg }}">Admin</span>
+  <span onClick="{{ viewViewer }}" style="cursor:pointer;padding:4px 12px;border-radius:9999px;font-weight:500;background:{{ viewerBg }};color:{{ viewerFg }}">Viewer</span>
+  <span onClick="{{ openAudit }}" style="cursor:pointer;padding:4px 12px;border-radius:9999px;border:1px solid #4A5567">Audit trail ({{ auditCount }})</span>
+  <a href="Add-on Default Filter Member.dc.html" style="color:#fff;padding:4px 12px;border-radius:9999px;border:1px solid #4A5567;text-decoration:none">Sheets add-on</a>
+</div>
+
+<x-import component-from-global-scope="FolioDS.Modal" open="{{ auditOpen }}" size="default" title="Audit trail" subtitle="Default filter member changes" onClose="{{ closeAudit }}" hint-size="0,0">
+  <sc-if value="{{ noAudit }}" hint-placeholder-val="{{ true }}"><div style="padding:24px;text-align:center;font-size:14px;color:#677489">No changes yet. Set a default to see the entry.</div></sc-if>
+  <sc-for list="{{ audit }}" as="a" hint-placeholder-count="0">
+    <div style="border:1px solid #E3E8EF;border-radius:12px;padding:12px 16px;display:flex;flex-direction:column;gap:4px;font-size:14px">
+      <div style="display:flex;justify-content:space-between"><span style="font-weight:600">{{ a.dim }} · Default filter member</span><span style="font-size:12px;color:#677489">{{ a.when }}</span></div>
+      <div style="color:#4A5567">{{ a.who }} changed <span style="text-decoration:line-through;color:#677489">{{ a.prev }}</span> to <b>{{ a.next }}</b></div>
+    </div>
+  </sc-for>
+</x-import>
+
+<sc-if value="{{ toastOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:400">
+    <x-import component-from-global-scope="FolioDS.Toast" type="success" title="{{ toastTitle }}" button="View audit trail" onButtonClick="{{ openAudit }}" onDismiss="{{ closeToast }}" hint-size="300px,64px">{{ toastBody }}</x-import>
+  </div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { dim: 'dept', role: 'admin', defaults: { acct: 'is', dept: null }, open: {}, pickerOpen: false, sel: null, query: '', pOpen: {}, confirmOpen: false, next: null, auditOpen: false, audit: [], toast: null };
+  TREES = {
+    acct: { name: 'Account', nodes: [
+      ['is', null, 'Income Statement'], ['rev', 'is', 'Revenue'], ['401', 'rev', '401000 - Support Revenue'], ['402', 'rev', '402000 - Platform Revenue'], ['403', 'rev', '403000 - Implementation Revenue'], ['410', 'rev', '410000 - Discount'],
+      ['cogs', 'is', 'Cost of Goods Sold'], ['501', 'cogs', '501000 - Platform CoGS'], ['550', 'cogs', '550000 - Intercompany CoGS'], ['gm', 'is', 'Gross Margin']] },
+    dept: { name: 'Department', nodes: [
+      ['all', null, 'All Departments'],
+      ['corp', 'all', 'Corporate'], ['ga', 'corp', 'G&A'], ['fin', 'corp', 'Finance'], ['ppl', 'corp', 'People'],
+      ['gtm', 'all', 'Go-to-Market'], ['sal', 'gtm', 'Sales'], ['mkt', 'gtm', 'Marketing'], ['cs', 'gtm', 'Customer Success'],
+      ['rd', 'all', 'R&D'], ['plat', 'rd', 'Platform'], ['data', 'rd', 'Data'], ['des', 'rd', 'Design'],
+      ['ns', 'all', 'NetSuite Connection'], ['ns1', 'ns', 'NS - Operations'], ['ns2', 'ns', 'NS - Facilities'], ['ns3', 'ns', 'NS - Legal'], ['ns4', 'ns', 'NS - IT'], ['ns5', 'ns', 'NS - Procurement'], ['ns6', 'ns', 'NS - Support']] }
+  };
+  tree(k) {
+    const nodes = this.TREES[k].nodes.map(([id, parent, name]) => ({ id, parent, name, kids: [] }));
+    const by = {}; nodes.forEach((n) => { by[n.id] = n; });
+    nodes.forEach((n) => { if (n.parent) by[n.parent].kids.push(n); });
+    return { nodes, by, root: nodes[0] };
+  }
+  path(t, id) { const p = []; let n = t.by[id]; while (n) { p.unshift(n.name); n = n.parent && t.by[n.parent]; } return p.join(' › '); }
+  auto(t) { let b = null; t.nodes.forEach((n) => { if (n.kids.length && (!b || n.kids.length > b.kids.length)) b = n; }); return b; }
+  flat(t, openMap) {
+    const out = [];
+    const walk = (n, d) => { out.push({ n, d }); if (n.kids.length && openMap[n.id] !== false) n.kids.forEach((c) => walk(c, d + 1)); };
+    walk(t.root, 0); return out;
+  }
+  commit = () => {
+    const s = this.state, k = s.dim, t = this.tree(k), prev = s.defaults[k], next = s.next;
+    const nm = (id) => id ? t.by[id].name : 'Automatic (' + this.auto(t).name + ')';
+    this.setState({
+      defaults: { ...s.defaults, [k]: next }, confirmOpen: false, pickerOpen: false,
+      audit: [{ dim: this.TREES[k].name, who: 'Nina Graham', prev: nm(prev), next: nm(next), when: 'Just now' }, ...s.audit],
+      toast: { title: next ? 'Default filter member updated' : 'Default reset to automatic', body: next ? this.TREES[k].name + ' filters now open on ' + t.by[next].name + '.' : this.TREES[k].name + ' filters open on the parent with the most children.' }
+    });
+    clearTimeout(this._tt); this._tt = setTimeout(() => this.setState({ toast: null }), 6000);
+  };
+  renderVals() {
+    const s = this.state, F = window.FolioDS, e = React.createElement, k = s.dim, t = this.tree(k), name = this.TREES[k].name;
+    const isViewer = s.role === 'viewer', canEdit = !isViewer;
+    const defId = s.defaults[k], isSet = !!defId, autoNode = this.auto(t);
+    const nm = (id) => id ? t.by[id].name : 'Automatic (' + autoNode.name + ')';
+    const rows = this.flat(t, s.open).map(({ n, d }) => {
+      const isDefault = n.id === defId, has = n.kids.length > 0, isOpen = s.open[n.id] !== false;
+      return {
+        bg: has && d < 2 ? '#fff' : '#F8FAFC', pad: d * 24, name: n.name, weight: has ? 500 : 400, type: has ? 'Group' : '--', isDefault,
+        caret: 'fa-solid fa-caret-' + (isOpen ? 'down' : 'right'), caretVis: has ? 'visible' : 'hidden',
+        toggle: () => this.setState((st) => ({ open: { ...st.open, [n.id]: st.open[n.id] === false } })),
+        actLabel: isDefault ? 'Current default' : 'Set as default', actColor: isDefault ? '#677489' : canEdit ? '#2667D8' : '#97A3B6',
+        actOpacity: isDefault ? 1 : 0, cursor: canEdit && !isDefault ? 'pointer' : 'not-allowed',
+        tip: !canEdit ? 'Requires the Manage Dimension Members, Formulas & Tags permission' : isDefault ? 'This is the default filter member' : 'Set as default filter member',
+        setDefault: () => { if (canEdit && !isDefault) this.setState({ next: n.id, confirmOpen: true }); }
+      };
+    });
+    const q = s.query.trim().toLowerCase();
+    const pl = q ? t.nodes.filter((n) => n.name.toLowerCase().includes(q)).map((n) => ({ n, d: 0, flat: true })) : this.flat(t, s.pOpen).map((x) => ({ ...x, flat: false }));
+    const pickRows = pl.map(({ n, d, flat }) => {
+      const has = n.kids.length > 0 && !flat, isOpen = s.pOpen[n.id] !== false, on = s.sel === n.id;
+      return {
+        pad: 8 + d * 24, bg: on ? '#EFF6FF' : 'transparent', name: n.name, weight: on ? 600 : 400,
+        hint: n.id === defId ? 'Current default' : n.kids.length ? n.kids.length + ' members' : 'Leaf',
+        ring: on ? '#2667D8' : '#97A3B6', dot: on ? '#2667D8' : 'transparent',
+        caret: 'fa-solid fa-caret-' + (isOpen ? 'down' : 'right'), caretVis: has ? 'visible' : 'hidden',
+        toggle: (ev) => { ev.stopPropagation(); this.setState((st) => ({ pOpen: { ...st.pOpen, [n.id]: st.pOpen[n.id] === false } })); },
+        select: () => this.setState({ sel: n.id })
+      };
+    });
+    const sideNavEl = F ? e(F.PortalSideBarNav, { expanded: true, activeItemId: 'dimensions', style: { width: '100%' } }) : null;
+    const TABS = ['Account', 'Department', 'Scenario', 'Time', 'Entity', 'Product'];
+    const icons = ['fa-clipboard-list', 'fa-sitemap', 'fa-code-branch', 'fa-calendar', 'fa-location-dot', 'fa-box'];
+    const tabsEl = F ? e(F.TabGroup, { type: 'secondary', tabs: TABS.map((l, i) => ({ label: l, icon: e('i', { className: 'fa-regular ' + icons[i] }) })), activeIndex: k === 'acct' ? 0 : 1, onChange: (i) => { if (i < 2) this.setState({ dim: i === 0 ? 'acct' : 'dept', query: '' }); } }) : null;
+    const searchFilterEl = F ? e(F.SearchAndFilter, { filters: [{ label: 'Status', value: 'Enabled' }, { label: 'Type', value: 'All' }], searchPlaceholder: 'Find' }) : null;
+    const headerEl = F ? e(F.PageHeader, { icon: e('i', { className: 'fa-regular fa-network-wired' }), title: 'Dimensions', style: { borderBottom: 'none', paddingBottom: 0 }, actions: e(F.Button, { variant: 'primary', size: 'small', leadingIcon: e('i', { className: 'fa-regular fa-plus' }) }, 'New') }) : null;
+    const pickerFooter = F ? e(React.Fragment, null,
+      isSet ? e(F.Button, { variant: 'ghost-destructive', onClick: () => this.setState({ pickerOpen: false, next: null, confirmOpen: true }), style: { marginRight: 'auto' } }, 'Reset to automatic') : null,
+      e(F.Button, { variant: 'ghost-gray', onClick: () => this.setState({ pickerOpen: false }) }, 'Cancel'),
+      e(F.Button, { variant: 'primary', disabled: !s.sel || s.sel === defId, onClick: () => this.setState({ next: s.sel, confirmOpen: true }) }, 'Continue')) : null;
+    const confirmFooter = F ? e(React.Fragment, null,
+      e(F.Button, { variant: 'ghost-gray', onClick: () => this.setState({ confirmOpen: false }) }, 'Cancel'),
+      e(F.Button, { variant: s.next ? 'primary' : 'destructive', onClick: this.commit }, s.next ? 'Set default' : 'Reset to automatic')) : null;
+    const tg = s.toast;
+    return {
+      popOpen: s.pickerOpen || s.confirmOpen, showPick: s.pickerOpen && !s.confirmOpen, cantContinue: !s.sel || s.sel === defId,
+      closeAll: () => this.setState({ pickerOpen: false, confirmOpen: false }),
+      goConfirm: () => this.setState({ next: s.sel, confirmOpen: true, pickerOpen: false }),
+      btnChevron: F ? e('i', { className: 'fa-regular fa-chevron-down', style: { fontSize: 11 } }) : null,
+      confirmCta: s.next ? 'Set default' : 'Reset to automatic',
+      btnLabel: 'Default Member', btnIcon: F ? e('i', { className: (isViewer ? 'fa-regular fa-lock' : 'fa-regular fa-star') }) : null,
+      btnTip: isViewer ? 'Requires the Manage Dimension Members, Formulas & Tags permission' : isSet ? 'Applies to every user in the Excel and Sheets add-ins' : 'Automatic: ' + autoNode.name + ' (parent with most children). Click to set a default.',
+      sideNavEl, headerEl, tabsEl, searchFilterEl, rows, pickRows, isViewer, canEdit, dimName: name,
+      isSet, isUnset: !isSet, defaultName: isSet ? t.by[defId].name : '', defaultPath: isSet ? this.path(t, defId) : '', autoName: autoNode.name,
+      pickIcon: F ? e('i', { className: 'fa-regular fa-sitemap' }) : null, pickLabel: isSet ? 'Change' : 'Choose member',
+      openPicker: () => this.setState({ pickerOpen: true, sel: defId || null, query: '' }),
+      askReset: () => this.setState({ next: null, confirmOpen: true, pickerOpen: false }),
+      viewAdmin: () => this.setState({ role: 'admin' }), viewViewer: () => this.setState({ role: 'viewer' }),
+      adminBg: !isViewer ? '#fff' : 'transparent', adminFg: !isViewer ? '#222B3A' : '#fff', viewerBg: isViewer ? '#fff' : 'transparent', viewerFg: isViewer ? '#222B3A' : '#fff',
+      openAudit: () => this.setState({ auditOpen: true }), closeAudit: () => this.setState({ auditOpen: false }), auditCount: s.audit.length, audit: s.audit, noAudit: s.audit.length === 0, auditOpen: s.auditOpen,
+      pickerOpen: s.pickerOpen, pickerTitle: 'Default filter member · ' + name, closePicker: () => this.setState({ pickerOpen: false }), pickerFooter,
+      query: s.query, onQuery: (ev) => this.setState({ query: ev.target.value }), noMatches: pickRows.length === 0,
+      confirmOpen: s.confirmOpen, confirmTitle: s.next ? 'Set default filter member?' : 'Reset to automatic?', closeConfirm: () => this.setState({ confirmOpen: false }), confirmFooter,
+      prevName: nm(defId), nextName: nm(s.next),
+      toastOpen: !!tg, toastTitle: tg ? tg.title : '', toastBody: tg ? tg.body : '', closeToast: () => this.setState({ toast: null })
+    };
+  }
+}
+</script>
+</body>
+</html>

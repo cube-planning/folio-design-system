@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<!-- @template name="Workspace Template: Dimension" description="Dimensions screen — hierarchical chart-of-accounts tree with type tabs, filters, and inline edit/delete, built on the App Shell." -->
+<!-- @built-against design-sync 2026-08-19 (see github.md); last verified 2026-08-25 -->
+<helmet>
+  <script src="./ds-base.js"></script>
+  <script src="./_sidebar-icons.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+    .fa-solid::before,.fa-regular::before,.fa-brands::before,.fa-light::before,.fa-thin::before,.fa-duotone::before { content:var(--fa) !important; }
+    body { font-family:'DM Sans',sans-serif; background:#F5F7FA; height:100vh; overflow:hidden; color:#222B3A; }
+    a { text-decoration:none; color:inherit; }
+    .app-shell { display:flex; height:100vh; }
+    .sb { width:255px; min-width:255px; padding:8px; display:flex; flex-direction:column; height:100vh; transition:width .2s ease,min-width .2s ease; overflow:hidden; }
+    .sb.col { width:64px; min-width:64px; }
+    .sb-card { background:#fff; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06); flex:1; display:flex; flex-direction:column; overflow:hidden; }
+    .sb-hdr { height:48px; padding:16px 12px 0 16px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; white-space:nowrap; }
+    .sb.col .sb-hdr { flex-direction:column; height:auto; justify-content:center; align-items:center; gap:8px; padding:12px 0 8px; }
+    .logo-wm { display:flex; align-items:center; }
+    .logo-wm img { height:28px; width:auto; display:block; }
+    .logo-ic { display:none; align-items:center; justify-content:center; }
+    .logo-ic img { height:28px; width:auto; display:block; }
+    .sb.col .logo-wm { display:none; }
+    .sb.col .logo-ic { display:flex; }
+    .col-btn { width:28px; height:28px; border:none; border-radius:4px; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#4A5567; }
+    .col-btn:hover { background:#F1F4F8; }
+    .cc-left,.cc-right { display:inline-flex; align-items:center; justify-content:center; }
+    .cc-right { display:none; }
+    .sb.col .cc-left { display:none; }
+    .sb.col .cc-right { display:inline-flex; }
+    .sb-nav { flex:1; overflow-y:auto; overflow-x:hidden; padding:24px 0; }
+    .sb-nav::-webkit-scrollbar { width:4px; }
+    .sb-nav::-webkit-scrollbar-thumb { background:#CDD5E0; border-radius:2px; }
+    .dv { height:1px; background:#E3E8EF; margin:8px 0; }
+    .nav-section { display:flex; flex-direction:column; gap:4px; padding:8px 0; }
+    .sb.col .nav-section { padding:0; align-items:center; }
+    .sec { display:flex; align-items:center; gap:4px; height:20px; padding:0 16px; font-family:'DM Sans', sans-serif; font-size:12px; font-weight:400; color:#4A5567; white-space:nowrap; }
+    .sb.col .sec { justify-content:center; padding:0; }
+    .sb.col .sec-lbl,.sb.col .sec-crt { display:none; }
+    .sec-crt { font-size:8px; color:#677489; transition:transform .15s ease; }
+    .sec { cursor:pointer; user-select:none; }
+    .nav-section.collapsed > *:not(.sec) { display:none; }
+    .nav-section.collapsed .sec-crt { transform:rotate(-90deg); }
+    .ni { height:32px; padding:0 24px 0 29px; border-left:3px solid transparent; display:flex; align-items:center; gap:8px; border-radius:0; cursor:pointer; position:relative; white-space:nowrap; color:inherit; width:100%; }
+    .ni.home { padding:0 24px 0 29px; border-left:3px solid transparent; }
+    .nav-section .ni:hover { background:#EFF6FF; border-left-color:#2667D8; }
+    .nav-section .ni:hover .ni-lbl { color:#2667D8; }
+    .nav-section .ni:hover .ni-ic { color:#2667D8; }
+    .ni.home:hover { background:#EFF6FF; border-left-color:#2667D8; }
+    .ni.home:hover .ni-lbl { color:#2667D8; }
+    .ni.home:hover .ni-ic { color:#2667D8; }
+    .nav-section .ni.active { background:#EFF6FF; border-left-color:#2667D8; }
+    .ni.home.active { background:#EFF6FF; border-left-color:#2667D8; }
+    .ni.active .ni-lbl { color:#2667D8; font-weight:500; }
+    .ni.active .ni-ic { color:#2667D8; }
+    .ni-ic { width:22px; height:22px; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#4A5567; font-size:15px; }
+    .ni-lbl { font-size:14px; font-weight:400; color:#222B3A; }
+    .sb.col .ni { padding:0; border-left:none; width:36px; justify-content:center; border-radius:4px; }
+    .sb.col .ni.home { padding:0; border-radius:4px; }
+    .sb.col .ni-lbl { display:none; }
+    .sb.col .ni:hover::after { content:attr(data-label); position:absolute; left:calc(100% + 8px); top:50%; transform:translateY(-50%); background:#222B3A; color:#fff; font-size:12px; font-weight:500; padding:4px 10px; border-radius:4px; white-space:nowrap; z-index:300; pointer-events:none; }
+    .ni-sub-wrap { padding-left:34px; display:flex; flex-direction:column; }
+    .ni-sub { display:flex; align-items:center; height:32px; padding:4px 16px 4px 18px; border-left:2px solid #E3E8EF; font-size:14px; font-weight:400; color:#222B3A; cursor:pointer; white-space:nowrap; }
+    .ni-sub:hover { background:#EFF6FF; }
+    .ni-sub.active { color:#2667D8; font-weight:600; border-left-color:#2667D8; }
+    .sb.col .ni-sub-wrap { display:none; }
+    .apps-wrap { padding:0 8px 16px; }
+    .sb.col .apps-wrap { padding:0 0 8px; }
+    .apps-sec { display:flex; align-items:center; gap:4px; padding:8px 8px 4px; font-family:'DM Sans', sans-serif; font-size:12px; font-weight:400; color:#4A5567; }
+    .sb.col .apps-sec { justify-content:center; padding:8px 0 4px; }
+    .sb.col .apps-sec .sec-lbl,.sb.col .apps-sec .sec-crt { display:none; }
+    .apps-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:4px; padding:4px 0; }
+    .apps-grid .app-tile:nth-child(8) { grid-column:1; }
+    .sb.col .apps-grid { display:flex; flex-direction:column; align-items:center; gap:4px; }
+    .app-tile { display:flex; flex-direction:column; align-items:center; gap:4px; padding:4px 0; border-radius:8px; cursor:pointer; position:relative; }
+    .app-tile:hover { background:#EFF6FF; }
+    .app-circ { width:32px; height:32px; border-radius:50%; background:#EEF0F4; border:1.5px solid #DDE1E8; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#4A5567; font-size:13px; }
+    .app-lbl { font-size:10px; font-weight:500; color:#353F4F; text-align:center; line-height:1.2; }
+    .sb.col .app-lbl { display:none; }
+    .sb.col .app-tile:hover::after { content:attr(data-label); position:absolute; left:calc(100% + 8px); top:50%; transform:translateY(-50%); background:#222B3A; color:#fff; font-size:12px; font-weight:500; padding:4px 10px; border-radius:4px; white-space:nowrap; z-index:300; pointer-events:none; }
+    .staff-row { display:flex; align-items:center; justify-content:space-between; padding:0 12px 0 24px; height:40px; flex-shrink:0; }
+    .staff-row-left { display:flex; align-items:center; gap:8px; }
+    .staff-label { font-size:14px; font-weight:400; color:#222B3A; }
+    .staff-more-btn { width:28px; height:28px; border:none; background:transparent; border-radius:4px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#677489; font-size:14px; }
+    .staff-more-btn:hover { background:#F2F5F9; }
+    .sb.col .staff-row { padding:0; justify-content:center; }
+    .sb.col .staff-label { display:none; }
+    .sb.col .staff-more-btn { display:none; }
+    .main { flex:1; display:flex; flex-direction:column; min-width:0; overflow:hidden; }
+    .topnav { height:80px; background:#F5F7FA; border-bottom:1px solid #E3E8EF; display:flex; align-items:center; justify-content:space-between; padding:0 24px; flex-shrink:0; }
+    .tn-company { display:flex; align-items:center; gap:4px; height:32px; padding:0 12px; background:#fff; border-radius:16px; box-shadow:0 2px 2px #E3E8EF; cursor:pointer; white-space:nowrap; }
+    .tn-company:hover { box-shadow:0 2px 4px #CDD5E0; }
+    .tn-company-ic { width:22px; height:22px; display:flex; align-items:center; justify-content:center; color:#173D82; font-size:13px; }
+    .tn-company-name { font-size:12px; font-weight:400; color:#677489; }
+    .tn-chevron { width:22px; height:22px; display:flex; align-items:center; justify-content:center; color:#353F4F; font-size:11px; }
+    .tn-right { display:flex; align-items:center; gap:8px; }
+    .tn-btn { width:32px; height:32px; border-radius:4px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; color:#4A5567; font-size:15px; }
+    .tn-btn:hover { background:#F8FAFC; }
+    .tn-ai-btn { width:28px; height:28px; border:none; border-radius:50%; background:linear-gradient(135deg,#7A5AF8 10%,#9B8AFB 50%,#5925DC 100%); padding:0; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; }
+    .tn-ai-btn { position:relative; }
+    .tn-ai-btn:hover { opacity:.85; }
+    .tn-ai-btn:hover::after { content:attr(data-tip); position:absolute; top:calc(100% + 8px); left:50%; transform:translateX(-50%); background:#222B3A; color:#fff; font-size:12px; font-weight:500; padding:4px 10px; border-radius:4px; white-space:nowrap; z-index:300; pointer-events:none; }
+    .tn-user { display:flex; align-items:center; gap:8px; height:32px; padding:0 8px; background:#fff; border-radius:20px; box-shadow:0 2px 2px #E3E8EF; cursor:pointer; white-space:nowrap; }
+    .tn-user:hover { box-shadow:0 2px 4px #CDD5E0; }
+    .tn-avatar { width:24px; height:24px; border-radius:12px; background:#E3E8EF; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:#4A5567; flex-shrink:0; }
+    .tn-user-name { font-size:12px; font-weight:400; color:#677489; }
+    .page-content { flex:1; overflow-y:auto; background:#F5F7FA; padding:24px; }
+    .pg { width:100%; }
+    .pg-head { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:16px; }
+    .pg-title-row { display:flex; align-items:center; gap:8px; }
+    .pg-title-ic { color:#222B3A; font-size:24px; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; }
+    .pg-title { font-size:24px; line-height:32px; font-weight:700; color:#222B3A; }
+    .pg-sub { font-size:14px; color:#677489; margin-top:8px; }
+    .pg-sub-help { color:#173D82; font-size:14px; cursor:pointer; }
+    .pg-head-acts { display:flex; align-items:center; gap:8px; }
+    /* Tab strip and filter row are now TabGroup / SearchAndFilter — only the
+       surrounding spacing lives here. Gaps per Figma 71:26428: tabs pt 16,
+       filter row pt 24 / pb 16. */
+    .tabs-row { padding-top:16px; border-bottom:1px solid #E3E8EF; }
+    .filter-row { padding:24px 0 16px; }
+    .tree-caret { width:16px; height:16px; display:inline-flex; align-items:center; justify-content:center; color:#677489; font-size:10px; cursor:pointer; flex-shrink:0; background:none; border:none; }
+    .tree-caret.leaf { visibility:hidden; cursor:default; }
+    .pg > .pg-sub, .pg-wrap > .pg-sub { margin-top:8px; }
+  </style>
+</helmet>
+
+<div class="app-shell">
+  <aside id="sb" class="sb">
+    <div class="sb-card">
+      <div class="sb-hdr">
+        <div class="logo-wm"><img src="./cube-full-logo-mrp7qtfz-2a8j.svg" alt="Cube"></div>
+        <div class="logo-ic"><img src="./cube-icon-logo-mrp7voek-lnif.svg" alt="Cube"></div>
+        <button class="col-btn" data-action="collapse" aria-label="Toggle sidebar">
+          <span class="cc-left">{{ ic.collapseLeft }}</span><span class="cc-right">{{ ic.collapseRight }}</span>
+        </button>
+      </div>
+      <div class="sb-nav">
+        <div class="ni home" data-label="Home"><div class="ni-ic">{{ ic.home }}</div><span class="ni-lbl">Home</span></div>
+        <div class="dv"></div>
+        {{ sideNavEl }}
+      </div>
+      <div style="height:1px;background:#E3E8EF;margin:0"></div>
+      <div class="staff-row">
+        <div class="staff-row-left">
+          <div class="ni-ic" style="color:#4A5567"><i class="fa-regular fa-users"></i></div>
+          <span class="staff-label">Cube Staff</span>
+        </div>
+        <button class="staff-more-btn" aria-label="More options">
+          <i class="fa-solid fa-ellipsis-vertical"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topnav">
+      <div class="tn-company">
+        <div class="tn-company-ic"><i class="fa-solid fa-buildings"></i></div>
+        <span class="tn-company-name">{{ companyName }}</span>
+        <div class="tn-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+      </div>
+      <div class="tn-right">
+        <button class="tn-btn" title="Background tasks">{{ ic.backgroundTasks }}</button>
+        <button class="tn-btn" title="Help"><i class="fa-regular fa-circle-question"></i></button>
+        <button class="tn-ai-btn" data-tip="Cube AI">{{ ic.cubeAiAnalyst }}</button>
+        <div class="tn-user">
+          <x-import component-from-global-scope="FolioDS.Avatar" type="initials" size="xs" name="{{ userName }}" hint-size="24px,24px"></x-import>
+          <span class="tn-user-name">{{ userName }}</span>
+          <div class="tn-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+        </div>
+      </div>
+    </header>
+    <main class="page-content">
+      <div class="pg">
+        {{ headerEl }}
+        <p class="pg-sub">Manage your data structure in Cube. <i class="fa-regular fa-circle-question pg-sub-help" aria-label="Help"></i></p>
+
+        <div class="tabs-row">{{ tabsEl }}</div>
+
+        <div class="filter-row">{{ searchFilterEl }}</div>
+
+        {{ tableEl }}
+      </div>
+    </main>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1440px&quot;,&quot;height&quot;:&quot;900px&quot;},&quot;companyName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Accuplanner Inc&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;userName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Nina Graham&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+class Component extends DCLogic {
+  state = { activeTab: 'Account', collapsed: {} };
+  componentDidMount() {
+    this._onClick = (e) => {
+      const secEl = e.target.closest('.sec');
+      if (secEl) { const ns = secEl.closest('.nav-section'); if (ns) ns.classList.toggle('collapsed'); return; }
+      const collapse = e.target.closest('[data-action="collapse"]');
+      if (collapse) { const sb = document.getElementById('sb'); if (sb) sb.classList.toggle('col'); this.setState((st) => ({ sbCollapsed: !(st && st.sbCollapsed) })); return; }
+      const ni = e.target.closest('.ni');
+      if (ni) { document.querySelectorAll('.ni').forEach((i) => i.classList.remove('active')); ni.classList.add('active'); return; }
+      const tab = e.target.closest('[data-tab]');
+      if (tab) { this.setState({ activeTab: tab.getAttribute('data-tab') }); return; }
+      const toggle = e.target.closest('[data-toggle]');
+      if (toggle) {
+        const id = toggle.getAttribute('data-toggle');
+        this.setState((s) => ({ collapsed: { ...s.collapsed, [id]: !s.collapsed[id] } }));
+      }
+    };
+    document.addEventListener('click', this._onClick);
+    if (!window.SIDEBAR_ICONS || !window.FolioDS) {
+      this._iconWait = setInterval(() => { if (window.SIDEBAR_ICONS && window.FolioDS) { clearInterval(this._iconWait); this.forceUpdate(); } }, 60);
+    }
+  }
+  componentWillUnmount() {
+    document.removeEventListener('click', this._onClick);
+    if (this._iconWait) clearInterval(this._iconWait);
+  }
+  get TABS() {
+    return [
+      { label: 'Account', icon: 'fa-regular fa-clipboard-list' },
+      { label: 'Department', icon: 'fa-regular fa-sitemap' },
+      { label: 'Scenario', icon: 'fa-regular fa-code-branch' },
+      { label: 'Time', icon: 'fa-regular fa-calendar' },
+      { label: 'Entity', icon: 'fa-regular fa-location-dot' },
+      { label: 'Product', icon: 'fa-regular fa-box' },
+      { label: 'Market', icon: 'fa-solid fa-display-chart-up' }
+    ];
+  }
+  get DIMS() {
+    return [
+      { id: 'is', name: 'Income Statement', group: true, children: [] },
+      { id: 'rev', name: 'Revenue A', group: true, children: [
+        { id: '401', name: '401000 - Support Revenue' },
+        { id: '402', name: '402000 - Platform Revenue' },
+        { id: '403', name: '403000 - Implementation Revenue' },
+        { id: '409', name: '409000 - Intercompany Revenue' },
+        { id: '401b', name: '401000 - Support Revenue' },
+        { id: '410', name: '410000 - Discount' }
+      ] },
+      { id: 'cogs', name: 'Cost of Goods Sold', group: true, children: [
+        { id: '501', name: '501000 - Platform CoGS' },
+        { id: '550', name: '550000 - Intercompany CoGS' },
+        { id: '590', name: '590000 - Overhead Allocation' },
+        { id: '590b', name: '590000 - Overhead Allocation 1', type: 'Formula' }
+      ] },
+      { id: 'gm', name: 'Gross Margin' },
+      { id: 'opex', name: 'Operating Expenses', type: 'Formula', group: true, children: [] }
+    ];
+  }
+  buildDimensionsTable(C, collapsed) {
+    const e = React.createElement;
+    const T = { gray100: '#F8FAFC', gray200: '#F2F5F9', gray300: '#E3E8EF', gray500: '#97A3B6', gray700: '#4A5567', gray900: '#222B3A', blue: '#2667D8', divider: '#F2F5F9', white: '#FFFFFF', font: "'DM Sans',sans-serif" };
+    const open = (id) => !collapsed[id];
+    const toggle = (id) => this.setState((s) => ({ collapsed: { ...s.collapsed, [id]: !s.collapsed[id] } }));
+    const th = { height: 40, padding: '0 8px', background: T.gray200, fontFamily: T.font, fontSize: 12, fontWeight: 600, color: T.gray700, textTransform: 'uppercase', textAlign: 'left', whiteSpace: 'nowrap' };
+    const td = (extra) => ({ height: 48, padding: '0 8px', fontFamily: T.font, fontSize: 14, color: T.gray900, borderBottom: '1px solid ' + T.divider, verticalAlign: 'middle', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', ...(extra || {}) });
+    const actions = () => e(C.Actions, null,
+      e(C.ActionButton, { 'aria-label': 'Edit', icon: e('i', { className: 'fa-regular fa-pen', style: { fontSize: 12, color: '#677489' } }) }),
+      e(C.ActionButton, { 'aria-label': 'Remove', icon: e('i', { className: 'fa-regular fa-xmark', style: { fontSize: 12, color: '#677489' } }) }));
+    const trs = [];
+    this.DIMS.forEach((node) => {
+      trs.push(e('tr', { key: node.id, style: { background: T.white } },
+        e('td', { style: td() }, e('span', { style: { display: 'inline-flex', alignItems: 'center', gap: 8, minWidth: 0, maxWidth: '100%' } },
+          node.group ? e('i', { onClick: () => toggle(node.id), className: 'fa-solid fa-caret-' + (open(node.id) ? 'down' : 'right'), style: { fontSize: 14, color: T.gray900, cursor: 'pointer', width: 14, flexShrink: 0 } }) : e('span', { style: { width: 14, display: 'inline-block', flexShrink: 0 } }),
+          e('span', { style: { fontWeight: node.group ? 500 : 400, color: T.gray900, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' } }, node.name))),
+        e('td', { style: td({ color: T.gray500, fontWeight: node.group ? 500 : 400 }) }, node.type || '--'),
+        e('td', { style: td({ textAlign: 'right' }) }, actions())));
+      if (node.group && open(node.id)) node.children.forEach((c) => trs.push(e('tr', { key: c.id, style: { background: T.gray100 } },
+        e('td', { style: td({ background: T.gray100 }) }, e('span', { style: { display: 'inline-flex', alignItems: 'center', gap: 8, paddingLeft: 34, minWidth: 0, maxWidth: '100%' } }, e('a', { href: '#', style: { color: T.blue, textDecoration: 'none', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' } }, c.name))),
+        e('td', { style: td({ background: T.gray100, color: T.gray500 }) }, c.type || '--'),
+        e('td', { style: td({ background: T.gray100, textAlign: 'right' }) }, actions()))));
+    });
+    return e('div', { style: { border: '1px solid ' + T.gray300, borderRadius: 16, padding: 16, background: T.white, fontFamily: T.font, overflow: 'hidden' } },
+      e('table', { style: { width: '100%', borderCollapse: 'separate', borderSpacing: 0 } },
+        e('thead', null, e('tr', null, e('th', { style: { ...th, borderTopLeftRadius: 8 } }, 'Name'), e('th', { style: th }, 'Type'), e('th', { style: { ...th, borderTopRightRadius: 8, width: 80 } }, ''))),
+        e('tbody', null, trs)));
+  }
+  renderVals() {
+    const sideNavEl = window.FolioDS ? React.createElement(window.FolioDS.PortalSideBarNav, { expanded: !(this.state && this.state.sbCollapsed), activeItemId: 'dimensions', style: { width: '100%' } }) : null;
+    const activeTab = this.state.activeTab;
+    const collapsed = this.state.collapsed;
+    const F = window.FolioDS;
+    const e = React.createElement;
+    let tableEl = null, tabsEl = null, searchFilterEl = null, toolbarEl = null;
+    if (F) {
+      tableEl = this.buildDimensionsTable(F.Cell, collapsed);
+      // Per Figma 71:26428 these three are design system components, not local
+      // markup. TabGroup "secondary" is the 8px-gap / 2px-cobalt-underline
+      // variant the handoff shows; ButtonGroup already renders the white pill
+      // with the cobalt-500 border and dividers.
+      tabsEl = e(F.TabGroup, {
+        type: 'secondary',
+        tabs: this.TABS.map((t) => ({ label: t.label, icon: e('i', { className: t.icon }) })),
+        activeIndex: Math.max(0, this.TABS.findIndex((t) => t.label === activeTab)),
+        onChange: (i) => this.setState({ activeTab: this.TABS[i].label })
+      });
+      searchFilterEl = e(F.SearchAndFilter, {
+        filters: [{ label: 'Status', value: 'Enabled' }, { label: 'Type', value: 'All' }],
+        searchPlaceholder: 'Find'
+      });
+      toolbarEl = e(F.ButtonGroup, {
+        items: [
+          { icon: e('i', { className: 'fa-solid fa-merge' }), 'aria-label': 'Mapping' },
+          { icon: e('i', { className: 'fa-regular fa-copy' }), 'aria-label': 'Duplicate' },
+          { icon: e('i', { className: 'fa-regular fa-sparkles' }), 'aria-label': 'Cube AI' }
+        ]
+      });
+    }
+    const ghostIcon = (icon, label, size) => F ? e(F.Button, { variant: 'ghost-gray', size: size || 'small', 'aria-label': label, icon: e('i', { className: icon, style: { fontSize: size === 'large' ? 14 : 13 } }) }) : null;
+    const renameBtn = ghostIcon('fa-regular fa-pen', 'Rename', 'large');
+    const moreBtn = ghostIcon('fa-regular fa-ellipsis-vertical', 'More', 'large');
+    const newBtn = F ? e(F.Button, { variant: 'primary', size: 'large', leadingIcon: e('i', { className: 'fa-regular fa-plus' }), trailingIcon: e('i', { className: 'fa-regular fa-chevron-down', style: { fontSize: 11 } }) }, 'New') : null;
+    const ICONS = window.SIDEBAR_ICONS || {};
+    const mk = (k) => ICONS[k] ? React.createElement('span', { style: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }, dangerouslySetInnerHTML: { __html: ICONS[k] } }) : null;
+    const ic = {};
+    ['home','cubeBI','smartVariance','aiAnalyst','library','scenarios','dimensions','formulas','tags','integrations','dataExport','users','currencies','auditTrail','backgroundTasks','cubeAiAnalyst','aiPlugin','chatgpt','claude','excel','sheets','slack','teams','slides','powerpoint','collapseLeft','collapseRight'].forEach((k) => { ic[k] = mk(k); });
+    const companyName = this.props.companyName ?? 'Accuplanner Inc';
+    const userName = this.props.userName ?? 'Nina Graham';
+    const initials = userName.trim().split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase();
+    const FH = window.FolioDS;
+    const headerEl = FH ? React.createElement(FH.PageHeader, {
+      icon: React.createElement('i', { className: 'fa-regular fa-network-wired' }),
+      title: 'Dimensions',
+      style: { borderBottom: 'none', paddingBottom: 0 },
+      actions: newBtn ? React.createElement(React.Fragment, null, renameBtn, moreBtn, toolbarEl, newBtn) : null,
+    }) : null;
+
+    return { headerEl, sideNavEl, companyName, userName, initials, ic, tableEl, tabsEl, searchFilterEl, toolbarEl, newBtn, renameBtn, moreBtn };
+  }
+}
+
+</script>
+</body>
+</html>
