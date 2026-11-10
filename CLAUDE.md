@@ -75,17 +75,40 @@ them breaks the build or the sync: `components/**` (58 entries in `componentSrcM
 
 ## 1. Project Stack
 
-- **Framework:** React + TypeScript
-- **Styling:** Tailwind CSS v4 (`@tailwindcss/vite`)
-- **Components:** shadcn/ui (Radix primitives)
-- **Fonts:** DM Sans (sole typeface — replaces Lato/Montserrat)
-- **Build:** Vite
+There are **two different codebases** in play. Know which one you are in before applying any rule.
+
+### A. This repo: the Folio package (what you edit here)
+
+- **Framework:** React 18, plain JSX (`components/*.jsx`). TypeScript only as hand-written `.d.ts` stubs (about 25 of 67 components) and design-sync previews. No `.tsx` source.
+- **Styling:** self-styled with React inline `style` objects, reading `tokens/tokens.css` custom properties (`var(--radius-2xl)`, `var(--shadow-lg)`, `var(--color-cobalt-500)`) or resolved values that match the token scale. **No Tailwind, no PostCSS, no `cn()`, no CSS modules.**
+- **Components:** built from scratch. No shadcn or Radix imports.
+- **Fonts:** DM Sans (sole typeface, replaces Lato/Montserrat)
+- **Build:** esbuild via `build.mjs` (entry `index.js`, output `dist/index.js` and `dist/index.cjs`, global name `FolioDS`). Run with `npm run build`.
+- **Consumers:** design and product prototyping, through `npm run design-sync` and the `templates/` specimens. No product app ships from this package yet.
+
+### B. The consuming product app (target stack, not in this repo)
+
+React + TypeScript, Tailwind CSS v4 (`@tailwindcss/vite`), shadcn/ui (Radix primitives), Vite. The Tailwind class specs in sections 2, 6, 7 and 9 describe how a component should look **when built in that app**. Their token and measurement values are authoritative in both places; the class syntax is only for app B.
+
+> Rule of thumb: editing `components/*.jsx` means inline styles plus token variables. Building a screen in the product app means Tailwind classes plus shadcn. Never mix the two. Full reasoning is in `.design-sync/NOTES.md` § "CLAUDE.md's Tailwind rules don't apply to this repo" and `.design-sync/conventions.md`.
 
 ---
 
 ## 2. Naming Conventions
 
 ### File Structure
+
+**This repo (package A), the real layout:**
+```
+components/            # flat: Button.jsx, Modal.jsx, Drawer.jsx, Table.jsx ... plus .d.ts stubs
+  assets/              # committed logo and favicon SVGs
+index.js               # public exports, bundled by build.mjs
+tokens/                # tokens.css, typography.css, cube-colors.md
+templates/             # app shells and specimens
+.design-sync/          # sync config, conventions.md, NOTES.md, previews
+```
+
+**Product app (app B), target layout:**
 ```
 src/
 ├── components/
@@ -110,15 +133,12 @@ src/
 ```
 
 ### Component Naming
-- **shadcn primitives:** Lowercase kebab-case files (`button.tsx`, `dialog.tsx`) — default shadcn convention
-- **Folio components:** PascalCase, no prefix (`Drawer.tsx`, `SourceCard.tsx`, `Button.tsx`)
-- **Layout:** PascalCase, no prefix (`Sidebar.tsx`, `TopHeader.tsx`)
-- **Pages:** PascalCase, singular noun (`Scenarios.tsx`, `Dimensions.tsx`)
+- **In this repo:** PascalCase `.jsx`, no prefix, flat in `components/` (`Drawer.jsx`, `SourceCard.jsx`, `Button.jsx`). Add a matching `.d.ts` and an export in `index.js`.
+- **Product app only:** shadcn primitives use lowercase kebab-case (`button.tsx`, `dialog.tsx`); Folio components PascalCase `.tsx` in `components/cube/`; layout components PascalCase; pages PascalCase singular (`Scenarios.tsx`).
 
-### CSS Class Naming
-- Use Tailwind utility classes exclusively — no inline styles, no CSS modules
-- Cube tokens as custom Tailwind colors: `bg-cube-cobalt-500`, `text-cube-gray-900`
-- Use `cn()` helper from `lib/utils.ts` for conditional classes
+### Styling conventions
+- **In this repo:** inline `style` objects that reference `tokens/tokens.css` custom properties. Do not add Tailwind classes, `cn()`, or CSS modules. Snap any off-scale radius, spacing, shadow or color to the nearest real token. Hardcoded hex is a legacy smell (about 59 components still have some), so replace it with a token when you touch the file. Third-party brand colors (for example `AppIcon` per-app backgrounds) are the legitimate exception.
+- **Product app only:** Tailwind utility classes only, with Cube tokens as custom colors (`bg-cube-cobalt-500`, `text-cube-gray-900`), and `cn()` from `lib/utils.ts` for conditional classes.
 
 ---
 
@@ -470,7 +490,9 @@ Effect styles pushed to Figma — use these token names in code:
 
 ## 7. Icon System
 
-**Font Awesome Kit** — loaded via CDN in `index.html`:
+**In this repo:** Font Awesome Pro is self-hosted. `tokens/tokens.css` imports `./fontawesome/css/all.min.css`, and the vendored copy lives in `vendor/fontawesome/` (7.3.1). Components render `<i className="fa-solid fa-...">` directly, so the stylesheet only needs to be linked. (The `./fontawesome/` import path resolves in the synced bundle; `npm run design-sync` copies the vendored files into place, see `.design-sync/copy-fontawesome.sh`.) Do not use the `@fortawesome/react-fontawesome` package: it is still listed in `package.json` (at v6) but no component imports it.
+
+**In the product app:** Font Awesome Kit, loaded via CDN in `index.html`:
 ```html
 <script src="https://kit.fontawesome.com/YOUR_KIT_CODE.js" crossorigin="anonymous"></script>
 ```
@@ -490,7 +512,9 @@ the icon.
 <i className="fa-regular fa-bell" />
 ```
 
-### Sizing & color with Tailwind
+### Sizing & color with Tailwind (product app only)
+
+In this repo, size and color icons with inline `style` and token variables instead.
 
 ```tsx
 <i className="fa-solid fa-xmark text-cube-gray-600" />
@@ -543,14 +567,19 @@ Never recolor, rotate, outline, stretch, or substitute the mark — `fa-cube` is
 
 ## 9. Rules for Claude
 
+**Scope:** rules marked *(app)* apply to the product app only. Rules marked *(repo)* apply to `components/*.jsx` in this repo. Unmarked rules apply to both.
+
 ### DO
-- Always use Tailwind utility classes with Cube tokens (`bg-cube-cobalt-500`, not `bg-[#2667D8]`)
+- *(app)* Use Tailwind utility classes with Cube tokens (`bg-cube-cobalt-500`, not `bg-[#2667D8]`)
+- *(repo)* Style with inline `style` objects that read token custom properties (`var(--color-cobalt-500)`), not raw hex
 - Use Cobalt as the primary color — not Blue
-- Use pill/`rounded-full` for all buttons, badges, chips, and toggles
-- Use `rounded-lg` (8px) for inputs and selects
-- Use shadcn primitives as the base, then customize with Cube token classes
-- Use `cn()` for conditional/merged classes
-- Keep components in `components/cube/` — no prefix, PascalCase only
+- Use pill/`rounded-full` (repo: `var(--radius-full)`) for all buttons, badges, chips, and toggles
+- Use `rounded-lg` (repo: `var(--radius-lg)`, 8px) for inputs and selects
+- *(app)* Use shadcn primitives as the base, then customize with Cube token classes
+- *(app)* Use `cn()` for conditional/merged classes
+- *(app)* Keep components in `components/cube/`, no prefix, PascalCase only
+- *(repo)* Keep components flat in `components/`, PascalCase `.jsx`, with a `.d.ts` and an `index.js` export
+- *(repo)* After any prop or variant rename, grep `.design-sync/conventions.md` and `.design-sync/previews/` for the old names
 - Match Figma measurements exactly: 32px input height, 48px row height, 400px drawer width
 - Use DM Sans for all UI text — it is the only typeface in Folio
 - Use the committed logo artwork via `Logo` / `Favicon` — never draw or generate a Cube logo
@@ -562,8 +591,9 @@ Never recolor, rotate, outline, stretch, or substitute the mark — `fa-cube` is
 ### DO NOT
 - Never build a one-off modal: use the shared Modal shell (see "Modal"), swap the body, keep the header, footer and divider rules
 - Never use `rounded-[4px]` for buttons — use `rounded-full`
-- Never use inline `style={{}}` attributes
-- Never use arbitrary hex values — always use token classes
+- *(app)* Never use inline `style={{}}` attributes
+- *(app)* Never use arbitrary hex values, always use token classes
+- *(repo)* Never add Tailwind classes, `cn()` or CSS modules to `components/*.jsx`; never introduce a new arbitrary hex where a token exists
 - Never use Lato or Montserrat — DM Sans only
 - Never hand-draw, regenerate, recolor, or substitute the Cube logo (including `fa-cube`) — use the committed asset, or ask for the export
 - Never reference Blue 500 as primary — Cobalt is primary (`cobalt-500` resting/interactive, `cobalt-600` hover)
@@ -574,6 +604,8 @@ Never recolor, rotate, outline, stretch, or substitute the mark — `fa-cube` is
 - Never set `.page-content` horizontal padding to anything but 24px (see "Page content margin")
 
 ### WHEN BUILDING NEW COMPONENTS
+*(repo)* Build a self-styled `.jsx` component in `components/`, using inline styles and token variables. Add a `.d.ts` stub, export it from `index.js`, and add it to `componentSrcMap` in `.design-sync/config.json`. The steps below describe the product app.
+
 1. Check if a shadcn primitive exists (Sheet, Dialog, Switch, Collapsible, etc.)
 2. Wrap it in a PascalCase component (no prefix) with Folio token styling
 3. Export with clear prop types
