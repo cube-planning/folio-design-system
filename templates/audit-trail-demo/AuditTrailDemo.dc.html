@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<!-- @template name="Audit Trail Demo" description="Audit Trail page built entirely from real PageHeader, Filter, Input, Table, and StatusDot components — no bespoke markup." -->
+<helmet>
+  <script src="./ds-base.js"></script>
+  <link rel="stylesheet" href="../../ds-bundle/_ds_bundle.css">
+  <script src="../../ds-bundle/_ds_bundle.js"></script>
+  <style>
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:'DM Sans',sans-serif; background:#F5F7FA; padding:40px; min-height:100vh; }
+    .page { width:1120px; margin:0 auto; }
+  </style>
+</helmet>
+
+<div class="page">{{ pageEl }}</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1200px&quot;,&quot;height&quot;:&quot;760px&quot;}}">
+const ROWS = [
+  { id: 1, date: 'Feb 13, 2026 at 8:32 am', eventType: 'Data publish',  status: 'success', member: 'Alice Johnson' },
+  { id: 2, date: 'Feb 13, 2026 at 8:32 am', eventType: 'Table update',  status: 'success', member: 'Brian Smith' },
+  { id: 3, date: 'Feb 13, 2026 at 8:32 am', eventType: 'Data publish',  status: 'success', member: 'Catherine Lee' },
+  { id: 4, date: 'Feb 13, 2026 at 8:32 am', eventType: 'Data publish',  status: 'success', member: 'David Brown' },
+  { id: 5, date: 'Feb 13, 2026 at 8:32 am', eventType: 'Data publish',  status: 'success', member: 'Eva Martinez' },
+];
+
+class Component extends DCLogic {
+  state = { search: '', teamMember: 'All', eventType: 'All' };
+
+  setSearch(v) {
+    this.setState({ search: v });
+  }
+
+  componentDidMount() {
+    if (!window.FolioDS) {
+      this._dsWait = setInterval(() => {
+        if (window.FolioDS) { clearInterval(this._dsWait); this.forceUpdate(); }
+      }, 60);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this._dsWait) clearInterval(this._dsWait);
+  }
+
+  renderVals() {
+    const F = window.FolioDS;
+    if (!F) return {};
+    const { PageHeader, Filter, Input, Table, StatusDot, Cell } = F;
+
+    // Timestamp cell — DM Sans per CLAUDE.md, caption-1 (12px), regular weight only.
+    const dateCell = (value) => React.createElement('span', {
+      style: { fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#101828' },
+    }, value);
+
+    const statusCell = () => React.createElement('span', {
+      style: { display: 'inline-flex', alignItems: 'center' },
+    }, React.createElement(StatusDot, { color: 'success' }));
+
+    const detailsCell = (_value, row) => React.createElement(Cell.Link, {
+      onClick: () => {},
+    }, 'View Details');
+
+    const columns = [
+      { key: 'date', label: 'Date', render: dateCell },
+      { key: 'eventType', label: 'Event Type' },
+      { key: 'status', label: 'Status/ Health?', sortable: false, render: statusCell },
+      { key: 'member', label: 'Team Member' },
+      { key: 'details', label: '', align: 'right', sortable: false, render: detailsCell },
+    ];
+
+    const filteredRows = ROWS.filter((r) => {
+      if (!this.state.search) return true;
+      const q = this.state.search.toLowerCase();
+      return r.member.toLowerCase().includes(q) || r.eventType.toLowerCase().includes(q);
+    });
+
+    const headerEl = React.createElement(PageHeader, {
+      icon: React.createElement('i', { className: 'fa-regular fa-file-lines' }),
+      title: 'Audit Trail',
+    });
+
+    const filterRowEl = React.createElement('div', {
+      style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginTop: 16 },
+    },
+      React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 8 } },
+        React.createElement(Filter, { label: 'Team Member', value: this.state.teamMember, onClick: () => {} }),
+        React.createElement(Filter, { label: 'Event Type', value: this.state.eventType, onClick: () => {} }),
+      ),
+      React.createElement('div', { style: { width: 260 } },
+        React.createElement(Input, {
+          placeholder: 'Find',
+          value: this.state.search,
+          onChange: (e) => this.setSearch(e.target.value),
+          leadingIcon: React.createElement('i', { className: 'fa-solid fa-magnifying-glass' }),
+        }),
+      ),
+    );
+
+    const tableEl = React.createElement(Table, {
+      columns,
+      rows: filteredRows,
+      style: { marginTop: 16 },
+    });
+
+    const pageEl = React.createElement(React.Fragment, null,
+      headerEl,
+      React.createElement('p', {
+        style: { fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#475467', marginTop: 8 },
+      }, 'View changes to your data here.'),
+      filterRowEl,
+      tableEl,
+    );
+
+    return { pageEl };
+  }
+}
+</script>
+</body>
+</html>

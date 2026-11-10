@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<!-- @template name="Workspace Template: AI Hub" description="Charlie AI Analyst landing page — prompt hero, agent library with filter tabs and detail preview, and a getting-started row, built on the App Shell." -->
+<!-- @built-against design-sync 2026-08-19 (see github.md); last verified 2026-08-25 -->
+<helmet>
+  <script src="./ds-base.js"></script>
+  <script src="./_sidebar-icons.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+    .fa-solid::before,.fa-regular::before,.fa-brands::before,.fa-light::before,.fa-thin::before,.fa-duotone::before { content:var(--fa) !important; }
+    body { font-family:'DM Sans',sans-serif; background:#F5F7FA; height:100vh; overflow:hidden; color:#222B3A; }
+    a { text-decoration:none; color:inherit; }
+    .app-shell { display:flex; height:100vh; }
+    .sb { width:255px; min-width:255px; padding:8px; display:flex; flex-direction:column; height:100vh; transition:width .2s ease,min-width .2s ease; overflow:hidden; }
+    .sb.col { width:64px; min-width:64px; }
+    .sb-card { background:#fff; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06); flex:1; display:flex; flex-direction:column; overflow:hidden; }
+    .sb-hdr { height:48px; padding:16px 12px 0 16px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; white-space:nowrap; }
+    .sb.col .sb-hdr { flex-direction:column; height:auto; justify-content:center; align-items:center; gap:8px; padding:12px 0 8px; }
+    .logo-wm { display:flex; align-items:center; }
+    .logo-wm img { height:28px; width:auto; display:block; }
+    .logo-ic { display:none; align-items:center; justify-content:center; }
+    .logo-ic img { height:28px; width:auto; display:block; }
+    .sb.col .logo-wm { display:none; }
+    .sb.col .logo-ic { display:flex; }
+    .col-btn { width:28px; height:28px; border:none; border-radius:4px; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#4A5567; }
+    .col-btn:hover { background:#F1F4F8; }
+    .cc-left,.cc-right { display:inline-flex; align-items:center; justify-content:center; }
+    .cc-right { display:none; }
+    .sb.col .cc-left { display:none; }
+    .sb.col .cc-right { display:inline-flex; }
+    .sb-nav { flex:1; overflow-y:auto; overflow-x:hidden; padding:24px 0; }
+    .sb-nav::-webkit-scrollbar { width:4px; }
+    .sb-nav::-webkit-scrollbar-thumb { background:#CDD5E0; border-radius:2px; }
+    .dv { height:1px; background:#E3E8EF; margin:8px 0; }
+    .nav-section { display:flex; flex-direction:column; gap:4px; padding:8px 0; }
+    .sb.col .nav-section { padding:0; align-items:center; }
+    .sec { display:flex; align-items:center; gap:4px; height:20px; padding:0 16px; font-family:'DM Sans', sans-serif; font-size:12px; font-weight:400; color:#4A5567; white-space:nowrap; }
+    .sb.col .sec { justify-content:center; padding:0; }
+    .sb.col .sec-lbl,.sb.col .sec-crt { display:none; }
+    .sec-crt { font-size:8px; color:#677489; transition:transform .15s ease; }
+    .sec { cursor:pointer; user-select:none; }
+    .nav-section.collapsed > *:not(.sec) { display:none; }
+    .nav-section.collapsed .sec-crt { transform:rotate(-90deg); }
+    .ni { height:32px; padding:0 24px 0 29px; border-left:3px solid transparent; display:flex; align-items:center; gap:8px; border-radius:0; cursor:pointer; position:relative; white-space:nowrap; color:inherit; width:100%; }
+    .ni.home { padding:0 24px 0 29px; border-left:3px solid transparent; }
+    .nav-section .ni:hover { background:#EFF6FF; border-left-color:#2667D8; }
+    .nav-section .ni:hover .ni-lbl { color:#2667D8; }
+    .nav-section .ni:hover .ni-ic { color:#2667D8; }
+    .ni.home:hover { background:#EFF6FF; border-left-color:#2667D8; }
+    .ni.home:hover .ni-lbl { color:#2667D8; }
+    .ni.home:hover .ni-ic { color:#2667D8; }
+    .nav-section .ni.active { background:#EFF6FF; border-left-color:#2667D8; }
+    .ni.home.active { background:#EFF6FF; border-left-color:#2667D8; }
+    .ni.active .ni-lbl { color:#2667D8; font-weight:500; }
+    .ni.active .ni-ic { color:#2667D8; }
+    .ni-ic { width:22px; height:22px; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#4A5567; font-size:15px; }
+    .ni-lbl { font-size:14px; font-weight:400; color:#222B3A; }
+    .sb.col .ni { padding:0; border-left:none; width:36px; justify-content:center; border-radius:4px; }
+    .sb.col .ni.home { padding:0; border-radius:4px; }
+    .sb.col .ni-lbl { display:none; }
+    .sb.col .ni:hover::after { content:attr(data-label); position:absolute; left:calc(100% + 8px); top:50%; transform:translateY(-50%); background:#222B3A; color:#fff; font-size:12px; font-weight:500; padding:4px 10px; border-radius:4px; white-space:nowrap; z-index:300; pointer-events:none; }
+    .ni-sub-wrap { padding-left:34px; display:flex; flex-direction:column; }
+    .ni-sub { display:flex; align-items:center; height:32px; padding:4px 16px 4px 18px; border-left:2px solid #E3E8EF; font-size:14px; font-weight:400; color:#222B3A; cursor:pointer; white-space:nowrap; }
+    .ni-sub:hover { background:#EFF6FF; }
+    .ni-sub.active { color:#2667D8; font-weight:600; border-left-color:#2667D8; }
+    .sb.col .ni-sub-wrap { display:none; }
+    .apps-wrap { padding:0 8px 16px; }
+    .sb.col .apps-wrap { padding:0 0 8px; }
+    .apps-sec { display:flex; align-items:center; gap:4px; padding:8px 8px 4px; font-family:'DM Sans', sans-serif; font-size:12px; font-weight:400; color:#4A5567; }
+    .sb.col .apps-sec { justify-content:center; padding:8px 0 4px; }
+    .sb.col .apps-sec .sec-lbl,.sb.col .apps-sec .sec-crt { display:none; }
+    .apps-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:4px; padding:4px 0; }
+    .apps-grid .app-tile:nth-child(8) { grid-column:1; }
+    .sb.col .apps-grid { display:flex; flex-direction:column; align-items:center; gap:4px; }
+    .app-tile { display:flex; flex-direction:column; align-items:center; gap:4px; padding:4px 0; border-radius:8px; cursor:pointer; position:relative; }
+    .app-tile:hover { background:#EFF6FF; }
+    .app-circ { width:32px; height:32px; border-radius:50%; background:#EEF0F4; border:1.5px solid #DDE1E8; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#4A5567; font-size:13px; }
+    .app-lbl { font-size:10px; font-weight:500; color:#353F4F; text-align:center; line-height:1.2; }
+    .sb.col .app-lbl { display:none; }
+    .sb.col .app-tile:hover::after { content:attr(data-label); position:absolute; left:calc(100% + 8px); top:50%; transform:translateY(-50%); background:#222B3A; color:#fff; font-size:12px; font-weight:500; padding:4px 10px; border-radius:4px; white-space:nowrap; z-index:300; pointer-events:none; }
+    .main { flex:1; display:flex; flex-direction:column; min-width:0; overflow:hidden; }
+    .topnav { height:80px; background:#F5F7FA; border-bottom:1px solid #E3E8EF; display:flex; align-items:center; justify-content:space-between; padding:0 24px; flex-shrink:0; }
+    .tn-company { display:flex; align-items:center; gap:4px; height:32px; padding:0 12px; background:#fff; border-radius:16px; box-shadow:0 2px 2px #E3E8EF; cursor:pointer; white-space:nowrap; }
+    .tn-company:hover { box-shadow:0 2px 4px #CDD5E0; }
+    .tn-company-ic { width:22px; height:22px; display:flex; align-items:center; justify-content:center; color:#173D82; font-size:13px; }
+    .tn-company-name { font-size:12px; font-weight:400; color:#677489; }
+    .tn-chevron { width:22px; height:22px; display:flex; align-items:center; justify-content:center; color:#353F4F; font-size:11px; }
+    .tn-right { display:flex; align-items:center; gap:8px; }
+    .tn-btn { width:32px; height:32px; border-radius:4px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; color:#4A5567; font-size:15px; }
+    .tn-btn:hover { background:#F8FAFC; }
+    .tn-ai-btn { width:28px; height:28px; border:none; border-radius:50%; background:linear-gradient(135deg,#7A5AF8 10%,#9B8AFB 50%,#5925DC 100%); padding:0; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; }
+    .tn-ai-btn { position:relative; }
+    .tn-ai-btn:hover { opacity:.85; }
+    .tn-user { display:flex; align-items:center; gap:8px; height:32px; padding:0 8px; background:#fff; border-radius:20px; box-shadow:0 2px 2px #E3E8EF; cursor:pointer; white-space:nowrap; }
+    .tn-user:hover { box-shadow:0 2px 4px #CDD5E0; }
+    .tn-avatar { width:24px; height:24px; border-radius:12px; background:#E3E8EF; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:#4A5567; flex-shrink:0; }
+    .tn-user-name { font-size:12px; font-weight:400; color:#677489; }
+    .page-content { flex:1; overflow-y:auto; background:#F5F7FA; padding:24px; }
+    .pg { display:flex; flex-direction:column; gap:32px; }
+
+    .hero { background:#fff; border:1px solid #E3E8EF; border-radius:16px; padding:40px 32px; display:flex; flex-direction:column; align-items:center; gap:20px; }
+    .hero-orb { width:64px; height:64px; position:relative; overflow:hidden; }
+    .hero-orb-inner { width:220px; height:220px; position:relative; transform:scale(0.29091); transform-origin:0 0; }
+    .hero-orb-sparkle { position:absolute; left:92px; top:92px; width:36px; height:36px; }
+    .hero-orb-sparkle svg { position:absolute; }
+    .hero-title { font-size:28px; font-weight:600; line-height:1.35; color:#222B3A; text-align:center; max-width:600px; }
+    .hero-sub { font-size:14px; font-weight:400; color:#4A5567; text-align:center; }
+    .hero-input { min-height:96px; border:1px solid #E3E8EF; border-radius:14px; background:#fff; padding:16px 20px; position:relative; box-shadow:-8px 8px 10px #EBE9FE,4px 4px 20px #EBE9FE; }
+    .hero-input textarea { border:none; outline:none; width:100%; height:44px; resize:none; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:400; color:#222B3A; background:transparent; }
+    .hero-input textarea::placeholder { color:#97A3B6; }
+    .hero-send { position:absolute; bottom:14px; right:16px; width:32px; height:32px; border-radius:50%; border:none; background:linear-gradient(135deg,#7A5AF8 10%,#9B8AFB 50%,#5925DC 100%); cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; color:#fff; font-size:16px; }
+    .hero-send:hover { opacity:.9; }
+    .chip-row { display:flex; align-items:center; gap:12px; max-width:1200px; width:100%; flex-wrap:nowrap; justify-content:center; }
+    .chip { display:flex; align-items:flex-start; gap:8px; padding:12px 16px; border:1px solid #E3E8EF; border-radius:10px; background:#fff; font-size:13px; color:#353F4F; cursor:pointer; flex:1; min-width:0; line-height:1.4; }
+    .chip:hover { border-color:#7A5AF8; background:#FAF9FF; }
+    .chip span { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+    .chip i { color:#7A5AF8; font-size:13px; margin-top:2px; flex-shrink:0; }
+
+    .sec-hdr { display:flex; align-items:center; justify-content:space-between; }
+    .sec-title { font-size:20px; font-weight:600; color:#222B3A; }
+    .history-btn { height:36px; padding:0 16px; border-radius:9999px; border:1px solid #E3E8EF; background:#fff; color:#173D82; font-family:'DM Sans',sans-serif; font-weight:500; font-size:13px; cursor:pointer; display:inline-flex; align-items:center; gap:8px; }
+    .history-btn:hover { background:#F8FAFC; }
+
+    .agents-card { background:#fff; border:1px solid #E3E8EF; border-radius:16px; padding:24px; display:flex; flex-direction:column; gap:16px; }
+    .agent-tabs { display:flex; align-items:center; gap:22px; border-bottom:1px solid #E3E8EF; }
+    .agent-tab { display:flex; align-items:center; gap:6px; height:36px; font-size:13px; font-weight:500; color:#677489; cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; }
+    .agent-tab i { font-size:12px; }
+    .agent-tab:hover { color:#222B3A; }
+    .agent-tab.active { color:#173D82; border-bottom-color:#173D82; }
+    .agent-body { display:grid; grid-template-columns:1fr 1fr; gap:20px; align-items:start; }
+    .agent-list { display:flex; flex-direction:column; }
+    .agent-row { display:flex; align-items:flex-start; gap:12px; padding:14px 12px; border-radius:10px; cursor:pointer; }
+    .agent-row:hover { background:#F8FAFC; }
+    .agent-row.sel { background:#EFF6FF; }
+    .agent-ic { width:40px; height:40px; display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; }
+    .agent-ic img { width:40px; height:40px; display:block; }
+    .agent-name { font-size:15px; font-weight:600; color:#222B3A; }
+    .agent-desc { font-size:13px; color:#677489; margin-top:2px; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; }
+    .agent-detail { background:#FCFCFD; border-radius:14px; padding:20px; display:flex; flex-direction:column; gap:14px; }
+    .detail-kicker { display:flex; align-items:center; gap:10px; }
+    .detail-kicker .agent-ic { width:40px; height:40px; }
+    .detail-kicker .agent-ic img { width:40px; height:40px; }
+    .detail-kicker span { font-size:16px; font-weight:600; letter-spacing:.06em; color:#677489; text-transform:uppercase; }
+    .detail-title { font-size:16px; font-weight:600; color:#222B3A; }
+    .detail-label { font-size:12px; color:#97A3B6; }
+    .prompt-box { border:1.5px solid #BDB4FE; background:#fff; border-radius:10px; padding:14px 16px; font-size:13px; color:#353F4F; line-height:1.6; display:flex; gap:10px; }
+    .prompt-box i { color:#7A5AF8; margin-top:2px; flex-shrink:0; }
+    .detail-acts { display:flex; align-items:center; justify-content:flex-end; gap:8px; }
+    .run-btn { height:36px; padding:0 16px; border-radius:9999px; border:none; background:#EDE9FE; color:#5925DC; font-family:'DM Sans',sans-serif; font-weight:500; font-size:14px; cursor:pointer; display:inline-flex; align-items:center; gap:8px; }
+    .run-btn:hover { background:#E0D9FC; }
+    .icon-btn { width:36px; height:36px; border-radius:9999px; border:1px solid #E3E8EF; background:#fff; color:#4A5567; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; }
+    .icon-btn:hover { background:#F8FAFC; }
+
+    .learn-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+    .learn-card { background:#fff; border:1px solid #E3E8EF; border-radius:14px; padding:18px; display:flex; flex-direction:column; gap:8px; }
+    .learn-tag-row { display:flex; align-items:center; justify-content:space-between; }
+    .learn-tag { display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:600; padding:2px 10px; border-radius:9999px; }
+    .learn-tag.guide { background:#DBEAFE; color:#2667D8; }
+    .learn-tag.settings { background:#F2F5F9; color:#4A5567; }
+    .learn-tag.agent { background:#EDE9FE; color:#5925DC; }
+    .learn-tag.prompt { background:#EDE9FE; color:#5925DC; }
+    .learn-card .ext { color:#97A3B6; font-size:12px; }
+    .learn-title { font-size:15px; font-weight:600; color:#222B3A; }
+    .learn-desc { font-size:13px; color:#677489; line-height:1.5; }
+    .staff-row { display:flex; align-items:center; justify-content:space-between; padding:0 12px 0 24px; height:40px; flex-shrink:0; }
+    .staff-row-left { display:flex; align-items:center; gap:8px; }
+    .staff-label { font-size:14px; font-weight:400; color:#222B3A; }
+    .staff-more-btn { width:28px; height:28px; border:none; background:transparent; border-radius:4px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#677489; font-size:14px; }
+    .staff-more-btn:hover { background:#F2F5F9; }
+    .sb.col .staff-row { padding:0; justify-content:center; }
+    .sb.col .staff-label { display:none; }
+    .sb.col .staff-more-btn { display:none; }
+  </style>
+</helmet>
+
+<div class="app-shell">
+  <aside id="sb" class="sb">
+    <div class="sb-card">
+      <div class="sb-hdr">
+        <div class="logo-wm"><img src="./cube-full-logo-mrp7qtfz-2a8j.svg" alt="Cube"></div>
+        <div class="logo-ic"><img src="./cube-icon-logo-mrp7voek-lnif.svg" alt="Cube"></div>
+        <button class="col-btn" data-action="collapse" aria-label="Toggle sidebar">
+          <span class="cc-left">{{ ic.collapseLeft }}</span><span class="cc-right">{{ ic.collapseRight }}</span>
+        </button>
+      </div>
+      <div class="sb-nav">
+        <div class="ni home" data-label="Home"><div class="ni-ic">{{ ic.home }}</div><span class="ni-lbl">Home</span></div>
+
+        <div class="dv"></div>
+        {{ sideNavEl }}
+      </div>
+      <div style="height:1px;background:#E3E8EF;margin:0"></div>
+      <div class="staff-row">
+        <div class="staff-row-left">
+          <div class="ni-ic" style="color:#4A5567"><i class="fa-regular fa-users"></i></div>
+          <span class="staff-label">Cube Staff</span>
+        </div>
+        <button class="staff-more-btn" aria-label="More options">
+          <i class="fa-solid fa-ellipsis-vertical"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topnav">
+      <div class="tn-company">
+        <div class="tn-company-ic"><i class="fa-solid fa-buildings"></i></div>
+        <span class="tn-company-name">{{ companyName }}</span>
+        <div class="tn-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+      </div>
+      <div class="tn-right">
+        <button class="tn-btn" title="Background tasks">{{ ic.backgroundTasks }}</button>
+        <button class="tn-btn" title="Help"><i class="fa-regular fa-circle-question"></i></button>
+        <button class="tn-ai-btn" data-tip="Cube AI">{{ ic.cubeAiAnalyst }}</button>
+        <div class="tn-user">
+          <x-import component-from-global-scope="FolioDS.Avatar" type="initials" size="xs" name="{{ userName }}" hint-size="24px,24px"></x-import>
+          <span class="tn-user-name">{{ userName }}</span>
+          <div class="tn-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <div class="pg">
+
+        <div class="hero">
+          <div class="hero-orb" aria-label="Charlie">
+            <div class="hero-orb-inner">
+              <svg width="220" height="220" viewBox="0 0 220 220" style="position:absolute;top:0;left:0">
+                <defs>
+                  <radialGradient id="charlieCubeGrad" cx="35%" cy="30%" r="75%">
+                    <stop offset="0%" stop-color="#8b7ff0"></stop>
+                    <stop offset="100%" stop-color="#4f3fd6"></stop>
+                  </radialGradient>
+                </defs>
+                <g transform="translate(110,110) scale(1.3128) translate(-110,-110)">
+                  <path d="M99.64,56.06 Q110,50 120.36,56.06 L148.39,72.44 Q158.75,78.5 158.75,90.5 L158.75,129.5 Q158.75,141.5 148.39,147.56 L120.36,163.94 Q110,170 99.64,163.94 L71.61,147.56 Q61.25,141.5 61.25,129.5 L61.25,90.5 Q61.25,78.5 71.61,72.44 Z" fill="url(#charlieCubeGrad)"></path>
+                </g>
+              </svg>
+              <div class="hero-orb-sparkle" id="charlieSparkle">
+                <svg width="36" height="36" viewBox="0 0 18 18" style="left:0;top:0"><path d="M9 0 L11 7 L18 9 L11 11 L9 18 L7 11 L0 9 L7 7 Z" fill="#ffffff" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round"></path></svg>
+                <svg width="20" height="20" viewBox="0 0 18 18" style="left:34px;top:-6px"><path d="M9 0 L11 7 L18 9 L11 11 L9 18 L7 11 L0 9 L7 7 Z" fill="#ffffff" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round"></path></svg>
+                <svg width="14" height="14" viewBox="0 0 18 18" style="left:40px;top:22px"><path d="M9 0 L11 7 L18 9 L11 11 L9 18 L7 11 L0 9 L7 7 Z" fill="#ffffff" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round"></path></svg>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;align-items:center">
+            <div class="hero-title" id="hero-title-el">Meet Charlie, your AI Analyst</div>
+            <div class="hero-sub">Ask anything about your financials — Charlie routes it to the right FP&amp;A Agent.</div>
+          </div>
+          <div class="hero-input" style="width:640px">
+            <textarea placeholder="Ask Cube about forecasts, variance, or headcount…"></textarea>
+            <button class="hero-send" aria-label="Send"><i class="fa-solid fa-arrow-up"></i></button>
+          </div>
+          <div style="background:#F8FAFC;border-radius:16px;padding:8px;width:100%">
+            <div class="chip-row">
+              <sc-for list="{{ prompts }}" as="p" hint-placeholder-count="4">
+                <div class="chip"><i class="fa-solid fa-sparkles"></i><span>{{ p }}</span></div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div class="sec-hdr">
+            <span class="sec-title">Explore Agents</span>
+            <x-import component-from-global-scope="FolioDS.Button" variant="secondary" size="large" style="background:#fff;boxShadow:0px 1px 2px rgba(16,24,40,0.05)" hint-size="110px,32px"><i class="fa-regular fa-rectangle-history" style="margin-right:6px"></i>History</x-import>
+          </div>
+          <div class="agents-card">
+            <div class="agent-tabs">
+              <sc-for list="{{ agentTabs }}" as="t" hint-placeholder-count="5">
+                <div class="{{ t.cls }}" onclick="{{ t.onSelect }}"><i class="{{ t.icon }}"></i>{{ t.label }}</div>
+              </sc-for>
+            </div>
+            <div class="agent-body">
+              <div class="agent-list">
+                <sc-for list="{{ agentRows }}" as="a" hint-placeholder-count="4">
+                  <div class="{{ a.cls }}" onclick="{{ a.onSelect }}">
+                    <div class="agent-ic"><img src="./widget-graphic.png" alt=""></div>
+                    <div style="min-width:0"><div class="agent-name">{{ a.name }}</div><div class="agent-desc">{{ a.desc }}</div></div>
+                  </div>
+                </sc-for>
+              </div>
+              <div class="agent-detail">
+                <div class="detail-kicker"><div class="agent-ic"><img src="./widget-graphic.png" alt=""></div><span>{{ activeCategory }}</span></div>
+                <div class="detail-title">{{ activeName }}</div>
+                <div class="detail-label">The prompt</div>
+                <div class="prompt-box"><i class="fa-solid fa-sparkles"></i><span>{{ activePrompt }}</span></div>
+                <div class="detail-acts">
+                  <button class="run-btn"><i class="fa-solid fa-sparkles"></i>Run in Charlie</button>
+                  <button class="icon-btn" aria-label="Edit"><i class="fa-regular fa-pen"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <span class="sec-title">Learn and Get Started</span>
+          <div class="learn-grid">
+            <sc-for list="{{ learnCards }}" as="c" hint-placeholder-count="4">
+              <div class="learn-card">
+                <div class="learn-tag-row"><span class="{{ c.tagCls }}">{{ c.tag }}</span><i class="fa-solid fa-arrow-up-right-from-square ext"></i></div>
+                <div class="learn-title">{{ c.title }}</div>
+                <div class="learn-desc">{{ c.desc }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1600px&quot;,&quot;height&quot;:&quot;1000px&quot;},&quot;companyName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Accuplanner Inc&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;userName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Nina Graham&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+class Component extends DCLogic {
+  state = { activeTab: 'All', activeAgent: 'waterfall', heroInputWidth: 350 };
+  componentDidMount() {
+    this._measureTitle = () => {
+      const el = document.getElementById('hero-title-el');
+      if (el && el.offsetWidth) this.setState({ heroInputWidth: el.offsetWidth });
+    };
+    requestAnimationFrame(this._measureTitle);
+    window.addEventListener('resize', this._measureTitle);
+    (() => {
+      const radius = 58.5;
+      let angle = 45;
+      const speed = 360 / (15 * 60);
+      const tick = () => {
+        const el = document.getElementById('charlieSparkle');
+        if (el) {
+          angle = (angle + speed) % 360;
+          const rad = angle * Math.PI / 180;
+          const x = Math.cos(rad) * radius;
+          const y = Math.sin(rad) * radius;
+          el.style.transform = 'translate(' + x.toFixed(1) + 'px, ' + y.toFixed(1) + 'px)';
+        }
+        this._sparkleRaf = requestAnimationFrame(tick);
+      };
+      this._sparkleRaf = requestAnimationFrame(tick);
+    })();
+    this._onClick = (e) => {
+      const secEl = e.target.closest('.sec');
+      if (secEl) { const ns = secEl.closest('.nav-section'); if (ns) ns.classList.toggle('collapsed'); return; }
+      const collapse = e.target.closest('[data-action="collapse"]');
+      if (collapse) { const sb = document.getElementById('sb'); if (sb) sb.classList.toggle('col'); this.setState((st) => ({ sbCollapsed: !(st && st.sbCollapsed) })); }
+    };
+    document.addEventListener('click', this._onClick);
+    if (!window.SIDEBAR_ICONS || !window.FolioDS) {
+      this._iconWait = setInterval(() => { if (window.SIDEBAR_ICONS && window.FolioDS) { clearInterval(this._iconWait); this.forceUpdate(); } }, 60);
+    }
+  }
+  componentWillUnmount() {
+    document.removeEventListener('click', this._onClick);
+    window.removeEventListener('resize', this._measureTitle);
+    if (this._iconWait) clearInterval(this._iconWait);
+    if (this._sparkleRaf) cancelAnimationFrame(this._sparkleRaf);
+  }
+  get TABS() {
+    return [
+      { key: 'All', label: 'All', icon: '' },
+      { key: 'Analysis', label: 'Analysis', icon: 'fa-regular fa-chart-line' },
+      { key: 'Planners', label: 'Planners', icon: 'fa-regular fa-calendar' },
+      { key: 'Business Partners', label: 'Business Partners', icon: 'fa-regular fa-user-group' },
+      { key: 'Data Manager', label: 'Data Manager', icon: 'fa-regular fa-database' }
+    ];
+  }
+  get AGENTS() {
+    return [
+      { key: 'waterfall', name: 'Budget-to-Actuals Waterfall', category: 'Analysis', icon: 'fa-solid fa-chart-line', desc: 'Build a budget-to-actuals variance waterfall for the most recent quarter versus budget. Categorize every variance into Revenue, COGS, and OpEx.', prompt: 'Build a budget-to-actuals variance waterfall for the most recent quarter versus budget. Categorize every variance into Revenue, COGS, and OpEx. Within each bucket surface the top three sub-categories by dollar impact and add a one-sentence explanation. Show a running total after each bucket and end with the net EBITDA variance.' },
+      { key: 'margin', name: 'Gross Margin Variance Analysis', category: 'Analysis', icon: 'fa-solid fa-chart-line', desc: 'Decompose the gross margin variance for the most recent quarter across all product lines.', prompt: 'Decompose the gross margin variance for the most recent quarter across all product lines. Break out price, volume and mix effects separately, and flag any line where mix effect exceeds 2 points.' },
+      { key: 'trend', name: 'Month-over-Month Trend Analysis', category: 'Analysis', icon: 'fa-solid fa-chart-line', desc: 'Scan every P&L line item over the last 12 months and surface unusual patterns or inflection points.', prompt: 'Scan every P&L line item over the last 12 months and surface unusual patterns or inflection points. Rank the top 5 by magnitude of change and note the month each began.' },
+      { key: 'opex', name: 'OpEx Variance by Department', category: 'Analysis', icon: 'fa-solid fa-chart-line', desc: 'Break down OpEx variance for the most recent quarter across all departments against budget.', prompt: 'Break down OpEx variance for the most recent quarter across all departments against budget. Sort departments by absolute dollar variance and call out any department more than 10% over plan.' }
+    ];
+  }
+  renderVals() {
+    const sideNavEl = window.FolioDS ? React.createElement(window.FolioDS.PortalSideBarNav, { expanded: !(this.state && this.state.sbCollapsed), activeItemId: 'cubeAI', style: { width: '100%' } }) : null;
+    const activeTab = this.state.activeTab;
+    const activeAgentKey = this.state.activeAgent;
+    const agentTabs = this.TABS.map((t) => ({
+      label: t.label, icon: t.icon,
+      cls: 'agent-tab' + (t.key === activeTab ? ' active' : ''),
+      onSelect: () => this.setState({ activeTab: t.key })
+    }));
+    const filtered = activeTab === 'All' ? this.AGENTS : this.AGENTS.filter((a) => a.category === activeTab);
+    const agentRows = filtered.map((a) => ({
+      name: a.name, desc: a.desc, icon: a.icon,
+      cls: 'agent-row' + (a.key === activeAgentKey ? ' sel' : ''),
+      onSelect: () => this.setState({ activeAgent: a.key })
+    }));
+    const active = this.AGENTS.find((a) => a.key === activeAgentKey) || this.AGENTS[0];
+    const ICONS = window.SIDEBAR_ICONS || {};
+    const mk = (k) => ICONS[k] ? React.createElement('span', { style: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }, dangerouslySetInnerHTML: { __html: ICONS[k] } }) : null;
+    const ic = {};
+    ['home','cubeBI','boards','smartVariance','aiAnalyst','library','scenarios','workflows','dimensions','formulas','tags','integrations','dataExport','users','currencies','auditTrail','tables','backgroundTasks','cubeAiAnalyst','aiPlugin','chatgpt','claude','excel','sheets','slack','teams','slides','powerpoint','collapseLeft','collapseRight'].forEach((k) => { ic[k] = mk(k); });
+    const companyName = this.props.companyName ?? 'Accuplanner Inc';
+    const userName = this.props.userName ?? 'Nina Graham';
+    const initials = userName.trim().split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase();
+    const prompts = [
+      "Walk me through last quarter's OpEx variance to budget by department.",
+      'Compare headcount to plan by department.',
+      'Show the P&L impact of 10 new engineering hires next year.',
+      'Model conservative, base, and aggressive 2026 budget scenarios.'
+    ];
+    const learnCards = [
+      { tag: 'Guide', tagCls: 'learn-tag guide', title: 'Get started with Cube AI', desc: 'How Charlie and the FP&Agents work, and how to ask your first question.' },
+      { tag: 'Settings', tagCls: 'learn-tag settings', title: 'Set your AI preferences', desc: 'Choose how Cube AI responds and set defaults for your team.' },
+      { tag: 'Agent', tagCls: 'learn-tag agent', title: 'Plan with the Planner Agent', desc: 'Turn prompts into models, forecasts, and scenarios with the Planner.' },
+      { tag: 'Prompt', tagCls: 'learn-tag prompt', title: 'Run prompts from anywhere', desc: 'Use Cube prompts from Claude, ChatGPT, or Excel via the MCP server.' }
+    ];
+    return {
+      sideNavEl,
+      heroInputWidth: this.state.heroInputWidth + 'px',
+      companyName, userName, initials, ic, prompts, agentTabs, agentRows,
+      activeIcon: active.icon, activeCategory: active.category.toUpperCase(), activeName: active.name, activePrompt: active.prompt,
+      learnCards
+    };
+  }
+}
+
+</script>
+</body>
+</html>

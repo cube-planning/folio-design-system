@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onboarding Card — Folio DS Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="../vendor/fontawesome/css/all.min.css" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #F0F2F5;
+    padding: 2.5rem;
+    min-height: 100vh;
+  }
+  h1 { font-size: 20px; font-weight: 700; color: #101828; margin-bottom: 4px; }
+  p.lead { font-size: 13px; color: #667085; margin-bottom: 28px; }
+  .row { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+  .col { display: flex; flex-direction: column; gap: 10px; }
+  .col-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #98A2B3; }
+
+  .tile {
+    width: 280px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 16px;
+    border: 1px solid #D0D5DD;
+    overflow: hidden;
+    background: #fff;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(16,24,40,0.05);
+    transition: box-shadow 120ms ease;
+  }
+  .tile.hover {
+    box-shadow: 0 4px 8px -2px rgba(16,24,40,0.10), 0 2px 4px -2px rgba(16,24,40,0.06);
+  }
+
+  .tile-band {
+    position: relative;
+    background: #F2F5FB;
+    padding: 20px;
+    min-height: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .tile-band i.illustration { font-size: 32px; color: #122E64; opacity: .85; }
+
+  .radio {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 20px;
+    height: 20px;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border: 1px solid #D0D5DD;
+  }
+
+  .dismiss {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #475467;
+    font-size: 16px;
+  }
+
+  .tile-body { padding: 16px; display: flex; flex-direction: column; gap: 4px; }
+  .tile-title-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .tile-title { font-size: 16px; font-weight: 500; color: #101828; line-height: 24px; }
+  .tile-desc { font-size: 14px; font-weight: 400; color: #344054; line-height: 20px; }
+  .tile-desc a { color: #1D5FD6; text-decoration: underline; }
+
+  .check-badge {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    border-radius: 9999px;
+    background: #12B76A;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .check-badge i { font-size: 13px; color: #fff; }
+</style>
+</head>
+<body>
+  <h1>Onboarding Card — states</h1>
+  <p class="lead">"Get the most out of Cube" checklist tile — default, hover, and completed.</p>
+
+  <div class="row">
+    <div class="col">
+      <span class="col-label">Default</span>
+      <div class="tile">
+        <div class="tile-band">
+          <i class="fa-solid fa-image illustration"></i>
+          <span class="radio"></span>
+        </div>
+        <div class="tile-body">
+          <span class="tile-title">Add your company logo</span>
+          <p class="tile-desc">Brand your workspace. Find it under your name, top-right. <a href="#">Get Start</a></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <span class="col-label">Hover</span>
+      <div class="tile hover">
+        <div class="tile-band">
+          <i class="fa-solid fa-wand-magic-sparkles illustration"></i>
+          <span class="radio"></span>
+        </div>
+        <div class="tile-body">
+          <span class="tile-title">Prompt AI Analyst</span>
+          <p class="tile-desc">Ask a question in plain English and get a traceable answer. <a href="#">Get Start</a></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <span class="col-label">Completed</span>
+      <div class="tile">
+        <div class="tile-band">
+          <i class="fa-solid fa-layer-group illustration"></i>
+          <button type="button" class="dismiss" aria-label="Dismiss"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="tile-body">
+          <div class="tile-title-row">
+            <span class="tile-title">Create a workflow</span>
+            <span class="check-badge"><i class="fa-solid fa-check"></i></span>
+          </div>
+          <p class="tile-desc">Orchestrate a finance-led process like month-end close.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

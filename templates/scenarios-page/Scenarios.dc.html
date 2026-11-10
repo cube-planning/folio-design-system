@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<!-- @template name="Workspace Template: Scenarios" description="Scenarios list screen — nested scenario tree with filters, search, and row actions on the App Shell and the real DS Table/Cell/Select/Input components." -->
+<!-- @built-against design-sync 2026-08-19 (see github.md); last verified 2026-08-25 -->
+<helmet>
+  <script src="./ds-base.js"></script>
+  <script src="./_sidebar-icons.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:'DM Sans',sans-serif; background:#F5F7FA; height:100vh; overflow:hidden; color:#222B3A; }
+    a { text-decoration:none; color:inherit; }
+    .app-shell { display:flex; height:100vh; }
+    .sb { width:255px; min-width:255px; padding:8px; display:flex; flex-direction:column; height:100vh; transition:width .2s ease,min-width .2s ease; overflow:hidden; }
+    .sb.col { width:64px; min-width:64px; }
+    .sb-card { background:#fff; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06); flex:1; display:flex; flex-direction:column; overflow:hidden; }
+    .sb-hdr { height:48px; padding:16px 12px 0 16px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; white-space:nowrap; }
+    .sb.col .sb-hdr { flex-direction:column; height:auto; justify-content:center; align-items:center; gap:8px; padding:12px 0 8px; }
+    .logo-wm { display:flex; align-items:center; }
+    .logo-wm img { height:28px; width:auto; display:block; }
+    .logo-ic { display:none; align-items:center; justify-content:center; }
+    .logo-ic img { height:28px; width:auto; display:block; }
+    .sb.col .logo-wm { display:none; }
+    .sb.col .logo-ic { display:flex; }
+    .col-btn { width:28px; height:28px; border:none; border-radius:4px; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#4A5567; }
+    .col-btn:hover { background:#F1F4F8; }
+    .cc-left,.cc-right { display:inline-flex; align-items:center; justify-content:center; }
+    .cc-right { display:none; }
+    .sb.col .cc-left { display:none; }
+    .sb.col .cc-right { display:inline-flex; }
+    .sb-nav { flex:1; overflow-y:auto; overflow-x:hidden; padding:24px 0; }
+    .sb-nav::-webkit-scrollbar { width:4px; }
+    .sb-nav::-webkit-scrollbar-thumb { background:#CDD5E0; border-radius:2px; }
+    .dv { height:1px; background:#E3E8EF; margin:8px 0; }
+    .nav-section { display:flex; flex-direction:column; gap:4px; padding:8px 0; }
+    .sb.col .nav-section { padding:0; align-items:center; }
+    .sec { display:flex; align-items:center; gap:4px; height:20px; padding:0 16px; font-family:'DM Sans', sans-serif; font-size:12px; font-weight:400; color:#4A5567; white-space:nowrap; }
+    .sb.col .sec { justify-content:center; padding:0; }
+    .sb.col .sec-lbl,.sb.col .sec-crt { display:none; }
+    .sec-crt { font-size:8px; color:#677489; transition:transform .15s ease; }
+    .sec { cursor:pointer; user-select:none; }
+    .nav-section.collapsed > *:not(.sec) { display:none; }
+    .nav-section.collapsed .sec-crt { transform:rotate(-90deg); }
+    .ni { height:32px; padding:0 24px 0 29px; border-left:3px solid transparent; display:flex; align-items:center; gap:8px; border-radius:0; cursor:pointer; position:relative; white-space:nowrap; color:inherit; width:100%; }
+    .ni.home { padding:0 24px 0 29px; }
+    .nav-section .ni:hover { background:#EFF6FF; border-left-color:#2667D8; }
+    .nav-section .ni:hover .ni-lbl { color:#2667D8; }
+    .nav-section .ni:hover .ni-ic { color:#2667D8; }
+    .nav-section .ni.active { background:#EFF6FF; border-left-color:#2667D8; }
+    .ni.active .ni-lbl { color:#2667D8; font-weight:500; }
+    .ni.active .ni-ic { color:#2667D8; }
+    .ni-ic { width:22px; height:22px; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#4A5567; font-size:15px; }
+    .ni-lbl { font-size:14px; font-weight:400; color:#222B3A; }
+    .sb.col .ni { padding:0; border-left:none; width:36px; justify-content:center; border-radius:4px; }
+    .sb.col .ni-lbl { display:none; }
+    .sb.col .ni:hover::after { content:attr(data-label); position:absolute; left:calc(100% + 8px); top:50%; transform:translateY(-50%); background:#222B3A; color:#fff; font-size:12px; font-weight:500; padding:4px 10px; border-radius:4px; white-space:nowrap; z-index:300; pointer-events:none; }
+    .ni-sub-wrap { padding-left:34px; display:flex; flex-direction:column; }
+    .ni-sub { display:flex; align-items:center; height:32px; padding:4px 16px 4px 18px; border-left:2px solid #E3E8EF; font-size:14px; font-weight:400; color:#222B3A; cursor:pointer; white-space:nowrap; }
+    .ni-sub:hover { background:#EFF6FF; }
+    .sb.col .ni-sub-wrap { display:none; }
+    .apps-wrap { padding:0 8px 16px; }
+    .sb.col .apps-wrap { padding:0 0 8px; }
+    .apps-sec { display:flex; align-items:center; gap:4px; padding:8px 8px 4px; font-family:'DM Sans', sans-serif; font-size:12px; font-weight:400; color:#4A5567; }
+    .sb.col .apps-sec { justify-content:center; padding:8px 0 4px; }
+    .sb.col .apps-sec .sec-lbl,.sb.col .apps-sec .sec-crt { display:none; }
+    .apps-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:4px; padding:4px 0; }
+    .sb.col .apps-grid { display:flex; flex-direction:column; align-items:center; gap:4px; }
+    .app-tile { display:flex; flex-direction:column; align-items:center; gap:4px; padding:4px 0; border-radius:8px; cursor:pointer; position:relative; }
+    .app-tile:hover { background:#EFF6FF; }
+    .app-circ { width:32px; height:32px; border-radius:50%; background:#EEF0F4; border:1.5px solid #DDE1E8; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#4A5567; font-size:13px; }
+    .app-lbl { font-size:10px; font-weight:500; color:#353F4F; text-align:center; line-height:1.2; }
+    .sb.col .app-lbl { display:none; }
+    .main { flex:1; display:flex; flex-direction:column; min-width:0; overflow:hidden; }
+    .topnav { height:80px; background:#F5F7FA; border-bottom:1px solid #E3E8EF; display:flex; align-items:center; justify-content:space-between; padding:0 24px; flex-shrink:0; }
+    .tn-company { display:flex; align-items:center; gap:4px; height:32px; padding:0 12px; background:#fff; border-radius:16px; box-shadow:0 2px 2px #E3E8EF; cursor:pointer; white-space:nowrap; }
+    .tn-company-ic { width:22px; height:22px; display:flex; align-items:center; justify-content:center; color:#173D82; font-size:13px; }
+    .tn-company-name { font-size:12px; font-weight:400; color:#677489; }
+    .tn-chevron { width:22px; height:22px; display:flex; align-items:center; justify-content:center; color:#353F4F; font-size:11px; }
+    .tn-right { display:flex; align-items:center; gap:8px; }
+    .tn-btn { width:32px; height:32px; border-radius:4px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; color:#4A5567; font-size:15px; }
+    .tn-btn:hover { background:#F8FAFC; }
+    .tn-ai-btn { width:28px; height:28px; border:none; border-radius:50%; background:linear-gradient(135deg,#7A5AF8 10%,#9B8AFB 50%,#5925DC 100%); padding:0; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; }
+    .tn-user { display:flex; align-items:center; gap:8px; height:32px; padding:0 8px; background:#fff; border-radius:20px; box-shadow:0 2px 2px #E3E8EF; cursor:pointer; white-space:nowrap; }
+    .tn-avatar { width:24px; height:24px; border-radius:12px; background:#10B283; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:#fff; flex-shrink:0; }
+    .tn-user-name { font-size:12px; font-weight:400; color:#677489; }
+    .page-content { flex:1; overflow-y:auto; background:#F5F7FA; padding:24px; }
+    .pg { width:100%; display:flex; flex-direction:column; gap:8px; }
+    .pg-wrap { display:flex; flex-direction:column; gap:8px; padding-bottom:16px; border-bottom:1px solid #E3E8EF; }
+    .pg-sub { font-size:14px; color:#677489; }
+    .filter-bar { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:16px 0; }
+    .filter-left { display:flex; align-items:center; gap:10px; }
+    .filter-lbl { font-size:13px; color:#4A5567; font-weight:500; }
+    .card { background:#fff; border:1px solid #E3E8EF; border-radius:12px; overflow:hidden; }
+    .scen-row-name { display:flex; align-items:center; gap:6px; }
+    .scen-caret { width:14px; height:14px; display:inline-flex; align-items:center; justify-content:center; color:#4A5567; font-size:10px; cursor:pointer; flex-shrink:0; }
+    .scen-caret.leaf { visibility:hidden; }
+    .scen-label { font-size:14px; color:#222B3A; }
+    .scen-label.group { font-weight:400; }
+    .apps-grid .app-tile:nth-child(8) { grid-column: 1; }
+    .staff-row { display:flex; align-items:center; justify-content:space-between; padding:0 12px 0 24px; height:40px; flex-shrink:0; }
+    .staff-row-left { display:flex; align-items:center; gap:8px; }
+    .staff-label { font-size:14px; font-weight:400; color:#222B3A; }
+    .staff-more-btn { width:28px; height:28px; border:none; background:transparent; border-radius:4px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#677489; font-size:14px; }
+    .staff-more-btn:hover { background:#F2F5F9; }
+    .sb.col .staff-row { padding:0; justify-content:center; }
+    .sb.col .staff-label { display:none; }
+    .sb.col .staff-more-btn { display:none; }
+  </style>
+</helmet>
+
+<div class="app-shell">
+  <aside id="sb" class="sb">
+    <div class="sb-card">
+      <div class="sb-hdr">
+        <div class="logo-wm"><img src="./cube-full-logo-mrp7qtfz-2a8j.svg" alt="Cube"></div>
+        <div class="logo-ic"><img src="./cube-icon-logo-mrp7voek-lnif.svg" alt="Cube"></div>
+        <button class="col-btn" data-action="collapse" aria-label="Toggle sidebar">
+          <span class="cc-left">{{ ic.collapseLeft }}</span><span class="cc-right">{{ ic.collapseRight }}</span>
+        </button>
+      </div>
+      <div class="sb-nav">
+        <div class="ni home" data-label="Home"><div class="ni-ic">{{ ic.home }}</div><span class="ni-lbl">Home</span></div>
+
+        <div class="dv"></div>
+        {{ sideNavEl }}
+      </div>
+      <div style="height:1px;background:#E3E8EF;margin:0"></div>
+      <div class="staff-row">
+        <div class="staff-row-left">
+          <div class="ni-ic" style="color:#4A5567"><i class="fa-regular fa-users"></i></div>
+          <span class="staff-label">Cube Staff</span>
+        </div>
+        <button class="staff-more-btn" aria-label="More options">
+          <i class="fa-solid fa-ellipsis-vertical"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topnav">
+      <div class="tn-company">
+        <div class="tn-company-ic"><i class="fa-solid fa-buildings"></i></div>
+        <span class="tn-company-name">{{ companyName }}</span>
+        <div class="tn-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+      </div>
+      <div class="tn-right">
+        <button class="tn-btn" title="Background tasks">{{ ic.backgroundTasks }}</button>
+        <button class="tn-btn" title="Help"><i class="fa-regular fa-circle-question"></i></button>
+        <button class="tn-ai-btn" data-tip="Cube AI">{{ ic.cubeAiAnalyst }}</button>
+        <div class="tn-user">
+          <x-import component-from-global-scope="FolioDS.Avatar" type="initials" size="xs" name="{{ userName }}" hint-size="24px,24px"></x-import>
+          <span class="tn-user-name">{{ userName }}</span>
+          <div class="tn-chevron"><i class="fa-solid fa-chevron-down"></i></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <div class="pg">
+        <div class="pg-wrap">
+          {{ pageHeaderEl }}
+          <p class="pg-sub">Test scenario options and compare results to guide your financial decisions.</p>
+        </div>
+
+        <div class="filter-bar">
+          <div class="filter-left">
+            <span class="filter-lbl">Filter by:</span>
+            <x-import component-from-global-scope="FolioDS.Filter" label="Status" value="Enabled" hint-size="130px,32px"></x-import>
+            <x-import component-from-global-scope="FolioDS.Filter" label="Type" value="All" hint-size="90px,32px"></x-import>
+          </div>
+          <div style="width:260px">
+            <x-import component-from-global-scope="FolioDS.Input" size="large" placeholder="Find" leadingIcon="{{ searchIcon }}" hint-size="260px,36px"></x-import>
+          </div>
+        </div>
+
+        <div class="card">
+          {{ tableEl }}
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;1600px&quot;,&quot;height&quot;:&quot;1000px&quot;},&quot;companyName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Accuplanner Inc&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;userName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Nina Graham&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+class Component extends DCLogic {
+  state = { expanded: { forecasts: true, 'test-actuals-consol': true } };
+  componentDidMount() {
+    this._onClick = (e) => {
+      const secEl = e.target.closest('.sec');
+      if (secEl) { const ns = secEl.closest('.nav-section'); if (ns) ns.classList.toggle('collapsed'); return; }
+      const collapse = e.target.closest('[data-action="collapse"]');
+      if (collapse) { const sb = document.getElementById('sb'); if (sb) sb.classList.toggle('col'); this.setState((st) => ({ sbCollapsed: !(st && st.sbCollapsed) })); }
+    };
+    document.addEventListener('click', this._onClick);
+    if (!window.SIDEBAR_ICONS || !window.FolioDS) {
+      this._iconWait = setInterval(() => { if (window.SIDEBAR_ICONS && window.FolioDS) { clearInterval(this._iconWait); this.forceUpdate(); } }, 60);
+    }
+  }
+  componentWillUnmount() {
+    document.removeEventListener('click', this._onClick);
+    if (this._iconWait) clearInterval(this._iconWait);
+  }
+  toggle(id) {
+    this.setState((s) => ({ expanded: { ...s.expanded, [id]: !s.expanded[id] } }));
+  }
+  get TREE() {
+    return [
+      { id: 'actuals', name: 'Actuals', access: 'Locked – Actuals', type: '' },
+      { id: 'forecast', name: 'Forecast', access: '', type: '' },
+      { id: 'budgets', name: 'Budgets', access: '', type: '', group: true, children: [] },
+      { id: 'forecasts', name: 'Forecasts', access: '', type: '', group: true, children: [
+        { id: 'actual-formula', name: 'Actual – formula', access: '', type: 'Formula' },
+        { id: 'variance-avb', name: 'Variance AvB', access: '', type: 'Formula' }
+      ] },
+      { id: 'budget-test-consolidation', name: 'Budget Test Consolidation', access: '', type: '', group: true, children: [] },
+      { id: 'test-actuals-consol', name: 'Test Actuals Consol', access: '', type: '', group: true, children: [
+        { id: 'actual', name: 'Actual', access: '', type: 'Formula' },
+        { id: 'working-forecast', name: 'Working Forecast', access: '', type: '' },
+        { id: 'budget', name: 'Budget', access: '', type: '' },
+        { id: 'new', name: 'New', access: '', type: '' }
+      ] }
+    ];
+  }
+  flattenRows() {
+    const rows = [];
+    this.TREE.forEach((node) => {
+      rows.push({ ...node, level: 0 });
+      if (node.group && this.state.expanded[node.id]) {
+        (node.children || []).forEach((child) => rows.push({ ...child, level: 1 }));
+      }
+    });
+    return rows;
+  }
+  renderVals() {
+    const sideNavEl = window.FolioDS ? React.createElement(window.FolioDS.PortalSideBarNav, { expanded: !(this.state && this.state.sbCollapsed), activeItemId: 'scenarios', style: { width: '100%' } }) : null;
+    const F = window.FolioDS;
+    const C = F ? F.Cell : null;
+    let tableEl = null;
+    const rows = this.flattenRows();
+    if (F && C) {
+      const nameRender = (v, row) => React.createElement('div', { className: 'scen-row-name', style: { paddingLeft: row.level * 24 } },
+        React.createElement('span', {
+          className: 'scen-caret' + (row.group ? '' : ' leaf'),
+          onClick: row.group ? () => this.toggle(row.id) : undefined
+        }, row.group ? React.createElement('i', { className: 'fa-solid fa-caret-' + (this.state.expanded[row.id] ? 'down' : 'right') }) : null),
+        React.createElement('span', { className: 'scen-label' + (row.group ? ' group' : '') }, v)
+      );
+      const columns = [
+        { key: 'name', label: 'Name', render: nameRender },
+        { key: 'access', label: 'Write Access', render: (v) => React.createElement(C.Text, null, v || '') },
+        { key: 'type', label: 'Type', render: (v) => v ? React.createElement(C.Text, null, v) : null },
+        { key: '_a', label: '', sortable: false, align: 'right', render: () => React.createElement(C.Actions, null,
+          React.createElement(C.ActionButton, { 'aria-label': 'Edit', icon: React.createElement('i', { className: 'fa-regular fa-pen', style: { fontSize: 13 } }) }),
+          React.createElement(C.ActionButton, { 'aria-label': 'Remove', icon: React.createElement('i', { className: 'fa-regular fa-circle-xmark', style: { fontSize: 13 } }) })
+        ) }
+      ];
+      tableEl = React.createElement(F.Table, { columns, rows });
+    }
+    const ICONS = window.SIDEBAR_ICONS || {};
+    const mk = (k, size) => ICONS[k] ? React.createElement('span', { style: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: size, height: size }, dangerouslySetInnerHTML: { __html: ICONS[k] } }) : null;
+    const ic = {};
+    ['home','cubeBI','boards','smartVariance','aiAnalyst','library','tables','scenarios','workflows','dimensions','formulas','tags','integrations','dataExport','users','currencies','auditTrail','backgroundTasks','cubeAiAnalyst','aiPlugin','chatgpt','claude','excel','sheets','slack','teams','slides','powerpoint','collapseLeft','collapseRight'].forEach((k) => { ic[k] = mk(k, 14); });
+    const companyName = this.props.companyName ?? 'Accuplanner Inc';
+    const userName = this.props.userName ?? 'Nina Graham';
+    const searchIcon = React.createElement('i', { className: 'fa-solid fa-magnifying-glass', style: { fontSize: 13, color: '#97A3B6' } });
+    const ghostIcon = (icon, label, size) => F ? React.createElement(F.Button, { variant: 'ghost-gray', size: size || 'small', 'aria-label': label, icon: React.createElement('i', { className: icon }) }) : null;
+    const moreBtn = ghostIcon('fa-regular fa-ellipsis-vertical', 'More', 'large');
+    const compareBtn = ghostIcon('fa-regular fa-angles-right', 'Compare', 'large');
+    const duplicateBtn = ghostIcon('fa-regular fa-copy', 'Duplicate', 'large');
+    const aiBtn = ghostIcon('fa-solid fa-sparkles', 'Cube AI', 'large');
+    const scenarioBtn = F ? React.createElement(F.Button, { variant: 'primary', size: 'large' }, React.createElement('i', { className: 'fa-regular fa-plus', style: { marginRight: 6 } }), 'Scenario') : null;
+    const pageHeaderEl = F ? React.createElement(F.PageHeader, {
+      icon: React.createElement('i', { className: 'fa-regular fa-chart-line' }),
+      title: 'Scenarios',
+      style: { borderBottom: 'none', paddingBottom: 0 },
+      actions: React.createElement(React.Fragment, null, moreBtn, compareBtn, duplicateBtn, aiBtn, scenarioBtn),
+    }) : null;
+    return {
+      sideNavEl,
+      companyName, userName, ic, tableEl, searchIcon, pageHeaderEl
+    };
+  }
+}
+
+</script>
+</body>
+</html>

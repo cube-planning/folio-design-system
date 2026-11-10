@@ -1,0 +1,48 @@
+<!doctype html>
+<!-- @dsCard group="Components" name="Icon system" subtitle="Font Awesome Solid — color-mapped UI icons" viewport="700x200" -->
+<html><head><meta charset="utf-8"><title>Iconography</title>
+<link rel="stylesheet" href="_shared.css">
+<link rel="stylesheet" href="../vendor/fontawesome/css/all.min.css">
+<style>
+  body { padding: 18px; }
+  .grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px; }
+  .cell { background: #fff; border-radius: var(--radius-lg); box-shadow: inset 0 0 0 1px var(--gray-300); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 10px 4px; }
+  /* Font-based icons — sized with font-size, not SVG stroke-width. */
+  .cell i { font-size: 20px; line-height: 1; }
+  .lbl { font-family: var(--font-body); font-size: 10px; color: var(--gray-600); }
+
+  /* Color mapping — docs/foundation/BRAND-FOUNDATION.md § Icons + README § Color Mapping */
+  .default { color: var(--gray-600); }
+  .active  { color: var(--new-blue); }
+  .ai      { color: var(--deep-purple); }
+  .ok      { color: var(--green-og); }
+  .warn    { color: var(--burnt-amber); }
+  .err     { color: var(--error); }
+  .onwhite { background: var(--darkest); color: #fff; }
+  .onwhite .lbl { color: rgba(255,255,255,.6); }
+</style>
+</head><body>
+  <!-- Font Awesome, fa-solid (the default style per docs/foundation/BRAND-FOUNDATION.md
+       § Icons). Every name verified against the vendored
+       fontawesome-pro-7.3.1-web/metadata/icons.json before use, checking both
+       that the name exists and that `solid` is among its styles.
+       Icons are served from the vendored package, not a CDN. -->
+  <div class="grid">
+    <div class="cell default"><i class="fa-solid fa-house"></i><span class="lbl">default</span></div>
+    <div class="cell active"><i class="fa-solid fa-table-columns"></i><span class="lbl">active</span></div>
+    <div class="cell ai"><i class="fa-solid fa-sparkles"></i><span class="lbl">AI</span></div>
+    <div class="cell ok"><i class="fa-solid fa-circle-check"></i><span class="lbl">success</span></div>
+    <div class="cell warn"><i class="fa-solid fa-triangle-exclamation"></i><span class="lbl">warning</span></div>
+    <div class="cell err"><i class="fa-solid fa-circle-xmark"></i><span class="lbl">error</span></div>
+    <div class="cell onwhite"><i class="fa-solid fa-database" style="color: var(--light-green)"></i><span class="lbl">on dark</span></div>
+    <div class="cell default"><i class="fa-solid fa-chart-line"></i><span class="lbl">chart</span></div>
+    <div class="cell default"><i class="fa-solid fa-file-lines"></i><span class="lbl">report</span></div>
+    <div class="cell default"><i class="fa-solid fa-code-branch"></i><span class="lbl">trace</span></div>
+    <div class="cell default"><i class="fa-solid fa-users"></i><span class="lbl">team</span></div>
+    <div class="cell default"><i class="fa-solid fa-gear"></i><span class="lbl">settings</span></div>
+    <div class="cell default"><i class="fa-solid fa-magnifying-glass"></i><span class="lbl">search</span></div>
+    <div class="cell default"><i class="fa-solid fa-bell"></i><span class="lbl">alerts</span></div>
+    <div class="cell default"><i class="fa-solid fa-plug"></i><span class="lbl">connect</span></div>
+    <div class="cell default"><i class="fa-solid fa-calculator"></i><span class="lbl">calc</span></div>
+  </div>
+</body></html>

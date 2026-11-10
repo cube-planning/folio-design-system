@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stepper 3.0 — Folio DS Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="vendor/fontawesome/css/all.min.css" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'Nunito Sans', BlinkMacSystemFont, sans-serif; background: #F0F2F5; display: flex; justify-content: center; padding: 2rem; min-height: 100vh; }
+.wrap { width: 960px; }
+
+.header { padding: 1.5rem 0 1rem; }
+.header h1 { font-size: 22px; font-weight: 700; color: #0E2349; margin-bottom: 4px; }
+.header p { font-size: 13px; color: #677489; }
+
+.sb { background: white; border: 1px solid #E0E5EC; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(16,24,40,.06); }
+
+/* Toolbar */
+.sb-bar { background: white; border-bottom: 1px solid #E5E5E5; display: flex; align-items: center; gap: 4px; padding: 0 14px; height: 42px; }
+.sb-icon { width: 30px; height: 30px; border: none; background: none; cursor: pointer; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: #666; font-size: 14px; }
+.sb-icon:hover { background: #F3F3F3; }
+.sb-sep { width: 1px; height: 18px; background: #E5E5E5; margin: 0 4px; }
+.sb-logo { display: flex; align-items: center; gap: 8px; }
+.sb-logo-mark { display: flex; align-items: center; justify-content: center; }
+.sb-logo-mark svg { display: block; height: 22px; width: auto; }
+.sb-logo-text { font-size: 13px; font-weight: 700; color: #163D83; }
+.sb-bar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.sb-badge { font-size: 11px; font-weight: 600; color: #677489; background: #F1F4F8; padding: 2px 8px; border-radius: 99px; }
+
+/* Canvas */
+.sb-canvas { background: white; min-height: 160px; display: flex; align-items: center; justify-content: center; padding: 2.5rem; border-bottom: 1px solid #E5E5E5; background-image: radial-gradient(#DEE3EC 1px, transparent 1px); background-size: 20px 20px; }
+.sb-canvas.no-dots { background-image: none; }
+
+/* Code bar */
+.sb-codebar { background: white; display: flex; align-items: center; gap: 16px; padding: 8px 16px; border-bottom: 1px solid #E5E5E5; }
+.sb-cbtn { font-size: 12px; color: #888; border: none; background: none; cursor: pointer; display: flex; align-items: center; gap: 5px; padding: 4px 0; }
+.sb-cbtn:hover { color: #333; }
+.code-snippet { display: none; background: #F6F8FA; border: 1px solid #E5E5E5; border-radius: 6px; padding: 10px 14px; font-family: 'SFMono-Regular', monospace; font-size: 12px; color: #333; margin: 0 16px 12px; line-height: 1.6; white-space: pre-wrap; }
+.code-snippet.visible { display: block; }
+#copied-msg { font-size: 12px; color: #229E66; margin-left: auto; opacity: 0; transition: opacity 200ms; }
+#copied-msg.show { opacity: 1; }
+
+/* Tabs */
+.sb-tabs { background: white; display: flex; padding: 0 16px; border-bottom: 1px solid #E5E5E5; }
+.sb-tab { padding: 10px 14px; font-size: 12px; font-weight: 600; color: #999; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px; }
+.sb-tab.on { color: #163D83; border-bottom-color: #163D83; }
+
+/* Controls table */
+.ctl-head { display: grid; grid-template-columns: 160px 1fr 90px 1fr 32px; padding: 8px 16px; background: white; border-bottom: 1px solid #E5E5E5; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #aaa; }
+.ctl-row { display: grid; grid-template-columns: 160px 1fr 90px 1fr 32px; padding: 10px 16px; background: white; border-bottom: 1px solid #F2F2F2; align-items: center; min-height: 48px; }
+.ctl-row:hover { background: #FAFAFA; }
+.ctl-name { font-family: 'SFMono-Regular', 'Menlo', monospace; font-size: 12px; font-weight: 700; color: #333; }
+.ctl-desc { font-family: 'SFMono-Regular', monospace; font-size: 10px; color: #bbb; line-height: 1.5; padding-right: 12px; }
+.ctl-def { font-size: 11px; color: #ccc; }
+select.ctrl { width: 100%; border: 1px solid #E0E0E0; border-radius: 5px; padding: 5px 8px; font-size: 12px; background: white; color: #333; cursor: pointer; }
+select.ctrl:focus { outline: none; border-color: #A6BEEB; }
+.bool-wrap { display: flex; }
+.bool-btn { flex: 1; padding: 4px 8px; font-size: 12px; border: 1px solid #E0E0E0; background: white; cursor: pointer; color: #777; }
+.bool-btn:first-child { border-radius: 5px 0 0 5px; border-right: none; }
+.bool-btn:last-child { border-radius: 0 5px 5px 0; }
+.bool-btn.on { background: #EBEBEB; font-weight: 700; color: #333; }
+.rst { width: 28px; height: 28px; border: none; background: none; cursor: pointer; color: #ccc; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+.rst:hover { background: #F0F0F0; color: #888; }
+
+/* State strip */
+.strip-divider { height: 1px; background: #EBEEF2; }
+.strip-wrap { padding: 20px; background: #FAFAFA; }
+.strip-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.strip-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #aaa; }
+.strip-variant { font-size: 11px; font-weight: 600; color: #677489; background: #EEF2FA; padding: 2px 8px; border-radius: 99px; }
+.strip-row { display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap; }
+.strip-cell { display: flex; flex-direction: column; align-items: center; gap: 10px; min-width: 72px; }
+.strip-name { font-size: 10px; color: #aaa; font-weight: 600; letter-spacing: .04em; text-align: center; text-transform: uppercase; }
+
+/* Overview grid */
+.overview-wrap { padding: 20px; background: #FAFAFA; }
+.overview-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #aaa; margin-bottom: 16px; }
+.overview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.overview-cell { display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; padding: 12px; border-radius: 8px; }
+.overview-cell:hover { background: #EFF3F9; }
+.overview-cell:hover .overview-name { color: #163D83; }
+.overview-name { font-size: 10px; color: #aaa; font-weight: 600; letter-spacing: .03em; transition: color 100ms; text-align: center; }
+
+/* ── STEPPER ───────────────────────────────── */
+/* Colors from Figma node 1254-48540 (component-specific cobalt ramp). */
+:root {
+  --step-cobalt-50:  #E6EBF4;
+  --step-cobalt-200: #8EA8E1;
+  --step-cobalt-500: #173D82;
+  --step-gray-300:   #E3E8EF;
+  --step-gray-900:   #222B3A;
+}
+.step-node { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.step-circle {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 600; border: 2px solid transparent;
+  transition: box-shadow .12s ease;
+}
+.step-label { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 400; line-height: 1.5; white-space: nowrap; }
+
+/* Done */
+.step-circle.done { background: var(--step-cobalt-50); color: var(--step-cobalt-500); cursor: pointer; }
+.step-circle.done.hov { box-shadow: 0 0 0 4px var(--step-cobalt-50); }
+.step-label.done { color: var(--step-gray-900); }
+/* Active */
+.step-circle.active { background: #fff; border-color: var(--step-cobalt-500); cursor: pointer; }
+.step-circle.active::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--step-cobalt-500); }
+.step-circle.active.hov { box-shadow: 0 0 0 4px var(--step-cobalt-50); }
+.step-label.active { color: var(--step-cobalt-500); font-weight: 600; }
+/* Inactive — inert, thin ring + muted dot; End+Inactive drops the dot */
+.step-circle.inactive { background: #fff; border: 2px solid var(--step-gray-300); cursor: default; }
+.step-circle.inactive::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--step-gray-300); }
+.step-circle.inactive.no-dot::after { content: none; }
+.step-label.inactive { color: var(--step-gray-300); }
+
+/* Assembled track (canvas hero) */
+.stepper-track { display: flex; align-items: flex-start; padding-bottom: 28px; }
+.st-node { flex: 0 0 36px; width: 36px; position: relative; }
+.st-node .step-circle { position: relative; z-index: 1; }
+.st-node .step-label { position: absolute; top: 46px; left: 50%; transform: translateX(-50%); }
+.st-connector { height: 2px; flex: 1 1 auto; min-width: 120px; background: var(--step-gray-300); margin-top: 17px; transition: background .15s ease; }
+.st-connector.filled { background: var(--step-cobalt-200); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <h1>Stepper 3.0 — Folio DS Prototype</h1>
+    <p>Horizontal stepper. Click a Done or Active step to jump · Inactive steps are inert · Use controls to audit each element × status.</p>
+  </div>
+
+  <div class="sb">
+    <div class="sb-bar">
+      <div class="sb-logo">
+        <span class="sb-logo-mark">
+          <svg width="20" height="22" viewBox="0 0 29 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11.2464 5.30427L13.5369 4L13.5282 15.7556L11.229 17.0598L11.2464 5.30427Z" fill="#163D83"></path>
+            <path d="M24.6057 21.23L14.8688 15.747V4L24.6057 9.5603V21.23Z" fill="#163D83"></path>
+            <path d="M23.935 22.3624L14.2678 27.9999L4.68762 22.3109L14.1894 16.8622L23.935 22.3624Z" fill="#163D83"></path>
+            <path d="M7.6318 9.67221L9.93103 8.35936L9.9136 17.8153L7.61438 19.1195L7.6318 9.67221Z" fill="#163D83"></path>
+            <path d="M4.01742 14.4599L6.31665 13.1471L6.29923 19.8744L4 21.1786L4.01742 14.4599Z" fill="#163D83"></path>
+          </svg>
+        </span>
+        <span class="sb-logo-text">Folio</span>
+      </div>
+      <div class="sb-sep"></div>
+      <button class="sb-icon" onclick="toggleDots()" title="Toggle dots background"><i class="fa-solid fa-table-cells"></i></button>
+      <button class="sb-icon" title="Zoom in"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+      <button class="sb-icon" title="Zoom out"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+      <div class="sb-bar-right">
+        <span class="sb-badge">Stepper · Figma naming · 3.0</span>
+      </div>
+    </div>
+
+    <div class="sb-canvas" id="canvas">
+      <div class="stepper-track" id="preview"></div>
+    </div>
+
+    <div class="sb-codebar">
+      <button class="sb-cbtn" onclick="toggleCode()"><i class="fa-solid fa-code" style="font-size:13px"></i> Show code</button>
+      <button class="sb-cbtn" onclick="copyCode()"><i class="fa-regular fa-copy" style="font-size:13px"></i> Copy code</button>
+      <span id="copied-msg">Copied!</span>
+    </div>
+    <div class="code-snippet" id="code-block"></div>
+
+    <div class="sb-tabs">
+      <div class="sb-tab on">Controls</div>
+      <div class="sb-tab">Actions</div>
+      <div class="sb-tab">Accessibility</div>
+    </div>
+
+    <div class="ctl-head">
+      <span>Name</span><span>Description</span><span>Default</span><span>Control</span><span></span>
+    </div>
+
+    <!-- steps -->
+    <div class="ctl-row">
+      <span class="ctl-name">steps</span>
+      <span class="ctl-desc">number of steps in the track</span>
+      <span class="ctl-def">4</span>
+      <select class="ctrl" id="ctl-steps" onchange="render()">
+        <option value="3">3</option>
+        <option value="4" selected>4</option>
+        <option value="5">5</option>
+      </select>
+      <button class="rst" onclick="resetSel('ctl-steps','4')" title="Reset">↺</button>
+    </div>
+
+    <!-- active -->
+    <div class="ctl-row">
+      <span class="ctl-name">active</span>
+      <span class="ctl-desc">1-based index of the current step</span>
+      <span class="ctl-def">2</span>
+      <select class="ctrl" id="ctl-active" onchange="render()">
+        <option value="1">Step 1</option>
+        <option value="2" selected>Step 2</option>
+        <option value="3">Step 3</option>
+        <option value="4">Step 4</option>
+        <option value="5">Step 5</option>
+      </select>
+      <button class="rst" onclick="resetSel('ctl-active','2')" title="Reset">↺</button>
+    </div>
+
+    <!-- showLabels -->
+    <div class="ctl-row">
+      <span class="ctl-name">showLabels</span>
+      <span class="ctl-desc">boolean</span>
+      <span class="ctl-def">true</span>
+      <div class="bool-wrap" id="labels-wrap">
+        <button class="bool-btn" onclick="setBool('showLabels',false,this,'labels-wrap')">False</button>
+        <button class="bool-btn on" onclick="setBool('showLabels',true,this,'labels-wrap')">True</button>
+      </div>
+      <button class="rst" onclick="setBool('showLabels',true,document.querySelectorAll('#labels-wrap .bool-btn')[1],'labels-wrap')" title="Reset">↺</button>
+    </div>
+
+    <!-- State strip -->
+    <div class="strip-divider"></div>
+    <div class="strip-wrap">
+      <div class="strip-header">
+        <span class="strip-label">All node states</span>
+        <span class="strip-variant">Done · Active · Inactive</span>
+      </div>
+      <div class="strip-row" id="strip"></div>
+    </div>
+
+    <!-- Overview grid -->
+    <div class="strip-divider"></div>
+    <div class="overview-wrap">
+      <div class="overview-label">All variants — Element × Status</div>
+      <div class="overview-grid" id="overview"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var S = { steps: 4, active: 2, showLabels: true };
+
+var STEP_LABELS = ['Data Source', 'Table Configuration', 'Mapping', 'Import Fields', 'Review'];
+
+var STATES = [
+  { cls: 'done',     name: 'Done' },
+  { cls: 'active',   name: 'Active' },
+  { cls: 'inactive', name: 'Inactive' }
+];
+
+var codeVisible = false;
+
+// A single step node (circle + optional label). isEnd drops the inactive dot.
+function buildNode(status, label, opts) {
+  opts = opts || {};
+  var node = document.createElement('div');
+  node.className = 'step-node';
+  var noDot = status === 'inactive' && opts.isEnd;
+  var circle = document.createElement('div');
+  circle.className = 'step-circle ' + status + (noDot ? ' no-dot' : '') + (opts.hover ? ' hov' : '');
+  if (status === 'done') circle.innerHTML = '<i class="fa-solid fa-check" aria-hidden="true"></i>';
+  node.appendChild(circle);
+  if (label != null) {
+    var lbl = document.createElement('div');
+    lbl.className = 'step-label ' + status;
+    lbl.textContent = label;
+    node.appendChild(lbl);
+  }
+  return node;
+}
+
+function render() {
+  S.steps = parseInt(document.getElementById('ctl-steps').value, 10);
+  S.active = Math.min(parseInt(document.getElementById('ctl-active').value, 10), S.steps);
+
+  var track = document.getElementById('preview');
+  track.innerHTML = '';
+  for (var i = 0; i < S.steps; i++) {
+    var status = (i + 1) < S.active ? 'done' : ((i + 1) === S.active ? 'active' : 'inactive');
+    var isEnd = i === S.steps - 1;
+    var wrap = document.createElement('div');
+    wrap.className = 'st-node';
+    var noDot = status === 'inactive' && isEnd;
+    var circle = document.createElement('div');
+    circle.className = 'step-circle ' + status + (noDot ? ' no-dot' : '');
+    if (status === 'done') circle.innerHTML = '<i class="fa-solid fa-check" aria-hidden="true"></i>';
+    if (status !== 'inactive') {
+      (function(idx){ circle.addEventListener('click', function(){ document.getElementById('ctl-active').value = String(idx + 1); render(); }); })(i);
+    }
+    wrap.appendChild(circle);
+    if (S.showLabels) {
+      var lbl = document.createElement('div');
+      lbl.className = 'step-label ' + status;
+      lbl.textContent = STEP_LABELS[i] || ('Step ' + (i + 1));
+      wrap.appendChild(lbl);
+    }
+    track.appendChild(wrap);
+    if (!isEnd) {
+      var conn = document.createElement('div');
+      conn.className = 'st-connector' + ((i + 1) < S.active ? ' filled' : '');
+      track.appendChild(conn);
+    }
+  }
+
+  updateCode();
+  renderStrip();
+  renderOverview();
+}
+
+function renderStrip() {
+  var strip = document.getElementById('strip');
+  strip.innerHTML = '';
+  STATES.forEach(function(st) {
+    var cell = document.createElement('div');
+    cell.className = 'strip-cell';
+    cell.appendChild(buildNode(st.cls, S.showLabels ? st.name : null, {}));
+    var nm = document.createElement('span');
+    nm.className = 'strip-name';
+    nm.textContent = st.name;
+    cell.appendChild(nm);
+    strip.appendChild(cell);
+  });
+}
+
+function renderOverview() {
+  var grid = document.getElementById('overview');
+  grid.innerHTML = '';
+  var elements = [{ key: 'Left', isEnd: false }, { key: 'End', isEnd: true }];
+  elements.forEach(function(el) {
+    STATES.forEach(function(st) {
+      var cell = document.createElement('div');
+      cell.className = 'overview-cell';
+      cell.title = el.key + ' / ' + st.name;
+      cell.appendChild(buildNode(st.cls, null, { isEnd: el.isEnd }));
+      var nm = document.createElement('span');
+      nm.className = 'overview-name';
+      nm.textContent = el.key + ' / ' + st.name;
+      cell.appendChild(nm);
+      grid.appendChild(cell);
+    });
+  });
+}
+
+function setBool(key, val, btn, wrapId) {
+  S[key] = val;
+  document.querySelectorAll('#' + wrapId + ' .bool-btn').forEach(function(b){ b.classList.remove('on'); });
+  btn.classList.add('on');
+  render();
+}
+
+function resetSel(id, val) {
+  document.getElementById(id).value = val;
+  render();
+}
+
+function toggleDots() {
+  document.getElementById('canvas').classList.toggle('no-dots');
+}
+
+function updateCode() {
+  var lbls = S.showLabels ? '' : '\n  showLabels={false}';
+  var code = '<Stepper\n  steps={' + S.steps + '}\n  active={' + S.active + '}' + lbls + '\n/>';
+  document.getElementById('code-block').textContent = code;
+}
+
+function toggleCode() {
+  codeVisible = !codeVisible;
+  document.getElementById('code-block').classList.toggle('visible', codeVisible);
+}
+
+function copyCode() {
+  updateCode();
+  var code = document.getElementById('code-block').textContent;
+  navigator.clipboard && navigator.clipboard.writeText(code);
+  var msg = document.getElementById('copied-msg');
+  msg.classList.add('show');
+  if (!codeVisible) { document.getElementById('code-block').classList.add('visible'); codeVisible = true; }
+  setTimeout(function(){ msg.classList.remove('show'); }, 2000);
+}
+
+render();
+</script>
+</body>
+</html>

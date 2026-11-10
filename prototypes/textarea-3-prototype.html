@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Textarea 3.0 — Folio DS Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="vendor/fontawesome/css/all.min.css" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'Nunito Sans', BlinkMacSystemFont, sans-serif; background: #F0F2F5; display: flex; justify-content: center; padding: 2rem; min-height: 100vh; }
+.wrap { width: 960px; }
+.header { padding: 1.5rem 0 1rem; }
+.header h1 { font-size: 22px; font-weight: 700; color: #0E2349; margin-bottom: 4px; }
+.header p { font-size: 13px; color: #677489; }
+.sb { background: white; border: 1px solid #E0E5EC; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(16,24,40,.06); }
+.sb-bar { background: white; border-bottom: 1px solid #E5E5E5; display: flex; align-items: center; gap: 4px; padding: 0 14px; height: 42px; }
+.sb-icon { width: 30px; height: 30px; border: none; background: none; cursor: pointer; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: #666; font-size: 14px; }
+.sb-icon:hover { background: #F3F3F3; }
+.sb-sep { width: 1px; height: 18px; background: #E5E5E5; margin: 0 4px; }
+.sb-logo { display: flex; align-items: center; gap: 8px; }
+.sb-logo-mark { display: flex; align-items: center; justify-content: center; }
+.sb-logo-mark svg { display: block; height: 22px; width: auto; }
+.sb-logo-text { font-size: 13px; font-weight: 700; color: #163D83; }
+.sb-bar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.sb-badge { font-size: 11px; font-weight: 600; color: #677489; background: #F1F4F8; padding: 2px 8px; border-radius: 99px; }
+.sb-canvas { background: white; min-height: 140px; display: flex; align-items: center; justify-content: center; padding: 2.5rem; border-bottom: 1px solid #E5E5E5; background-image: radial-gradient(#DEE3EC 1px, transparent 1px); background-size: 20px 20px; }
+.sb-canvas.no-dots { background-image: none; }
+.sb-codebar { background: white; display: flex; align-items: center; gap: 16px; padding: 8px 16px; border-bottom: 1px solid #E5E5E5; }
+.sb-cbtn { font-size: 12px; color: #888; border: none; background: none; cursor: pointer; display: flex; align-items: center; gap: 5px; padding: 4px 0; }
+.sb-cbtn:hover { color: #333; }
+.code-snippet { display: none; background: #F6F8FA; border: 1px solid #E5E5E5; border-radius: 6px; padding: 10px 14px; font-family: 'SFMono-Regular', monospace; font-size: 12px; color: #333; margin: 0 16px 12px; line-height: 1.6; white-space: pre-wrap; }
+.code-snippet.visible { display: block; }
+#copied-msg { font-size: 12px; color: #229E66; margin-left: auto; opacity: 0; transition: opacity 200ms; }
+#copied-msg.show { opacity: 1; }
+.sb-tabs { background: white; display: flex; padding: 0 16px; border-bottom: 1px solid #E5E5E5; }
+.sb-tab { padding: 10px 14px; font-size: 12px; font-weight: 600; color: #999; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px; }
+.sb-tab.on { color: #163D83; border-bottom-color: #163D83; }
+.ctl-head { display: grid; grid-template-columns: 140px 1fr 70px 1fr 32px; padding: 8px 16px; background: white; border-bottom: 1px solid #E5E5E5; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #aaa; }
+.ctl-row { display: grid; grid-template-columns: 140px 1fr 70px 1fr 32px; padding: 10px 16px; background: white; border-bottom: 1px solid #F2F2F2; align-items: center; min-height: 48px; }
+.ctl-row:hover { background: #FAFAFA; }
+.ctl-name { font-family: 'SFMono-Regular', 'Menlo', monospace; font-size: 12px; font-weight: 700; color: #333; }
+.ctl-desc { font-family: 'SFMono-Regular', monospace; font-size: 10px; color: #bbb; line-height: 1.5; padding-right: 12px; }
+.ctl-def { font-size: 11px; color: #ccc; }
+select.ctrl { width: 100%; border: 1px solid #E0E0E0; border-radius: 5px; padding: 5px 8px; font-size: 12px; background: white; color: #333; cursor: pointer; }
+select.ctrl:focus { outline: none; border-color: #A6BEEB; }
+input[type=text].ctrl { width: 100%; border: 1px solid #E0E0E0; border-radius: 5px; padding: 5px 8px; font-size: 12px; background: white; color: #333; }
+input[type=text].ctrl:focus { outline: none; border-color: #A6BEEB; }
+.bool-wrap { display: flex; }
+.bool-btn { flex: 1; padding: 4px 8px; font-size: 12px; border: 1px solid #E0E0E0; background: white; cursor: pointer; color: #777; }
+.bool-btn:not(:last-child) { border-right: none; }
+.bool-btn:first-child { border-radius: 5px 0 0 5px; }
+.bool-btn:last-child { border-radius: 0 5px 5px 0; }
+.bool-btn.on { background: #EBEBEB; font-weight: 700; color: #333; }
+.rst { width: 28px; height: 28px; border: none; background: none; cursor: pointer; color: #ccc; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+.rst:hover { background: #F0F0F0; color: #888; }
+.strip-divider { height: 1px; background: #EBEEF2; }
+.strip-wrap { padding: 20px; background: #FAFAFA; }
+.strip-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.strip-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #aaa; }
+.strip-row { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; }
+.strip-cell { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; width: 220px; }
+.strip-name { font-size: 10px; color: #aaa; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+
+/* ── THE TEXTAREA ─────────────────── */
+.fta-wrap { display: inline-flex; flex-direction: column; gap: 4px; width: 100%; font-family: 'DM Sans', sans-serif; }
+.fta-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.fta-head.count-only { justify-content: flex-end; }
+.fta-label { font-size: 12px; font-weight: 500; color: #101828; line-height: 18px; }
+.fta-label .req { color: #D92D20; margin-left: 2px; }
+.fta-headcount { font-size: 12px; font-family: 'DM Sans', sans-serif; font-weight: 400; color: #677489; flex-shrink: 0; }
+.fta-field {
+  display: block; width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 8px;
+  font-size: 14px; line-height: 20px; font-family: 'DM Sans', sans-serif; font-weight: 400; color: #101828;
+  outline: none; transition: border 100ms, box-shadow 100ms; border: 1px solid #98A2B3; background: white;
+  box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.10), 0px 1px 2px rgba(16, 24, 40, 0.06);
+}
+.fta-field::placeholder { color: #98A2B3; }
+.fta-field.hover { border-color: #173D82; }
+.fta-field.focused { border-color: #173D82; box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.10), 0px 1px 2px rgba(16, 24, 40, 0.06), 0 0 0 2px #8EA8E1; }
+.fta-field.error { border-color: #D92D20; }
+.fta-field.disabled { box-shadow: none; background: #F2F4F7; color: #98A2B3; }
+.fta-err { display: flex; align-items: center; gap: 4px; color: #D92D20; font-size: 12px; font-weight: 500; line-height: 18px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <h1>Textarea 3.0 — Folio DS Prototype</h1>
+    <p>Multi-line text input · auto-resize (capped, then scrolls) or fixed-height · label / char count / error / disabled.</p>
+  </div>
+  <div class="sb">
+    <div class="sb-bar">
+      <div class="sb-logo">
+        <span class="sb-logo-mark">
+          <svg width="20" height="22" viewBox="0 0 29 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11.2464 5.30427L13.5369 4L13.5282 15.7556L11.229 17.0598L11.2464 5.30427Z" fill="#163D83"></path>
+            <path d="M24.6057 21.23L14.8688 15.747V4L24.6057 9.5603V21.23Z" fill="#163D83"></path>
+            <path d="M23.935 22.3624L14.2678 27.9999L4.68762 22.3109L14.1894 16.8622L23.935 22.3624Z" fill="#163D83"></path>
+            <path d="M7.6318 9.67221L9.93103 8.35936L9.9136 17.8153L7.61438 19.1195L7.6318 9.67221Z" fill="#163D83"></path>
+            <path d="M4.01742 14.4599L6.31665 13.1471L6.29923 19.8744L4 21.1786L4.01742 14.4599Z" fill="#163D83"></path>
+          </svg>
+        </span>
+        <span class="sb-logo-text">Folio</span>
+      </div>
+      <div class="sb-sep"></div>
+      <button class="sb-icon" onclick="document.getElementById('canvas').classList.toggle('no-dots')" title="Toggle dots"><i class="fa-solid fa-table-cells"></i></button>
+      <div class="sb-bar-right"><span class="sb-badge">Textarea · Figma naming · 3.0</span></div>
+    </div>
+
+    <div class="sb-canvas" id="canvas"><div id="preview" style="width:360px"></div></div>
+
+    <div class="sb-codebar">
+      <button class="sb-cbtn" onclick="window.__toggleCode()"><i class="fa-solid fa-code" style="font-size:13px"></i> Show code</button>
+      <button class="sb-cbtn" onclick="window.__copyCode()"><i class="fa-regular fa-copy" style="font-size:13px"></i> Copy code</button>
+      <span id="copied-msg">Copied!</span>
+    </div>
+    <div class="code-snippet" id="code-block"></div>
+
+    <div class="sb-tabs"><div class="sb-tab on">Controls</div><div class="sb-tab">Variants</div></div>
+    <div class="ctl-head"><span>Name</span><span>Description</span><span>Default</span><span>Control</span><span></span></div>
+
+    <div class="ctl-row">
+      <span class="ctl-name">size</span>
+      <span class="ctl-desc">"large" (80px field) | "small" (60px field)</span>
+      <span class="ctl-def">large</span>
+      <div class="bool-wrap" id="size-wrap">
+        <button class="bool-btn on" onclick="setBool('size','large',this)">large</button>
+        <button class="bool-btn" onclick="setBool('size','small',this)">small</button>
+      </div>
+      <button class="rst" onclick="resetChoice('size','large','size-wrap',0)" title="Reset">↺</button>
+    </div>
+    <div class="ctl-row">
+      <span class="ctl-name">label</span>
+      <span class="ctl-desc">Field label, top-aligned</span>
+      <span class="ctl-def">Comment</span>
+      <input class="ctrl" type="text" id="ctl-label" value="Comment" oninput="render()">
+      <button class="rst" onclick="resetInput('ctl-label','Comment')" title="Reset">↺</button>
+    </div>
+    <div class="ctl-row">
+      <span class="ctl-name">required</span>
+      <span class="ctl-desc">Shows red asterisk after label</span>
+      <span class="ctl-def">false</span>
+      <div class="bool-wrap" id="required-wrap">
+        <button class="bool-btn on" onclick="setBool('required',false,this)">False</button>
+        <button class="bool-btn" onclick="setBool('required',true,this)">True</button>
+      </div>
+      <button class="rst" onclick="resetBool('required',false,'required-wrap')" title="Reset">↺</button>
+    </div>
+    <div class="ctl-row">
+      <span class="ctl-name">placeholder</span>
+      <span class="ctl-desc">Empty-state text</span>
+      <span class="ctl-def">Add a comment...</span>
+      <input class="ctrl" type="text" id="ctl-placeholder" value="Add a comment..." oninput="render()">
+      <button class="rst" onclick="resetInput('ctl-placeholder','Add a comment...')" title="Reset">↺</button>
+    </div>
+    <div class="ctl-row">
+      <span class="ctl-name">autoResize</span>
+      <span class="ctl-desc">Grows with content up to maxHeight, then scrolls</span>
+      <span class="ctl-def">true</span>
+      <div class="bool-wrap" id="autoResize-wrap">
+        <button class="bool-btn" onclick="setBool('autoResize',false,this)">False</button>
+        <button class="bool-btn on" onclick="setBool('autoResize',true,this)">True</button>
+      </div>
+      <button class="rst" onclick="resetBool('autoResize',true,'autoResize-wrap')" title="Reset">↺</button>
+    </div>
+    <div class="ctl-row">
+      <span class="ctl-name">rows</span>
+      <span class="ctl-desc">Override min height — leave "auto" to use size's default (80/60px)</span>
+      <span class="ctl-def">auto</span>
+      <select class="ctrl" id="ctl-rows" onchange="render()">
+        <option value="" selected>auto (from size)</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="6">6</option>
+      </select>
+      <button class="rst" onclick="resetSel('ctl-rows','')" title="Reset">↺</button>
+    </div>
+    <div class="ctl-row">
+      <span class="ctl-name">maxHeight</span>
+      <span class="ctl-desc">Cap in px when autoResize — scrolls past this</span>
+      <span class="ctl-def">200</span>
+      <select class="ctrl" id="ctl-maxHeight" onchange="render()">
+        <option value="120">120</option>
+        <option value="160">160</option>
+        <option value="200" selected>200</option>
+        <option value="240">240</option>
+      </select>
+      <button class="rst" onclick="resetSel('ctl-maxHeight','200')" title="Reset">↺</button>
+    </div>
+    <div class="ctl-row">
+      <span class="ctl-name">charCount</span>
+      <span class="ctl-desc">Shows n/maxChars, DM Sans</span>
+      <span class="ctl-def">false</span>
+      <div class="bool-wrap" id="charCount-wrap">
+        <button class="bool-btn on" onclick="setBool('charCount',false,this)">False</button>
+        <button class="bool-btn" onclick="setBool('charCount',true,this)">True</button>
+      </div>
+      <button class="rst" onclick="resetBool('charCount',false,'charCount-wrap')" title="Reset">↺</button>
+    </div>
+    <div class="ctl-row">
+      <span class="ctl-name">state</span>
+      <span class="ctl-desc">"default"|"hover"|"focused"|"error"|"disabled"</span>
+      <span class="ctl-def">default</span>
+      <select class="ctrl" id="ctl-state" onchange="render()">
+        <option value="default" selected>default</option>
+        <option value="hover">hover</option>
+        <option value="focused">focused</option>
+        <option value="error">error</option>
+        <option value="disabled">disabled</option>
+      </select>
+      <button class="rst" onclick="resetSel('ctl-state','default')" title="Reset">↺</button>
+    </div>
+    <div class="ctl-row">
+      <span class="ctl-name">errorMessage</span>
+      <span class="ctl-desc">Shown below field when state="error"</span>
+      <span class="ctl-def">This field is required</span>
+      <input class="ctrl" type="text" id="ctl-errorMessage" value="This field is required" oninput="render()">
+      <button class="rst" onclick="resetInput('ctl-errorMessage','This field is required')" title="Reset">↺</button>
+    </div>
+
+    <div class="strip-divider"></div>
+    <div class="strip-wrap">
+      <div class="strip-header"><span class="strip-label">All states</span></div>
+      <div class="strip-row" id="strip"></div>
+    </div>
+
+    <div class="strip-divider"></div>
+    <div class="strip-wrap">
+      <div class="strip-header"><span class="strip-label">Auto-resize vs fixed — click to select</span></div>
+      <div class="strip-row" id="overview"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var S = { size: "large", label: "Comment", required: false, placeholder: "Add a comment...", autoResize: true, rows: null, maxHeight: 200, charCount: false, maxChars: 280, state: "default", errorMessage: "This field is required" };
+var codeVisible = false;
+var LINE_HEIGHT = 20, PAD = 8;
+var SIZE_MIN_HEIGHT = { large: 80, small: 60 };
+
+function buildTextarea(opts) {
+  var wrap = document.createElement("div");
+  wrap.className = "fta-wrap";
+
+  var count;
+  var hasLabel = !!opts.label;
+  var hasCount = !!(opts.charCount && opts.maxChars);
+  if (hasLabel || hasCount) {
+    var head = document.createElement("div");
+    head.className = "fta-head" + (!hasLabel ? " count-only" : "");
+    if (hasLabel) {
+      var label = document.createElement("label");
+      label.className = "fta-label";
+      label.textContent = opts.label;
+      if (opts.required) { var ast = document.createElement("span"); ast.className = "req"; ast.textContent = "*"; label.appendChild(ast); }
+      head.appendChild(label);
+    }
+    if (hasCount) {
+      count = document.createElement("span");
+      count.className = "fta-headcount";
+      count.textContent = "0/" + opts.maxChars;
+      head.appendChild(count);
+    }
+    wrap.appendChild(head);
+  }
+
+  var ta = document.createElement("textarea");
+  var stateClass = opts.disabled ? "disabled" : opts.state;
+  ta.className = "fta-field" + (stateClass && stateClass !== "default" ? " " + stateClass : "");
+  ta.placeholder = opts.placeholder;
+  ta.rows = opts.autoResize ? undefined : opts.rows;
+  ta.disabled = opts.disabled || opts.state === "disabled";
+  var minHeight = opts.rows ? (opts.rows * LINE_HEIGHT + PAD * 2) : SIZE_MIN_HEIGHT[opts.size];
+  ta.style.minHeight = minHeight + "px";
+  if (opts.autoResize) {
+    ta.style.resize = "none";
+    ta.style.overflowY = "hidden";
+    ta.style.maxHeight = opts.maxHeight + "px";
+    ta.addEventListener("input", function () {
+      ta.style.height = "auto";
+      var next = Math.min(ta.scrollHeight, opts.maxHeight);
+      ta.style.height = Math.max(next, minHeight) + "px";
+      ta.style.overflowY = ta.scrollHeight > opts.maxHeight ? "auto" : "hidden";
+      if (count) count.textContent = ta.value.length + "/" + opts.maxChars;
+    });
+  } else {
+    ta.style.resize = "vertical";
+  }
+  wrap.appendChild(ta);
+
+  if (opts.state === "error" && opts.errorMessage) {
+    var err = document.createElement("div");
+    err.className = "fta-err";
+    err.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="font-size:12px"></i>' + opts.errorMessage;
+    wrap.appendChild(err);
+  }
+  return wrap;
+}
+
+function render() {
+  S.label = document.getElementById("ctl-label").value;
+  S.placeholder = document.getElementById("ctl-placeholder").value;
+  var rowsVal = document.getElementById("ctl-rows").value;
+  S.rows = rowsVal ? parseInt(rowsVal, 10) : null;
+  S.maxHeight = parseInt(document.getElementById("ctl-maxHeight").value, 10);
+  S.state = document.getElementById("ctl-state").value;
+  S.errorMessage = document.getElementById("ctl-errorMessage").value;
+
+  var preview = document.getElementById("preview");
+  preview.innerHTML = "";
+  preview.appendChild(buildTextarea(S));
+
+  updateCode();
+  renderStrip();
+  renderOverview();
+}
+
+function renderStrip() {
+  var strip = document.getElementById("strip");
+  strip.innerHTML = "";
+  ["default", "hover", "focused", "error", "disabled"].forEach(function (st) {
+    var cell = document.createElement("div");
+    cell.className = "strip-cell";
+    var opts = Object.assign({}, S, { state: st, label: st.charAt(0).toUpperCase() + st.slice(1) });
+    cell.appendChild(buildTextarea(opts));
+    var nm = document.createElement("span");
+    nm.className = "strip-name";
+    nm.textContent = st;
+    cell.appendChild(nm);
+    strip.appendChild(cell);
+  });
+}
+
+function renderOverview() {
+  var grid = document.getElementById("overview");
+  grid.innerHTML = "";
+  [{ key: true, name: "Auto-resize (comment)" }, { key: false, name: "Fixed height (modal field)" }].forEach(function (o) {
+    var cell = document.createElement("div");
+    cell.className = "strip-cell";
+    cell.style.cursor = "pointer";
+    var opts = Object.assign({}, S, { autoResize: o.key, state: "default", label: o.name });
+    cell.appendChild(buildTextarea(opts));
+    var nm = document.createElement("span");
+    nm.className = "strip-name";
+    nm.textContent = o.name;
+    cell.appendChild(nm);
+    cell.addEventListener("click", function () {
+      document.querySelectorAll("#autoResize-wrap .bool-btn").forEach(function (b) { b.classList.remove("on"); });
+      document.querySelectorAll("#autoResize-wrap .bool-btn")[o.key ? 1 : 0].classList.add("on");
+      S.autoResize = o.key;
+      render();
+    });
+    grid.appendChild(cell);
+  });
+}
+
+function setBool(key, val, btn) {
+  S[key] = val;
+  btn.parentElement.querySelectorAll(".bool-btn").forEach(function (b) { b.classList.remove("on"); });
+  btn.classList.add("on");
+  render();
+}
+function resetBool(key, val, wrapId) {
+  S[key] = val;
+  var idx = val ? 1 : 0;
+  document.querySelectorAll("#" + wrapId + " .bool-btn").forEach(function (b) { b.classList.remove("on"); });
+  document.querySelectorAll("#" + wrapId + " .bool-btn")[idx].classList.add("on");
+  render();
+}
+function resetInput(id, v) { document.getElementById(id).value = v; render(); }
+function resetSel(id, v) { document.getElementById(id).value = v; render(); }
+function resetChoice(key, val, wrapId, idx) {
+  S[key] = val;
+  document.querySelectorAll("#" + wrapId + " .bool-btn").forEach(function (b) { b.classList.remove("on"); });
+  document.querySelectorAll("#" + wrapId + " .bool-btn")[idx].classList.add("on");
+  render();
+}
+
+function updateCode() {
+  var lines = ["const { Textarea } = window.FolioDS;", "", "<Textarea"];
+  if (S.size !== "large") lines.push('  size="' + S.size + '"');
+  lines.push('  label="' + S.label + '"');
+  if (S.required) lines.push("  required");
+  lines.push('  placeholder="' + S.placeholder + '"');
+  if (!S.autoResize) lines.push("  autoResize={false}");
+  if (S.rows) lines.push("  rows={" + S.rows + "}");
+  if (S.autoResize) lines.push("  maxHeight={" + S.maxHeight + "}");
+  if (S.charCount) { lines.push("  charCount"); lines.push("  maxChars={" + S.maxChars + "}"); }
+  if (S.state !== "default") lines.push('  state="' + S.state + '"');
+  if (S.state === "error") lines.push('  errorMessage="' + S.errorMessage + '"');
+  lines.push("  value={value}");
+  lines.push("  onChange={(e) => setValue(e.target.value)}");
+  lines.push("/>");
+  document.getElementById("code-block").textContent = lines.join("\n");
+}
+
+window.__toggleCode = function () { codeVisible = !codeVisible; document.getElementById("code-block").classList.toggle("visible", codeVisible); };
+window.__copyCode = function () {
+  updateCode();
+  var t = document.getElementById("code-block").textContent;
+  navigator.clipboard && navigator.clipboard.writeText(t);
+  var m = document.getElementById("copied-msg"); m.classList.add("show");
+  if (!codeVisible) { document.getElementById("code-block").classList.add("visible"); codeVisible = true; }
+  setTimeout(function () { m.classList.remove("show"); }, 2000);
+};
+
+render();
+</script>
+</body>
+</html>
